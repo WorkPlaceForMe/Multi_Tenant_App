@@ -178,7 +178,7 @@ export class SocialComponent implements OnInit, OnDestroy {
 
   }
   got(id){
-    this.route.navigateByUrl(`/pages/tickets/view/${id.data.id}`)
+    this.route.navigate([`/pages/tickets`])
   }
   settings = {
     mode: 'external',

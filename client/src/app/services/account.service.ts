@@ -50,4 +50,7 @@ API_URI = api
   assignTick(id:string,some:any){
     return this.http.put(`${this.API_URI}/ticket/assign/${id}`,some)
   }
+  seeTick(id:string){
+    return this.http.get(`${this.API_URI}/ticket/one/${id}`)
+  }
 }

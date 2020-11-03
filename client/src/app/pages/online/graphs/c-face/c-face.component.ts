@@ -178,7 +178,8 @@ export class CFaceComponent implements OnInit, OnDestroy {
 
   }
   got(id){
-    this.route.navigateByUrl(`/pages/tickets/view/${id.data.id}`)
+    this.route.navigate([`/pages/tickets`])
+    // this.route.navigateByUrl(`/pages/tickets/view/${id.data.id}`)
   }
   settings = {
     mode: 'external',

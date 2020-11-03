@@ -17,6 +17,12 @@ module.exports = function(app) {
     controller.getAll
   );
 
+  app.get(
+    "/api/ticket/one/:id",
+    [authJwt.verifyToken, authJwt.isClientOrBranch],
+    controller.seeTick
+  );
+
   app.put(
     "/api/ticket/check/:id",
     [authJwt.verifyToken, authJwt.isClientOrBranch],

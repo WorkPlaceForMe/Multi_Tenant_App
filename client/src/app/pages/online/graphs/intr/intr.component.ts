@@ -212,7 +212,8 @@ export class IntrComponent implements OnInit, OnDestroy {
   source:any = new LocalDataSource();
   source2:any = new LocalDataSource();
   got(id){
-    this.route.navigate([`/pages/tickets/view/${id.data.id}`])
+    this.route.navigate([`/pages/tickets`])
+    // this.route.navigate([`/pages/tickets/view/${id.data.id}`], {queryParams: id.data})
 }
 
   settings = {
