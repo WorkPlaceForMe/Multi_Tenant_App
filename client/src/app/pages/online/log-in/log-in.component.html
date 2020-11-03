@@ -1,0 +1,53 @@
+<div class="container p-4">
+    <div class="displayTable">
+      <div class="displayTableCell">
+        <div class="col-md-6 offset-3">
+            <nb-card>
+                <nb-card-header>
+                    <h3 align='center' style='word-wrap: break-word;'>Sign In</h3>
+                </nb-card-header>
+                <nb-card-body>
+        <div class="authBlock" align='center'>
+    
+              <form [formGroup]="registerForm" (ngSubmit)='onSubmit()'>
+                
+                <div class="col-md-10">
+    
+          <div class="form-group">
+            <input type="text" class="form-control" formControlName="username" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" nbInput fullWidth id="username" autofocus placeholder="User Name" [status]='values.username' />
+            <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+              <div *ngIf="f.username.errors.required">{{errorMessage}}</div>
+          </div>
+    
+          </div>
+          
+                <div class="form-group">
+                    <!-- <input type="password"class="form-control"  placeholder="Password" formControlName="password" [ngClass]="{ 'is-invalid': submitted && error.err }" /> -->
+                    <input type="password" class="form-control" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" nbInput fullWidth id="password" autofocus placeholder="Password" [status]='values.password' />
+                    <!-- <div *ngIf="submitted && errorMessage != ''" class="invalid-feedback">
+                      <div>{{errorMessage}}</div>
+                    </div> -->
+                    <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                      <div *ngIf="f.password.errors.required">{{errorMessage}}</div>
+                  </div>
+
+                </div>
+    
+          </div>
+    <br>
+          <!-- Calling SignIn Api from AuthService -->
+    
+          <div class="form-group">
+            <button nbButton [status]="values.login" *ngIf="!loading">Log In</button>
+            <button nbButton [status]="'primary'" [nbSpinner]="true" nbSpinnerSize="giant" nbSpinnerStatus="primary" [disabled]="loading" *ngIf="loading">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+        </div>
+    
+    </form>
+
+      </div>
+    </nb-card-body>
+    </nb-card>
+      </div>
+    </div>
+    </div>
+    </div>

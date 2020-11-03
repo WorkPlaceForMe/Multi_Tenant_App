@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col-md-2">
+        <nb-card>
+            <nb-card-header align='center'>
+                <p>List of dashboards</p>
+            </nb-card-header>
+            <nb-card-body>
+                <label class="label">Analytics</label>
+                <nb-radio-group [(ngModel)]='analytic' (ngModelChange)='reload(alg)' *ngFor='let alg of info.analytics'>
+                    <nb-radio
+                      [value]="alg">
+                      <small>{{alg.name}}</small>
+                    </nb-radio>
+                  </nb-radio-group>
+            </nb-card-body>
+        </nb-card>
+    </div>
+    <div class="col-md-10">
+       <ngx-control [analytic]="analytic" [cameras]='cameras' (cameraSel)="aaa($event)" [rel]='rel'></ngx-control>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+<div class="container">
+    <div class='col-md-12' style="margin-top: 5px;">
+        <p>Incidents</p>
+        <div class="row">
+            <div class="col-md-3">
+                <nb-card>
+                    <nb-card-body>
+                        <p>Total</p>
+                    <strong>{{loitering == undefined ? 'None' : loitering.total}}</strong>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            <div class="col-md-7">
+                <nb-card>
+                    <nb-card-body>
+                        <p>Avg Frequency</p>
+                        <strong>{{loitering == undefined ? 'None' : loitering.avgH}}</strong>&nbsp;per hr,&nbsp;<strong>{{loitering == undefined ? 'None' : loitering.avgS}}</strong>&nbsp;per sec.
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <nb-card>
+                    <nb-card-body>
+                        <p>Alerts by Hour</p>
+                        <chart id='chart' type="horizontalBar" [data]="dataH" [options]="optionsH"></chart>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            <div class="col-md-6">
+                <nb-card>
+                    <nb-card-body>
+                        <p>Dwell Time Variation</p>
+                        <chart type="line" [data]="dataL" [options]="optionsL"></chart>
+                        <small *ngIf='loitering != null'>Min:&nbsp;<strong>{{loitering.min}}</strong>&nbsp;Max:&nbsp;<strong>{{loitering.max}}</strong>&nbsp;Avg:&nbsp;<strong>{{loitering.avg}}</strong></small>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-7">
+                <nb-card>
+                    <nb-card-body>
+                        <ng2-smart-table [settings]="settings" [source]="source" (edit)='got($event)'>
+                        </ng2-smart-table>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            <div class="col-md-5">
+                <nb-card>
+                    <nb-card-body align='center'>
+                        <canvas #streaming id="canvas"  width="640" height="480" style="display: block; width: 90%;"></canvas>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+
+    </div>
+    </div>
+    

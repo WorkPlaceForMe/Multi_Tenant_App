@@ -1,0 +1,20 @@
+<div *ngIf='type == "assign"' class='row'>
+    <div class="col-md-5">
+    <nb-select [(ngModel)]='user'>
+        <nb-option value='' disabled>Choose a User:</nb-option>
+        <nb-option *ngFor='let obj of users' [value]="obj.username">{{obj.username}}</nb-option>
+      </nb-select>
+    <div *ngIf="show" class="text-danger">
+        <small> Choose a user to proceed.</small>
+    </div>
+    </div>
+      <div class="col-md-2" style="margin-left: 5px;">
+      <button [status]="'success'" nbButton (click)='assign()'>Confirm Assignament</button>
+    </div>
+</div>
+
+<div *ngIf='type == "update"' class='row'>
+    <button [status]="'success'" *ngIf="reviewed == 'null'" fullWidth nbButton (click)='update()'>Confirm</button>
+    <button [status]="'warning'" *ngIf="reviewed != 'null'" fullWidth nbButton (click)='Nupdate()'>Remove update</button>
+    <button [status]="'danger'" fullWidth nbButton (click)='close()'>Cancel</button>
+</div>

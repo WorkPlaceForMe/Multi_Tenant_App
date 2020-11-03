@@ -1,0 +1,48 @@
+<div class='row'>
+<div class="col-md-3">
+  <nb-card>
+    <nb-card-header><h4>Pictures of: {{user.name}}</h4></nb-card-header>
+    <nb-card-body>
+        <h6>File name: {{fileName}}</h6>
+        <div class="form-group">
+  <div class="input-group mb-3">
+    <div class="custom-file">
+        <label class="custom-file-label" for="exampleInputFile">File</label>
+       <input type="file" (change)=change() #fileInput class="custom-file-input" id="exampleInputFile" aria-describedby="fileHelp" name="file">
+    </div>
+  </div>
+</div>
+<button *ngIf='!loading' type="button" class="btn-block" nbButton [status]="'success'"
+      (click)="uploa();"
+      [disabled]='!available'>
+      Upload
+</button>
+<button *ngIf='loading' type="button" class="btn-block" nbButton [nbSpinner]="'primary'" nbSpinnerSize="medium" nbSpinnerStatus="primary"
+      disabled>
+      Upload
+</button>
+<!--       [disabled]="!uploader.getNotUploadedItems().length || uploader.getNotUploadedItems().length + this.images.length == 0"-->
+<button [routerLink]="['/pages/management']" class="btn-block" nbButton [status]="'primary'"><i class="fas fa-arrow-circle-left"></i>&nbsp;Go Back</button>
+    </nb-card-body>
+  </nb-card>
+
+</div>
+<div class="col-md-3 mb-3" *ngFor = "let image of imagesFiles; index as i" style="min-height: 18rem; margin-top: 10px;">
+    <nb-card>
+      <nb-card-body>
+        <div class="embed-responsive embed-responsive-4by3">
+          <img [src]="image.location | trustedUrl" class="embed-responsive-item img-thumbnail" style='width: 100%; object-fit: contain; image-orientation: from-image;'>
+        </div>
+      <br>
+      <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-danger btn-block" (click)="deleteImage(image.name)">
+              <!-- ; deleteImageFile(image.name) height="{{image.showHeight}}" width="{{image.showWidth}}"    -->
+              <i class="far fa-trash-alt"></i>
+            </button>
+          </div>
+              </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+input[type="file"] {
+  color: transparent;
+}
+
+.embed-responsive-item{
+  background-color: rgb(25,32,56);
+}
+
+.custom-file-label{
+  background-color: rgb(25,32,56);
+  border-color: rgb(51,102,255);
+  color: rgb(51,102,255);
+}
+
+.custom-file-label::after{
+  background-color: rgb(34,43,69);
+  border-color: rgb(51,102,255);
+  color: rgb(51,102,255);
+}
+
