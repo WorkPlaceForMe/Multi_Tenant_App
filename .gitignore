@@ -7,3 +7,4 @@ server/access.log
 build.sh
 commands_ssl.sh
 install.sh
+.gitignore
