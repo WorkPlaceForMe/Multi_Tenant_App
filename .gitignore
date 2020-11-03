@@ -1,9 +1,0 @@
-client/node_modules/
-server/node_modules/
-server/resources/*/
-server/dist/
-server/config.env
-server/access.log
-build.sh
-commands_ssl.sh
-install.sh
