@@ -96,7 +96,6 @@ exports.loitering = (req, res) =>{
   })
 }
 
-//Diaz
 exports.intrude = (req, res) =>{
   
   let token = req.headers["x-access-token"];
