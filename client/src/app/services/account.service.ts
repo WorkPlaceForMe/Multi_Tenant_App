@@ -1,0 +1,53 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { api } from '../models/API';
+import { Account } from '../models/Account';
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AccountService {
+API_URI = api
+    constructor(private http: HttpClient) { }
+
+  getAccount(role:string){
+    return this.http.get(`${this.API_URI}/users/${role}`)
+  }
+  addAccount(acc:Account,un_role:string){
+    return this.http.post(`${this.API_URI}/auth/signup/${un_role}`, acc)
+  }
+  getAlg(){
+    return this.http.get(`${this.API_URI}/algorithms/every`);
+  }
+  editAlgo(id:string,algos:any){
+    return this.http.put(`${this.API_URI}/algorithms/edit/${id}`,algos);
+  }
+  editAccount(acc:Account,id:string,un_role:string){
+    return this.http.put(`${this.API_URI}/edit/${un_role}/${id}`, acc)
+  }
+  deleteAccount(id:string,un_role:string){
+    return this.http.delete(`${this.API_URI}/delete/${un_role}/${id}`)
+  }
+  getOneAd(id:string){
+    return this.http.get(`${this.API_URI}/users/getOneAd/${id}`)
+  }
+  getOne(id:string){
+    return this.http.get(`${this.API_URI}/users/getOne/${id}`)
+  }
+  changePs(psw:any,id:string){
+    return this.http.put(`${this.API_URI}/changeP/${id}`, psw)
+  }  
+  remaining(){
+    return this.http.get(`${this.API_URI}/users/remaining`)
+  }
+  tickets(some:any){
+    return this.http.post(`${this.API_URI}/ticket/all`,some)
+  }
+  checkTick(id:string,some:any){
+    return this.http.put(`${this.API_URI}/ticket/check/${id}`,some)
+  }
+  assignTick(id:string,some:any){
+    return this.http.put(`${this.API_URI}/ticket/assign/${id}`,some)
+  }
+}

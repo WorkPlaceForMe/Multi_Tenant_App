@@ -1,0 +1,80 @@
+<div class="row">
+  <div class='col-md-8 offset-2'>
+    <nb-card>  
+      <nb-card-body>
+
+        <form [formGroup]="registerForm" (ngSubmit)='onSubmit()'>
+            <div class="form-group">
+              <label for="name" class="label">Name</label>
+              <input type="text" class="form-control" formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" nbInput fullWidth id="name" autofocus placeholder="Name" [status]='values.name' />
+              <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                <div *ngIf="f.name.errors.required">Name is required</div>
+                <div *ngIf="f.name.errors.pattern">Name can not contain numbers or special characters.</div>
+            </div>
+            </div>
+            <div class="form-group">
+              <label class="label">Gender</label>
+                <nb-radio-group [(value)]="radioGroupValue" formControlName="gender">
+                  <nb-radio
+                    [value]="'Male'">
+                    Male
+                  </nb-radio>
+                  <nb-radio
+                    [value]="'Female'">
+                    Female
+                  </nb-radio>
+                </nb-radio-group>
+                <div *ngIf="submitted && f.gender.errors" class="invalid-feedback">
+                  <div *ngIf="f.gender.errors.required">Gender is required</div>
+                </div>
+              </div>
+              <label class="label">Age Group</label>
+                <div class="form-group">
+    <nb-select fullWidth formControlName="age_group" placeholder="Choose age group" [ngClass]="{ 'is-invalid': submitted && f.age_group.errors }" [status]='values.age_group'>
+      <nb-option value="" disabled>Choose:</nb-option>
+      <nb-option value="Senior">Senior</nb-option>
+      <nb-option value="Middle Age">Middle Age</nb-option>
+      <nb-option value="Adult">Adult</nb-option>
+      <nb-option value="Young Adult">Young Adult</nb-option>
+      <nb-option value="Teen">Teen</nb-option>
+    </nb-select>
+    <div *ngIf="submitted && f.age_group.errors" class="invalid-feedback">
+      <div *ngIf="f.age_group.errors.required">Age group is required</div>
+    </div>
+    </div>
+
+    <label class="label">Designation</label>
+    <div class="form-group">
+<nb-select fullWidth formControlName="role" placeholder="Choose a desgination" [ngClass]="{ 'is-invalid': submitted && f.role.errors }" [status]='values.role'>
+<nb-option value="" disabled>Choose:</nb-option>
+<nb-option value="Employee">Employee</nb-option>
+<nb-option value="CIP">CIP</nb-option>
+<nb-option value="VIP">VIP</nb-option>
+</nb-select>
+<div *ngIf="submitted && f.role.errors" class="invalid-feedback">
+<div *ngIf="f.role.errors.required">Role is required</div>
+</div>
+</div>
+
+<label class="label">Category</label>
+<div class="form-group">
+<nb-select fullWidth formControlName="category" placeholder="Choose a category" [ngClass]="{ 'is-invalid': submitted && f.category.errors }" [status]='values.category'>
+<nb-option value="" disabled>Choose:</nb-option>
+<nb-option value="Whitelist">Whitelist</nb-option>
+<nb-option value="Blacklist">Blacklist</nb-option>
+</nb-select>
+<div *ngIf="submitted && f.category.errors" class="invalid-feedback">
+<div *ngIf="f.category.errors.required">Category is required</div>
+</div>
+</div>
+
+    <button [status]="'success'" nbButton class="btn-block" *ngIf="is_saving == false">Save</button>
+    <button [status]="'success'" nbButton class="btn-block" *ngIf="is_saving == true" [nbSpinner]="is_saving" nbSpinnerSize="medium" nbSpinnerStatus="primary">&nbsp;</button>
+    </form>
+    <hr>
+    <button [routerLink]="['/pages/management']" [status]="'primary'" nbButton class="btn-block"><i class="fas fa-arrow-circle-left"></i> &nbsp;Back</button>
+      </nb-card-body>
+      </nb-card>
+  </div>
+
+</div>

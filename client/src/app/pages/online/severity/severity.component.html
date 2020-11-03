@@ -1,0 +1,5 @@
+<div align='center' [ngSwitch]='rowData.level'>
+    <button *ngSwitchCase="'0'" class="btn btn-success" disabled value=0><i class="fas fa-battery-empty"></i></button>
+    <button *ngSwitchCase="'1'" class="btn btn-warning" disabled value=1><i class="fas fa-battery-half"></i></button>
+    <button *ngSwitchCase="'2'" class="btn btn-danger" disabled value=2><i class="fas fa-battery-full"></i></button>
+    </div>

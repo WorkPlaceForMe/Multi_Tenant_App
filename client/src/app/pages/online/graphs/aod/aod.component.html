@@ -1,0 +1,40 @@
+<div class="container">
+    <div class='col-md-12' style="margin-top: 5px;">
+        <div class="row justify-content-start">
+            <div class="col-md-3">
+                <nb-card>
+                    <nb-card-body>
+                        <p>Total</p>
+                        <strong>{{aod == undefined ? 'None' : aod.total}}</strong>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            <div class="col-md-9">
+                <nb-card>
+                    <nb-card-body>
+                        <p>Over Time</p>
+                        <chart type="line" [data]="dataL" [options]="optionsL"></chart>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-7">
+                <nb-card>
+                    <nb-card-body>
+                        <ng2-smart-table [settings]="settings" [source]="source" (edit)='got($event)'>
+                        </ng2-smart-table>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            <div class="col-md-5">
+                <nb-card>
+                    <nb-card-body align='center'>
+                        <canvas #streaming id="canvas"  width="640" height="480" style="display: block; width: 90%;"></canvas>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+
+    </div>
+</div>

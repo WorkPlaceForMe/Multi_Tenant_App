@@ -1,0 +1,53 @@
+<div class="container">
+    <div class="row justify-content-between">
+        <div class="col-4">
+            <h5>{{analytic.name}}</h5>
+        </div>
+        <div class="col-8" align='right'>
+    <input nbInput placeholder="Today - Pick a new Range" [nbDatepicker]="rangepicker">
+    <nb-rangepicker #rangepicker [max]="max" [(range)]="range" style='margin-left: 2px;' (rangeChange)="changeRange($event)"></nb-rangepicker>
+    <button  nbButton [status]="'primary'" (click)="reload()"><i class="fas fa-sync-alt"></i></button>
+    <nb-select [(ngModel)]='reTime' (ngModelChange)='set($event)' id='select'>
+    <nb-option [value]=0>Off</nb-option>
+    <nb-option [value]=5>5 s</nb-option>
+    <nb-option [value]=30>30 s</nb-option>
+    <nb-option [value]=60>1 m</nb-option>
+    <nb-option [value]=300>5 m</nb-option>
+    <nb-option [value]=600>10 m</nb-option>
+    </nb-select>
+    </div>
+    </div>
+    
+    <div class="row justify-content-end">
+        <div class="col-5">
+        <div *ngIf="showRange" class="text-danger wrap-text" align='right'>
+            <small>Fill the range, for a day, click it twice.</small>
+        </div>
+    </div>
+        <div class="col-4" align='right'>
+    <nb-select [(ngModel)]='camera' (ngModelChange)='cam($event)'>
+        <nb-option value="" disabled>Choose a camera:</nb-option>
+        <nb-option *ngFor='let cam of cameras' [value]=cam.id>{{cam.name}}</nb-option>
+        </nb-select>
+    </div>
+    </div>
+    
+    </div>
+    
+    <div class="container" *ngIf='camera != ""'>
+    <div class='col-md-12' style="margin-top: 5px;" [ngSwitch]='analytic.algo_id'>
+        <nb-card *ngSwitchCase='-1' [nbSpinner]="'primary'" nbSpinnerSize="medium" nbSpinnerStatus="primary" fullWdith><nb-card-body>&nbsp;</nb-card-body></nb-card>
+        <nb-card *ngSwitchCase='-2'><nb-card-body>&nbsp;</nb-card-body></nb-card>
+        <ngx-pc *ngSwitchCase='12' [range]='range' [camera]='camera'></ngx-pc>
+        <ngx-loit *ngSwitchCase='2' [range]='range' [camera]='camera'></ngx-loit>
+        <ngx-intr *ngSwitchCase='17' [range]='range' [camera]='camera'></ngx-intr>
+        <ngx-viol *ngSwitchCase='19' [range]='range' [camera]='camera'></ngx-viol>
+        <ngx-aod *ngSwitchCase='16' [range]='range' [camera]='camera'></ngx-aod>
+        <ngx-c-face *ngSwitchCase='20' [range]='range' [camera]='camera'></ngx-c-face>
+        <ngx-social *ngSwitchCase='21' [range]='range' [camera]='camera'></ngx-social>
+        <ngx-queue *ngSwitchCase='22' [range]='range' [camera]='camera'></ngx-queue>
+        <ngx-helm *ngSwitchCase='23' [range]='range' [camera]='camera'></ngx-helm>
+        <ngx-vault *ngSwitchCase='24' [range]='range' [camera]='camera'></ngx-vault>
+    </div>
+    </div>
+    

@@ -1,0 +1,4 @@
+<div align='center' [ngSwitch]='rowData.status'>
+    <button *ngSwitchCase="'0'" class="btn btn-danger" disabled><i class="fas fa-times-circle"></i></button>
+    <button *ngSwitchCase="'1'" class="btn btn-info" disabled>Reviewed by: {{rowData.reviewed}}</button>
+    </div>

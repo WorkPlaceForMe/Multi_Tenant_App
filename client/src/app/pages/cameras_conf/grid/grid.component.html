@@ -1,0 +1,36 @@
+
+<div class="card border-primary">
+  <div class="card-body" align="center">
+    <img [src]='link' width='{{width}}' height='{{height}}'> 
+<div [ngStyle]='classe()'>
+  <img [ngStyle]='the()' src="assets/grid.png">
+</div>
+</div>
+</div>
+
+<div class="card border-primary">
+<div class="card-body">
+  <div class="row">
+<div class="col-md-7">
+<fieldset class="form-group">
+  <label class='offset-5' for="customRange">Angle</label>
+  <input type="range" min="30" max="89" class="custom-range" id="customRange" [(ngModel)]="x">
+</fieldset>
+<fieldset class="form-group">
+  <label class='offset-5' for="customRange2">Move Y</label>
+  <input type="range" min="-13" max="5" class="custom-range" id="customRange2" [(ngModel)]="my">
+</fieldset>
+<fieldset class="form-group">
+  <label class='offset-5' for="customRange3">Move X</label>
+  <input type="range" min="-40" max="-10" class="custom-range" id="customRange3" [(ngModel)]="mx">
+</fieldset>
+</div>
+<div class="col-md-5">
+  <div class='btn-group offset-3' role="group">
+    <button class="btn btn-info"(click)="save()">Save</button>
+    <a class="btn btn-warning" [routerLink]="['/camerasList']">Back</a>
+  </div>
+</div>
+</div>
+</div>
+</div>

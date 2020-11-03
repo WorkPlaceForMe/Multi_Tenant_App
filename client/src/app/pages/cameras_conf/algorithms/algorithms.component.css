@@ -1,0 +1,127 @@
+.mat-accordion .mat-header-row {
+    padding-left: 1.5rem;
+    padding-right: 2rem;
+    border-bottom: none;
+  }
+  
+  .mat-expansion-panel-header.mat-row {
+    border-bottom: none;
+  }
+
+  :root{
+    --mat-header-row-height: 56px;
+    --mat-row-height: 48px;
+  --mat-row-horizontal-padding: 24px;
+  }
+  
+  .mat-table {
+    display: block;
+  }
+  
+  .mat-header-row {
+    min-height: var(mat-header-row-height);
+  }
+  
+  .mat-row {
+    min-height: var(mat-row-height);
+  }
+  
+    .mat-header-row {
+    display: flex;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    align-items: center;
+    padding: 4em var(mat-row-horizontal-padding);
+    box-sizing: border-box;
+  }
+
+  .mat-row-first {
+    display: flex;
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    align-items: center;
+    padding: 0 var(mat-row-horizontal-padding);
+    box-sizing: border-box;
+  }
+  .mat-row {
+    display: flex;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    align-items: center;
+    padding: 0 var(mat-row-horizontal-padding);
+    box-sizing: border-box;
+  }
+  ::after {
+      display: inline-block;
+      min-height: inherit;
+      content: '';
+    }
+  
+  
+  .mat-cell {
+    padding: 4px;
+    flex: 1;
+    overflow: hidden;
+    word-wrap: break-word;
+  }
+
+  .mat-header-cell {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    font-weight: 900;
+    font-size: 0.9em;
+    color: white;
+    text-align: center;
+    padding: 3px;
+    flex: 1;
+    overflow: hidden;
+    word-wrap: break-word;
+  }
+
+  .alfonsTitle{
+  background-color: #2eb8b8;
+  }
+
+.but{
+  background-color:yellow;
+}
+  but:hover{background-color:orange;}
+
+  but:focus{background-color:red;}
+  
+
+  .alfons{
+    background-color: #47d1d1;
+  }
+
+  .boton{
+    background-color: #ff8533;
+  }
+
+  input[type=number]{
+    width: 45px;
+} 
+input[type=time]{
+  width: 76px;
+} 
+
+  .mat-header-title {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  font-weight: 900;
+  font-size: 2em;
+  color: white;
+  text-align: center;
+  padding: 4px;
+  flex: 1;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+  .panel{
+      max-height: fit-content;
+  }
+  
+  
