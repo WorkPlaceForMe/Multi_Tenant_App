@@ -76,7 +76,18 @@ export class PcComponent implements OnInit, OnDestroy {
       p = '+'
     }
     this.timezone = p + JSON.stringify(this.timezone) + '00';
-    this.serv.pc(this.camera,this.range).subscribe(
+    let type;
+    if(this.now_user.id_branch != '0000'){
+      type = 'cam_id';
+    }else{
+      type = 'id_account'
+    }
+    let l = {
+      start: this.range.start,
+      end: this.range.end,
+      type: type
+    }
+    this.serv.pc(this.camera,l).subscribe(
       res=>{
         this.pc = res['data']
         for(var m of this.pc.raw){

@@ -8,7 +8,7 @@ import { AnalyticsService } from '../../../../services/analytics.service';
 import { FacesService } from '../../../../services/faces.service';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
-
+import { Account } from '../../../../models/Account';
 
 
 @Component({
@@ -76,11 +76,22 @@ export class HelmComponent implements OnInit, OnDestroy {
       p = '+'
     }
     this.timezone = p + JSON.stringify(this.timezone) + '00';
-      this.serv.helm(this.camera,this.range).subscribe(
+    let type;
+    if(this.now_user.id_branch != '0000'){
+      type = 'cam_id';
+    }else{
+      type = 'id_account'
+    }
+    let l = {
+      start: this.range.start,
+      end: this.range.end,
+      type: type
+    }
+      this.serv.helm(this.camera,l).subscribe(
         res=>{
           this.helm = res['data']
           for(var m of this.helm.raw){
-            m['picture']  = api + "/pictures/" + this.now_user['id_account']+'/' + this.now_user['id_branch']+'/helm/' + this.camera+ '/' + m['picture']
+            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/helm/' + m['cam_id'] + '/' + m['picture'])
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
             switch(m['alert_type']){
               case '0':{

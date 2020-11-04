@@ -8,7 +8,7 @@ import { AnalyticsService } from '../../../../services/analytics.service';
 import { FacesService } from '../../../../services/faces.service';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
-
+import { Account } from '../../../../models/Account';
 
 @Component({
   selector: 'ngx-aod',
@@ -76,11 +76,22 @@ export class AodComponent implements OnInit, OnDestroy {
       p = '+'
     }
     this.timezone = p + JSON.stringify(this.timezone) + '00';
-      this.serv.aod(this.camera,this.range).subscribe(
+    let type;
+    if(this.now_user.id_branch != '0000'){
+      type = 'cam_id';
+    }else{
+      type = 'id_account'
+    }
+    let l = {
+      start: this.range.start,
+      end: this.range.end,
+      type: type
+    }
+      this.serv.aod(this.camera,l).subscribe(
         res=>{
           this.aod = res['data']
           for(var m of this.aod.raw){
-            m['picture']  = api + "/pictures/" + this.now_user['id_account']+'/' + this.now_user['id_branch']+'/aod/' + this.camera+ '/' + m['picture']
+            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/aod/' + m['cam_id'] + '/' + m['picture'])
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
           }
           this.source = this.aod.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))

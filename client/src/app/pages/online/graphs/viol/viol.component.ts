@@ -9,7 +9,7 @@ import { FacesService } from '../../../../services/faces.service';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { VideoComponent } from '../video/video.component';
 import { Router } from '@angular/router';
-
+import { Account } from '../../../../models/Account';
 
 @Component({
   selector: 'ngx-viol',
@@ -76,11 +76,22 @@ export class ViolComponent implements OnInit, OnDestroy {
       p = '+'
     }
     this.timezone = p + JSON.stringify(this.timezone) + '00';
-      this.serv.violence(this.camera,this.range).subscribe(
+    let type;
+    if(this.now_user.id_branch != '0000'){
+      type = 'cam_id';
+    }else{
+      type = 'id_account'
+    }
+    let l = {
+      start: this.range.start,
+      end: this.range.end,
+      type: type
+    }
+      this.serv.violence(this.camera,l).subscribe(
         res=>{
           this.violence = res['data']
           for(var m of this.violence.raw){
-            m['picture']  = api + "/pictures/" + this.now_user['id_account']+'/' + this.now_user['id_branch']+'/violence/' + this.camera+ '/' + m['clip_path']
+            m['picture']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/violence/' + m['cam_id'] + '/' +m['clip_path']
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
             switch(m['severity']){
               case '0':{

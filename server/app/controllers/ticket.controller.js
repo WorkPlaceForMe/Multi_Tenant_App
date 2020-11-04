@@ -36,10 +36,3 @@ exports.assign = (req, res) =>{
         res.status(200).json({success: true, data: result})
       });
 }
-
-exports.seeTick = (req, res) =>{
-      db.con().query(`SELECT * from tickets where id = '${req.params.id}';`, function (err, result) {
-      if (err) return res.status(500).json({success: false, message: err});
-      res.status(200).json({success: true, data: result})
-    });
-}

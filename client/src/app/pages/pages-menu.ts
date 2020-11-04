@@ -109,7 +109,7 @@ export const MENU_ITEMSCLIENT: NbMenuItem[] = [
   {
     title: 'Reports',
     icon: 'bar-chart-outline',
-    link: 'reports'
+    link: 'graphs'
   },
   {
     title: 'Tickets',

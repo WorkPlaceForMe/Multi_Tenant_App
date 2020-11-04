@@ -27,7 +27,6 @@ import { ChangePassComponent } from './online/change-pass/change-pass.component'
 import { OtherGuard } from '../guard/other.guard';
 import { TicketComponent } from './online/ticket/ticket.component';
 import { CenterComponent } from './online/graphs/center/center.component';
-import { SingleTickComponent } from './online/single-tick/single-tick.component';
 
 const routes: Routes = [
     {
@@ -127,11 +126,6 @@ canActivate: [AuthGuard]
 {
   path: 'tickets',
   component: TicketComponent,
-  canActivate: [AuthGuard]
-},
-{
-  path: 'tickets/view/:id',
-  component: SingleTickComponent,
   canActivate: [AuthGuard]
 },
 {

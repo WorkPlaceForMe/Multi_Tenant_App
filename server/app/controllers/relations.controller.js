@@ -225,8 +225,14 @@ exports.createRel = (req, res) =>{
                       }
                     }
                     }
+                    let wh;
+                    if(user.id_branch != 0000){
+                      wh = {id_branch: decoded.id_branch }
+                    }else{
+                      wh = {id_account: decoded.id_account }
+                    }
                     Relation.findAll({
-                      where: { id_branch: decoded.id_branch }
+                      where: wh
                     }).then(rels => {
                       rels = [...new Set(rels.map(item => item.algo_id))];
                       var analytics = []
@@ -241,7 +247,7 @@ exports.createRel = (req, res) =>{
                       }
                       }
                       Cameras.findAll({
-                        where: { id_branch: decoded.id_branch  },
+                        where: wh,
                         attributes: ['name', 'id']
                       }).then(cameras => {
                           let set = {
@@ -256,11 +262,11 @@ exports.createRel = (req, res) =>{
                       return res.status(500).send({ success:false, message: err.message });
                     });
                 }).catch(err =>{
-                  return res.status(500).send({ success: false, message: err });
+                  return res.status(500).send({ success: false, message: err.message });
                 })
                 });
               }).catch(err=>{
-                return  res.status(500).send({ success: false, message: err });
+                return  res.status(500).send({ success: false, message: err.message });
               })
         });
     }

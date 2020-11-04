@@ -9,10 +9,16 @@ exports.loitering = (req, res) =>{
     let token = req.headers["x-access-token"];
     const data = req.body;
     jwt.verify(token, process.env.secret, (err, decoded) => {
+      let wh;
+      if(decoded.id_branch != 0000){
+        wh = {id_branch: decoded.id_branch, algo_id : 2 }
+      }else{
+        wh = {id_account: decoded.id_account, algo_id : 2 }
+      }
         Relation.findOne({
-            where: { id_branch: decoded.id_branch, algo_id : 2 }
+            where: wh
           }).then(rel => {
-       db.con().query(`SELECT * from loitering WHERE cam_id = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+       db.con().query(`SELECT * from loitering WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
         if (err) return res.status(500).json({success: false, message: err});
         let avg = 0;
         let min = 0;
@@ -101,7 +107,7 @@ exports.intrude = (req, res) =>{
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
-     db.con().query(`SELECT * from intrude WHERE cam_id = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+     db.con().query(`SELECT * from intrude WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {}
       let avg = 0;
@@ -164,7 +170,7 @@ exports.violence = (req, res) =>{
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
-     db.con().query(`SELECT * from violence WHERE cam_id = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+     db.con().query(`SELECT * from violence WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {};
       let cache = '';
@@ -200,7 +206,7 @@ exports.aod = (req, res) =>{
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
-     db.con().query(`SELECT * from aod WHERE cam_id = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+     db.con().query(`SELECT * from aod WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {}
       let cache = '';
@@ -251,7 +257,7 @@ exports.covered = (req, res) =>{
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
-     db.con().query(`SELECT * from alerts WHERE alert= 'no mask' and cam_id = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+     db.con().query(`SELECT * from alerts WHERE alert= 'no mask' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {};
       let cache = '';
@@ -302,7 +308,7 @@ exports.social = (req, res) =>{
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
-     db.con().query(`SELECT * from alerts WHERE alert= 'sociald' and cam_id = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+     db.con().query(`SELECT * from alerts WHERE alert= 'sociald' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {"0": 0, "1":0, "2": 0}
       let ressover = {};
@@ -356,7 +362,7 @@ exports.pc = (req, res) =>{
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
-     db.con().query(`SELECT * from pcount WHERE cam_id = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+     db.con().query(`SELECT * from pcount WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ressEn = {}
       let ressEx = {}
@@ -458,7 +464,7 @@ exports.helm = (req, res) =>{
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
-     db.con().query(`SELECT * from alerts WHERE alert= 'helmet' and cam_id = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+     db.con().query(`SELECT * from alerts WHERE alert= 'helmet' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {};
       let cache = '';
@@ -516,7 +522,7 @@ exports.queue = (req, res) =>{
   }
 
   const data = req.body;
-     db.con().query(`SELECT * from queue_mgt WHERE cam_id = '${req.params.id}' and start_time >= '${data.start}' and  start_time <= '${data.end}' order by start_time asc;`, function (err, result) {
+     db.con().query(`SELECT * from queue_mgt WHERE ${data.type} = '${req.params.id}' and start_time >= '${data.start}' and  start_time <= '${data.end}' order by start_time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let countIn = 0;
       let avg = 0;

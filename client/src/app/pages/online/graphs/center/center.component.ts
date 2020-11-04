@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FacesService } from '../../../../services/faces.service';
+import { Account } from '../../../../models/Account';
 
 @Component({
   selector: 'ngx-center',
@@ -18,6 +19,7 @@ export class CenterComponent implements OnInit {
   camera = '';
   rel:boolean = false;
   reCache: number;
+  now_user: Account;
   analytic ={
     algo_id: -1,
     name: ''
@@ -42,25 +44,25 @@ export class CenterComponent implements OnInit {
         p = res['fact']
       }
       this.rel = p;
-      // console.log(p,res,this.analytic.algo_id, this.reCache)
       if(this.rel == false){
         this.analytic.algo_id = -2;
-        // console.log(this.reCache, this.analytic.algo_id)
       }else{
         this.analytic.algo_id = this.reCache
-        // console.log('aaaa')
       }
     },err => console.error(err))
   }
 
   reload(alg){
     if(this.camera != ''){
-      let id;
+      let id,type;
       id = this.analytic.algo_id
       if(this.reCache != undefined){
         id = this.reCache
       }
-      this.face.checkRel({id: this.camera, algo_id: id}).subscribe(res=>{
+      if(this.now_user.id_branch == '0000'){
+        type = 'show'
+      }
+      this.face.checkRel({id: this.camera, algo_id: id, type: type}).subscribe(res=>{
         if(this.analytic.algo_id != -1 && this.analytic.algo_id != -2){
           this.reCache = this.analytic.algo_id
         }        
@@ -81,6 +83,11 @@ export class CenterComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.now_user = JSON.parse(localStorage.getItem('now_user'))
+    if(this.now_user.id_branch == '0000'){
+      this.camera = this.now_user.id_account
+      this.analytic.algo_id = -2;
+    }
     this.facesService.getDashboard().subscribe(
       res=>{
         this.info = res['data']

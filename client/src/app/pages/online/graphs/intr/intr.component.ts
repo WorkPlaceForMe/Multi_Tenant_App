@@ -8,7 +8,8 @@ import { AnalyticsService } from '../../../../services/analytics.service';
 import { FacesService } from '../../../../services/faces.service';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
-import { query, state } from '@angular/animations';
+import { Account } from '../../../../models/Account';
+
 
 @Component({
   selector: 'ngx-intr',
@@ -74,11 +75,22 @@ export class IntrComponent implements OnInit, OnDestroy {
       p = '+'
     }
     this.timezone = p + JSON.stringify(this.timezone) + '00';
-      this.serv.intrude(this.camera,this.range).subscribe(
+    let type;
+    if(this.now_user.id_branch != '0000'){
+      type = 'cam_id';
+    }else{
+      type = 'id_account'
+    }
+    let l = {
+      start: this.range.start,
+      end: this.range.end,
+      type: type
+    }
+      this.serv.intrude(this.camera,l).subscribe(
         res=>{
           this.intrude = res['data']
           for(var m of this.intrude.raw){
-            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + this.now_user['id_branch']+'/intrusion/' + this.camera+ '/' + m['picture'])
+            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/intrusion/' + m['cam_id'] + '/' + m['picture'])
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
           }
           this.source = this.intrude.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))

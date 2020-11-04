@@ -176,8 +176,14 @@ exports.addCamera = (req,res) => {
     if(data.algo_id == -2){
       return res.status(200).send({ success: true, message: 'Skipping'});
     }
+    let wh;
+    if(data.type == 'show'){
+      wh = { id_account :  data.id , algo_id: data.algo_id}
+    }else{
+      wh = { camera_id :  data.id , algo_id: data.algo_id}
+    }
     Relations.findAll({
-      where:{ camera_id :  data.id , algo_id: data.algo_id}
+      where: wh
     }).then(ress=>{
       let mess;
       if(ress.length == 0){

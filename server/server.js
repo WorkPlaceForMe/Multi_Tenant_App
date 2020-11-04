@@ -69,6 +69,7 @@ require('./app/routes/schedule.routes')(app);
 require('./app/routes/ticket.routes')(app);
 require('./app/routes/analytics.routes')(app);
 
+//resources being served
 app.use('/api/pictures', express.static(picResourceFolderPath))
 
 const ALGO_CONFIG = process.env.ALGO_CONFIG || '{ "algo_fr": 3301, "algo_am": 3302 }'

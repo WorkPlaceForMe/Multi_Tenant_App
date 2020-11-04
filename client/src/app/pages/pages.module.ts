@@ -80,7 +80,6 @@ import { AodComponent } from './online/graphs/aod/aod.component';
 import { CFaceComponent } from './online/graphs/c-face/c-face.component';
 import { SocialComponent } from './online/graphs/social/social.component';
 import { QueueComponent } from './online/graphs/queue/queue.component';
-import { SingleTickComponent } from './online/single-tick/single-tick.component';
 import { HelmComponent } from './online/graphs/helm/helm.component';
 import { VaultComponent } from './online/graphs/vault/vault.component';
 
@@ -174,7 +173,6 @@ import { VaultComponent } from './online/graphs/vault/vault.component';
     CFaceComponent,
     SocialComponent,
     QueueComponent,
-    SingleTickComponent,
     HelmComponent,
     VaultComponent
   ],

@@ -8,6 +8,7 @@ import { AnalyticsService } from '../../../../services/analytics.service';
 import { FacesService } from '../../../../services/faces.service';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
+import { Account } from '../../../../models/Account';
 
 @Component({
   selector: 'ngx-queue',
@@ -58,11 +59,22 @@ export class QueueComponent implements OnInit, OnDestroy {
       },500)
     }
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
-      this.serv.queue(this.camera,this.range).subscribe(
+    let type;
+    if(this.now_user.id_branch != '0000'){
+      type = 'cam_id';
+    }else{
+      type = 'id_account'
+    }
+    let l = {
+      start: this.range.start,
+      end: this.range.end,
+      type: type
+    }
+      this.serv.queue(this.camera,l).subscribe(
         res=>{
           this.queue = res['data']
           for(var m of this.queue.raw){
-            m['picture']  = api + "/pictures/" + this.now_user['id_account']+'/' + this.now_user['id_branch']+'/queue/' + this.camera+ '/' + m['picture']
+            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['picture'])
           }
           this.source = this.queue.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
 
