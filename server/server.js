@@ -80,7 +80,7 @@ const ALGO_CONFIG = process.env.ALGO_CONFIG || '{ "algo_fr": 3301, "algo_am": 33
     catch(err) {
         console.error(`ALGO_CONFIG malformed. Skipping algo proxying: ${JSON.stringify(err)}`)
     }
-        
+
 // client side
 app.use(express.static(process.env.WEBSITE_PATH));
 

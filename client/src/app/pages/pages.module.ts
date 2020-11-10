@@ -34,7 +34,6 @@ import { TrustedStylePipe } from '../pipes/trusted-style.pipe';
 import { AnalyticsComponent } from './analytics/analytics.component';
 import { SearchComponent } from './facial_recognition/search/search.component';
 import { FormsModule as ngFormsModule } from '@angular/forms';
-import { FormsRoutingModule } from './forms/forms-routing.module';
 import { NbCardModule, NbIconModule, NbInputModule, NbTreeGridModule, NbAccordionModule, NbButtonModule, NbListModule,NbRouteTabsetModule,
   NbStepperModule,
   NbTabsetModule, NbUserModule,    NbActionsModule,
@@ -96,7 +95,6 @@ import { VaultComponent } from './online/graphs/vault/vault.component';
     NbCheckboxModule,
     NbRadioModule,
     NbDatepickerModule,
-    FormsRoutingModule,
     NbSelectModule,
     ngFormsModule,
     NbAccordionModule,
