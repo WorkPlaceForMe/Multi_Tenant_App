@@ -65,7 +65,7 @@ export class CenterComponent implements OnInit {
       this.face.checkRel({id: this.camera, algo_id: id, type: type}).subscribe(res=>{
         if(this.analytic.algo_id != -1 && this.analytic.algo_id != -2){
           this.reCache = this.analytic.algo_id
-        }        
+        }
         let p = false;
         if(res['message']){
           p = false
