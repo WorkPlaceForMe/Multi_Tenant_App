@@ -1,6 +1,6 @@
 client/node_modules/
 server/node_modules/
-server/resources/*/
+server/resources/*
 server/dist/
 server/config.env
 server/access.log
