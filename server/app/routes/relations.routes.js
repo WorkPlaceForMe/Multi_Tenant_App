@@ -49,13 +49,13 @@ module.exports = function(app) {
 
   app.post(
     "/api/camConf/:id",
-    [authJwt.verifyToken, authJwt.isClientOrBranch],
+    [authJwt.verifyToken, authJwt.isClientOrBranch, verifyRel.numRels],
     controller.configs
   );
 
   app.post(
     "/api/roiConf/:id",
-    [authJwt.verifyToken, authJwt.isClientOrBranch, verifyRel.numRels],
+    [authJwt.verifyToken, authJwt.isClientOrBranch],
     controller.configsRoi
   );
 

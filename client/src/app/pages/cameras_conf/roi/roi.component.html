@@ -91,8 +91,8 @@
                                     <label for="from" class="label">From:&nbsp;</label>
                                     <input type="text" nbInput id='from' fieldSize="small" [status]="'primary'" disabled size='5' value="Area {{wrong['of'] + 1}}">
                                    <div class="dropdown-divider"></div>
-                            <nb-checkbox *ngIf="algos[13]['activated'] == true" [(ngModel)]="wrong['anpr']">Licence plate detector</nb-checkbox>
-                            <nb-checkbox *ngIf="algos[13]['activated'] == false || algos[13]['activated'] == undefined" [(ngModel)]="wrong['anpr']" disabled >Licence plate detector</nb-checkbox>
+                            <nb-checkbox *ngIf="actANPR == true" [(ngModel)]="wrong['anpr']">Licence plate detector</nb-checkbox>
+                            <nb-checkbox *ngIf="actANPR == false" [(ngModel)]="wrong['anpr']" disabled >Licence plate detector</nb-checkbox>
                           </div>
                                 </nb-card-body>
                             </nb-card>
@@ -133,7 +133,7 @@
                             <label for="from1" class="label">From:&nbsp;</label>
                           <input type="text" id='from1' nbInput fieldSize="small" [status]="'primary'" disabled size='5' value="Area {{wrong0['of'] + 1}}">
                            <div class="dropdown-divider"></div>
-                    <nb-checkbox  [(ngModel)]="wrong0['anpr']" disabled >Licence plate detector</nb-checkbox>
+                    <nb-checkbox  [(ngModel)]="wrong0['anpr']" [disabled]='actANPR == false' >Licence plate detector</nb-checkbox>
                   </div>
                         </nb-card-body>
                     </nb-card>
@@ -171,8 +171,8 @@
                         </div>
                         <div class="dropdown-divider"></div>
 
-                            <nb-checkbox *ngIf="algos[13]['activated'] == true" [(ngModel)]="wrong['anpr']">Licence plate detector</nb-checkbox>
-                            <nb-checkbox *ngIf="algos[13]['activated'] == false || algos[13]['activated'] == undefined" [(ngModel)]="wrong['anpr']" disabled >Licence plate detector</nb-checkbox> 
+                            <nb-checkbox *ngIf="actANPR == true" [(ngModel)]="wrong['anpr']">Licence plate detector</nb-checkbox>
+                            <nb-checkbox *ngIf="actANPR == false" [(ngModel)]="wrong['anpr']" disabled >Licence plate detector</nb-checkbox> 
                               </div>                              
                               <div class="dropdown-divider"></div>
                           <div align='center' *ngIf='selected != undefined'>

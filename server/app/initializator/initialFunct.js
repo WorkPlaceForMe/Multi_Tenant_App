@@ -114,4 +114,14 @@ exports.initial = function() {
         id: 24,
         name: 'Vault Open'
       })
+      algo.create({
+        id: 25,
+        name: 'Barrier Not Closed'
+      })
+      algo.create({
+        id: 26,
+        name: 'Vehicle Counting'
+      })
 }
+
+//Remember to add any new algorithm into ../models/index.js DB.Algorithms
