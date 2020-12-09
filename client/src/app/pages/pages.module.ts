@@ -3,14 +3,7 @@ import { NbMenuModule, NbPopoverModule } from '@nebular/theme';
 
 import { ThemeModule } from '../@theme/theme.module';
 import { PagesComponent } from './pages.component';
-<<<<<<< HEAD
 import { PagesRoutingModule } from './pages-routing.module';
-=======
-import { DashboardModule } from './dashboard/dashboard.module';
-import { ECommerceModule } from './e-commerce/e-commerce.module';
-import { PagesRoutingModule } from './pages-routing.module';
-import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 
 import { HttpClientModule } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
@@ -38,10 +31,6 @@ import { TrustedStylePipe } from '../pipes/trusted-style.pipe';
 import { AnalyticsComponent } from './analytics/analytics.component';
 import { SearchComponent } from './facial_recognition/search/search.component';
 import { FormsModule as ngFormsModule } from '@angular/forms';
-<<<<<<< HEAD
-=======
-import { FormsRoutingModule } from './forms/forms-routing.module';
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 import { NbCardModule, NbIconModule, NbInputModule, NbTreeGridModule, NbAccordionModule, NbButtonModule, NbListModule,NbRouteTabsetModule,
   NbStepperModule,
   NbTabsetModule, NbUserModule,    NbActionsModule,
@@ -87,10 +76,6 @@ import { AodComponent } from './online/graphs/aod/aod.component';
 import { CFaceComponent } from './online/graphs/c-face/c-face.component';
 import { SocialComponent } from './online/graphs/social/social.component';
 import { QueueComponent } from './online/graphs/queue/queue.component';
-<<<<<<< HEAD
-=======
-import { SingleTickComponent } from './online/single-tick/single-tick.component';
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 import { HelmComponent } from './online/graphs/helm/helm.component';
 import { VaultComponent } from './online/graphs/vault/vault.component';
 
@@ -107,10 +92,6 @@ import { VaultComponent } from './online/graphs/vault/vault.component';
     NbCheckboxModule,
     NbRadioModule,
     NbDatepickerModule,
-<<<<<<< HEAD
-=======
-    FormsRoutingModule,
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
     NbSelectModule,
     ngFormsModule,
     NbAccordionModule,
@@ -126,12 +107,6 @@ import { VaultComponent } from './online/graphs/vault/vault.component';
     PagesRoutingModule,
     ThemeModule,
     NbMenuModule,
-<<<<<<< HEAD
-=======
-    DashboardModule,
-    ECommerceModule,
-    MiscellaneousModule,
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
@@ -190,10 +165,6 @@ import { VaultComponent } from './online/graphs/vault/vault.component';
     CFaceComponent,
     SocialComponent,
     QueueComponent,
-<<<<<<< HEAD
-=======
-    SingleTickComponent,
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
     HelmComponent,
     VaultComponent
   ],

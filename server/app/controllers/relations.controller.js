@@ -225,7 +225,6 @@ exports.createRel = (req, res) =>{
                       }
                     }
                     }
-<<<<<<< HEAD
                     let wh;
                     if(user.id_branch != 0000){
                       wh = {id_branch: decoded.id_branch }
@@ -234,10 +233,6 @@ exports.createRel = (req, res) =>{
                     }
                     Relation.findAll({
                       where: wh
-=======
-                    Relation.findAll({
-                      where: { id_branch: decoded.id_branch }
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
                     }).then(rels => {
                       rels = [...new Set(rels.map(item => item.algo_id))];
                       var analytics = []
@@ -252,11 +247,7 @@ exports.createRel = (req, res) =>{
                       }
                       }
                       Cameras.findAll({
-<<<<<<< HEAD
                         where: wh,
-=======
-                        where: { id_branch: decoded.id_branch  },
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
                         attributes: ['name', 'id']
                       }).then(cameras => {
                           let set = {
@@ -271,19 +262,11 @@ exports.createRel = (req, res) =>{
                       return res.status(500).send({ success:false, message: err.message });
                     });
                 }).catch(err =>{
-<<<<<<< HEAD
                   return res.status(500).send({ success: false, message: err.message });
                 })
                 });
               }).catch(err=>{
                 return  res.status(500).send({ success: false, message: err.message });
-=======
-                  return res.status(500).send({ success: false, message: err });
-                })
-                });
-              }).catch(err=>{
-                return  res.status(500).send({ success: false, message: err });
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
               })
         });
     }

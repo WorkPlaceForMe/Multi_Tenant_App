@@ -8,11 +8,7 @@ import { AnalyticsService } from '../../../../services/analytics.service';
 import { FacesService } from '../../../../services/faces.service';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
-<<<<<<< HEAD
 import { Account } from '../../../../models/Account';
-=======
-
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 
 @Component({
   selector: 'ngx-c-face',
@@ -58,11 +54,7 @@ export class CFaceComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-<<<<<<< HEAD
     if(api.length <= 1){
-=======
-    if(api.length <= 4){
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
       setTimeout(()=>{
         this.face.camera({id: this.camera}).subscribe(
           res =>{
@@ -83,7 +75,6 @@ export class CFaceComponent implements OnInit, OnDestroy {
       p = '+'
     }
     this.timezone = p + JSON.stringify(this.timezone) + '00';
-<<<<<<< HEAD
     let type;
     if(this.now_user.id_branch != '0000'){
       type = 'cam_id';
@@ -100,13 +91,6 @@ export class CFaceComponent implements OnInit, OnDestroy {
           this.covered = res['data']
           for(var m of this.covered.raw){
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/covered/' + m['cam_id'] + '/' + m['picture'])
-=======
-      this.serv.covered(this.camera,this.range).subscribe(
-        res=>{
-          this.covered = res['data']
-          for(var m of this.covered.raw){
-            m['picture']  = api + "/pictures/" + this.now_user['id_account']+'/' + this.now_user['id_branch']+'/covered/' + this.camera+ '/' + m['picture']
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
             switch(m['alert_type']){
               case '0':{
@@ -205,12 +189,8 @@ export class CFaceComponent implements OnInit, OnDestroy {
 
   }
   got(id){
-<<<<<<< HEAD
     this.route.navigate([`/pages/tickets`])
     // this.route.navigateByUrl(`/pages/tickets/view/${id.data.id}`)
-=======
-    this.route.navigateByUrl(`/pages/tickets/view/${id.data.id}`)
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
   }
   settings = {
     mode: 'external',

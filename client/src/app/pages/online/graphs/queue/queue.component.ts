@@ -8,10 +8,7 @@ import { AnalyticsService } from '../../../../services/analytics.service';
 import { FacesService } from '../../../../services/faces.service';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
-<<<<<<< HEAD
 import { Account } from '../../../../models/Account';
-=======
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 
 @Component({
   selector: 'ngx-queue',
@@ -49,11 +46,7 @@ export class QueueComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-<<<<<<< HEAD
     if(api.length <= 1){
-=======
-    if(api.length <= 4){
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
       setTimeout(()=>{
         this.face.camera({id: this.camera}).subscribe(
           res =>{
@@ -66,7 +59,6 @@ export class QueueComponent implements OnInit, OnDestroy {
       },500)
     }
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
-<<<<<<< HEAD
     let type;
     if(this.now_user.id_branch != '0000'){
       type = 'cam_id';
@@ -83,13 +75,6 @@ export class QueueComponent implements OnInit, OnDestroy {
           this.queue = res['data']
           for(var m of this.queue.raw){
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['picture'])
-=======
-      this.serv.queue(this.camera,this.range).subscribe(
-        res=>{
-          this.queue = res['data']
-          for(var m of this.queue.raw){
-            m['picture']  = api + "/pictures/" + this.now_user['id_account']+'/' + this.now_user['id_branch']+'/queue/' + this.camera+ '/' + m['picture']
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
           }
           this.source = this.queue.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
 
@@ -102,11 +87,7 @@ export class QueueComponent implements OnInit, OnDestroy {
 
   }
   got(id){
-<<<<<<< HEAD
     this.route.navigate([`/pages/tickets`])
-=======
-    this.route.navigateByUrl(`/pages/tickets/view/${id.data.id}`)
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
   }
   settings = {
     mode: 'external',

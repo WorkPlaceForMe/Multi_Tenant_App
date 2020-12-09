@@ -20,10 +20,7 @@ if(process.env.NODE_ENV === 'production'){
         origin: `http://${process.env.my_ip}:${process.env.PORT}`
       };
       app.use(cors(corsOptions));
-<<<<<<< HEAD
       console.log('Running on Production')
-=======
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 }
 
 // parse requests of content-type - application/json
@@ -43,10 +40,7 @@ app.use(morgan('Date: :date[web] // Url: :remote-addr // Method: :method:url // 
 }));
 
 const db = require("./app/models");
-<<<<<<< HEAD
 
-=======
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 if(process.env.INSTALL === 'true'){
   mysql.createConnection({
     user     : process.env.USERM,
@@ -77,10 +71,7 @@ require('./app/routes/schedule.routes')(app);
 require('./app/routes/ticket.routes')(app);
 require('./app/routes/analytics.routes')(app);
 
-<<<<<<< HEAD
 //resources being served
-=======
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 app.use('/api/pictures', express.static(picResourceFolderPath))
 
 const ALGO_CONFIG = process.env.ALGO_CONFIG || '{ "algo_fr": 3301, "algo_am": 3302 }'
@@ -91,11 +82,7 @@ const ALGO_CONFIG = process.env.ALGO_CONFIG || '{ "algo_fr": 3301, "algo_am": 33
     catch(err) {
         console.error(`ALGO_CONFIG malformed. Skipping algo proxying: ${JSON.stringify(err)}`)
     }
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 // client side
 app.use(express.static(process.env.WEBSITE_PATH));
 

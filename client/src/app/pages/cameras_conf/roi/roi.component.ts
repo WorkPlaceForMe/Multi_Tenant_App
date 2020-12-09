@@ -170,12 +170,6 @@ export class ROIComponent implements OnInit {
     }
   }
 
-<<<<<<< HEAD
-=======
-  vieww(){
-    console.log(this.polygons)
-  }
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
   
   ngOnInit() {
     this.setBcg();
@@ -549,13 +543,6 @@ re_draw(end: boolean){
   }
 }
 
-<<<<<<< HEAD
-=======
-info(){
-  console.log(this.polygons);
-  }
-
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
   isOdd(num){
     return num % 2;
   }
