@@ -7,3 +7,10 @@ server/access.log
 build.sh
 commands_ssl.sh
 install.sh
+app.zip
+buildDocker.sh
+client.zip
+server.zip
+config.env
+configDocker.env
+runDocker.sh
