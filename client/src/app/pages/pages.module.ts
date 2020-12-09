@@ -78,6 +78,7 @@ import { SocialComponent } from './online/graphs/social/social.component';
 import { QueueComponent } from './online/graphs/queue/queue.component';
 import { HelmComponent } from './online/graphs/helm/helm.component';
 import { VaultComponent } from './online/graphs/vault/vault.component';
+import { ParkingComponent } from './online/graphs/parking/parking.component';
 
 // import { OverallComponent } from './facial_recognition/overall/overall.component';
 
@@ -166,7 +167,8 @@ import { VaultComponent } from './online/graphs/vault/vault.component';
     SocialComponent,
     QueueComponent,
     HelmComponent,
-    VaultComponent
+    VaultComponent,
+    ParkingComponent
   ],
   providers: [
     FacesService,

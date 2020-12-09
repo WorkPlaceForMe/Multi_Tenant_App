@@ -51,5 +51,10 @@ export class AnalyticsService {
     return this.http.post(`${this.API_URL}vault/${id}`, dates);
   }
 
+  parking(id:string,dates){
+    return this.http.post(`${this.API_URL}parking/${id}`, dates);
+  }
+
+
   constructor(private http: HttpClient) { }
 }
