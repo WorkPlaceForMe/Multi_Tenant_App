@@ -17,6 +17,7 @@ import { Roi } from '../../../models/Roi';
 export class ROIComponent implements OnInit {
   link: SafeResourceUrl;
   open:boolean;
+  actANPR: boolean = false;
   constructor(private rd: Renderer2, private facesService: FacesService, private activatedRoute: ActivatedRoute,sanitizer: DomSanitizer, private colo:ColorsService, private router: Router) {
     const params = this.activatedRoute.snapshot.params;
     this.wrong['dir'] = 'beggining';
@@ -40,6 +41,7 @@ export class ROIComponent implements OnInit {
             this.algos[i].name = res['data'][i].name
             this.algos[i].available = res['data'][i].available
             this.algos[i].id = res['data'][i].id
+            this.algos[i].activated = true;
           }
           if(this.algos[i]['id'] == this.id){
             this.algorithm = this.algos[i];
@@ -55,10 +57,9 @@ export class ROIComponent implements OnInit {
           res =>{
             this.relations = res['data'];
           for(let u = 0; u < this.relations.length; u++){
-            if(this.relations[u]['algo_id'] == 13){
-              this.algos[13].activated = true;
-            }else{
-              this.algos[13].activated = false;
+            if(parseInt(this.relations[u]['algo_id']) == 13){
+              this.algos[13]['activated'] = true;
+              this.actANPR = true;
             }
             if(this.relations[u]['roi_id'] != null &&  this.relations[u]['algo_id'] == params.id){
               for(let l = 0; l < this.relations[u]['roi_id'].length; l++){
