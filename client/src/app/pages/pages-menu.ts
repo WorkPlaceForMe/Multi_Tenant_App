@@ -106,11 +106,11 @@ export const MENU_ITEMSCLIENT: NbMenuItem[] = [
     icon: 'people-outline',
     link: 'accounts'
   },
-  {
-    title: 'Reports',
-    icon: 'bar-chart-outline',
-    link: 'graphs'
-  },
+  // {
+  //   title: 'Reports',
+  //   icon: 'bar-chart-outline',
+  //   link: 'graphs'
+  // },
   {
     title: 'Tickets',
     icon: 'done-all-outline',

@@ -55,7 +55,7 @@ export class HelmComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if(api.length <= 4){
+    if(api.length <= 1){
       setTimeout(()=>{
         this.face.camera({id: this.camera}).subscribe(
           res =>{
@@ -187,12 +187,13 @@ export class HelmComponent implements OnInit, OnDestroy {
           this.helm = undefined;
         }
       )
-
   }
+
   got(id){
     this.route.navigate([`/pages/tickets`])
     // this.route.navigateByUrl(`/pages/tickets/view/${id.data.id}`)
   }
+  
   settings = {
     mode: 'external',
     actions: {

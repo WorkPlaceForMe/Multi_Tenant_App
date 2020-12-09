@@ -47,6 +47,9 @@ export class AnalyticsService {
     return this.http.post(`${this.API_URL}helm/${id}`, dates);
   }
 
+  vault(id:string,dates){
+    return this.http.post(`${this.API_URL}vault/${id}`, dates);
+  }
 
   constructor(private http: HttpClient) { }
 }

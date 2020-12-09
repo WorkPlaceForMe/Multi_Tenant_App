@@ -20,6 +20,7 @@ exports.loitering = (req, res) =>{
           }).then(rel => {
        db.con().query(`SELECT * from loitering WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
         if (err) return res.status(500).json({success: false, message: err});
+        let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
         let avg = 0;
         let min = 0;
         let max = 0;
@@ -79,7 +80,7 @@ exports.loitering = (req, res) =>{
             v['alert'] = r;
           })
           avg = Math.round((avg/ result.length) * 100) / 100;
-        let av = result.length/24
+        let av = result.length/(24 * days)
         let a = {
             total: result.length,
             avgH: Math.round(av * 100) / 100,
@@ -109,6 +110,7 @@ exports.intrude = (req, res) =>{
   jwt.verify(token, process.env.secret, (err, decoded) => {
      db.con().query(`SELECT * from intrude WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
+      let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
       let ress = {}
       let avg = 0;
       let cache = '';
@@ -151,8 +153,7 @@ exports.intrude = (req, res) =>{
       for(var l of Object.keys(ress)){
         lo.push({name: l, value: ress[l], perc: JSON.stringify(Math.round((ress[l]/result.length) * 100)) + '%'})
       }
-      avg = Math.round((avg/ result.length) * 100) / 100;
-      let av = result.length/24
+      let av = result.length/(24 * days)
       let a = {
           total: result.length,
           avgH: Math.round(av * 100) / 100,
@@ -510,17 +511,15 @@ exports.helm = (req, res) =>{
   })
 }
 
+function display (seconds) {
+  const format = val => `0${Math.floor(val)}`.slice(-2)
+  const hours = seconds / 3600
+  const minutes = (seconds % 3600) / 60
+
+  return [hours, minutes, seconds % 60].map(format).join(':')
+}
 
 exports.queue = (req, res) =>{
-
-  function display (seconds) {
-    const format = val => `0${Math.floor(val)}`.slice(-2)
-    const hours = seconds / 3600
-    const minutes = (seconds % 3600) / 60
-  
-    return [hours, minutes, seconds % 60].map(format).join(':')
-  }
-
   const data = req.body;
      db.con().query(`SELECT * from queue_mgt WHERE ${data.type} = '${req.params.id}' and start_time >= '${data.start}' and  start_time <= '${data.end}' order by start_time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
@@ -581,4 +580,73 @@ exports.queue = (req, res) =>{
       res.status(200).json({success: true, data: a})
     });
 
+}
+
+exports.vault = (req, res) =>{
+  
+  let token = req.headers["x-access-token"];
+  const data = req.body;
+  jwt.verify(token, process.env.secret, (err, decoded) => {
+     db.con().query(`SELECT * from vault WHERE  ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+      if (err) return res.status(500).json({success: false, message: err});
+      let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
+      let ress = {};
+      let cache = '';
+      let organized = [];
+      for(var v of result){
+        if(cache == ''){
+          cache = v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()
+        }
+        
+        if(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
+          
+          while(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
+            cache = new Date(cache + ':00:00')
+            ress[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1)] = 0;
+            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1);
+          }
+        }
+        if(cache == v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
+          ress[v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()] = (ress[v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()] || 0) + 1;
+        }
+        let d = v.time
+        let se = d.getSeconds()
+        let mi = d.getMinutes()
+        let ho = d.getHours()
+        if(se < 10){
+          se = '0' + se;
+        }
+        if(mi < 10){
+          mi = '0' + mi;
+        }
+        if(ho < 10){
+          ho = '0' + ho;
+        }
+        d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
+        v['picture'] = `${d}_${v.trackid}.jpg`;
+        if(v.open == 1){
+          v['time_in'] = v['time']
+          organized.push(v)
+        }else {
+          organized[organized.length - 1]['time_out'] = v['time']
+        }
+      }
+      if(organized[organized.length - 1]['time_out'] == undefined){
+        organized[organized.length - 1]['time_out'] = new Date();
+      }
+      for(var t of organized){
+        t['duration'] = (t.time_out - t.time_in)/1000;
+        t['duration'] = display(t['duration'])
+      }
+      let av = result.length/(24 * days)
+      let a = {
+          total: result.length,
+          avg: Math.round(av * 100) / 100,
+          raw: result,
+          org: organized,
+          over: ress
+      }
+      res.status(200).json({success: true, data: a})
+    });
+  })
 }

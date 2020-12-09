@@ -20,6 +20,7 @@ if(process.env.NODE_ENV === 'production'){
         origin: `http://${process.env.my_ip}:${process.env.PORT}`
       };
       app.use(cors(corsOptions));
+      console.log('Running on Production')
 }
 
 // parse requests of content-type - application/json
@@ -39,6 +40,7 @@ app.use(morgan('Date: :date[web] // Url: :remote-addr // Method: :method:url // 
 }));
 
 const db = require("./app/models");
+
 if(process.env.INSTALL === 'true'){
   mysql.createConnection({
     user     : process.env.USERM,

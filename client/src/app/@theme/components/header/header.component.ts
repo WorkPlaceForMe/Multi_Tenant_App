@@ -1,12 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
 import { api } from '../../../models/API'
+import { Account } from '../../../models/Account';
 
 import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -41,6 +43,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'dark';
   pic: string;
+  now_user: Account;
 
   userMenu = [ { title: 'Profile' }, { title: 'Log out' } ];
 
@@ -50,11 +53,30 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private userService: UserData,
               private layoutService: LayoutService,
               private breakpointService: NbMediaBreakpointsService,
-              public authservice: AuthService) {
+              public authservice: AuthService,
+              public router: Router
+              ) {
                 this.pic = `${api}/pictures/logo.png`
   }
 
+  logOut(){
+    this.authservice.signOut(this.now_user.username).subscribe(
+        res=>{
+          window.localStorage.clear();
+          window.sessionStorage.clear();
+          window.location.reload()
+          // this.router.navigate(['/'])
+        }, err =>{ 
+          console.error(err)
+          window.localStorage.clear();
+          window.sessionStorage.clear();
+          window.location.reload()
+        }
+    )
+  }
+
   ngOnInit() {
+    this.now_user = JSON.parse(localStorage.getItem('now_user'))
     this.currentTheme = this.themeService.currentTheme;
 
     this.userService.getUsers()

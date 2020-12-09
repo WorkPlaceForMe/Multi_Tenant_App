@@ -64,4 +64,10 @@ module.exports = function(app) {
     [authJwt.verifyToken],
     controller.queue
   );
+
+  app.post(
+    "/api/analytics/vault/:id",
+    [authJwt.verifyToken],
+    controller.vault
+  );
 }

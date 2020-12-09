@@ -53,7 +53,7 @@ export class LoitComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
-    if(api.length <= 4){
+    if(api.length <= 1){
       setTimeout(()=>{
         this.face.camera({id: this.camera}).subscribe(
           res =>{

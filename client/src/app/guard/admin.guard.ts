@@ -18,8 +18,19 @@ constructor(
     Observable<boolean> | Promise<boolean> | boolean {
       if(this.authService.isAdminClientBranch !== true){
         if(this.authService.isLoggedIn !== true) {
-          this.authService.signOut()
-          return this.router.navigate(['sign-in'])
+          this.authService.signOut(JSON.parse(localStorage.getItem('now_user'))['username']).subscribe(
+            res=>{
+              window.localStorage.clear();
+              window.sessionStorage.clear();
+              window.location.reload()
+              // this.router.navigate(['/'])
+            }, err =>{ 
+              console.error(err)
+              window.localStorage.clear();
+              window.sessionStorage.clear();
+              window.location.reload()
+            }
+        )
         } else {
           this.router.navigate(['dashboard'])
         }
@@ -31,7 +42,19 @@ constructor(
         err => {
           console.log(err)
           window.alert("Your session has expired, please log in again.");
-          this.authService.signOut()
+          this.authService.signOut(JSON.parse(localStorage.getItem('now_user'))['username']).subscribe(
+            res=>{
+              window.localStorage.clear();
+              window.sessionStorage.clear();
+              window.location.reload()
+              // this.router.navigate(['/'])
+            }, err =>{ 
+              console.error(err)
+              window.localStorage.clear();
+              window.sessionStorage.clear();
+              window.location.reload()
+            }
+        )
         }
       )
       return true;

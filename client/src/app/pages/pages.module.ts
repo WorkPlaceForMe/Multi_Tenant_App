@@ -3,10 +3,7 @@ import { NbMenuModule, NbPopoverModule } from '@nebular/theme';
 
 import { ThemeModule } from '../@theme/theme.module';
 import { PagesComponent } from './pages.component';
-import { DashboardModule } from './dashboard/dashboard.module';
-import { ECommerceModule } from './e-commerce/e-commerce.module';
 import { PagesRoutingModule } from './pages-routing.module';
-import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
 
 import { HttpClientModule } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
@@ -110,9 +107,6 @@ import { VaultComponent } from './online/graphs/vault/vault.component';
     PagesRoutingModule,
     ThemeModule,
     NbMenuModule,
-    DashboardModule,
-    ECommerceModule,
-    MiscellaneousModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,

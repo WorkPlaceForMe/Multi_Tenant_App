@@ -57,10 +57,9 @@ export class LogInComponent implements OnInit {
       data => {
         this.authService.saveToken(data.user.accessToken);
         this.authService.saveUser(data.user);
-
         this.isLoggedIn = true;
         this.roles = this.authService.getUser().roles;
-        this.router.navigate(['pages/dashboard'])
+        window.location.reload()
       },
       err => {
         this.errorMessage = err.error.message;
@@ -74,6 +73,12 @@ export class LogInComponent implements OnInit {
         }
         if(err.error.type == 'disable'){
           this.values.login = 'danger'
+          this.showToast(err.error.message)
+        }
+        if(err.error.type == 'logged'){
+          this.values.login = 'danger'
+          this.values.username = 'danger'
+          this.values.password = 'danger'
           this.showToast(err.error.message)
         }
         this.loading = false;

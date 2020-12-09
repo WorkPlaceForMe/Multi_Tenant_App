@@ -55,10 +55,12 @@ export class AodComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if(api.length <= 4){
+    // if(api.length <= 4){
+      if(api.length <= 1){
       setTimeout(()=>{
         this.face.camera({id: this.camera}).subscribe(
           res =>{
+            console.log(res)
             this.player = new JSMpeg.Player(`ws://localhost:${res['port']}`, {
               canvas: this.streamingcanvas.nativeElement, autoplay: true, audio: false, loop: true
             })

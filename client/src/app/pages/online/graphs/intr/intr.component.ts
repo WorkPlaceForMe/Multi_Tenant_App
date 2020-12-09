@@ -54,7 +54,7 @@ export class IntrComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if(api.length <= 4){
+    if(api.length <= 1){
       setTimeout(()=>{
         this.face.camera({id: this.camera}).subscribe(
           res =>{

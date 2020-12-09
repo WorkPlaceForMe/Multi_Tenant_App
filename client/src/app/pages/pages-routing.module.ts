@@ -2,9 +2,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
 import { PagesComponent } from './pages.component';
-// import { DashboardComponent } from './dashboard/dashboard.component';
-// import { ECommerceComponent } from './e-commerce/e-commerce.component';
-import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 
 import { FaceFormComponent } from './facial_recognition/face-form/face-form.component';
 import { ImagesFormComponent } from './facial_recognition/images-form/images-form.component';
@@ -27,6 +24,7 @@ import { ChangePassComponent } from './online/change-pass/change-pass.component'
 import { OtherGuard } from '../guard/other.guard';
 import { TicketComponent } from './online/ticket/ticket.component';
 import { CenterComponent } from './online/graphs/center/center.component';
+import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 
 const routes: Routes = [
     {
@@ -139,7 +137,7 @@ pathMatch: 'full',
 },
 {
 path: '**',
-component: NotFoundComponent
+component: PagenotfoundComponent
 },
 ]}
   
