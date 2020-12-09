@@ -2,6 +2,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
 import { PagesComponent } from './pages.component';
+<<<<<<< HEAD
+=======
+// import { DashboardComponent } from './dashboard/dashboard.component';
+// import { ECommerceComponent } from './e-commerce/e-commerce.component';
+import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 
 import { FaceFormComponent } from './facial_recognition/face-form/face-form.component';
 import { ImagesFormComponent } from './facial_recognition/images-form/images-form.component';
@@ -24,7 +30,11 @@ import { ChangePassComponent } from './online/change-pass/change-pass.component'
 import { OtherGuard } from '../guard/other.guard';
 import { TicketComponent } from './online/ticket/ticket.component';
 import { CenterComponent } from './online/graphs/center/center.component';
+<<<<<<< HEAD
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
+=======
+import { SingleTickComponent } from './online/single-tick/single-tick.component';
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 
 const routes: Routes = [
     {
@@ -127,6 +137,14 @@ canActivate: [AuthGuard]
   canActivate: [AuthGuard]
 },
 {
+<<<<<<< HEAD
+=======
+  path: 'tickets/view/:id',
+  component: SingleTickComponent,
+  canActivate: [AuthGuard]
+},
+{
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
   path: 'graphs',
   component: CenterComponent,
   canActivate: [AuthGuard]
@@ -137,7 +155,11 @@ pathMatch: 'full',
 },
 {
 path: '**',
+<<<<<<< HEAD
 component: PagenotfoundComponent
+=======
+component: NotFoundComponent
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 },
 ]}
   

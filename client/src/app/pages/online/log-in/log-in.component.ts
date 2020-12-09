@@ -57,9 +57,16 @@ export class LogInComponent implements OnInit {
       data => {
         this.authService.saveToken(data.user.accessToken);
         this.authService.saveUser(data.user);
+<<<<<<< HEAD
         this.isLoggedIn = true;
         this.roles = this.authService.getUser().roles;
         window.location.reload()
+=======
+
+        this.isLoggedIn = true;
+        this.roles = this.authService.getUser().roles;
+        this.router.navigate(['pages/dashboard'])
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
       },
       err => {
         this.errorMessage = err.error.message;
@@ -75,12 +82,15 @@ export class LogInComponent implements OnInit {
           this.values.login = 'danger'
           this.showToast(err.error.message)
         }
+<<<<<<< HEAD
         if(err.error.type == 'logged'){
           this.values.login = 'danger'
           this.values.username = 'danger'
           this.values.password = 'danger'
           this.showToast(err.error.message)
         }
+=======
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
         this.loading = false;
       }
     );

@@ -6,8 +6,11 @@ var jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require('uuid')
 const cp = require('child_process');
 const fs = require('fs');
+<<<<<<< HEAD
 const { rejects } = require("assert");
 const { resolve } = require("path");
+=======
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 Stream = require('node-rtsp-stream')
 const path = process.env.home + process.env.username + process.env.pathDocker + process.env.resources
 
@@ -111,6 +114,7 @@ exports.addCamera = (req,res) => {
     })
   })
   }
+<<<<<<< HEAD
   
   function getStream(camera,port,id, tries = 0){
     return new Promise((resolve, reject) => {
@@ -153,6 +157,8 @@ exports.addCamera = (req,res) => {
     })
    
   }
+=======
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 
   exports.cam = (req,res)=>{
     const data = req.body;
@@ -163,12 +169,43 @@ exports.addCamera = (req,res) => {
             where: { id :  data.id, id_branch: decoded.id_branch},
           }).then(camera => {
             let port = 9999
+<<<<<<< HEAD
             port = port - streams.length
             stream = getStream(camera,port,data.id).then((stream)=> {
               res.status(200).send({ success: true, port: stream.port});
             }).catch((err)=>{
               res.status(500).send({ success: false, message: err});
             })
+=======
+            try{
+              if(streams.length != 0){
+                for(var a of streams){
+                  if(a.port == port){
+                    port = port - 1;
+                  }
+                }
+              }
+              
+              stream = new Stream({
+                name: camera.name,
+                streamUrl: camera.rtsp_in,
+                wsPort: port,
+                fps: 15,
+                ffmpegOptions: { // options ffmpeg flags
+                  '-stats': '', // an option with no neccessary value uses a blank string
+                  '-r': 30 ,// options with required values specify the value after the key
+                  '-s' : '640x480'
+                }
+              })
+              streams.push({str:stream, id:data.id, port: port})
+              res.status(200).send({ success: true, port: port});
+            }
+            catch(err){
+              res.status(500).send({  success: false, message: err.message });
+            }
+           
+              
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
           }).catch(err => {
             res.status(500).send({  success: false, message: err.message });
           });
@@ -198,6 +235,7 @@ exports.addCamera = (req,res) => {
     if(data.algo_id == -2){
       return res.status(200).send({ success: true, message: 'Skipping'});
     }
+<<<<<<< HEAD
     let wh;
     if(data.type == 'show'){
       wh = { id_account :  data.id , algo_id: data.algo_id}
@@ -206,6 +244,10 @@ exports.addCamera = (req,res) => {
     }
     Relations.findAll({
       where: wh
+=======
+    Relations.findAll({
+      where:{ camera_id :  data.id , algo_id: data.algo_id}
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
     }).then(ress=>{
       let mess;
       if(ress.length == 0){

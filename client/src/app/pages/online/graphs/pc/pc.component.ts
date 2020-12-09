@@ -55,6 +55,7 @@ export class PcComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
+<<<<<<< HEAD
     // if(api.length <= 4){
     //   setTimeout(()=>{
     //     this.face.camera({id: this.camera}).subscribe(
@@ -67,6 +68,20 @@ export class PcComponent implements OnInit, OnDestroy {
     //     )
     //   },1500)
     // }
+=======
+    if(api.length <= 4){
+      setTimeout(()=>{
+        this.face.camera({id: this.camera}).subscribe(
+          res =>{
+            this.player = new JSMpeg.Player(`ws://localhost:${res['port']}`, {
+              canvas: this.streamingcanvas.nativeElement, autoplay: true, audio: false, loop: true
+            })
+          },
+          err=> console.error(err)
+        )
+      },500)
+    }
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
     var time = new Date();
     this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0,3);
     let aaa = this.timezone;
@@ -76,6 +91,7 @@ export class PcComponent implements OnInit, OnDestroy {
       p = '+'
     }
     this.timezone = p + JSON.stringify(this.timezone) + '00';
+<<<<<<< HEAD
     let type;
     if(this.now_user.id_branch != '0000'){
       type = 'cam_id';
@@ -88,6 +104,9 @@ export class PcComponent implements OnInit, OnDestroy {
       type: type
     }
     this.serv.pc(this.camera,l).subscribe(
+=======
+    this.serv.pc(this.camera,this.range).subscribe(
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
       res=>{
         this.pc = res['data']
         for(var m of this.pc.raw){

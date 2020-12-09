@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { DatePipe } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -10,12 +11,17 @@ import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
 
+=======
+import { Component, Input, OnInit } from '@angular/core';
+import { NbCalendarRange } from '@nebular/theme';
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 
 @Component({
   selector: 'ngx-vault',
   templateUrl: './vault.component.html',
   styleUrls: ['./vault.component.scss']
 })
+<<<<<<< HEAD
 export class VaultComponent implements OnInit, OnDestroy {
 
   @Input() range: NbCalendarRange<Date>;
@@ -251,3 +257,16 @@ export class ButtonViewComponent implements ViewCell, OnInit {
   }
 }
 
+=======
+export class VaultComponent implements OnInit {
+
+  @Input() range: NbCalendarRange<Date>;
+  @Input() camera;
+  
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339

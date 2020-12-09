@@ -26,7 +26,11 @@ export class AuthService {
     public ngZone: NgZone, // NgZone service to remove outside scope warning
     private http: HttpClient
   ) {
+<<<<<<< HEAD
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
+=======
+    // this.auth()
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
   }
 
   login(credentials): Observable<any> {
@@ -46,6 +50,7 @@ export class AuthService {
     }, httpOptions);
   }
 
+<<<<<<< HEAD
   signOut(username): Observable<any> {
     return this.http.post(AUTH_API + 'signout', {
       username: username
@@ -54,6 +59,24 @@ export class AuthService {
 
   get isLoggedIn(): boolean {
     return (this.now_user !== null) ? true : false;
+=======
+  signOut() {
+    window.localStorage.clear();
+    window.sessionStorage.clear();
+    this.router.navigate(['/'])
+  }
+
+
+  // Returns true when user is looged in and email is verified
+  get isLoggedIn(): boolean {
+    const user = JSON.parse(localStorage.getItem('now_user'));
+    return (user !== null) ? true : false;
+  }
+
+  get isOtp(): boolean {
+    const user = JSON.parse(localStorage.getItem('user'));
+    return (user !== null && user.email !== null) ? true : false;
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
   }
 
   get isSetUp(): boolean {
@@ -62,6 +85,7 @@ export class AuthService {
   }
 
   get isAdminClientBranch(): boolean{
+<<<<<<< HEAD
     return this.isLoggedIn && this.now_user !== null && this.now_user.role !== "user";
   }
 
@@ -87,6 +111,40 @@ export class AuthService {
 
   get isUser(): boolean {
     return this.isLoggedIn && this.now_user !== null && this.now_user.role == "user";
+=======
+    const now_user = JSON.parse(localStorage.getItem('now_user'));
+    return this.isLoggedIn && now_user !== null && now_user.role !== "user";
+  }
+
+  get isClientBranch(): boolean {
+    const now_user = JSON.parse(localStorage.getItem('now_user'));
+    return this.isLoggedIn && now_user !== null && now_user.role == "client" && now_user.id_branch != "0000";
+  }
+
+  get isClientorBranch(): boolean {
+    const now_user = JSON.parse(localStorage.getItem('now_user'));
+    return this.isLoggedIn && now_user !== null && (now_user.role == "client" || now_user.role == 'branch');
+  }
+
+  get isAdmin(): boolean {
+    const now_user = JSON.parse(localStorage.getItem('now_user'));
+    return this.isLoggedIn && now_user !== null && now_user.role == "admin";
+  }
+
+  get isBranch(): boolean {
+    const now_user = JSON.parse(localStorage.getItem('now_user'));
+    return this.isLoggedIn && now_user !== null && now_user.role == "branch";
+  }
+  
+  get isClient(): boolean {
+    const now_user = JSON.parse(localStorage.getItem('now_user'));
+    return this.isLoggedIn && now_user !== null && now_user.role == "client";
+  }
+
+  get isUser(): boolean {
+    const now_user = JSON.parse(localStorage.getItem('now_user'));
+    return this.isLoggedIn && now_user !== null && now_user.role == "user";
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
   }
 
   public saveToken(token: string) {

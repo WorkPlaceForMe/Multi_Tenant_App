@@ -36,3 +36,14 @@ exports.assign = (req, res) =>{
         res.status(200).json({success: true, data: result})
       });
 }
+<<<<<<< HEAD
+=======
+
+// exports.seeTick = (req, res) =>{
+//   const data = req.body;
+//       db.con().query(`UPDATE tickets set assigned= '${data.assigned}', assignedBy= '${data.assignedBy}' where id = '${req.params.id}';`, function (err, result) {
+//       if (err) return res.status(500).json({success: false, message: err});
+//       res.status(200).json({success: true, data: result})
+//     });
+// }
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
