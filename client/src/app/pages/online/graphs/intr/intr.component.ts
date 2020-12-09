@@ -8,12 +8,8 @@ import { AnalyticsService } from '../../../../services/analytics.service';
 import { FacesService } from '../../../../services/faces.service';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
-<<<<<<< HEAD
 import { Account } from '../../../../models/Account';
 
-=======
-import { query, state } from '@angular/animations';
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 
 @Component({
   selector: 'ngx-intr',
@@ -58,11 +54,7 @@ export class IntrComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-<<<<<<< HEAD
     if(api.length <= 1){
-=======
-    if(api.length <= 4){
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
       setTimeout(()=>{
         this.face.camera({id: this.camera}).subscribe(
           res =>{
@@ -83,7 +75,6 @@ export class IntrComponent implements OnInit, OnDestroy {
       p = '+'
     }
     this.timezone = p + JSON.stringify(this.timezone) + '00';
-<<<<<<< HEAD
     let type;
     if(this.now_user.id_branch != '0000'){
       type = 'cam_id';
@@ -100,13 +91,6 @@ export class IntrComponent implements OnInit, OnDestroy {
           this.intrude = res['data']
           for(var m of this.intrude.raw){
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/intrusion/' + m['cam_id'] + '/' + m['picture'])
-=======
-      this.serv.intrude(this.camera,this.range).subscribe(
-        res=>{
-          this.intrude = res['data']
-          for(var m of this.intrude.raw){
-            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + this.now_user['id_branch']+'/intrusion/' + this.camera+ '/' + m['picture'])
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
           }
           this.source = this.intrude.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
@@ -240,12 +224,8 @@ export class IntrComponent implements OnInit, OnDestroy {
   source:any = new LocalDataSource();
   source2:any = new LocalDataSource();
   got(id){
-<<<<<<< HEAD
     this.route.navigate([`/pages/tickets`])
     // this.route.navigate([`/pages/tickets/view/${id.data.id}`], {queryParams: id.data})
-=======
-    this.route.navigate([`/pages/tickets/view/${id.data.id}`])
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 }
 
   settings = {

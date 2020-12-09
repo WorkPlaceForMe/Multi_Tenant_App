@@ -53,11 +53,8 @@ module.exports = function(app) {
 
   app.post("/api/auth/signin", controller.signin);
 
-<<<<<<< HEAD
   app.post("/api/auth/signout", controller.loggOut);
 
-=======
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
   app.get(
     "/api/auth/check",
     [

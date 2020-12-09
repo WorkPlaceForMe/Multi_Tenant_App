@@ -9,11 +9,7 @@ import { FacesService } from '../../../../services/faces.service';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { VideoComponent } from '../video/video.component';
 import { Router } from '@angular/router';
-<<<<<<< HEAD
 import { Account } from '../../../../models/Account';
-=======
-
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 
 @Component({
   selector: 'ngx-viol',
@@ -59,11 +55,7 @@ export class ViolComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-<<<<<<< HEAD
     if(api.length <= 1){
-=======
-    if(api.length <= 4){
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
       setTimeout(()=>{
         this.face.camera({id: this.camera}).subscribe(
           res =>{
@@ -84,7 +76,6 @@ export class ViolComponent implements OnInit, OnDestroy {
       p = '+'
     }
     this.timezone = p + JSON.stringify(this.timezone) + '00';
-<<<<<<< HEAD
     let type;
     if(this.now_user.id_branch != '0000'){
       type = 'cam_id';
@@ -101,13 +92,6 @@ export class ViolComponent implements OnInit, OnDestroy {
           this.violence = res['data']
           for(var m of this.violence.raw){
             m['picture']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/violence/' + m['cam_id'] + '/' +m['clip_path']
-=======
-      this.serv.violence(this.camera,this.range).subscribe(
-        res=>{
-          this.violence = res['data']
-          for(var m of this.violence.raw){
-            m['picture']  = api + "/pictures/" + this.now_user['id_account']+'/' + this.now_user['id_branch']+'/violence/' + this.camera+ '/' + m['clip_path']
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
             switch(m['severity']){
               case '0':{
@@ -202,11 +186,7 @@ export class ViolComponent implements OnInit, OnDestroy {
 
   }
   got(id){
-<<<<<<< HEAD
     this.route.navigate([`/pages/tickets`])
-=======
-    this.route.navigateByUrl(`/pages/tickets/view/${id.data.id}`)
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
   }
   settings = {
     mode: 'external',

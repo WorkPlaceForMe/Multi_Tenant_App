@@ -24,11 +24,7 @@
             <small>Fill the range, for a day, click it twice.</small>
         </div>
     </div>
-<<<<<<< HEAD
         <div class="col-4" align='right' *ngIf='now_user.id_branch != "0000"'>
-=======
-        <div class="col-4" align='right'>
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
     <nb-select [(ngModel)]='camera' (ngModelChange)='cam($event)'>
         <nb-option value="" disabled>Choose a camera:</nb-option>
         <nb-option *ngFor='let cam of cameras' [value]=cam.id>{{cam.name}}</nb-option>

@@ -53,11 +53,7 @@ export class LoitComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
-<<<<<<< HEAD
     if(api.length <= 1){
-=======
-    if(api.length <= 4){
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
       setTimeout(()=>{
         this.face.camera({id: this.camera}).subscribe(
           res =>{
@@ -78,7 +74,6 @@ export class LoitComponent implements OnInit, OnDestroy {
       p = '+'
     }
     this.timezone = p + JSON.stringify(this.timezone) + '00';
-<<<<<<< HEAD
     let type;
     if(this.now_user.id_branch != '0000'){
       type = 'cam_id';
@@ -95,13 +90,6 @@ export class LoitComponent implements OnInit, OnDestroy {
         this.loitering = res['data']
         for(var m of this.loitering.raw){
           m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/loitering/' + m['cam_id'] + '/' + m['picture'])
-=======
-    this.serv.loitering(this.camera,this.range).subscribe(
-      res=>{
-        this.loitering = res['data']
-        for(var m of this.loitering.raw){
-          m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + this.now_user['id_branch']+'/loitering/' + this.camera+ '/' + m['picture'])
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
         }
         this.source = this.loitering.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
@@ -301,11 +289,7 @@ export class LoitComponent implements OnInit, OnDestroy {
   };
 
   got(id){
-<<<<<<< HEAD
     this.route.navigate([`/pages/tickets`])
-=======
-    this.route.navigateByUrl(`/pages/tickets/view/${id.data.id}`)
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
   }
 }
 

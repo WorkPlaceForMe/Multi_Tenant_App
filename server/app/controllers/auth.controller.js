@@ -135,11 +135,8 @@ exports.signupAdmin = (req, res) => {
     });
 };
 
-<<<<<<< HEAD
 let usersIn = [];
 
-=======
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 exports.signin = (req, res) => {
   User.findOne({
     where: {
@@ -166,7 +163,6 @@ exports.signin = (req, res) => {
       if (user.disabled === 1){
         return res.status(401).send({success: false, message: "This account has been disabled, please get in contact with the Administator." , type:'disable' });
       }
-<<<<<<< HEAD
       let exp = 43200;
       for(a of usersIn){
         if (user.username == a.name){
@@ -181,11 +177,6 @@ exports.signin = (req, res) => {
 
       var token = jwt.sign({ id: user.id, id_account: user.id_account, id_branch: user.id_branch }, process.env.secret, {
         expiresIn: exp // 12 hours
-=======
-
-      var token = jwt.sign({ id: user.id, id_account: user.id_account, id_branch: user.id_branch }, process.env.secret, {
-        expiresIn: 43200 // 12 hours
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
       });
 
       res.status(200).send({success: true,
@@ -203,17 +194,13 @@ exports.signin = (req, res) => {
       });
     })
     .catch(err => {
-<<<<<<< HEAD
       console.log(err)
-=======
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
       res.status(500).send({success: false, message: err.message });
     });
 };
 
 exports.check = (req,res) =>{
   res.status(200).send({success: true , message: 'Session still active'})
-<<<<<<< HEAD
 }
 
 exports.loggOut = (req,res) =>{
@@ -228,6 +215,3 @@ exports.loggOut = (req,res) =>{
 }
 
 function arrayRemove(arr, value) { return arr.filter(function(ele){ return ele.name != value; });}
-=======
-}
->>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
