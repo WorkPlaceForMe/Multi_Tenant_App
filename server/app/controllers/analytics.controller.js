@@ -9,6 +9,7 @@ exports.loitering = (req, res) =>{
     let token = req.headers["x-access-token"];
     const data = req.body;
     jwt.verify(token, process.env.secret, (err, decoded) => {
+<<<<<<< HEAD
       let wh;
       if(decoded.id_branch != 0000){
         wh = {id_branch: decoded.id_branch, algo_id : 2 }
@@ -21,6 +22,13 @@ exports.loitering = (req, res) =>{
        db.con().query(`SELECT * from loitering WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
         if (err) return res.status(500).json({success: false, message: err});
         let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
+=======
+        Relation.findOne({
+            where: { id_branch: decoded.id_branch, algo_id : 2 }
+          }).then(rel => {
+       db.con().query(`SELECT * from loitering WHERE cam_id = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+        if (err) return res.status(500).json({success: false, message: err});
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
         let avg = 0;
         let min = 0;
         let max = 0;
@@ -80,7 +88,11 @@ exports.loitering = (req, res) =>{
             v['alert'] = r;
           })
           avg = Math.round((avg/ result.length) * 100) / 100;
+<<<<<<< HEAD
         let av = result.length/(24 * days)
+=======
+        let av = result.length/24
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
         let a = {
             total: result.length,
             avgH: Math.round(av * 100) / 100,
@@ -108,9 +120,14 @@ exports.intrude = (req, res) =>{
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
+<<<<<<< HEAD
      db.con().query(`SELECT * from intrude WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
+=======
+     db.con().query(`SELECT * from intrude WHERE cam_id = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+      if (err) return res.status(500).json({success: false, message: err});
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
       let ress = {}
       let avg = 0;
       let cache = '';
@@ -153,7 +170,12 @@ exports.intrude = (req, res) =>{
       for(var l of Object.keys(ress)){
         lo.push({name: l, value: ress[l], perc: JSON.stringify(Math.round((ress[l]/result.length) * 100)) + '%'})
       }
+<<<<<<< HEAD
       let av = result.length/(24 * days)
+=======
+      avg = Math.round((avg/ result.length) * 100) / 100;
+      let av = result.length/24
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
       let a = {
           total: result.length,
           avgH: Math.round(av * 100) / 100,
@@ -171,7 +193,11 @@ exports.violence = (req, res) =>{
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
+<<<<<<< HEAD
      db.con().query(`SELECT * from violence WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+=======
+     db.con().query(`SELECT * from violence WHERE cam_id = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {};
       let cache = '';
@@ -207,7 +233,11 @@ exports.aod = (req, res) =>{
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
+<<<<<<< HEAD
      db.con().query(`SELECT * from aod WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+=======
+     db.con().query(`SELECT * from aod WHERE cam_id = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {}
       let cache = '';
@@ -258,7 +288,11 @@ exports.covered = (req, res) =>{
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
+<<<<<<< HEAD
      db.con().query(`SELECT * from alerts WHERE alert= 'no mask' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+=======
+     db.con().query(`SELECT * from alerts WHERE alert= 'no mask' and cam_id = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {};
       let cache = '';
@@ -309,7 +343,11 @@ exports.social = (req, res) =>{
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
+<<<<<<< HEAD
      db.con().query(`SELECT * from alerts WHERE alert= 'sociald' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+=======
+     db.con().query(`SELECT * from alerts WHERE alert= 'sociald' and cam_id = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {"0": 0, "1":0, "2": 0}
       let ressover = {};
@@ -363,7 +401,11 @@ exports.pc = (req, res) =>{
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
+<<<<<<< HEAD
      db.con().query(`SELECT * from pcount WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+=======
+     db.con().query(`SELECT * from pcount WHERE cam_id = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
       if (err) return res.status(500).json({success: false, message: err});
       let ressEn = {}
       let ressEx = {}
@@ -465,7 +507,11 @@ exports.helm = (req, res) =>{
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
+<<<<<<< HEAD
      db.con().query(`SELECT * from alerts WHERE alert= 'helmet' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+=======
+     db.con().query(`SELECT * from alerts WHERE alert= 'helmet' and cam_id = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {};
       let cache = '';
@@ -511,6 +557,7 @@ exports.helm = (req, res) =>{
   })
 }
 
+<<<<<<< HEAD
 function display (seconds) {
   const format = val => `0${Math.floor(val)}`.slice(-2)
   const hours = seconds / 3600
@@ -522,6 +569,21 @@ function display (seconds) {
 exports.queue = (req, res) =>{
   const data = req.body;
      db.con().query(`SELECT * from queue_mgt WHERE ${data.type} = '${req.params.id}' and start_time >= '${data.start}' and  start_time <= '${data.end}' order by start_time asc;`, function (err, result) {
+=======
+
+exports.queue = (req, res) =>{
+
+  function display (seconds) {
+    const format = val => `0${Math.floor(val)}`.slice(-2)
+    const hours = seconds / 3600
+    const minutes = (seconds % 3600) / 60
+  
+    return [hours, minutes, seconds % 60].map(format).join(':')
+  }
+
+  const data = req.body;
+     db.con().query(`SELECT * from queue_mgt WHERE cam_id = '${req.params.id}' and start_time >= '${data.start}' and  start_time <= '${data.end}' order by start_time asc;`, function (err, result) {
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
       if (err) return res.status(500).json({success: false, message: err});
       let countIn = 0;
       let avg = 0;
@@ -580,6 +642,7 @@ exports.queue = (req, res) =>{
       res.status(200).json({success: true, data: a})
     });
 
+<<<<<<< HEAD
 }
 
 exports.vault = (req, res) =>{
@@ -649,4 +712,6 @@ exports.vault = (req, res) =>{
       res.status(200).json({success: true, data: a})
     });
   })
+=======
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 }

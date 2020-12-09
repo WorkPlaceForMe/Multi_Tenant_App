@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { NbCalendarRange, NbComponentStatus, NbDateService, NbGlobalPhysicalPosition, NbGlobalPosition, NbToastrService } from '@nebular/theme';
 import { FacesService } from '../../../../services/faces.service';
+<<<<<<< HEAD
 import { Account } from '../../../../models/Account';
+=======
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
 
 @Component({
   selector: 'ngx-control',
@@ -22,7 +25,10 @@ export class ControlComponent implements OnInit, OnDestroy {
   showRange: boolean;
   renew: any;
   timezone: string;
+<<<<<<< HEAD
   now_user: Account;
+=======
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
   constructor(
     private toastrService: NbToastrService,
     protected dateService: NbDateService<Date>,
@@ -88,11 +94,17 @@ export class ControlComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+<<<<<<< HEAD
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
     if(this.now_user.id_branch == '0000'){
       this.camera = this.now_user.id_account
       this.analytic.algo_id = -2;
     }
+=======
+    // setInterval(()=>{
+    //   console.log(this.rel,this.analytic)
+    // },500)
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
     this.max = this.dateService.addDay(this.dateService.today(), 0);
     let a = this.dateService.addDay(this.dateService.today(), 0);
     this.fin = new Date(a.setHours(a.getHours() + 23))

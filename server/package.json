@@ -17,7 +17,10 @@
     "exif": "^0.6.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+<<<<<<< HEAD
     "mariadb": "^2.5.1",
+=======
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
     "mysql": "^2.18.1",

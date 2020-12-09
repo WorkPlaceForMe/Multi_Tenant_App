@@ -24,6 +24,7 @@ export class AuthGuard implements CanActivate {
         err => {
           console.log(err)
           window.alert("Your session has expired, please log in again.");
+<<<<<<< HEAD
           this.authService.signOut(JSON.parse(localStorage.getItem('now_user'))['username']).subscribe(
             res=>{
               window.localStorage.clear();
@@ -37,6 +38,9 @@ export class AuthGuard implements CanActivate {
               window.location.reload()
             }
         )
+=======
+          this.authService.signOut()
+>>>>>>> 8e3f7f53d9979c5d6b3c340b06e35cbbf02b6339
         }
       )
       return true;
