@@ -1,10 +1,11 @@
 client/node_modules/
 server/node_modules/
-server/access.log
 server/resources/logoAirtel.png
 server/resources/logoAirtel.ico
 server/resources/**
 server/dist/
+server/Dockerfile
+server/.dockerignore
 server/config.env
 server/access.log
 build.sh
