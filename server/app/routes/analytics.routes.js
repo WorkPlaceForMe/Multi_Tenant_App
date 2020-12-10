@@ -70,4 +70,28 @@ module.exports = function(app) {
     [authJwt.verifyToken],
     controller.vault
   );
+
+  app.post(
+    "/api/analytics/parking/:id",
+    [authJwt.verifyToken],
+    controller.parking
+  );
+
+  app.post(
+    "/api/analytics/anpr/:id",
+    [authJwt.verifyToken],
+    controller.anpr
+  );
+
+  app.post(
+    "/api/analytics/barrier/:id",
+    [authJwt.verifyToken],
+    controller.barrier
+  );
+
+  app.post(
+    "/api/analytics/vehicle/:id",
+    [authJwt.verifyToken],
+    controller.vc
+  );
 }
