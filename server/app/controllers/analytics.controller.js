@@ -647,7 +647,7 @@ exports.vault = (req, res) =>{
 exports.parking = async (req, res) =>{
   
   const data = req.body;
-    await db.con().query(`SELECT * from parking WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+    await db.con().query(`SELECT * from alerts WHERE alert = 'park' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       for(var v of result){
 
@@ -678,7 +678,7 @@ exports.parking = async (req, res) =>{
 exports.anpr = async (req, res) =>{
   
   const data = req.body;
-    await db.con().query(`SELECT * from anpr WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+    await db.con().query(`SELECT * from plate WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       for(var v of result){
 

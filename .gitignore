@@ -18,3 +18,4 @@ server.zip
 config.env
 configDocker.env
 runDocker.sh
+node_ubuntu.sh
