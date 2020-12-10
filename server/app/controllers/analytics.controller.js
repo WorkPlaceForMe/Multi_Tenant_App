@@ -202,12 +202,10 @@ exports.violence = (req, res) =>{
   })
 }
 
-exports.aod = (req, res) =>{
+exports.aod = async (req, res) =>{
   
-  let token = req.headers["x-access-token"];
   const data = req.body;
-  jwt.verify(token, process.env.secret, (err, decoded) => {
-     db.con().query(`SELECT * from aod WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+    await db.con().query(`SELECT * from aod WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {}
       let cache = '';
@@ -243,14 +241,13 @@ exports.aod = (req, res) =>{
         d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
         v['picture'] = `${d}_${v.track_id}.jpg`;
       }
-            let a = {
+      const a = {
           total: result.length,
           raw: result,
           over: ress
       }
       res.status(200).json({success: true, data: a})
     });
-  })
 }
 
 exports.covered = (req, res) =>{
@@ -358,31 +355,28 @@ exports.social = (req, res) =>{
   })
 }
 
-exports.pc = (req, res) =>{
-  
-  let token = req.headers["x-access-token"];
+exports.pc = async (req, res) =>{
   const data = req.body;
-  jwt.verify(token, process.env.secret, (err, decoded) => {
-     db.con().query(`SELECT * from pcount WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+  const ressEn = {}
+  const ressEx = {}
+  var avgi = 0;
+  var mini = 0;
+  var maxi = 0;
+  var avgen = 0;
+  var minen = 0;
+  var maxen = 0;
+  var avgex = 0;
+  var minex = 0;
+  var maxex = 0;
+  var ins = 0;
+  var totalEn = 0;
+  var totalEx = 0;
+  const label = [];
+  const dain = [];
+  const daen = [];
+  const daex = [];
+    await db.con().query(`SELECT * from pcount WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
-      let ressEn = {}
-      let ressEx = {}
-      let avgi = 0;
-      let mini = 0;
-      let maxi = 0;
-      let avgen = 0;
-      let minen = 0;
-      let maxen = 0;
-      let avgex = 0;
-      let minex = 0;
-      let maxex = 0;
-      let ins = 0;
-      let totalEn = 0;
-      let totalEx = 0;
-      let label = [];
-      let dain = [];
-      let daen = [];
-      let daex = [];
       result.forEach(function(v) {
         ressEn[v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()] = v.count2
         ressEx[v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()] = v.count1
@@ -457,7 +451,6 @@ exports.pc = (req, res) =>{
       }
       res.status(200).json({success: true, data: a})
     });
-  })
 }
 
 exports.helm = (req, res) =>{
@@ -649,4 +642,196 @@ exports.vault = (req, res) =>{
       res.status(200).json({success: true, data: a})
     });
   })
+}
+
+exports.parking = async (req, res) =>{
+  
+  const data = req.body;
+    await db.con().query(`SELECT * from parking WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+      if (err) return res.status(500).json({success: false, message: err});
+      for(var v of result){
+
+        let d = v.time
+        let se = d.getSeconds()
+        let mi = d.getMinutes()
+        let ho = d.getHours()
+        if(se < 10){
+          se = '0' + se;
+        }
+        if(mi < 10){
+          mi = '0' + mi;
+        }
+        if(ho < 10){
+          ho = '0' + ho;
+        }
+        d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
+        v['picture'] = `${d}_${v.track_id}.jpg`;
+      }
+      const a = {
+          total: result.length,
+          raw: result
+      }
+      res.status(200).json({success: true, data: a})
+    });
+}
+
+exports.anpr = async (req, res) =>{
+  
+  const data = req.body;
+    await db.con().query(`SELECT * from anpr WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+      if (err) return res.status(500).json({success: false, message: err});
+      for(var v of result){
+
+        let d = v.time
+        let se = d.getSeconds()
+        let mi = d.getMinutes()
+        let ho = d.getHours()
+        if(se < 10){
+          se = '0' + se;
+        }
+        if(mi < 10){
+          mi = '0' + mi;
+        }
+        if(ho < 10){
+          ho = '0' + ho;
+        }
+        d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
+        v['picture'] = `${d}_${v.track_id}.jpg`;
+      }
+      const a = {
+          total: result.length,
+          raw: result
+      }
+      res.status(200).json({success: true, data: a})
+    });
+}
+
+
+exports.barrier = async (req, res) =>{
+  
+  const data = req.body;
+    await db.con().query(`SELECT * from barrier WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+      if (err) return res.status(500).json({success: false, message: err});
+      for(var v of result){
+
+        let d = v.time
+        let se = d.getSeconds()
+        let mi = d.getMinutes()
+        let ho = d.getHours()
+        if(se < 10){
+          se = '0' + se;
+        }
+        if(mi < 10){
+          mi = '0' + mi;
+        }
+        if(ho < 10){
+          ho = '0' + ho;
+        }
+        d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
+        v['picture'] = `${d}_${v.track_id}.jpg`;
+      }
+      const a = {
+          total: result.length,
+          raw: result
+      }
+      res.status(200).json({success: true, data: a})
+    });
+}
+
+exports.vc = async (req, res) =>{
+  const data = req.body;
+  const ressEn = {}
+  const ressEx = {}
+  var avgi = 0;
+  var mini = 0;
+  var maxi = 0;
+  var avgen = 0;
+  var minen = 0;
+  var maxen = 0;
+  var avgex = 0;
+  var minex = 0;
+  var maxex = 0;
+  var ins = 0;
+  var totalEn = 0;
+  var totalEx = 0;
+  const label = [];
+  const dain = [];
+  const daen = [];
+  const daex = [];
+    await db.con().query(`SELECT * from vcount WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+      if (err) return res.status(500).json({success: false, message: err});
+      result.forEach(function(v) {
+        ressEn[v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()] = v.count2
+        ressEx[v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()] = v.count1
+        label.push(v.time)
+        dain.push(v['count2'] - v['count1'])
+        daen.push(v['count2'])
+        daex.push(v['count1'])
+        v['picture'] = 'name.jpg'
+        v['inside'] = v['count2'] - v['count1']
+        avgi = avgi + v['inside'];
+        if(mini == 0){
+          mini = v['inside']
+        }else if(v['inside'] < mini){
+          mini = v['inside']
+        }
+        if(maxi == 0){
+          maxi = v['inside']
+        }else if(v['inside'] > maxi){
+          maxi = v['inside']
+        }
+        avgen = avgen + v.count2;
+        if(minen == 0){
+          minen = v.count2
+        }else if(v.count2 < minen){
+          minen = v.count2
+        }
+        if(maxen == 0){
+          maxen = v.count2
+        }else if(v.count2 > maxen){
+          maxen = v.count2
+        }
+        avgex = avgex + v.count1;
+        if(minex == 0){
+          minex = v.count1
+        }else if(v.count1 < minex){
+          minex = v.count1
+        }
+        if(maxex == 0){
+          maxex = v.count1
+        }else if(v.count1 > maxex){
+          maxex = v.count1
+        }
+      })
+      avgi = Math.round((avgi/ result.length) * 100) / 100;
+      avgen = Math.round((avgen/ result.length) * 100) / 100;
+      avgex = Math.round((avgex/ result.length) * 100) / 100;
+      if(result.length != 0){
+        ins = result[result.length - 1]['count2'] - result[result.length - 1]['count1']
+        totalEn = result[result.length - 1]['count2']
+        totalEx = result[result.length - 1]['count1']
+      }      
+      if(ins < 0){
+        ins = 0;
+      }
+      let a = {
+          totalEn: totalEn,
+          totalEx: totalEx,
+          in: ins,
+          avg: { in: avgi, en: avgen, ex: avgex},
+          min: { in: mini, en: minen, ex: minex},
+          max: { in: maxi, en: maxen, ex: maxex},
+          raw: result,
+          histogramEn: ressEn,
+          histogramEx: ressEx,
+          label: label,
+          dataIn: dain,
+          dataEn: daen,
+          dataEx: daex
+      }
+      if(result.length == 0){
+        return res.status(200).json({success: true, data: a})
+      }
+      res.status(200).json({success: true, data: a})
+    });
 }
