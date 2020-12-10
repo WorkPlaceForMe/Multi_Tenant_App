@@ -64,12 +64,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
         res=>{
           window.localStorage.clear();
           window.sessionStorage.clear();
+          this.router.navigate(['/'])
           window.location.reload()
-          // this.router.navigate(['/'])
         }, err =>{ 
           console.error(err)
           window.localStorage.clear();
           window.sessionStorage.clear();
+          this.router.navigate(['/'])
           window.location.reload()
         }
     )
