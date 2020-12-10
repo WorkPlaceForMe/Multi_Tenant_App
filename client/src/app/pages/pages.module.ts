@@ -79,6 +79,9 @@ import { QueueComponent } from './online/graphs/queue/queue.component';
 import { HelmComponent } from './online/graphs/helm/helm.component';
 import { VaultComponent } from './online/graphs/vault/vault.component';
 import { ParkingComponent } from './online/graphs/parking/parking.component';
+import { AnprComponent } from './online/graphs/anpr/anpr.component';
+import { BarrierComponent } from './online/graphs/barrier/barrier.component';
+import { VehicleComponent } from './online/graphs/vehicle/vehicle.component';
 
 // import { OverallComponent } from './facial_recognition/overall/overall.component';
 
@@ -168,7 +171,10 @@ import { ParkingComponent } from './online/graphs/parking/parking.component';
     QueueComponent,
     HelmComponent,
     VaultComponent,
-    ParkingComponent
+    ParkingComponent,
+    AnprComponent,
+    BarrierComponent,
+    VehicleComponent
   ],
   providers: [
     FacesService,
