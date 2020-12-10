@@ -56,7 +56,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
               public authservice: AuthService,
               public router: Router
               ) {
-                this.pic = `${api}/pictures/logo.png`
+                this.pic = `${api}/pictures/logo1.png`
   }
 
   logOut(){

@@ -82,7 +82,7 @@ export class ThemeModule {
       providers: [
         ...NbThemeModule.forRoot(
           {
-            name: 'corporate', // here to change the theme
+            name: 'dark', // here to change the theme
           },
           [ DEFAULT_THEME, COSMIC_THEME, CORPORATE_THEME, DARK_THEME ],
         ).providers,
