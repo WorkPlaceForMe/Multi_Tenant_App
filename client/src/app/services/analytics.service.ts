@@ -55,6 +55,17 @@ export class AnalyticsService {
     return this.http.post(`${this.API_URL}parking/${id}`, dates);
   }
 
+  anpr(id:string,dates){
+    return this.http.post(`${this.API_URL}anpr/${id}`, dates);
+  }
+
+  barrier(id:string,dates){
+    return this.http.post(`${this.API_URL}barrier/${id}`, dates);
+  }
+
+  vehicle(id:string,dates){
+    return this.http.post(`${this.API_URL}vehicle/${id}`, dates);
+  }
 
   constructor(private http: HttpClient) { }
 }
