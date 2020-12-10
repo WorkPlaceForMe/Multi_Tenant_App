@@ -1,0 +1,60 @@
+<div class="container">
+    <div class='col-md-12' style="margin-top: 5px;">
+        <p>Incidents</p>
+        <div class="row">
+            <div class="col-md-3">
+                <nb-card>
+                    <nb-card-body>
+                        <p>Current Count</p>
+                    <strong>{{vehicle == undefined ? 'None' : vehicle.in}}</strong>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            <div class="col-md-9">
+                <nb-card>
+                    <nb-card-body>
+                        <p>Vehicles inside over time</p>
+                        <chart type="line" [data]="dataL" [options]="optionsL"></chart>
+                        <small *ngIf='vehicle != null'>Min:&nbsp;<strong>{{vehicle.min.in}}</strong>&nbsp;Max:&nbsp;<strong>{{vehicle.max.in}}</strong>&nbsp;Avg:&nbsp;<strong>{{vehicle.avg.in}}</strong></small>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <nb-card>
+                    <nb-card-body>
+                        Total Entries<br>
+                    <strong>{{vehicle == undefined ? 'None' : vehicle.totalEn}}</strong>
+                    <br>
+                    <br>
+                    Total Exits<br>
+                    <strong>{{vehicle == undefined ? 'None' : vehicle.totalEx}}</strong>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            <div class="col-md-9">
+                <nb-card>
+                    <nb-card-body>
+                        <p>Vehicles Entering and Exiting</p>
+                        <chart type="line" [data]="dataL2" [options]="optionsL2"></chart>
+                        <small *ngIf='vehicle != null'>Entering: Min:&nbsp;<strong>{{vehicle.min.en}}</strong>&nbsp;Max:&nbsp;<strong>{{vehicle.max.en}}</strong>&nbsp;Avg:&nbsp;<strong>{{vehicle.avg.en}}</strong></small><br>
+                        <small *ngIf='vehicle != null'>Exiting: Min:&nbsp;<strong>{{vehicle.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{vehicle.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{vehicle.avg.ex}}</strong></small>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+       <div class="row">
+            <div class="col-md-12">
+                <nb-card>
+                    <nb-card-body>
+                            <p>By Hour</p>
+                            <chart id='chart' type="horizontalBar" [data]="dataH" [options]="optionsH"></chart>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+
+    </div>
+    </div>
+    
