@@ -10,6 +10,7 @@ server/access.log
 build.sh
 commands_ssl.sh
 install.sh
+install_nginx.sh
 app.zip
 buildDocker.sh
 client.zip
