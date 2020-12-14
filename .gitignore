@@ -7,6 +7,7 @@ server/resources/**
 server/dist/
 server/config.env
 server/access.log
+./vscode/
 build.sh
 commands_ssl.sh
 install.sh
