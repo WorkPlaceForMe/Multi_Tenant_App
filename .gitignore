@@ -6,7 +6,7 @@ server/resources/logoAirtel.ico
 server/resources/**
 server/dist/
 server/config.env
-server/access.log
+node_ubuntu.sh
 build.sh
 commands_ssl.sh
 install.sh
