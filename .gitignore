@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ./client/node_modules/**
 ./server/node_modules/**
 ./server/resources/logoAirtel.png
@@ -8,6 +9,17 @@
 ./server/.dockerignore
 ./server/config.env
 ./server/access.log
+=======
+client/node_modules/
+server/node_modules/
+server/access.log
+server/resources/logoAirtel.png
+server/resources/logoAirtel.ico
+server/resources/**
+server/dist/
+server/config.env
+server/access.log
+>>>>>>> 1272afe7361344aa68cd6c2b4f05dc6ee9589510
 build.sh
 commands_ssl.sh
 install.sh
