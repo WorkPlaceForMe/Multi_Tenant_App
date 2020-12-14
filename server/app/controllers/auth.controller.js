@@ -205,9 +205,11 @@ exports.check = (req,res) =>{
 
 exports.loggOut = (req,res) =>{
   const data = req.body
+  console.log(usersIn)
   for(let a = 0; a < usersIn.length; a++){
     if(data.username == usersIn[a].name){
       usersIn = arrayRemove(usersIn,data.username)
+      console.log(usersIn)
       return res.status(200).send({success: true , message: 'Logged Out'})
     }
   }

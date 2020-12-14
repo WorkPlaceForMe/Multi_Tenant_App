@@ -17,9 +17,11 @@ app.use(compression())
 
 if(process.env.NODE_ENV === 'production'){
     var corsOptions = {
-        origin: `http://${process.env.my_ip}:${process.env.PORT}`
+        origin: `http://${process.env.my_ip}:${process.env.PORT}`,
+        credentials: true,
+        origin: true
       };
-      app.use(cors(corsOptions));
+      app.options('*',cors(corsOptions));
       console.log('Running on Production')
 }
 
@@ -27,7 +29,8 @@ if(process.env.NODE_ENV === 'production'){
 app.use(bodyParser.json({limit: '10mb', extended: true}));
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({limit: '10mb', extended: true}));
-app.use(function(req, res, next) {
+
+app.all(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE');
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-access-token");
