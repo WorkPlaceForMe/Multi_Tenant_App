@@ -16,6 +16,7 @@ server/node_modules/
 server/access.log
 server/resources/logoAirtel.png
 server/resources/logoAirtel.ico
+./server/resources/logo.png
 server/resources/**/
 server/dist/
 server/config.env
