@@ -10,6 +10,7 @@ WORKDIR /home/nodejs/app
 
 # Download dependancies
 COPY package*.json ./
+RUN apt update -y && apt install -y python-pip && pip install --upgrade pip && pip install opencv-python==4.2.0.32
 RUN npm install --production
 
 COPY ./app ./app
