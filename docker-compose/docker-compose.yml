@@ -19,6 +19,7 @@ services:
     image: multi-tenant-server:0.1
     restart: always
     volumes:
+      - ${DATA_DIR}/resources:/home/nodejs/app/resources
       - ./conf/config.env:/home/nodejs/app/config.env
   multi-tenant-ui:
     image: multi-tenant-ui:0.1
