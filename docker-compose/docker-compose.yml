@@ -18,6 +18,20 @@ services:
       - db
     image: multi-tenant-server:0.1
     restart: always
+    environment:
+       PORT: 3300
+       HOST: MultiTenant@123
+       DB: multi_tenant
+       USERM: multi_tenant
+       PASSWORD: MultiTenant@123
+       INSTALL: true
+       NODE_ENV: production
+       my_ip: localhost
+       resources: resources/
+       home: /usr/
+       username: 'src'
+       pathDocker: /app/
+       secret: s0mth1ng_complicat3d-no-fac1l
     volumes:
       - ${DATA_DIR}/resources:/home/nodejs/app/resources
       - ./conf/config.env:/home/nodejs/app/config.env
