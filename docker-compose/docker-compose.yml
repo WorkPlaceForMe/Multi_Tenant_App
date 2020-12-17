@@ -20,7 +20,7 @@ services:
     restart: always
     environment:
        PORT: 3300
-       HOST: MultiTenant@123
+       HOST: db
        DB: multi_tenant
        USERM: multi_tenant
        PASSWORD: MultiTenant@123
@@ -32,6 +32,8 @@ services:
        username: 'src'
        pathDocker: /app/
        secret: s0mth1ng_complicat3d-no-fac1l
+       dialect: mysql
+       WEBSITE_PATH: ./dist
     volumes:
       - ${DATA_DIR}/resources:/home/nodejs/app/resources
       - ./conf/config.env:/home/nodejs/app/config.env
