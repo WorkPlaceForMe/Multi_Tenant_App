@@ -190,7 +190,22 @@ exports.violence = (req, res) =>{
         }
         if(cache == v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
           ress[v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()] = (ress[v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()] || 0) + 1;
+        }        
+        let d = v.time
+        let se = d.getSeconds()
+        let mi = d.getMinutes()
+        let ho = d.getHours()
+        if(se < 10){
+          se = '0' + se;
         }
+        if(mi < 10){
+          mi = '0' + mi;
+        }
+        if(ho < 10){
+          ho = '0' + ho;
+        }
+        d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
+        v['clip_path'] = `${d}_${v.track_id}.mp4`;
       }
       let a = {
           total: result.length,
@@ -647,7 +662,7 @@ exports.vault = (req, res) =>{
 exports.parking = async (req, res) =>{
   
   const data = req.body;
-    await db.con().query(`SELECT * from parking WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+    await db.con().query(`SELECT * from alerts WHERE alert = 'park' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       for(var v of result){
 
@@ -678,7 +693,7 @@ exports.parking = async (req, res) =>{
 exports.anpr = async (req, res) =>{
   
   const data = req.body;
-    await db.con().query(`SELECT * from anpr WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+    await db.con().query(`SELECT * from plate WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       for(var v of result){
 
