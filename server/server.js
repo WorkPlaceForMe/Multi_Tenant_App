@@ -74,7 +74,7 @@ require('./app/routes/analytics.routes')(app);
 //resources being served
 app.use('/api/pictures', express.static(picResourceFolderPath))
 
-const ALGO_CONFIG = process.env.ALGO_CONFIG || '{ "algo_fr": 3301, "algo_am": 3302 }'
+const ALGO_CONFIG = process.env.ALGO_CONFIG || '{ "algo_fr": 3301, "algo_am": 3302, "algo_v": 3303  }'
     let algoConfigs
     try {    
         algoConfigs = JSON.parse(ALGO_CONFIG)
