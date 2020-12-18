@@ -56,7 +56,7 @@ export class AodComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // if(api.length <= 4){
-      if(api.length <= 1){
+      if(api.length <= 4){
       setTimeout(()=>{
         this.face.camera({id: this.camera}).subscribe(
           res =>{
