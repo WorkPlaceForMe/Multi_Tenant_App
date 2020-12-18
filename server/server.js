@@ -84,11 +84,11 @@ const ALGO_CONFIG = process.env.ALGO_CONFIG || '{ "algo_fr": 3301, "algo_am": 33
     }
 
 // client side
-app.use(express.static(process.env.WEBSITE_PATH));
+// app.use(express.static(process.env.WEBSITE_PATH));
 
-// 404 re-route
-app.get('*', function(req,res){
-    res.redirect('/');
-  });
+// // 404 re-route
+// app.get('*', function(req,res){
+//     res.redirect('/');
+//   });
 
 module.exports = app
