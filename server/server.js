@@ -17,7 +17,7 @@ app.use(compression())
 
 if(process.env.NODE_ENV === 'production'){
     var corsOptions = {
-        origin: `http://${process.env.my_ip}:${process.env.PORT}`
+        origin: `http://${process.env.my_ip}:4200`
       };
       app.use(cors(corsOptions));
       console.log('Running on Production')
@@ -74,21 +74,12 @@ require('./app/routes/analytics.routes')(app);
 //resources being served
 app.use('/api/pictures', express.static(picResourceFolderPath))
 
-const ALGO_CONFIG = process.env.ALGO_CONFIG || '{ "algo_fr": 3301, "algo_am": 3302, "algo_v": 3303  }'
-    let algoConfigs
-    try {    
-        algoConfigs = JSON.parse(ALGO_CONFIG)
-    }
-    catch(err) {
-        console.error(`ALGO_CONFIG malformed. Skipping algo proxying: ${JSON.stringify(err)}`)
-    }
+// // client side
+// app.use(express.static(process.env.WEBSITE_PATH));
 
-// client side
-app.use(express.static(process.env.WEBSITE_PATH));
-
-// 404 re-route
-app.get('*', function(req,res){
-    res.redirect('/');
-  });
+// // 404 re-route
+// app.get('*', function(req,res){
+//     res.redirect('/');
+//   });
 
 module.exports = app

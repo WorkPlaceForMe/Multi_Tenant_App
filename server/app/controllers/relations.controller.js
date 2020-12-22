@@ -235,14 +235,20 @@ exports.createRel = (req, res) =>{
                       where: wh
                     }).then(rels => {
                       rels = [...new Set(rels.map(item => item.algo_id))];
-                      var analytics = []
+                      var analyticsPrem = []
+                      var analyticsThreats = []
                       for(var c of algors){
                         for(var d of rels){
                         if(c['id'] == parseInt(d)){
                           if(c['name'] == 'Heatmap'){
                             continue;
                           }
-                          analytics.push({algo_id: parseInt(d), name: c['name'], status : "'primary'"})
+                          if(parseInt(d) == 12 || parseInt(d) == 22 || parseInt(d) == 2 || parseInt(d) == 24){
+                            analyticsPrem.push({algo_id: parseInt(d), name: c['name'], status : "'primary'"})
+                          }else{
+                            analyticsThreats.push({algo_id: parseInt(d), name: c['name'], status : "'primary'"})
+                          }
+                          // analytics.push({algo_id: parseInt(d), name: c['name'], status : "'primary'"})
                         }
                       }
                       }
@@ -251,7 +257,8 @@ exports.createRel = (req, res) =>{
                         attributes: ['name', 'id']
                       }).then(cameras => {
                           let set = {
-                            analytics: analytics,
+                            analyticsP: analyticsPrem,
+                            analyticsT: analyticsThreats,
                             cameras: cameras
                           }
                           res.status(200).send({ success: true, data: set });

@@ -2,16 +2,23 @@
     <div class="col-md-2">
         <nb-card>
             <nb-card-header align='center'>
-                <p>List of dashboards</p>
+                <p>Analytics</p>
             </nb-card-header>
             <nb-card-body>
-                <label class="label">Analytics</label>
-                <nb-radio-group [(ngModel)]='analytic' (ngModelChange)='reload(alg)' *ngFor='let alg of info.analytics'>
+                <label class="label">Premises</label>
+                <nb-radio-group [(ngModel)]='analytic' (ngModelChange)='reload(alg)' *ngFor='let alg of info.analyticsP'>
                     <nb-radio
                       [value]="alg">
                       <small>{{alg.name}}</small>
                     </nb-radio>
                   </nb-radio-group>
+                  <label class="label">Threats</label>
+                  <nb-radio-group [(ngModel)]='analytic' (ngModelChange)='reload(alg)' *ngFor='let algo of info.analyticsT'>
+                      <nb-radio
+                        [value]="algo">
+                        <small>{{algo.name}}</small>
+                      </nb-radio>
+                    </nb-radio-group>
             </nb-card-body>
         </nb-card>
     </div>

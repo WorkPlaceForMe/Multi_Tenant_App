@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { NbCalendarRange, NbComponentStatus, NbDateService, NbGlobalPhysicalPosition, NbGlobalPosition, NbToastrService } from '@nebular/theme';
-import { FacesService } from '../../../../services/faces.service';
 import { Account } from '../../../../models/Account';
 
 @Component({
@@ -17,6 +16,7 @@ export class ControlComponent implements OnInit, OnDestroy {
   fin: Date;
   range: NbCalendarRange<Date>;
   camera: string = '';
+  location: string = '';
   reTime: number = 0;
   refresh: number = 0;
   showRange: boolean;
@@ -26,7 +26,6 @@ export class ControlComponent implements OnInit, OnDestroy {
   constructor(
     private toastrService: NbToastrService,
     protected dateService: NbDateService<Date>,
-    private face: FacesService,
   ) { }
 
   @Output() cameraSel = new EventEmitter<string>();
@@ -60,21 +59,21 @@ export class ControlComponent implements OnInit, OnDestroy {
     }
   }
 
-  
-
   cam(event){
     this.cameraSel.emit(event);
     setTimeout(()=>{
       if(this.rel != false){
-        if(this.camera == '' || event == ''){
-          return this.showToast('Please choose a camera.', 'info');
+        if(event === ''){
+          if(this.camera == ''){
+            return this.showToast('Please choose a camera.', 'info');
+          }
         }else{
           if(this.range.end == undefined){
             return;
           }
           let algo_id = this.analytic.algo_id;
           this.analytic.algo_id = -1;
-          setTimeout(()=>{
+          setTimeout(()=>{            
             this.camera = event;
             this.analytic.algo_id = algo_id
           },50)
@@ -89,10 +88,10 @@ export class ControlComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
-    if(this.now_user.id_branch == '0000'){
-      this.camera = this.now_user.id_account
-      this.analytic.algo_id = -2;
-    }
+    // if(this.now_user.id_branch == '0000'){
+    //   this.camera = this.now_user.id_account
+    //   this.analytic.algo_id = -2;
+    // }
     this.max = this.dateService.addDay(this.dateService.today(), 0);
     let a = this.dateService.addDay(this.dateService.today(), 0);
     this.fin = new Date(a.setHours(a.getHours() + 23))

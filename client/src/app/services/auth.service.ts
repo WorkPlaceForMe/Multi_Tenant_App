@@ -47,6 +47,7 @@ export class AuthService {
   }
 
   signOut(username): Observable<any> {
+    console.log(AUTH_API + 'signout')
     return this.http.post(AUTH_API + 'signout', {
       username: username
     }, httpOptions)

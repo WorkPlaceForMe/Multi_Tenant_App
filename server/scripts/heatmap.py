@@ -4,7 +4,7 @@ import argparse
 import MySQLdb
 from dotenv import load_dotenv
 import os
-load_dotenv('../config.env')
+load_dotenv('./config.env')
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--cameraid", type=str , default=False)
