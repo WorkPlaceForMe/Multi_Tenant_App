@@ -5,7 +5,7 @@ import { AppComponent } from '../../app.component';
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.css']
+  styleUrls: ['./settings.component.css'],
 })
 export class SettingsComponent implements OnInit, OnDestroy {
 
@@ -24,7 +24,7 @@ status:any = {
   aod:0,
   vehicle:0,
   broadcasting:0,
-  system:0
+  system:0,
 }
 
 ini:string;
@@ -65,7 +65,7 @@ this.check = setInterval(()=>{
         }
         console.log(this.status)
       },
-      err => console.log(err)
+      err => console.log(err),
     )
   }
 
