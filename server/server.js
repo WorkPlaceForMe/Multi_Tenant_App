@@ -74,7 +74,7 @@ require('./app/routes/analytics.routes')(app);
 //resources being served
 app.use('/api/pictures', express.static(picResourceFolderPath))
 
-// // client side
+// client side
 // app.use(express.static(process.env.WEBSITE_PATH));
 
 // // 404 re-route
