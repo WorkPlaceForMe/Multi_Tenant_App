@@ -200,7 +200,7 @@ exports.addCamera = (req,res) => {
     }
     let wh;
     if(data.type == 'show'){
-      wh = { id_account :  data.id , algo_id: data.algo_id}
+      wh = { id_branch :  data.id , algo_id: data.algo_id}
     }else{
       wh = { camera_id :  data.id , algo_id: data.algo_id}
     }

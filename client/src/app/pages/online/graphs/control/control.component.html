@@ -30,6 +30,12 @@
         <nb-option *ngFor='let cam of cameras' [value]=cam.id>{{cam.name}}</nb-option>
         </nb-select>
     </div>
+    <div class="col-4" align='right' *ngIf='now_user.id_branch == "0000"'>
+        <nb-select [(ngModel)]='camera' (ngModelChange)='cam($event)'>
+            <nb-option value="" disabled>Choose a location:</nb-option>
+            <nb-option *ngFor='let loc of cameras' [value]=loc.id_branch>{{loc.username}}</nb-option>
+            </nb-select>
+        </div>
     </div>
     
     </div>
