@@ -7,3 +7,17 @@
     padding-top: nb-theme(layout-padding-top);
   }
 }
+
+nb-layout-header {
+  background: #eee;
+  height: 92px;
+  padding: 0px;
+}
+
+.nb-theme-corporate nb-layout-header nav{
+  padding: 0px !important;
+  height: 92px;
+}
+
+
+

@@ -36,6 +36,8 @@
       @include nb-ltr(padding-right, 1.25rem);
       @include nb-rtl(padding-left, 1.25rem);
       text-decoration: none;
+      padding-right: 10px !important;
+      padding-left: 10px;
       color: nb-theme(text-hint-color);
       nb-icon {
         font-size: 1.75rem;
@@ -43,7 +45,7 @@
     }
 
     .logo {
-      padding: 0 1.25rem;
+      padding: 0 10px;
       font-size: 1.75rem;
       @include nb-ltr(border-left, 1px solid nb-theme(divider-color));
       @include nb-rtl(border-right, 1px solid nb-theme(divider-color));
@@ -66,5 +68,13 @@
     nb-select {
       display: none;
     }
+  }
+
+  ngx-header{
+    height: 100%;
+  }
+  .logo-header-container {
+    height: 92px;
+    background: #FFF;
   }
 }

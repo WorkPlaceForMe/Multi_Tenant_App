@@ -10,7 +10,7 @@ import { AuthService } from "../../../services/auth.service";
         <ngx-header></ngx-header>
       </nb-layout-header>
 
-      <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive *ngIf='authService.isLoggedIn == true'>
+      <nb-sidebar state="collapsed" class="menu-sidebar" tag="menu-sidebar" responsive *ngIf='authService.isLoggedIn == true'>
         <ng-content select="nb-menu"></ng-content>
       </nb-sidebar>
 
