@@ -11,7 +11,6 @@ import { AccountService } from '../../../../services/account.service';
 export class CenterComponent implements OnInit {
 
   constructor(
-    private facesService: FacesService,
     private accountserv: AccountService,
     private face: FacesService,
     ) { }
@@ -23,8 +22,13 @@ export class CenterComponent implements OnInit {
   reCache: number;
   now_user: Account;
   analytic ={
-    algo_id: -1,
-    name: ''
+    algo_id: -3,
+    name: 'Dashboard'
+  }
+  overview ={
+    algo_id: -3,
+    name: 'Dashboard',
+    status: "'primary'"
   }
 
 

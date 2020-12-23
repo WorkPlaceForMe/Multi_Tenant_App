@@ -198,6 +198,9 @@ exports.addCamera = (req,res) => {
     if(data.algo_id == -2){
       return res.status(200).send({ success: true, message: 'Skipping'});
     }
+    if(data.algo_id == -3){
+      return res.status(200).send({ success: true, fact: true});
+    }
     let wh;
     if(data.type == 'show'){
       wh = { id_branch :  data.id , algo_id: data.algo_id}
