@@ -61,7 +61,10 @@ export class CenterComponent implements OnInit {
     if(algo){
       this.analytic = algo;
     }else{
-      this.aaa;
+      this.analytic ={
+        algo_id: -1,
+        name: ''
+      };
     }
    
     if(this.camera != ''){
