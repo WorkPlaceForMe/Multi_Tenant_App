@@ -55,18 +55,6 @@ export class ViolComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if(api.length <= 4){
-      setTimeout(()=>{
-        this.face.camera({id: this.camera}).subscribe(
-          res =>{
-            this.player = new JSMpeg.Player(`ws://localhost:${res['port']}`, {
-              canvas: this.streamingcanvas.nativeElement, autoplay: true, audio: false, loop: true
-            })
-          },
-          err=> console.error(err)
-        )
-      },500)
-    }
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
     var time = new Date();
     this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0,3);

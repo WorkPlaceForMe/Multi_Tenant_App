@@ -46,18 +46,6 @@ export class QueueComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if(api.length <= 4){
-      setTimeout(()=>{
-        this.face.camera({id: this.camera}).subscribe(
-          res =>{
-            this.player = new JSMpeg.Player(`ws://localhost:${res['port']}`, {
-              canvas: this.streamingcanvas.nativeElement, autoplay: true, audio: false, loop: true
-            })
-          },
-          err=> console.error(err)
-        )
-      },500)
-    }
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
     let type;
     if(this.now_user.id_branch != '0000'){
