@@ -8,7 +8,7 @@ exports.loitering = async (req, res) =>{
   
     let token = req.headers["x-access-token"];
     const data = req.body;
-    jwt.verify(token, process.env.secret, (err, decoded) => {
+    jwt.verify(token, process.env.secret, async (err, decoded) => {
       let wh;
       if(decoded.id_branch != 0000){
         wh = {id_branch: decoded.id_branch, algo_id : 2 }
@@ -18,7 +18,7 @@ exports.loitering = async (req, res) =>{
         Relation.findOne({
             where: wh
           }).then(rel => {
-       await db.con().query(`SELECT * from loitering WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+       db.con().query(`SELECT * from loitering WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
         if (err) return res.status(500).json({success: false, message: err});
         let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
         let avg = 0;
@@ -104,10 +104,8 @@ exports.loitering = async (req, res) =>{
 }
 
 exports.intrude = async (req, res) =>{
-  
-  let token = req.headers["x-access-token"];
+
   const data = req.body;
-  jwt.verify(token, process.env.secret, (err, decoded) => {
     await db.con().query(`SELECT * from intrude WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
@@ -163,14 +161,12 @@ exports.intrude = async (req, res) =>{
       }
       res.status(200).json({success: true, data: a})
     });
-  })
 }
 
 exports.violence = async (req, res) =>{
-  
-  let token = req.headers["x-access-token"];
+
   const data = req.body;
-  jwt.verify(token, process.env.secret, (err, decoded) => {
+
      await db.con().query(`SELECT * from violence WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {};
@@ -214,7 +210,6 @@ exports.violence = async (req, res) =>{
       }
       res.status(200).json({success: true, data: a})
     });
-  })
 }
 
 exports.aod = async (req, res) =>{
@@ -266,10 +261,8 @@ exports.aod = async (req, res) =>{
 }
 
 exports.covered = async (req, res) =>{
-  
-  let token = req.headers["x-access-token"];
   const data = req.body;
-  jwt.verify(token, process.env.secret, (err, decoded) => {
+
     await db.con().query(`SELECT * from alerts WHERE alert= 'no mask' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {};
@@ -313,14 +306,10 @@ exports.covered = async (req, res) =>{
       }
       res.status(200).json({success: true, data: a})
     });
-  })
 }
 
 exports.social = async (req, res) =>{
-  
-  let token = req.headers["x-access-token"];
   const data = req.body;
-  jwt.verify(token, process.env.secret, (err, decoded) => {
     await db.con().query(`SELECT * from alerts WHERE alert= 'sociald' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {"0": 0, "1":0, "2": 0}
@@ -367,7 +356,6 @@ exports.social = async (req, res) =>{
       }
       res.status(200).json({success: true, data: a})
     });
-  })
 }
 
 exports.pc = async (req, res) =>{
@@ -469,10 +457,9 @@ exports.pc = async (req, res) =>{
 }
 
 exports.helm = async (req, res) =>{
-  
-  let token = req.headers["x-access-token"];
+
   const data = req.body;
-  jwt.verify(token, process.env.secret, (err, decoded) => {
+
      await db.con().query(`SELECT * from alerts WHERE alert= 'helmet' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {};
@@ -516,7 +503,6 @@ exports.helm = async (req, res) =>{
       }
       res.status(200).json({success: true, data: a})
     });
-  })
 }
 
 function display (seconds) {
@@ -591,10 +577,9 @@ exports.queue = async (req, res) =>{
 }
 
 exports.vault = async (req, res) =>{
-  
-  let token = req.headers["x-access-token"];
+
   const data = req.body;
-  jwt.verify(token, process.env.secret, (err, decoded) => {
+
      await db.con().query(`SELECT * from vault WHERE  ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
@@ -656,7 +641,6 @@ exports.vault = async (req, res) =>{
       }
       res.status(200).json({success: true, data: a})
     });
-  })
 }
 
 exports.parking = async (req, res) =>{
