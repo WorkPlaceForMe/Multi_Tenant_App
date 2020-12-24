@@ -57,7 +57,13 @@ export class CenterComponent implements OnInit {
     },err => console.error(err))
   }
 
-  reload(alg){
+  reload( algo ){
+    if(algo){
+      this.analytic = algo;
+    }else{
+      this.aaa;
+    }
+   
     if(this.camera != ''){
       let id,type;
       id = this.analytic.algo_id

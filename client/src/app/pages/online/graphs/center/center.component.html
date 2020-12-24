@@ -1,28 +1,25 @@
 <div class="row">
-    <div class="col-md-2">
-        <nb-card>
-            <nb-card-header align='center'>
-                <p>Analytics</p>
-            </nb-card-header>
-            <nb-card-body>
-                <label class="label">Premises</label>
-                <nb-radio-group [(ngModel)]='analytic' (ngModelChange)='reload(alg)' *ngFor='let alg of info.analyticsP'>
-                    <nb-radio
-                      [value]="alg">
-                      <small>{{alg.name}}</small>
-                    </nb-radio>
-                  </nb-radio-group>
-                  <label class="label">Threats</label>
-                  <nb-radio-group [(ngModel)]='analytic' (ngModelChange)='reload(alg)' *ngFor='let algo of info.analyticsT'>
-                      <nb-radio
-                        [value]="algo">
-                        <small>{{algo.name}}</small>
-                      </nb-radio>
-                    </nb-radio-group>
-            </nb-card-body>
-        </nb-card>
+    <div class="col-md-2 left-column">
+        <div class="logo-container">
+          <img src="/api/pictures/logo.png" >
+        </div>
+    
+        <label class="algo-category">PREMISES</label>
+        <mat-selection-list #premisescams [multiple]="false">
+          <mat-list-option (click)="reload(alg)" *ngFor="let alg of info.analyticsP" [value]="alg">
+            {{alg.name}}
+          </mat-list-option>
+        </mat-selection-list>
+        <label class="algo-category">THREATS</label>
+        <mat-selection-list #premisescams [multiple]="false">
+          <mat-list-option (click)="reload(alg)" *ngFor="let alg of info.analyticsT" [value]="alg">
+            {{alg.name}}
+          </mat-list-option>
+        </mat-selection-list>
+
+
     </div>
-    <div class="col-md-10">
+    <div class="col-md-10 right-column">
        <ngx-control [analytic]="analytic" [cameras]='cameras' (cameraSel)="aaa($event)" [rel]='rel'></ngx-control>
     </div>
 </div>

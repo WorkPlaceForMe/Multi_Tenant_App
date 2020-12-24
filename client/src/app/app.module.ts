@@ -12,6 +12,7 @@ import { AnnotationsService } from './services/annotations.service';
 import { ColorsService } from './services/colors';
 import { StrService } from './services/strArray';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatListModule } from '@angular/material/list';
 import {
   NbChatModule,
   NbDatepickerModule,
@@ -33,6 +34,7 @@ import { VgCoreModule } from '@videogular/ngx-videogular/core';
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
+    MatListModule,
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
     NbDatepickerModule.forRoot(),

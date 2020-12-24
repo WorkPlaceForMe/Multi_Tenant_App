@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { AuthService } from "../../../services/auth.service";
 
 @Component({
@@ -6,11 +6,11 @@ import { AuthService } from "../../../services/auth.service";
   styleUrls: ['./one-column.layout.scss'],
   template: `
     <nb-layout windowMode>
-      <nb-layout-header fixed *ngIf='authService.isLoggedIn == true'>
+      <nb-layout-header fixed *ngIf='authService.isLoggedIn == true && showHeader'>
         <ngx-header></ngx-header>
       </nb-layout-header>
 
-      <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive *ngIf='authService.isLoggedIn == true'>
+      <nb-sidebar state="collapsed" class="menu-sidebar" tag="menu-sidebar" responsive *ngIf='authService.isLoggedIn == true'>
         <ng-content select="nb-menu"></ng-content>
       </nb-sidebar>
 
@@ -21,5 +21,6 @@ import { AuthService } from "../../../services/auth.service";
   `,
 })
 export class OneColumnLayoutComponent {
+  @Input() showHeader: true;
 constructor(public authService: AuthService){}
 }
