@@ -18,18 +18,18 @@ constructor(
     Observable<boolean> | Promise<boolean> | boolean {
       if(this.authService.isAdminClientBranch !== true){
         if(this.authService.isLoggedIn !== true) {
-          window.location.reload()
           this.authService.signOut(JSON.parse(localStorage.getItem('now_user'))['username']).subscribe(
             res=>{
               window.localStorage.clear();
               window.sessionStorage.clear();
               window.location.reload()
-              // this.router.navigate(['/'])
+              this.router.navigate(['/'])
             }, err =>{ 
               console.error(err)
               window.localStorage.clear();
               window.sessionStorage.clear();
               window.location.reload()
+              this.router.navigate(['/'])
             }
         )
         } else {
@@ -48,12 +48,13 @@ constructor(
               window.localStorage.clear();
               window.sessionStorage.clear();
               window.location.reload()
-              // this.router.navigate(['/'])
+              this.router.navigate(['/'])
             }, err =>{ 
               console.error(err)
               window.localStorage.clear();
               window.sessionStorage.clear();
               window.location.reload()
+              this.router.navigate(['/'])
             }
         )
         }

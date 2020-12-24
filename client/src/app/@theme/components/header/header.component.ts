@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
 import { api } from '../../../models/API'
 import { Account } from '../../../models/Account';
-
 import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
@@ -54,27 +53,29 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private layoutService: LayoutService,
               private breakpointService: NbMediaBreakpointsService,
               public authservice: AuthService,
-              public router: Router
+              public router: Router,
               ) {
                 this.pic = `${api}/pictures/logo.png`
   }
 
-  logOut(){
-    this.authservice.signOut(this.now_user.username).subscribe(
-        res=>{
-          window.localStorage.clear();
-          window.sessionStorage.clear();
-          this.router.navigate(['/'])
-          window.location.reload()
-        }, err =>{ 
-          console.error(err)
-          window.localStorage.clear();
-          window.sessionStorage.clear();
-          this.router.navigate(['/'])
-          window.location.reload()
-        }
-    )
+  signOff(){
+   const us = JSON.parse(localStorage.getItem('now_user'))['username']
+   this.authservice.signOut(us).subscribe(
+    res=>{
+      window.localStorage.clear();
+      window.sessionStorage.clear();
+      window.location.reload()
+      this.router.navigate(['/'])
+    }, err =>{ 
+      console.error(err)
+      window.localStorage.clear();
+      window.sessionStorage.clear();
+      window.location.reload()
+      this.router.navigate(['/'])
+    }
+)
   }
+
 
   ngOnInit() {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))

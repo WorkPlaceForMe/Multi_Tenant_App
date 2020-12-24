@@ -29,12 +29,13 @@ export class AuthGuard implements CanActivate {
               window.localStorage.clear();
               window.sessionStorage.clear();
               window.location.reload()
-              // this.router.navigate(['/'])
+              this.router.navigate(['/'])
             }, err =>{ 
               console.error(err)
               window.localStorage.clear();
               window.sessionStorage.clear();
               window.location.reload()
+              this.router.navigate(['/'])
             }
         )
         }
