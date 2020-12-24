@@ -4,7 +4,7 @@ var jwt = require("jsonwebtoken");
 var db=require('../models/dbmysql');
 const Relation = db1.relation
 
-exports.loitering = (req, res) =>{
+exports.loitering = async (req, res) =>{
   
     let token = req.headers["x-access-token"];
     const data = req.body;
@@ -18,7 +18,7 @@ exports.loitering = (req, res) =>{
         Relation.findOne({
             where: wh
           }).then(rel => {
-       db.con().query(`SELECT * from loitering WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+       await db.con().query(`SELECT * from loitering WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
         if (err) return res.status(500).json({success: false, message: err});
         let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
         let avg = 0;
@@ -103,12 +103,12 @@ exports.loitering = (req, res) =>{
   })
 }
 
-exports.intrude = (req, res) =>{
+exports.intrude = async (req, res) =>{
   
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
-     db.con().query(`SELECT * from intrude WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+    await db.con().query(`SELECT * from intrude WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
       let ress = {}
@@ -166,12 +166,12 @@ exports.intrude = (req, res) =>{
   })
 }
 
-exports.violence = (req, res) =>{
+exports.violence = async (req, res) =>{
   
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
-     db.con().query(`SELECT * from violence WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+     await db.con().query(`SELECT * from violence WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {};
       let cache = '';
@@ -265,12 +265,12 @@ exports.aod = async (req, res) =>{
     });
 }
 
-exports.covered = (req, res) =>{
+exports.covered = async (req, res) =>{
   
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
-     db.con().query(`SELECT * from alerts WHERE alert= 'no mask' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+    await db.con().query(`SELECT * from alerts WHERE alert= 'no mask' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {};
       let cache = '';
@@ -316,12 +316,12 @@ exports.covered = (req, res) =>{
   })
 }
 
-exports.social = (req, res) =>{
+exports.social = async (req, res) =>{
   
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
-     db.con().query(`SELECT * from alerts WHERE alert= 'sociald' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+    await db.con().query(`SELECT * from alerts WHERE alert= 'sociald' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {"0": 0, "1":0, "2": 0}
       let ressover = {};
@@ -468,12 +468,12 @@ exports.pc = async (req, res) =>{
     });
 }
 
-exports.helm = (req, res) =>{
+exports.helm = async (req, res) =>{
   
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
-     db.con().query(`SELECT * from alerts WHERE alert= 'helmet' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+     await db.con().query(`SELECT * from alerts WHERE alert= 'helmet' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {};
       let cache = '';
@@ -527,9 +527,9 @@ function display (seconds) {
   return [hours, minutes, seconds % 60].map(format).join(':')
 }
 
-exports.queue = (req, res) =>{
+exports.queue = async (req, res) =>{
   const data = req.body;
-     db.con().query(`SELECT * from queue_mgt WHERE ${data.type} = '${req.params.id}' and start_time >= '${data.start}' and  start_time <= '${data.end}' order by start_time asc;`, function (err, result) {
+     await db.con().query(`SELECT * from queue_mgt WHERE ${data.type} = '${req.params.id}' and start_time >= '${data.start}' and  start_time <= '${data.end}' order by start_time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let countIn = 0;
       let avg = 0;
@@ -590,12 +590,12 @@ exports.queue = (req, res) =>{
 
 }
 
-exports.vault = (req, res) =>{
+exports.vault = async (req, res) =>{
   
   let token = req.headers["x-access-token"];
   const data = req.body;
   jwt.verify(token, process.env.secret, (err, decoded) => {
-     db.con().query(`SELECT * from vault WHERE  ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+     await db.con().query(`SELECT * from vault WHERE  ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
       let ress = {};
