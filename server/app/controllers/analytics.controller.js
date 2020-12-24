@@ -559,7 +559,7 @@ exports.queue = (req, res) =>{
           ho = '0' + ho;
         }
         d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
-        v['picture'] = `${d}_${v.trackid}.jpg`;
+        v['picture'] = `${d}_${v.track_id}.jpg`;
       }
       for(var e of times){
         avg = avg + e.time;
