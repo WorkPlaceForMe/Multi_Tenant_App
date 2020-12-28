@@ -17,8 +17,8 @@ exports.loitering = async (req, res) =>{
       }
         Relation.findOne({
             where: wh
-          }).then(rel => {
-       db.con().query(`SELECT * from loitering WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+          }).then(async rel => {
+      await db.con().query(`SELECT * from loitering WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
         if (err) return res.status(500).json({success: false, message: err});
         let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
         let avg = 0;
