@@ -29,6 +29,7 @@ export class ControlComponent implements OnInit, OnDestroy {
   calMonths: string[] = ["Jan", "Feb", "March", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
   selectedDate: Date;
+  selectedMonth: Date;
   lastMonths: Date[] = [];
   
   currentSelection: string  = "Date";
@@ -51,15 +52,38 @@ export class ControlComponent implements OnInit, OnDestroy {
     }else{
       this.rangeSelector.hide();
     }
-   
   }
 
   setDate(){
-
+    if(this.selectedDate){
+      let start = this.selectedDate;
+      //Add one data and minus 1 sec to set time to end of the day
+      let end = this.dateService.addDay(start, 1);
+      end = new Date(end.getTime()-1000);
+      this.range = {
+        start: new Date(start),
+        end: new Date(end)
+      }
+      this.cam(this.camera)
+      this.showRangeSelector(false);
+    }
   }
 
   setMonth(){
-
+    if(this.selectedMonth){
+      let start = this.selectedMonth;
+      //Add one month and minus 1 second to go to the end of the month
+      let end = this.dateService.addMonth(start, 1);
+      end = new Date(end.getTime()-1000);
+      this.range = {
+        start: new Date(start),
+        end: new Date(end)
+      }
+      this.cam(this.camera)
+      this.showRangeSelector(false);
+      
+    }
+    
   }
 
   changeRange(event){
@@ -136,13 +160,21 @@ export class ControlComponent implements OnInit, OnDestroy {
     }
 
     this.initMonths();
+    this.selectedDate =  this.dateService.addDay(this.dateService.today(), 0);
   }
 
   initMonths(){
     let t = this.dateService.today();
+
+    // Go to start of the month
+    let daysToMinus = t.getDate()-1;
+    daysToMinus *= -1;
+    t = this.dateService.addDay(t, daysToMinus)
+
+
     this.lastMonths.push(t);
     for(let i = 1; i <= 12; i++){
-        let a = i*-1;
+        let a = -1 * i;
         this.lastMonths.push(this.dateService.addMonth(t, a));
     }
 
