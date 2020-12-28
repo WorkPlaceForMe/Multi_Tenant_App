@@ -1,6 +1,5 @@
 
 require('dotenv').config({ path: '../../config.env'});
-console.log(process.env.DIALECT,process.env.HOST)
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(
   process.env.DB,
