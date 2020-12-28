@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { NbCalendarRange, NbComponentStatus, NbDateService, NbGlobalPhysicalPosition, NbGlobalPosition, NbToastrService } from '@nebular/theme';
 import { Account } from '../../../../models/Account';
+import { NbPopoverDirective } from '@nebular/theme';
 
 @Component({
   selector: 'ngx-control',
@@ -8,6 +9,8 @@ import { Account } from '../../../../models/Account';
   styleUrls: ['./control.component.scss']
 })
 export class ControlComponent implements OnInit, OnDestroy {
+
+  @ViewChild(NbPopoverDirective) rangeSelector: NbPopoverDirective;
 
   @Input() analytic;
   @Input() cameras;
@@ -23,12 +26,29 @@ export class ControlComponent implements OnInit, OnDestroy {
   renew: any;
   timezone: string;
   now_user: Account;
+  
+  currentSelection: string  = "Date";
+
+
   constructor(
     private toastrService: NbToastrService,
     protected dateService: NbDateService<Date>,
   ) { }
 
   @Output() cameraSel = new EventEmitter<string>();
+
+  selectRangeType(type){
+    this.currentSelection = type;
+  }
+
+  showRangeSelector(show: boolean){
+    if(show){
+      this.rangeSelector.show();
+    }else{
+      this.rangeSelector.hide();
+    }
+   
+  }
 
   changeRange(event){
     if(event.end != undefined){
@@ -41,6 +61,7 @@ export class ControlComponent implements OnInit, OnDestroy {
         end: new Date(event.end)
       }
       this.cam(this.camera)
+      this.showRangeSelector(false);
     }else{
       this.showRange = true;
     }

@@ -37,6 +37,7 @@ import { NbCardModule, NbIconModule, NbInputModule, NbTreeGridModule, NbAccordio
   NbCheckboxModule,
   NbRadioModule,
   NbDatepickerModule,
+  NbFormFieldModule,
   NbSelectModule, NbSpinnerModule } from '@nebular/theme';
 
 // import { TableComponent } from './facial_recognition/table/table.component';
@@ -103,6 +104,7 @@ import { VehicleComponent } from './online/graphs/vehicle/vehicle.component';
     NbListModule,
     NbRouteTabsetModule,
     NbStepperModule,
+    NbFormFieldModule,
     NbTabsetModule, NbUserModule,
     NbCardModule,
     NbTreeGridModule,

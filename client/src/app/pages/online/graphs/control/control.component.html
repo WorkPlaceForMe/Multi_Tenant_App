@@ -4,18 +4,33 @@
             <h5>{{analytic.name}}</h5>
         </div>
         <div class="col-8" align='right'>
-    <input nbInput placeholder="Today - Pick a new Range" [nbDatepicker]="rangepicker">
-    <nb-rangepicker #rangepicker [max]="max" [(range)]="range" style='margin-left: 2px;' (rangeChange)="changeRange($event)"></nb-rangepicker>
-    <button  nbButton [status]="'primary'" (click)="reload()"><i class="fas fa-sync-alt"></i></button>
-    <nb-select [(ngModel)]='reTime' (ngModelChange)='set($event)' id='select'>
-    <nb-option [value]=0>Off</nb-option>
-    <nb-option [value]=5>5 s</nb-option>
-    <nb-option [value]=30>30 s</nb-option>
-    <nb-option [value]=60>1 m</nb-option>
-    <nb-option [value]=300>5 m</nb-option>
-    <nb-option [value]=600>10 m</nb-option>
-    </nb-select>
-    </div>
+            <div class = "row">
+                <div class = "col">
+                </div>
+                <div class="col-md-auto" align='right' *ngIf='now_user.id_branch != "0000"'>
+                    <nb-select [(ngModel)]='camera' (ngModelChange)='cam($event)'>
+                        <nb-option value="" disabled>Choose a camera:</nb-option>
+                        <nb-option *ngFor='let cam of cameras' [value]=cam.id>{{cam.name}}</nb-option>
+                        </nb-select>
+                </div>
+                <div class="col-md-auto">
+                    <button class="ctr-btn" #popover (click) = "showRangeSelector(true)" [nbPopover]="rangeSelector" nbPopoverTrigger="noop" nbPopoverPlacement="bottom" nbButton>{{currentSelection}} <nb-icon icon="calendar"></nb-icon></button>
+                </div>
+                <div class = "col-md-auto">
+                    <button  class="ctr-btn" nbButton status="primary" (click)="reload()"><i class="fas fa-sync-alt"></i></button>
+                </div>
+                <div class = "col-md-auto">
+                    <nb-select class="ctr-btn" [(ngModel)]='reTime' (ngModelChange)='set($event)' id='select'>
+                        <nb-option [value]=0>Off</nb-option>
+                        <nb-option [value]=5>5 s</nb-option>
+                        <nb-option [value]=30>30 s</nb-option>
+                        <nb-option [value]=60>1 m</nb-option>
+                        <nb-option [value]=300>5 m</nb-option>
+                        <nb-option [value]=600>10 m</nb-option>
+                    </nb-select>
+                </div>
+            </div>
+        </div>
     </div>
     
     <div class="row justify-content-end">
@@ -23,12 +38,6 @@
         <div *ngIf="showRange" class="text-danger wrap-text" align='right'>
             <small>Fill the range, for a day, click it twice.</small>
         </div>
-    </div>
-        <div class="col-4" align='right' *ngIf='now_user.id_branch != "0000"'>
-    <nb-select [(ngModel)]='camera' (ngModelChange)='cam($event)'>
-        <nb-option value="" disabled>Choose a camera:</nb-option>
-        <nb-option *ngFor='let cam of cameras' [value]=cam.id>{{cam.name}}</nb-option>
-        </nb-select>
     </div>
     <div class="col-4" align='right' *ngIf='now_user.id_branch == "0000"'>
         <nb-select [(ngModel)]='camera' (ngModelChange)='cam($event)'>
@@ -41,23 +50,66 @@
     </div>
     
     <div class="container" *ngIf='camera != ""'>
-    <div class='col-md-12' style="margin-top: 5px;" [ngSwitch]='analytic.algo_id'>
-        <nb-card *ngSwitchCase='-1' [nbSpinner]="'primary'" nbSpinnerSize="medium" nbSpinnerStatus="primary" fullWdith><nb-card-body>&nbsp;</nb-card-body></nb-card>
-        <nb-card *ngSwitchCase='-2'><nb-card-body>&nbsp;</nb-card-body></nb-card>
-        <ngx-pc *ngSwitchCase='12' [range]='range' [camera]='camera'></ngx-pc>
-        <ngx-loit *ngSwitchCase='2' [range]='range' [camera]='camera'></ngx-loit>
-        <ngx-intr *ngSwitchCase='17' [range]='range' [camera]='camera'></ngx-intr>
-        <ngx-viol *ngSwitchCase='19' [range]='range' [camera]='camera'></ngx-viol>
-        <ngx-aod *ngSwitchCase='16' [range]='range' [camera]='camera'></ngx-aod>
-        <ngx-c-face *ngSwitchCase='20' [range]='range' [camera]='camera'></ngx-c-face>
-        <ngx-social *ngSwitchCase='21' [range]='range' [camera]='camera'></ngx-social>
-        <ngx-queue *ngSwitchCase='22' [range]='range' [camera]='camera'></ngx-queue>
-        <ngx-helm *ngSwitchCase='23' [range]='range' [camera]='camera'></ngx-helm>
-        <ngx-vault *ngSwitchCase='24' [range]='range' [camera]='camera'></ngx-vault>
-        <ngx-parking *ngSwitchCase='4' [range]='range' [camera]='camera'></ngx-parking>
-        <ngx-anpr *ngSwitchCase='13' [range]='range' [camera]='camera'></ngx-anpr>
-        <ngx-barrier *ngSwitchCase='25' [range]='range' [camera]='camera'></ngx-barrier>
-        <ngx-vehicle *ngSwitchCase='26' [range]='range' [camera]='camera'></ngx-vehicle>
-    </div>
+        <div class='col-md-12' style="margin-top: 5px;" [ngSwitch]='analytic.algo_id'>
+            <nb-card *ngSwitchCase='-1' [nbSpinner]="'primary'" nbSpinnerSize="medium" nbSpinnerStatus="primary" fullWdith><nb-card-body>&nbsp;</nb-card-body></nb-card>
+            <nb-card *ngSwitchCase='-2'><nb-card-body>&nbsp;</nb-card-body></nb-card>
+            <ngx-pc *ngSwitchCase='12' [range]='range' [camera]='camera'></ngx-pc>
+            <ngx-loit *ngSwitchCase='2' [range]='range' [camera]='camera'></ngx-loit>
+            <ngx-intr *ngSwitchCase='17' [range]='range' [camera]='camera'></ngx-intr>
+            <ngx-viol *ngSwitchCase='19' [range]='range' [camera]='camera'></ngx-viol>
+            <ngx-aod *ngSwitchCase='16' [range]='range' [camera]='camera'></ngx-aod>
+            <ngx-c-face *ngSwitchCase='20' [range]='range' [camera]='camera'></ngx-c-face>
+            <ngx-social *ngSwitchCase='21' [range]='range' [camera]='camera'></ngx-social>
+            <ngx-queue *ngSwitchCase='22' [range]='range' [camera]='camera'></ngx-queue>
+            <ngx-helm *ngSwitchCase='23' [range]='range' [camera]='camera'></ngx-helm>
+            <ngx-vault *ngSwitchCase='24' [range]='range' [camera]='camera'></ngx-vault>
+            <ngx-parking *ngSwitchCase='4' [range]='range' [camera]='camera'></ngx-parking>
+            <ngx-anpr *ngSwitchCase='13' [range]='range' [camera]='camera'></ngx-anpr>
+            <ngx-barrier *ngSwitchCase='25' [range]='range' [camera]='camera'></ngx-barrier>
+            <ngx-vehicle *ngSwitchCase='26' [range]='range' [camera]='camera'></ngx-vehicle>
+        </div>
     </div>
     
+    <ng-template #rangeSelector>
+        <nb-card class="margin-bottom-0">
+            <nb-list>
+                <nb-list-item >
+                    <div class = "row">
+                        <div class = "col-4" (click) = "selectRangeType('Date')">
+                                <nb-radio [checked] = "currentSelection=='Date'" >Date</nb-radio>
+                        </div>  
+                        <div class = "col-8">
+                            <input nbInput placeholder="Pick Date"  [disabled] = "currentSelection != 'Date'" [nbDatepicker]="dateTimePicker">
+                           <nb-datepicker (dateChange) = "showRangeSelector(false)" #dateTimePicker></nb-datepicker>
+                        </div>
+                    </div>
+                </nb-list-item>
+                <nb-list-item >
+                    <div class = "row" >
+                        <div class = "col-4" (click) = "selectRangeType('Month')">
+                                <nb-radio [checked] = "currentSelection=='Month'" (onClick) = "selectRangeType('Month')">Month</nb-radio>
+                        </div>  
+                        <div class = "col-8" >
+                            <nb-select (selectedChange) = "showRangeSelector(false)" placeholder="Select Showcase" [disabled] = "currentSelection != 'Month'" [(selected)]="selectedItem">
+                                <nb-option value="">Dec 2020</nb-option>
+                                <nb-option value="0">Nov 2020</nb-option>
+                                <nb-option value="1">Oct 2020</nb-option>
+                                <nb-option value="2">Sept 2020</nb-option>
+                            </nb-select>
+                        </div>
+                    </div>
+                </nb-list-item>
+                <nb-list-item >
+                    <div class = "row">
+                        <div class = "col-4" (click) = "selectRangeType('Custom')">
+                                <nb-radio [checked] = "currentSelection=='Custom'" (onClick) = "selectRangeType('Custom')">Custom</nb-radio>
+                        </div>  
+                        <div class = "col-8">
+                                <input  nbInput placeholder="Today - Pick a new Range" [nbDatepicker]="rangepicker" [disabled] = "currentSelection != 'Custom'">
+                                <nb-rangepicker  #rangepicker [max]="max" [(range)]="range" style='margin-left: 2px;' (rangeChange)="changeRange($event)"></nb-rangepicker> 
+                        </div>
+                    </div>
+                </nb-list-item>
+            </nb-list>
+        </nb-card>
+    </ng-template>
