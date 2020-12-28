@@ -10,6 +10,7 @@ import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { VideoComponent } from '../video/video.component';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
+import { emit } from 'process';
 
 @Component({
   selector: 'ngx-viol',
@@ -53,6 +54,14 @@ export class ViolComponent implements OnInit, OnDestroy {
       )
     }
   }
+
+  @ViewChild("videoPlayer", { static: false }) videoplayer: ElementRef;
+  isPlay: boolean = false;
+  toggleVideo(event: any) {
+    this.videoplayer.nativeElement.play();
+  }
+
+  videoFile:string = "";
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
@@ -176,6 +185,12 @@ export class ViolComponent implements OnInit, OnDestroy {
   got(id){
     this.route.navigate([`/pages/tickets`])
   }
+  pass(vid:string){
+    this.videoplayer.nativeElement.src = vid    
+    this.videoplayer.nativeElement.load();
+    this.videoplayer.nativeElement.play();
+
+  }
   settings = {
     mode: 'external',
     actions: {
@@ -202,9 +217,9 @@ export class ViolComponent implements OnInit, OnDestroy {
         type: 'custom',
         filter: false,
         renderComponent: ButtonViewComponent,
-        onComponentInitFunction(instance) {
-          instance.save.subscribe(row => {
-            alert(`${row.name} saved!`)
+        onComponentInitFunction:(instance) => {
+          instance.save.subscribe((row: string)  => {
+            this.pass(row)
           });
         }
       },
@@ -228,12 +243,10 @@ export class ViolComponent implements OnInit, OnDestroy {
 
 }
 
-
-
 @Component({
   selector: 'button-view',
   template: `
-    <button class='btn btn-primary btn-block' (click)="openWindowForm()"><i class="fas fa-play-circle"></i></button>
+    <button class='btn btn-primary btn-block' (click)="openVideo()"><i class="fas fa-play-circle"></i></button>
   `,
 })
 export class ButtonViewComponent implements ViewCell, OnInit {
@@ -246,6 +259,10 @@ export class ButtonViewComponent implements ViewCell, OnInit {
   @Input() rowData: any;
 
   @Output() save: EventEmitter<any> = new EventEmitter();
+
+  openVideo(){
+    this.save.emit(this.rowData.picture)
+  }
 
   openWindowForm() {
     window.open(this.rowData.picture, "_blank");

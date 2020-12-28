@@ -201,7 +201,7 @@ exports.violence = async (req, res) =>{
           ho = '0' + ho;
         }
         d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
-        v['clip_path'] = `${d}.mp4`;
+        // v['clip_path'] = `${d}.mp4`;
       }
       let a = {
           total: result.length,
