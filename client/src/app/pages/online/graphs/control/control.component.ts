@@ -26,6 +26,10 @@ export class ControlComponent implements OnInit, OnDestroy {
   renew: any;
   timezone: string;
   now_user: Account;
+  calMonths: string[] = ["Jan", "Feb", "March", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+  selectedDate: Date;
+  lastMonths: Date[] = [];
   
   currentSelection: string  = "Date";
 
@@ -48,6 +52,14 @@ export class ControlComponent implements OnInit, OnDestroy {
       this.rangeSelector.hide();
     }
    
+  }
+
+  setDate(){
+
+  }
+
+  setMonth(){
+
   }
 
   changeRange(event){
@@ -122,6 +134,18 @@ export class ControlComponent implements OnInit, OnDestroy {
       start: new Date(this.max),
       end: new Date(this.fin)
     }
+
+    this.initMonths();
+  }
+
+  initMonths(){
+    let t = this.dateService.today();
+    this.lastMonths.push(t);
+    for(let i = 1; i <= 12; i++){
+        let a = i*-1;
+        this.lastMonths.push(this.dateService.addMonth(t, a));
+    }
+
   }
 
   ngOnDestroy(){

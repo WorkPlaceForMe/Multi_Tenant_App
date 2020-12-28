@@ -91,10 +91,7 @@
                         </div>  
                         <div class = "col-8" >
                             <nb-select (selectedChange) = "showRangeSelector(false)" placeholder="Select Showcase" [disabled] = "currentSelection != 'Month'" [(selected)]="selectedItem">
-                                <nb-option value="">Dec 2020</nb-option>
-                                <nb-option value="0">Nov 2020</nb-option>
-                                <nb-option value="1">Oct 2020</nb-option>
-                                <nb-option value="2">Sept 2020</nb-option>
+                                <nb-option *ngFor='let month of lastMonths' [value]="month">{{calMonths[month.getMonth()] + " '" +  month.getFullYear()}} </nb-option>
                             </nb-select>
                         </div>
                     </div>
