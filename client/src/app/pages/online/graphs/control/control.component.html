@@ -49,7 +49,7 @@
     
     </div>
     
-    <div class="container" *ngIf='camera != ""'>
+    <div class="container" *ngIf='camera != ""' (click) = "showRangeSelector(false)">
         <div class='col-md-12' style="margin-top: 5px;" [ngSwitch]='analytic.algo_id'>
             <nb-card *ngSwitchCase='-1' [nbSpinner]="'primary'" nbSpinnerSize="medium" nbSpinnerStatus="primary" fullWdith><nb-card-body>&nbsp;</nb-card-body></nb-card>
             <nb-card *ngSwitchCase='-2'><nb-card-body>&nbsp;</nb-card-body></nb-card>
