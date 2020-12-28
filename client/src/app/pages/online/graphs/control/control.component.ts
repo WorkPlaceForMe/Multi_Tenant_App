@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { NbCalendarRange, NbComponentStatus, NbDateService, NbGlobalPhysicalPosition, NbGlobalPosition, NbToastrService } from '@nebular/theme';
 import { Account } from '../../../../models/Account';
+import { NbPopoverDirective } from '@nebular/theme';
 
 @Component({
   selector: 'ngx-control',
@@ -8,6 +9,8 @@ import { Account } from '../../../../models/Account';
   styleUrls: ['./control.component.scss']
 })
 export class ControlComponent implements OnInit, OnDestroy {
+
+  @ViewChild(NbPopoverDirective) rangeSelector: NbPopoverDirective;
 
   @Input() analytic;
   @Input() cameras;
@@ -23,12 +26,65 @@ export class ControlComponent implements OnInit, OnDestroy {
   renew: any;
   timezone: string;
   now_user: Account;
+  calMonths: string[] = ["Jan", "Feb", "March", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+  selectedDate: Date;
+  selectedMonth: Date;
+  lastMonths: Date[] = [];
+  
+  currentSelection: string  = "Date";
+
+
   constructor(
     private toastrService: NbToastrService,
     protected dateService: NbDateService<Date>,
   ) { }
 
   @Output() cameraSel = new EventEmitter<string>();
+
+  selectRangeType(type){
+    this.currentSelection = type;
+  }
+
+  showRangeSelector(show: boolean){
+    if(show){
+      this.rangeSelector.show();
+    }else{
+      this.rangeSelector.hide();
+    }
+  }
+
+  setDate(){
+    if(this.selectedDate){
+      let start = this.selectedDate;
+      //Add one data and minus 1 sec to set time to end of the day
+      let end = this.dateService.addDay(start, 1);
+      end = new Date(end.getTime()-1000);
+      this.range = {
+        start: new Date(start),
+        end: new Date(end)
+      }
+      this.cam(this.camera)
+      this.showRangeSelector(false);
+    }
+  }
+
+  setMonth(){
+    if(this.selectedMonth){
+      let start = this.selectedMonth;
+      //Add one month and minus 1 second to go to the end of the month
+      let end = this.dateService.addMonth(start, 1);
+      end = new Date(end.getTime()-1000);
+      this.range = {
+        start: new Date(start),
+        end: new Date(end)
+      }
+      this.cam(this.camera)
+      this.showRangeSelector(false);
+      
+    }
+    
+  }
 
   changeRange(event){
     if(event.end != undefined){
@@ -41,6 +97,7 @@ export class ControlComponent implements OnInit, OnDestroy {
         end: new Date(event.end)
       }
       this.cam(this.camera)
+      this.showRangeSelector(false);
     }else{
       this.showRange = true;
     }
@@ -101,6 +158,26 @@ export class ControlComponent implements OnInit, OnDestroy {
       start: new Date(this.max),
       end: new Date(this.fin)
     }
+
+    this.initMonths();
+    this.selectedDate =  this.dateService.addDay(this.dateService.today(), 0);
+  }
+
+  initMonths(){
+    let t = this.dateService.today();
+
+    // Go to start of the month
+    let daysToMinus = t.getDate()-1;
+    daysToMinus *= -1;
+    t = this.dateService.addDay(t, daysToMinus)
+
+
+    this.lastMonths.push(t);
+    for(let i = 1; i <= 12; i++){
+        let a = -1 * i;
+        this.lastMonths.push(this.dateService.addMonth(t, a));
+    }
+
   }
 
   ngOnDestroy(){
