@@ -5,7 +5,7 @@
                 <p>Analytics</p>
             </nb-card-header>
             <nb-card-body>
-              <nb-radio-group [(ngModel)]='analytic' (ngModelChange)='reload(overview)'>
+              <nb-radio-group [(ngModel)]='analytic' (ngModelChange)='reload(overview)' *ngIf='now_user.id_branch == "0000"'>
                   <nb-radio
                     [value]="overview">
                     <small>Dashboard</small>

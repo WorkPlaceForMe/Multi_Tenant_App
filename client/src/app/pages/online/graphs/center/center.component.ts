@@ -94,9 +94,7 @@ export class CenterComponent implements OnInit {
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
     if(this.now_user.id_branch == '0000'){
-      // this.camera = this.now_user.id_account
-      this.analytic.algo_id = -3;
-      this.analytic.name = "Dashboard"
+      this.analytic = this.overview
     }
     this.face.getDashboard().subscribe(
       res=>{
