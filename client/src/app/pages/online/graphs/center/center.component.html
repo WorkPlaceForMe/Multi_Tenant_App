@@ -5,6 +5,12 @@
                 <p>Analytics</p>
             </nb-card-header>
             <nb-card-body>
+              <nb-radio-group [(ngModel)]='analytic' (ngModelChange)='reload(overview)'>
+                  <nb-radio
+                    [value]="overview">
+                    <small>Dashboard</small>
+                  </nb-radio>
+                </nb-radio-group>
                 <label class="label">Premises</label>
                 <nb-radio-group [(ngModel)]='analytic' (ngModelChange)='reload(alg)' *ngFor='let alg of info.analyticsP'>
                     <nb-radio

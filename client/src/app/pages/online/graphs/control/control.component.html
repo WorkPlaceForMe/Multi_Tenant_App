@@ -39,7 +39,7 @@
             <small>Fill the range, for a day, click it twice.</small>
         </div>
     </div>
-    <div class="col-4" align='right' *ngIf='now_user.id_branch == "0000"'>
+    <div class="col-md-auto less-padding" align='right' *ngIf='now_user.id_branch == "0000"'>
         <nb-select [(ngModel)]='camera' (ngModelChange)='cam($event)'>
             <nb-option value="" disabled>Choose a location:</nb-option>
             <nb-option *ngFor='let loc of cameras' [value]=loc.id_branch>{{loc.username}}</nb-option>
@@ -53,6 +53,7 @@
         <div class='col-md-12 no-padding' style="margin-top: 5px;" [ngSwitch]='analytic.algo_id'>
             <nb-card *ngSwitchCase='-1' [nbSpinner]="'primary'" nbSpinnerSize="medium" nbSpinnerStatus="primary" fullWdith><nb-card-body>&nbsp;</nb-card-body></nb-card>
             <nb-card *ngSwitchCase='-2'><nb-card-body>&nbsp;</nb-card-body></nb-card>
+            <ngx-dash *ngSwitchCase='-3' [range]='range' [camera]='camera'></ngx-dash>
             <ngx-pc *ngSwitchCase='12' [range]='range' [camera]='camera'></ngx-pc>
             <ngx-loit *ngSwitchCase='2' [range]='range' [camera]='camera'></ngx-loit>
             <ngx-intr *ngSwitchCase='17' [range]='range' [camera]='camera'></ngx-intr>

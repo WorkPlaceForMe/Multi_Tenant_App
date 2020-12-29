@@ -83,6 +83,7 @@ import { ParkingComponent } from './online/graphs/parking/parking.component';
 import { AnprComponent } from './online/graphs/anpr/anpr.component';
 import { BarrierComponent } from './online/graphs/barrier/barrier.component';
 import { VehicleComponent } from './online/graphs/vehicle/vehicle.component';
+import { DashComponent } from './online/graphs/dash/dash.component';
 
 // import { OverallComponent } from './facial_recognition/overall/overall.component';
 
@@ -176,7 +177,8 @@ import { VehicleComponent } from './online/graphs/vehicle/vehicle.component';
     ParkingComponent,
     AnprComponent,
     BarrierComponent,
-    VehicleComponent
+    VehicleComponent,
+    DashComponent
   ],
   providers: [
     FacesService,

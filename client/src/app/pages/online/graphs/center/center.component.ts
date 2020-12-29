@@ -11,7 +11,6 @@ import { AccountService } from '../../../../services/account.service';
 export class CenterComponent implements OnInit {
 
   constructor(
-    private facesService: FacesService,
     private accountserv: AccountService,
     private face: FacesService,
     ) { }
@@ -25,6 +24,11 @@ export class CenterComponent implements OnInit {
   analytic ={
     algo_id: -1,
     name: ''
+  }
+  overview ={
+    algo_id: -3,
+    name: 'Dashboard',
+    status: "'primary"
   }
 
 
@@ -89,11 +93,11 @@ export class CenterComponent implements OnInit {
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
-    // if(this.now_user.id_branch == '0000'){
-    //   this.camera = this.now_user.id_account
-    //   this.analytic.algo_id = -2;
-    // }
-    console.log(this.analytic.algo_id)
+    if(this.now_user.id_branch == '0000'){
+      // this.camera = this.now_user.id_account
+      this.analytic.algo_id = -3;
+      this.analytic.name = "Dashboard"
+    }
     this.face.getDashboard().subscribe(
       res=>{
         this.info = res['data']
