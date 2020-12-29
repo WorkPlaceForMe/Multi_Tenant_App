@@ -1,7 +1,7 @@
 <div class="container">
     <div class="row justify-content-between">
         <div class="col-4">
-            <h5>{{analytic.name}}</h5>
+            <p class = "analytic-name">{{analytic.name}}</p>
         </div>
         <div class="col-8" align='right'>
             <div class = "row">
@@ -50,7 +50,7 @@
     </div>
     
     <div class="container" *ngIf='camera != ""' (click) = "showRangeSelector(false)">
-        <div class='col-md-12' style="margin-top: 5px;" [ngSwitch]='analytic.algo_id'>
+        <div class='col-md-12 no-padding' style="margin-top: 5px;" [ngSwitch]='analytic.algo_id'>
             <nb-card *ngSwitchCase='-1' [nbSpinner]="'primary'" nbSpinnerSize="medium" nbSpinnerStatus="primary" fullWdith><nb-card-body>&nbsp;</nb-card-body></nb-card>
             <nb-card *ngSwitchCase='-2'><nb-card-body>&nbsp;</nb-card-body></nb-card>
             <ngx-pc *ngSwitchCase='12' [range]='range' [camera]='camera'></ngx-pc>
@@ -71,11 +71,14 @@
     </div>
     
     <ng-template #rangeSelector>
+        
         <nb-list>
             <nb-list-item >
                 <div class = "row">
                     <div style = "width: 100px" class = "col-md-auto" (click) = "selectRangeType('Date')">
-                            <nb-radio [checked] = "currentSelection=='Date'" >Date</nb-radio>
+                            <nb-radio-group >
+                                <nb-radio [checked] = "currentSelection=='Date'" >Date</nb-radio>
+                            </nb-radio-group>
                     </div>  
                     <div class = "col">
                         <input nbInput placeholder="Pick Date"  [disabled] = "currentSelection != 'Date'" [value]="range.start" [nbDatepicker]="dateTimePicker" fullWidth fieldSize="small">
@@ -86,7 +89,9 @@
             <nb-list-item >
                 <div class = "row" >
                     <div style = "width: 100px" class = "col-md-auto" (click) = "selectRangeType('Month')">
-                        <nb-radio [checked] = "currentSelection=='Month'" (onClick) = "selectRangeType('Month')">Month</nb-radio>
+                        <nb-radio-group>
+                            <nb-radio [checked] = "currentSelection=='Month'" (onClick) = "selectRangeType('Month')">Month</nb-radio>
+                        </nb-radio-group>
                     </div>  
                     <div class = "col" >
                         <nb-select (selectedChange) = "setMonth()" placeholder="Select Showcase" [disabled] = "currentSelection != 'Month'" [(ngModel)]="selectedMonth" fullWidth size="small">
@@ -98,7 +103,9 @@
             <nb-list-item >
                 <div class = "row">
                     <div style = "width: 100px" class = "col-md-auto" (click) = "selectRangeType('Custom')">
-                            <nb-radio [checked] = "currentSelection=='Custom'" (onClick) = "selectRangeType('Custom')">Custom</nb-radio>
+                            <nb-radio-group>
+                                <nb-radio [checked] = "currentSelection=='Custom'" (onClick) = "selectRangeType('Custom')">Custom</nb-radio>
+                            </nb-radio-group>
                     </div>  
                     <div class = "col">
                             <input  nbInput placeholder="Today - Pick a new Range" [nbDatepicker]="rangepicker" [disabled] = "currentSelection != 'Custom'" fullWidth fieldSize="small">

@@ -2,3 +2,43 @@
     max-width: 100%;
     height: auto;
   }
+
+.no-padding{
+    padding: 0px;
+}
+
+.less-padding{
+  padding-left: 10px; 
+  padding-right: 5px; 
+}
+
+
+
+.top-badges{
+  min-height: 220px;
+}
+
+.badge-txt{
+font-size: 16px;
+font-weight: normal;
+font-stretch: normal;
+font-style: normal;
+line-height: normal;
+letter-spacing: normal;
+color: #535353;
+}
+
+.badge-reading{
+  font-size: 24px;
+  font-weight: 300;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #444444;
+  margin-bottom: 0px;
+}
+
+.graph-body {
+    min-height: 400px;
+}

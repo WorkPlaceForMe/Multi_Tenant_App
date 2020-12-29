@@ -1,8 +1,8 @@
-<div class="container">
-    <div class='col-md-12' style="margin-top: 5px;">
+<div class="container no-padding">
+    <div class='col-md-12 no-padding' style="margin-top: 30px;">
         <p>Incidents</p>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-3 less-padding">
                 <nb-card>
                     <nb-card-body>
                         <p>Total</p>
@@ -10,7 +10,7 @@
                     </nb-card-body>
                 </nb-card>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-5 less-padding">
                 <nb-card>
                     <nb-card-body>
                         <p>Avg Frequency</p>
@@ -20,17 +20,17 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
-                <nb-card>
-                    <nb-card-body>
+            <div class="col-md-5 less-padding">
+                <nb-card class = "graph-body">
+                    <nb-card-body >
                         <p>Alerts by Hour</p>
                         <chart id='chart' type="horizontalBar" [data]="dataH" [options]="optionsH"></chart>
                     </nb-card-body>
                 </nb-card>
             </div>
-            <div class="col-md-6">
-                <nb-card>
-                    <nb-card-body>
+            <div class="col-md-7 less-padding">
+                <nb-card class = "graph-body">
+                    <nb-card-body >
                         <p>Dwell Time Variation</p>
                         <chart type="line" [data]="dataL" [options]="optionsL"></chart>
                         <small *ngIf='loitering != null'>Min:&nbsp;<strong>{{loitering.min}}</strong>&nbsp;Max:&nbsp;<strong>{{loitering.max}}</strong>&nbsp;Avg:&nbsp;<strong>{{loitering.avg}}</strong></small>
@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-8 less-padding">
                 <nb-card>
                     <nb-card-body>
                         <ng2-smart-table [settings]="settings" [source]="source" (edit)='got($event)'>
@@ -47,9 +47,9 @@
                     </nb-card-body>
                 </nb-card>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-4 less-padding">
                 <nb-card>
-                    <nb-card-body align='center'>
+                    <nb-card-body align='center' style = "min-height: 250px">
                         <!-- <canvas #streaming id="canvas"  width="640" height="480" style="display: block; width: 90%;"></canvas> -->
                     </nb-card-body>
                 </nb-card>
