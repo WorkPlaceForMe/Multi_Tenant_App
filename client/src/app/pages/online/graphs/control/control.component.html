@@ -71,14 +71,11 @@
     </div>
     
     <ng-template #rangeSelector>
-        
         <nb-list>
             <nb-list-item >
                 <div class = "row">
-                    <div style = "width: 100px" class = "col-md-auto" (click) = "selectRangeType('Date')">
-                            <nb-radio-group >
-                                <nb-radio [checked] = "currentSelection=='Date'" >Date</nb-radio>
-                            </nb-radio-group>
+                    <div style = "width: 100px" class = "col-md-auto" (click) = "selectRangeType('Date')">  
+                        <nb-radio  name = "range" [checked] = "currentSelection=='Date'" >Date</nb-radio>
                     </div>  
                     <div class = "col">
                         <input nbInput placeholder="Pick Date"  [disabled] = "currentSelection != 'Date'" [value]="range.start" [nbDatepicker]="dateTimePicker" fullWidth fieldSize="small">
@@ -89,13 +86,11 @@
             <nb-list-item >
                 <div class = "row" >
                     <div style = "width: 100px" class = "col-md-auto" (click) = "selectRangeType('Month')">
-                        <nb-radio-group>
-                            <nb-radio [checked] = "currentSelection=='Month'" (onClick) = "selectRangeType('Month')">Month</nb-radio>
-                        </nb-radio-group>
+                        <nb-radio  name = "range" [checked] = "currentSelection=='Month'" (onClick) = "selectRangeType('Month')">Month</nb-radio>
                     </div>  
                     <div class = "col" >
                         <nb-select (selectedChange) = "setMonth()" placeholder="Select Showcase" [disabled] = "currentSelection != 'Month'" [(ngModel)]="selectedMonth" fullWidth size="small">
-                            <nb-option *ngFor='let month of lastMonths' [value]="month">{{calMonths[month.getMonth()] + " '" +  month.getFullYear()}} </nb-option>
+                            <nb-option  *ngFor='let month of lastMonths' [value]="month">{{calMonths[month.getMonth()] + " '" +  month.getFullYear()}} </nb-option>
                         </nb-select>
                     </div>
                 </div>
@@ -103,9 +98,7 @@
             <nb-list-item >
                 <div class = "row">
                     <div style = "width: 100px" class = "col-md-auto" (click) = "selectRangeType('Custom')">
-                            <nb-radio-group>
-                                <nb-radio [checked] = "currentSelection=='Custom'" (onClick) = "selectRangeType('Custom')">Custom</nb-radio>
-                            </nb-radio-group>
+                        <nb-radio  name = "range" [checked] = "currentSelection=='Custom'" (onClick) = "selectRangeType('Custom')">Custom</nb-radio>
                     </div>  
                     <div class = "col">
                             <input  nbInput placeholder="Today - Pick a new Range" [nbDatepicker]="rangepicker" [disabled] = "currentSelection != 'Custom'" fullWidth fieldSize="small">
