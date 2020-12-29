@@ -1,23 +1,23 @@
-<div class="container">
-    <div class='col-md-12' style="margin-top: 5px;">
+<div class="container no-padding">
+    <div class='col-md-12 no-padding' style="margin-top: 30px;">
         <div class="row justify-content-start">
-            <div class="col-md-3">
+            <div class="col-md-3 less-padding">
                 <nb-card>
-                    <nb-card-body>
-                        <p>Total</p>
-                        <strong>{{intrude == undefined ? 'None' : intrude.total}}</strong>
+                    <nb-card-body >
+                        <p class = "badge-txt">Total</p>
+                        <p class = "badge-reading">{{intrude == undefined ? 'None' : intrude.total}}</p>
                     </nb-card-body>
                 </nb-card>
                 <nb-card>
-                    <nb-card-body>
-                        <p>Avg Frequency</p>
-                        <strong>{{intrude == undefined ? 'None' : intrude.avgH}}</strong> per hr
+                    <nb-card-body >
+                        <p class = "badge-txt">Avg Frequency</p>
+                        <p class = "badge-reading">{{intrude == undefined ? 'None' : intrude.avgH}} per hr</p> 
                     </nb-card-body>
                 </nb-card>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-9 less-padding">
                 <nb-card>
-                    <nb-card-body>
+                    <nb-card-body  class = "top-badges" >
                         <p>Over Time</p>
                         <chart type="line" [data]="dataL" [options]="optionsL"></chart>
                     </nb-card-body>
@@ -25,7 +25,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-7 less-padding">
                 <nb-card>
                     <nb-card-body>
                         <ng2-smart-table [settings]="settings" [source]="source"  (edit)='got($event)'>
@@ -33,9 +33,9 @@
                     </nb-card-body>
                 </nb-card>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-5 less-padding">
                 <nb-card>
-                    <nb-card-body align='center'>
+                    <nb-card-body align='center' style = "min-height: 300px">
 
                     </nb-card-body>
                 </nb-card>

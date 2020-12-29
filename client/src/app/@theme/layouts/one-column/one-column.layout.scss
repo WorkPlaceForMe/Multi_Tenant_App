@@ -6,4 +6,9 @@
   .menu-sidebar ::ng-deep .scrollable {
     padding-top: nb-theme(layout-padding-top);
   }
+
+  nb-layout-column {
+    padding: 15px; 
+    background-color: #eeeeee
+  }
 }
