@@ -107,23 +107,31 @@ exports.intrude = async (req, res) =>{
 
   const data = req.body;
     await db.con().query(`SELECT * from intrude WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+      console.log("hiiii")
       if (err) return res.status(500).json({success: false, message: err});
       let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
       let ress = {}
       let avg = 0;
       let cache = '';
       let ressover = {};
+      let i = 1;
+      console.log(result.length)
       result.forEach(function(v) {
         if(cache == ''){
           cache = v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()
         }
-        
         if(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
-          
+          //console.log(2);
           while(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
             cache = new Date(cache + ':00:00')
             ressover[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1)] = 0;
-            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1);
+            let h  = cache.getHours() + 1;
+            let d = cache.getDate();
+            if(h == 24){
+              h = 0;
+              d++;
+            }
+            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + d + ' ' +(h);
           }
         }
         if(cache == v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
@@ -138,12 +146,14 @@ exports.intrude = async (req, res) =>{
         if(se < 10){
           se = '0' + se;
         }
+        console.log(5);
         if(mi < 10){
           mi = '0' + mi;
         }
         if(ho < 10){
           ho = '0' + ho;
         }
+        console.log(6);
         d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
         v['picture'] = `${d}_${v.track_id}_zone${v.zone}.jpg`;
       })
@@ -159,6 +169,7 @@ exports.intrude = async (req, res) =>{
           donut: lo,
           over: ressover
       }
+      console.log("end")
       res.status(200).json({success: true, data: a})
     });
 }
@@ -277,7 +288,13 @@ exports.covered = async (req, res) =>{
           while(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
             cache = new Date(cache + ':00:00')
             ress[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1)] = 0;
-            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1);
+            let h = cache.getHours() + 1;
+            let d = cache.getDate();
+            if(h == 24){
+              h = 0;
+              d++;
+            }
+            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" +d + ' ' +(h);
           }
         }
         if(cache == v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
