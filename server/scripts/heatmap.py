@@ -17,7 +17,7 @@ PATHD = os.environ.get('pathDocker')
 RES = os.environ.get('resources')
 pathIm = ('{}{}{}{}{}/{}/').format(HOME,USER,PATHD,RES,args.id_account,args.id_branch)
 
-ip = os.environ.get("my_ip")
+ip = os.environ.get("app_url")
 
 MYSQL_HOST = os.environ.get('HOST')
 MYSQL_USER = os.environ.get('USERM')
@@ -47,7 +47,7 @@ height=int(cap.get(4))
 width=int(cap.get(3))
 print("image saved")
 cursor.execute('update cameras set pic_height = \"{}\" where id=\"{}\"'.format(height,args.cameraid))
-cursor.execute('update cameras set heatmap_pic = "http://{}:3300/api/pictures/{}/{}/heatmap_pics/{}_heatmap.png" where id=\"{}\"'.format(ip,args.id_account,args.id_branch,args.cameraid,args.cameraid))
+cursor.execute('update cameras set heatmap_pic = "{}/api/pictures/{}/{}/heatmap_pics/{}_heatmap.png" where id=\"{}\"'.format(ip,args.id_account,args.id_branch,args.cameraid,args.cameraid))
 # cursor.execute('update cameras set heatmap_pic = "/pictures/{}/{}/heatmap_pics/{}_heatmap.png" where id=\"{}\"'.format(ip,args.id_account,args.id_branch,args.cameraid,args.cameraid)) # for prod
 cursor.execute('update cameras set pic_width = \"{}\" where id=\"{}\"'.format(width,args.cameraid))
 cursor.execute('update cameras set cam_height = \"{}\" where id=\"{}\"'.format(height,args.cameraid))
