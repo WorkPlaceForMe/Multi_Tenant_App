@@ -33,7 +33,7 @@ constructor(
             }
         )
         } else {
-          this.router.navigate(['dashboard'])
+          this.router.navigate(['/pages/dashboard'])
         }
       }
       this.facesService.mess().subscribe(

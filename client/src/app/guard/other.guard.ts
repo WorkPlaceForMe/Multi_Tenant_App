@@ -33,7 +33,7 @@ export class OtherGuard implements CanActivate {
           }
       )
       } else {
-        this.router.navigate(['dashboard'])
+        this.router.navigate(['/pages/dashboard'])
       }
     }
     this.facesService.mess().subscribe(
