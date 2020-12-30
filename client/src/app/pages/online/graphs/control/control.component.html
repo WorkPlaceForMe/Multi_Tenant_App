@@ -7,11 +7,11 @@
             <div class = "row">
                 <div class = "col">
                 </div>
-                <div class="col-md-auto less-padding ctr-btn" align='right' *ngIf='now_user.id_branch != "0000"'>
-                    <nb-select [(ngModel)]='camera' (ngModelChange)='cam($event)' size="small">
+                <div class="col-md-auto less-padding" align='right' *ngIf='now_user.id_branch != "0000"'>
+                    <nb-select class="ctr-btn" [(ngModel)]='camera' (ngModelChange)='cam($event)' size="small">
                         <nb-option value="" disabled>Choose a camera:</nb-option>
                         <nb-option *ngFor='let cam of cameras' [value]=cam.id>{{cam.name}}</nb-option>
-                    </nb-select>
+                        </nb-select>
                 </div>
                 <div class="col-md-auto less-padding" >
                     <button style = "width: 130px" class="ctr-btn" #popover (click) = "showRangeSelector(true)" [nbPopover]="rangeSelector" nbPopoverTrigger="noop" nbPopoverPlacement="bottom" size="small" nbButton>{{currentSelection}} <nb-icon icon="calendar"></nb-icon></button>
