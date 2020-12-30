@@ -76,6 +76,7 @@ export class LoitComponent implements OnInit, OnDestroy {
     this.serv.loitering(this.camera,l).subscribe(
       res=>{
         this.loitering = res['data']
+        console.log(res)
         for(var m of this.loitering.raw){
           m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/loitering/' + m['cam_id'] + '/' + m['picture'])
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)

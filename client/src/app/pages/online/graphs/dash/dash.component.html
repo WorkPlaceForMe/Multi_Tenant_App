@@ -1,27 +1,30 @@
 <div class="container no-padding">
     <div class='col-md-12 no-padding' style="margin-top: 30px;">
+        <div class="row">
+            <h6>Premises</h6>
+        </div>
         <div class="row justify-content-start">
             <div class="col less-padding">
                 <p>People Count</p>
                 <nb-card class = "top-badges">
                     <nb-card-body>
                         <p class = "badge-txt">Current Count</p>
-                        <p class = "badge-reading">{{queue == undefined ? 'None' : queue.count}}</p>
+                        <p class = "badge-reading">{{tickets.count.pc == undefined ? 'None' : tickets.count.pc}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
-            <div class="col less-padding">
+            <div class = "col-md-4 less-padding">
                 <p>Queue Management</p>
                 <nb-card class = "top-badges">
                     <nb-card-body>
                         <div class="row">
                             <div class="col-md-6">
                                 <p class = "badge-txt">People in Queue</p>
-                                <p class = "badge-reading">{{queue && queue.avg ? 'None' : queue.avg}} min</p> 
+                                <p class = "badge-reading"> min</p> 
                             </div>
                             <div class="col-md-6">
                                 <p class = "badge-txt">Avg Wait Time</p>
-                                <p class = "badge-reading">{{queue && queue.avg ? 'None' : queue.avg}} min</p> 
+                                <p class = "badge-reading"> min</p> 
                             </div>
                         </div>
 
@@ -33,16 +36,16 @@
                 <nb-card class = "top-badges">
                     <nb-card-body>
                         <p class = "badge-txt">Total</p>
-                        <p class = "badge-reading">{{queue == undefined ? 'None' : queue.min}}</p>
+                        <p class = "badge-reading">{{tickets.count.loitering == undefined ? 'None' : tickets.count.loitering}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
-            <div class="col-md-4 less-padding">
+            <div class="col less-padding">
                 <p>Vault Door</p>
                 <nb-card class = "top-badges">
                     <nb-card-body>
                         <p class = "badge-txt">Total</p>
-                        <p class = "badge-reading">{{queue == undefined ? 'None' : queue.max}}</p>
+                        <p class = "badge-reading">{{tickets.count.vault == undefined ? 'None' : tickets.count.vault}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
@@ -51,6 +54,125 @@
             <div class="col less-padding">
                 <nb-card>
                     <nb-card-body class = "graph-body">
+                            <nb-card>
+                                <nb-card-body class = "top-badges">
+                                    <p>People Entering and Exiting</p>
+                                    <!-- <chart type="line" [data]="dataL2" [options]="optionsL2"></chart> -->
+                                    <small>Entering: Min:&nbsp;<strong> </strong>&nbsp;Max:&nbsp;<strong> </strong>&nbsp;Avg:&nbsp;<strong> </strong></small><br>
+                                    <small>Exiting: Min:&nbsp;<strong> </strong>&nbsp;Max:&nbsp;<strong> </strong>&nbsp;Avg:&nbsp;<strong> </strong></small>
+                                </nb-card-body>
+                            </nb-card>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            <div class="col less-padding">
+                <nb-card>
+                    <nb-card-body align='center' class = "graph-body">
+                        <nb-card>
+                            <nb-card-body class = "top-badges">
+                                <p>People Entering and Exiting</p>
+                                <!-- <chart type="line" [data]="dataL2" [options]="optionsL2"></chart> -->
+                                <small>Entering: Min:&nbsp;<strong> </strong>&nbsp;Max:&nbsp;<strong> </strong>&nbsp;Avg:&nbsp;<strong> </strong></small><br>
+                                <small>Exiting: Min:&nbsp;<strong> </strong>&nbsp;Max:&nbsp;<strong> </strong>&nbsp;Avg:&nbsp;<strong> </strong></small>
+                            </nb-card-body>
+                        </nb-card>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+        <div class="row">
+            <h6>Threats</h6>
+        </div>
+        <div class="row justify-content-start">
+            <div class="col less-padding">
+                <p>Violence</p>
+                <nb-card class = "top-badges">
+                    <nb-card-body>
+                        <p class = "badge-txt">Incidents</p>
+                        <p class = "badge-reading">{{tickets.count.violence == undefined ? 'None' : tickets.count.violence}}</p>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            <div class = "col less-padding">
+                <p>Helmet</p>
+                <nb-card class = "top-badges">
+                    <nb-card-body>
+                                <p class = "badge-txt">Detected</p>
+                                <p class = "badge-reading">{{tickets.count.helmet == undefined ? 'None' : tickets.count.helmet}}</p> 
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            <div class="col less-padding">
+                <p>Covered Face</p>
+                <nb-card class = "top-badges">
+                    <nb-card-body>
+                        <p class = "badge-txt">Total</p>
+                        <p class = "badge-reading">{{tickets.count.covered == undefined ? 'None' : tickets.count.covered}}</p>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            <div class="col less-padding">
+                <p>Unattended Object</p>
+                <nb-card class = "top-badges">
+                    <nb-card-body>
+                        <p class = "badge-txt">Total</p>
+                        <p class = "badge-reading">{{tickets.count.aod == undefined ? 'None' : tickets.count.aod}}</p>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            <div class="col less-padding">
+                <p>Social Distancing</p>
+                <nb-card class = "top-badges">
+                    <nb-card-body>
+                        <p class = "badge-txt">Violations</p>
+                        <p class = "badge-reading">{{tickets.count.social == undefined ? 'None' : tickets.count.social}}</p>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            <div class="col less-padding">
+                <p>Intrusions</p>
+                <nb-card class = "top-badges">
+                    <nb-card-body>
+                        <p class = "badge-txt">Total</p>
+                        <p class = "badge-reading">{{tickets.count.intrusion == undefined ? 'None' : tickets.count.intrusion}}</p>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col less-padding">
+                <nb-card>
+                    <nb-card-body class = "graph-body">
+                            <nb-card>
+                                <nb-card-body class = "top-badges">
+                                    <p>People Entering and Exiting</p>
+                                    <!-- <chart type="line" [data]="dataL2" [options]="optionsL2"></chart> -->
+                                    <small>Entering: Min:&nbsp;<strong> </strong>&nbsp;Max:&nbsp;<strong> </strong>&nbsp;Avg:&nbsp;<strong> </strong></small><br>
+                                    <small>Exiting: Min:&nbsp;<strong> </strong>&nbsp;Max:&nbsp;<strong> </strong>&nbsp;Avg:&nbsp;<strong> </strong></small>
+                                </nb-card-body>
+                            </nb-card>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            <div class="col less-padding">
+                <nb-card>
+                    <nb-card-body align='center' class = "graph-body">
+                        <nb-card>
+                            <nb-card-body class = "top-badges">
+                                <p>People Entering and Exiting</p>
+                                <!-- <chart type="line" [data]="dataL2" [options]="optionsL2"></chart> -->
+                                <small>Entering: Min:&nbsp;<strong> </strong>&nbsp;Max:&nbsp;<strong> </strong>&nbsp;Avg:&nbsp;<strong> </strong></small><br>
+                                <small>Exiting: Min:&nbsp;<strong> </strong>&nbsp;Max:&nbsp;<strong> </strong>&nbsp;Avg:&nbsp;<strong> </strong></small>
+                            </nb-card-body>
+                        </nb-card>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 less-padding">
+                <nb-card>
+                    <nb-card-body>
                         <ng2-smart-table [settings]="settings" [source]="source" (edit)='got($event)'>
                         </ng2-smart-table>
                     </nb-card-body>
@@ -58,12 +180,11 @@
             </div>
             <div class="col-md-4 less-padding">
                 <nb-card>
-                    <nb-card-body align='center' class = "graph-body">
+                    <nb-card-body align='center' style = "min-height: 250px">
                         <!-- <canvas #streaming id="canvas"  width="640" height="480" style="display: block; width: 90%;"></canvas> -->
                     </nb-card-body>
                 </nb-card>
             </div>
         </div>
-
     </div>
 </div>

@@ -44,6 +44,9 @@ API_URI = api
   tickets(some:any){
     return this.http.post(`${this.API_URI}/ticket/all`,some)
   }
+  ticketsPeriod(some:any){
+    return this.http.post(`${this.API_URI}/ticket/some/`,some)
+  }
   checkTick(id:string,some:any){
     return this.http.put(`${this.API_URI}/ticket/check/${id}`,some)
   }

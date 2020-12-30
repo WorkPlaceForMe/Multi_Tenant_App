@@ -93,9 +93,7 @@ export class CenterComponent implements OnInit {
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
-    if(this.now_user.id_branch == '0000'){
-      this.analytic = this.overview
-    }
+    this.analytic = this.overview
     this.face.getDashboard().subscribe(
       res=>{
         this.info = res['data']

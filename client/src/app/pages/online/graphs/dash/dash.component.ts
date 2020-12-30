@@ -3,12 +3,10 @@ import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, 
 import { DomSanitizer } from '@angular/platform-browser';
 import { NbCalendarRange } from '@nebular/theme';
 import { LocalDataSource, ViewCell } from 'ng2-smart-table';
-import { api } from '../../../../models/API';
-import { AnalyticsService } from '../../../../services/analytics.service';
 import { FacesService } from '../../../../services/faces.service';
-import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
+import { AccountService } from '../../../../services/account.service';
 
 @Component({
   selector: 'ngx-dash',
@@ -19,14 +17,14 @@ export class DashComponent implements OnInit , OnDestroy {
 
   @Input() range: NbCalendarRange<Date>;
   @Input() camera;
-  queue: any = [];
+  tickets: any = [];
   player: any;
   now_user: Account;
 
   @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef; 
 
   constructor(
-    private serv: AnalyticsService,
+    private serv: AccountService,
     public sanitizer: DomSanitizer,
     private face: FacesService,
     public datepipe: DatePipe,
@@ -49,7 +47,7 @@ export class DashComponent implements OnInit , OnDestroy {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
     let type;
     if(this.now_user.id_branch != '0000'){
-      type = 'cam_id';
+      type = 'id_branch';
     }else{
       type = 'id_account'
     }
@@ -58,18 +56,19 @@ export class DashComponent implements OnInit , OnDestroy {
       end: this.range.end,
       type: type
     }
-      this.serv.queue(this.camera,l).subscribe(
+      this.serv.ticketsPeriod(l).subscribe(
         res=>{
-          this.queue = res['data']
-          for(var m of this.queue.raw){
-            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['picture'])
-          }
-          this.source = this.queue.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
+          this.tickets = res['data']
+          console.log(res)
+          // for(var m of this.tickets.raw){
+          //   m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/tickets/' + m['cam_id'] + '/' + m['picture'])
+          // }
+          // this.source = this.tickets.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
 
         },
         err => {
           console.error(err)
-          this.queue = undefined;
+          this.tickets = undefined;
         }
       )
 
