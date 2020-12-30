@@ -121,9 +121,11 @@ exports.intrude = async (req, res) =>{
         if(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
           
           while(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
-            cache = new Date(cache + ':00:00')
-            ressover[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1)] = 0;
-            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1);
+            let t = new Date(cache + ':00:00').getTime();
+            t += (60 * 60*1000)
+            cache = new Date(t)
+            ressover[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours())] = 0;
+            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours());
           }
         }
         if(cache == v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
@@ -179,9 +181,12 @@ exports.violence = async (req, res) =>{
         if(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
           
           while(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
-            cache = new Date(cache + ':00:00')
-            ress[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1)] = 0;
-            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1);
+            let t = new Date(cache + ':00:00').getTime();
+            //Add one hours to date
+            t += (60 * 60*1000)
+            cache = new Date(t)
+            ress[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours())] = 0;
+            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours());
           }
         }
         if(cache == v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
@@ -227,9 +232,12 @@ exports.aod = async (req, res) =>{
         if(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
           
           while(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
-            cache = new Date(cache + ':00:00')
-            ress[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1)] = 0;
-            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1);
+            let t = new Date(cache + ':00:00').getTime();
+            //Add one hours to date
+            t += (60 * 60*1000)
+            cache = new Date(t)
+            ress[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours())] = 0;
+            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours());
           }
         }
         if(cache == v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
@@ -273,11 +281,13 @@ exports.covered = async (req, res) =>{
         }
         
         if(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
-          
           while(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
-            cache = new Date(cache + ':00:00')
-            ress[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1)] = 0;
-            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1);
+            let t = new Date(cache + ':00:00').getTime();
+            //Add one hours to date
+            t += (60 * 60*1000)
+            cache = new Date(t)
+            ress[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours())] = 0;
+            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours());
           }
         }
         if(cache == v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
@@ -323,9 +333,12 @@ exports.social = async (req, res) =>{
         if(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
           
           while(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
-            cache = new Date(cache + ':00:00')
-            ressover[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1)] = 0;
-            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1);
+            let t = new Date(cache + ':00:00').getTime();
+            //Add one hours to date
+            t += (60 * 60*1000)
+            cache = new Date(t)
+            ressover[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours())] = 0;
+            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours());
           }
         }
         if(cache == v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
@@ -472,9 +485,12 @@ exports.helm = async (req, res) =>{
         if(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
           
           while(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
-            cache = new Date(cache + ':00:00')
-            ress[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1)] = 0;
-            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1);
+            let t = new Date(cache + ':00:00').getTime();
+            //Add one hours to date
+            t += (60 * 60*1000)
+            cache = new Date(t)
+            ress[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours())] = 0;
+            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours());
           }
         }
         if(cache == v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
@@ -594,9 +610,12 @@ exports.vault = async (req, res) =>{
         if(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
           
           while(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
-            cache = new Date(cache + ':00:00')
-            ress[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1)] = 0;
-            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours() + 1);
+            let t = new Date(cache + ':00:00').getTime();
+            //Add one hours to date
+            t += (60 * 60*1000)
+            cache = new Date(t)
+            ress[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours())] = 0;
+            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours());
           }
         }
         if(cache == v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
