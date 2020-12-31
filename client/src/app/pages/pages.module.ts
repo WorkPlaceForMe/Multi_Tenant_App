@@ -38,7 +38,8 @@ import { NbCardModule, NbIconModule, NbInputModule, NbTreeGridModule, NbAccordio
   NbRadioModule,
   NbDatepickerModule,
   NbFormFieldModule,
-  NbSelectModule, NbSpinnerModule } from '@nebular/theme';
+  NbSelectModule, NbSpinnerModule,
+  NbContextMenuModule } from '@nebular/theme';
 
 // import { TableComponent } from './facial_recognition/table/table.component';
 import { HeatmapComponent } from './cameras_conf/heatmap/heatmap.component';
@@ -94,6 +95,7 @@ import { DashComponent } from './online/graphs/dash/dash.component';
     ChartModule,
     Ng2SmartTableModule,
     NbSpinnerModule,
+    NbContextMenuModule,
     NbActionsModule,
     NbCheckboxModule,
     NbRadioModule,
