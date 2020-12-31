@@ -53,4 +53,10 @@ API_URI = api
   assignTick(id:string,some:any){
     return this.http.put(`${this.API_URI}/ticket/assign/${id}`,some)
   }
+  ticketsCount(some:any){
+    return this.http.post(`${this.API_URI}/ticket/counts/`,some)
+  }
+  queueLite(some:any,id:string){
+    return this.http.post(`${this.API_URI}/analytics/queueLite/${id}`,some)
+  }
 }

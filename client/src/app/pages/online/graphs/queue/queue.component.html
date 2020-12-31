@@ -13,7 +13,7 @@
                 <nb-card class = "top-badges">
                     <nb-card-body>
                         <p class = "badge-txt">Avg Wait Time</p>
-                        <p class = "badge-reading">{{queue && queue.avg ? 'None' : queue.avg}} min</p> 
+                        <p class = "badge-reading">{{queue == undefined ? 'None' : queue.avg}} min</p> 
                     </nb-card-body>
                 </nb-card>
             </div>

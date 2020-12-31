@@ -18,6 +18,12 @@ module.exports = function(app) {
   );
 
   app.post(
+    "/api/ticket/counts/",
+    [authJwt.verifyToken, authJwt.isClientOrBranch],
+    controller.countTypes
+  );
+
+  app.post(
     "/api/ticket/some/",
     [authJwt.verifyToken, authJwt.isClientOrBranch],
     controller.getPeriod

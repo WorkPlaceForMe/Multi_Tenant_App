@@ -9,7 +9,7 @@
                 <nb-card class = "top-badges">
                     <nb-card-body>
                         <p class = "badge-txt">Current Count</p>
-                        <p class = "badge-reading">{{tickets.count.pc == undefined ? 'None' : tickets.count.pc}}</p>
+                        <p class = "badge-reading"></p>
                     </nb-card-body>
                 </nb-card>
             </div>
@@ -20,11 +20,11 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <p class = "badge-txt">People in Queue</p>
-                                <p class = "badge-reading"> min</p> 
+                                <p class = "badge-reading">{{queue == {} ? 'None' : queue.count}}</p> 
                             </div>
                             <div class="col-md-6">
                                 <p class = "badge-txt">Avg Wait Time</p>
-                                <p class = "badge-reading"> min</p> 
+                                <p class = "badge-reading">{{queue == {} ? 'None' : queue.avg}}</p> 
                             </div>
                         </div>
 
@@ -36,7 +36,7 @@
                 <nb-card class = "top-badges">
                     <nb-card-body>
                         <p class = "badge-txt">Total</p>
-                        <p class = "badge-reading">{{tickets.count.loitering == undefined ? 'None' : tickets.count.loitering}}</p>
+                        <p class = "badge-reading">{{counts.loit == undefined ? 'None' : counts.loit.count}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
@@ -45,7 +45,7 @@
                 <nb-card class = "top-badges">
                     <nb-card-body>
                         <p class = "badge-txt">Total</p>
-                        <p class = "badge-reading">{{tickets.count.vault == undefined ? 'None' : tickets.count.vault}}</p>
+                        <p class = "badge-reading">{{counts.vault == undefined ? 'None' : counts.vault.count}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
@@ -86,7 +86,7 @@
                 <nb-card class = "top-badges">
                     <nb-card-body>
                         <p class = "badge-txt">Incidents</p>
-                        <p class = "badge-reading">{{tickets.count.violence == undefined ? 'None' : tickets.count.violence}}</p>
+                        <p class = "badge-reading">{{counts.violence == undefined ? 'None' : counts.violence.count}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
@@ -95,7 +95,7 @@
                 <nb-card class = "top-badges">
                     <nb-card-body>
                                 <p class = "badge-txt">Detected</p>
-                                <p class = "badge-reading">{{tickets.count.helmet == undefined ? 'None' : tickets.count.helmet}}</p> 
+                                <p class = "badge-reading">{{counts.helm == undefined ? 'None' : counts.helm.count}}</p> 
                     </nb-card-body>
                 </nb-card>
             </div>
@@ -104,7 +104,7 @@
                 <nb-card class = "top-badges">
                     <nb-card-body>
                         <p class = "badge-txt">Total</p>
-                        <p class = "badge-reading">{{tickets.count.covered == undefined ? 'None' : tickets.count.covered}}</p>
+                        <p class = "badge-reading">{{counts.noMask == undefined ? 'None' : counts.noMask.count}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
@@ -113,7 +113,7 @@
                 <nb-card class = "top-badges">
                     <nb-card-body>
                         <p class = "badge-txt">Total</p>
-                        <p class = "badge-reading">{{tickets.count.aod == undefined ? 'None' : tickets.count.aod}}</p>
+                        <p class = "badge-reading">{{counts.aod == undefined ? 'None' : counts.aod.count}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
@@ -122,7 +122,7 @@
                 <nb-card class = "top-badges">
                     <nb-card-body>
                         <p class = "badge-txt">Violations</p>
-                        <p class = "badge-reading">{{tickets.count.social == undefined ? 'None' : tickets.count.social}}</p>
+                        <p class = "badge-reading">{{counts.social == undefined ? 'None' : counts.social.count}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
@@ -131,7 +131,7 @@
                 <nb-card class = "top-badges">
                     <nb-card-body>
                         <p class = "badge-txt">Total</p>
-                        <p class = "badge-reading">{{tickets.count.intrusion == undefined ? 'None' : tickets.count.intrusion}}</p>
+                        <p class = "badge-reading">{{counts.intr == undefined ? 'None' : counts.intr.count}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>

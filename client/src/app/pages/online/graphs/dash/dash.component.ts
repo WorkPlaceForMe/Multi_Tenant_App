@@ -20,6 +20,17 @@ export class DashComponent implements OnInit , OnDestroy {
   tickets: any = [];
   player: any;
   now_user: Account;
+  queue: any = {}
+  counts = {
+    aod: {type: "", count: 0},
+    loit: {type: "", count: 0},
+    vault: {type: "", count: 0},
+    violence: {type: "", count: 0},
+    helm: {type: "", count: 0},
+    noMask: {type: "", count: 0},
+    social: {type: "", count: 0},
+    intr: {type: "", count: 0}
+  }
 
   @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef; 
 
@@ -45,26 +56,50 @@ export class DashComponent implements OnInit , OnDestroy {
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
-    let type;
+    var type;
     if(this.now_user.id_branch != '0000'){
       type = 'id_branch';
     }else{
       type = 'id_account'
     }
-    let l = {
+    var l = {
       start: this.range.start,
       end: this.range.end,
       type: type
     }
-      this.serv.ticketsPeriod(l).subscribe(
+      this.serv.ticketsCount(l).subscribe(
         res=>{
           this.tickets = res['data']
-          console.log(res)
+          this.counts.aod = this.tickets.count.find(element => element.type === 'aod');
+          this.counts.loit = this.tickets.count.find(element => element.type === 'loitering');
+          this.counts.vault = this.tickets.count.find(element => element.type === 'vault');
+          this.counts.violence = this.tickets.count.find(element => element.type === 'violence');
+          this.counts.helm = this.tickets.count.find(element => element.type === 'helm');
+          this.counts.noMask = this.tickets.count.find(element => element.type === 'noMask');
+          this.counts.social = this.tickets.count.find(element => element.type === 'social');
+          this.counts.intr = this.tickets.count.find(element => element.type === 'intrusion');
           // for(var m of this.tickets.raw){
           //   m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/tickets/' + m['cam_id'] + '/' + m['picture'])
           // }
           // this.source = this.tickets.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
-
+          if(this.now_user.id_branch != '0000'){
+            type = 'cam_id';
+          }else{
+            type = 'id_branch'
+          }
+          l = {
+            start: this.range.start,
+            end: this.range.end,
+            type: type
+          }
+          this.serv.queueLite(l,this.camera).subscribe(
+            res=>{
+              this.queue = res['data']
+            },
+            err =>{
+              console.error(err)
+            }
+          )
         },
         err => {
           console.error(err)

@@ -14,6 +14,17 @@ exports.getAll = (req, res) =>{
   })
 }
 
+exports.countTypes = async (req, res) =>{
+  const data = req.body
+  await db.con().query(`SELECT type, count(type) as count FROM multi_tenant.tickets WHERE createdAt >= '${data.start}' and  createdAt <= '${data.end}' group by type;`, function (err, result) {
+    if (err) return res.status(500).json({success: false, message: err});
+    const response = {
+      count: result,
+    }
+    res.status(200).json({success: true, data: response})
+  });
+}
+
 exports.getPeriod = async (req, res) =>{
   const data = req.body
   var count = {};
@@ -45,6 +56,8 @@ exports.getPeriod = async (req, res) =>{
         }
         label.push(i.createdAt)
       }
+
+
       const response = {
         count: count,
         raw: result,

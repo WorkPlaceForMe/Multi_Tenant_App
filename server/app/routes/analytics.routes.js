@@ -94,4 +94,10 @@ module.exports = function(app) {
     [authJwt.verifyToken],
     controller.vc
   );
+
+  app.post(
+    "/api/analytics/queueLite/:id",
+    [authJwt.verifyToken],
+    controller.queueLite
+  );
 }

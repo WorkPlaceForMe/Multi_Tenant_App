@@ -592,6 +592,21 @@ exports.queue = async (req, res) =>{
 
 }
 
+exports.queueLite = async (req, res) =>{
+  const data = req.body;
+     await db.con().query(`SELECT date_format(SEC_TO_TIME(AVG(TIME_TO_SEC(difference))), '%H:%i:%S') as avarage from (SELECT timediff(end_time, start_time) as difference FROM multi_tenant.queue_mgt where ${data.type} = '${req.params.id}' and queuing = 0 and start_time >= '${data.start}' and  start_time <= '${data.end}') t;`,async function (err, result) {
+      if (err) return res.status(500).json({success: false, message: err});
+      await db.con().query(`SELECT count(queuing) as count FROM multi_tenant.queue_mgt where ${data.type} = '${req.params.id}' and queuing = 1 and start_time >= '${data.start}' and  start_time <= '${data.end}';`, function (err2, result2) {
+        if (err2) return res.status(500).json({success: false, message: err2});
+      const a = {
+        avg: result[0].avarage,
+        count: result2[0].count
+      }
+      res.status(200).json({success: true, data: a})
+    });
+  });
+}
+
 exports.vault = async (req, res) =>{
 
   const data = req.body;
