@@ -11,7 +11,7 @@
                     <nb-select class="ctr-btn" [(ngModel)]='camera' (ngModelChange)='cam($event)' size="small">
                         <nb-option value="" disabled>Choose a camera:</nb-option>
                         <nb-option *ngFor='let cam of cameras' [value]=cam.id>{{cam.name}}</nb-option>
-                        </nb-select>
+                    </nb-select>
                 </div>
                 <div class="col-md-auto less-padding" >
                     <button style = "width: 130px" class="ctr-btn" #popover (click) = "showRangeSelector(true)" [nbPopover]="rangeSelector" nbPopoverTrigger="noop" nbPopoverPlacement="bottom" size="small" nbButton>{{currentSelection}} <nb-icon icon="calendar"></nb-icon></button>
@@ -28,6 +28,10 @@
                         <nb-option [value]=300>5 m</nb-option>
                         <nb-option [value]=600>10 m</nb-option>
                     </nb-select>
+                </div>
+                <div class = "col-md-auto less-padding">
+                    <button [nbContextMenu]="items"  size  = "small" nbButton ghost status="primary"><nb-icon  icon="more-vertical-outline"></nb-icon></button>
+            
                 </div>
             </div>
         </div>

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } 
 import { NbCalendarRange, NbComponentStatus, NbDateService, NbGlobalPhysicalPosition, NbGlobalPosition, NbToastrService } from '@nebular/theme';
 import { Account } from '../../../../models/Account';
 import { NbPopoverDirective } from '@nebular/theme';
+import { AuthService } from "../../../../services/auth.service";
 
 @Component({
   selector: 'ngx-control',
@@ -33,12 +34,53 @@ export class ControlComponent implements OnInit, OnDestroy {
   lastMonths: Date[] = [];
   
   currentSelection: string  = "Date";
+  items = [
+    {
+      title: 'Cameras',
+      icon: 'video-outline',
+      children: [
+        {
+          title: 'Add Camera',
+          link: '/pages/cameras/add_camera',
+          home: true,
+        },
+        {
+          title: 'Cameras List',
+          link: '/pages/camerasList',
+          home: true,
+        }
+      ],
+    },
+    {
+      title: 'Dashboards',
+      icon: 'bar-chart-outline',
+      link: '/pages/graphs'
+    },
+    {
+      title: 'Tickets',
+      icon: 'done-all-outline',
+      link: '/pages/tickets'
+    },
+  ];
 
 
   constructor(
     private toastrService: NbToastrService,
     protected dateService: NbDateService<Date>,
-  ) { }
+    private authService: AuthService
+  ) { 
+    if(authService.isAdmin){
+        this.items = [
+          {
+            title: 'Accounts',
+            icon: 'people-outline',
+            link: '/pages/accounts'
+          }
+        ];
+    }
+    
+    
+  }
 
   @Output() cameraSel = new EventEmitter<string>();
 

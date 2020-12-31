@@ -6,7 +6,8 @@ import { AccountService } from '../../../../services/account.service';
 @Component({
   selector: 'ngx-center',
   templateUrl: './center.component.html',
-  styleUrls: ['./center.component.scss']
+  styleUrls: ['./center.component.scss'],
+  styles: [ ':host {height: 100% !important}']
 })
 export class CenterComponent implements OnInit {
 
