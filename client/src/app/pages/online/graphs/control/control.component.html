@@ -1,5 +1,12 @@
 <div class="container">
     <div class="row justify-content-between">
+            <div class = "col less-padding">
+            </div>
+            <div class = "col-md-auto less-padding" *ngFor='let i of items'>
+                    <button [routerLink] = "i.link"  style = "color: #d12e26" nbButton ghost status="danger" size = "tiny"><nb-icon icon="{{i.icon}}" ></nb-icon>{{i.title}}</button>
+            </div>
+    </div>
+    <div class="row justify-content-between">
         <div class="col-4">
             <p class = "analytic-name">{{analytic.name}}</p>
         </div>
