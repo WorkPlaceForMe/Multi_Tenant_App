@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from "../services/auth.service";
 import { Router, NavigationEnd } from '@angular/router'
+import { NbSidebarService } from '@nebular/theme';
 
 import { MENU_ITEMSADMIN, MENU_ITEMSBRANCH, MENU_ITEMSCLIENT, MENU_ITEMSUSER } from './pages-menu';
 
@@ -27,7 +28,7 @@ export class PagesComponent {
   menuBranch = MENU_ITEMSBRANCH;
   menuUser = MENU_ITEMSUSER;
 
-  constructor( public authService: AuthService, private router: Router) {
+  constructor( public authService: AuthService, private router: Router, private sidebarService: NbSidebarService) {
     if(authService.isAdmin){
       router
     }
@@ -35,10 +36,12 @@ export class PagesComponent {
       if (val instanceof NavigationEnd) {
         if(val.url == '/pages/graphs'){
           this.showHeader = false;
+          this.state = 'collapsed';
         }else{
           this.showHeader = true;
+          this.state = 'compacted';
         }
-        this.state = "collapsed";
+        
       }
   });
   }
