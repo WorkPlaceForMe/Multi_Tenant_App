@@ -162,7 +162,7 @@ exports.addCamera = (req,res) => {
         Camera.findOne({
             where: { id :  data.id, id_branch: decoded.id_branch},
           }).then(camera => {
-            let port = 9999
+            let port = 19999
             port = port - streams.length
             stream = getStream(camera,port,data.id).then((stream)=> {
               res.status(200).send({ success: true, port: stream.port});
