@@ -1,23 +1,30 @@
 <div class="container">
     <div class="row justify-content-between">
+            <div class = "col less-padding">
+            </div>
+            <div class = "col-md-auto less-padding" *ngFor='let i of items'>
+                    <button [routerLink] = "i.link"  style = "color: #d12e26" nbButton ghost status="danger" size = "tiny"><nb-icon icon="{{i.icon}}" ></nb-icon>{{i.title}}</button>
+            </div>
+    </div>
+    <div class="row justify-content-between" style  = "padding-top: 20px ">
         <div class="col-4">
             <p class = "analytic-name">{{analytic.name}}</p>
         </div>
         <div class="col-8" align='right'>
             <div class = "row">
-                <div class = "col">
+                <div class = "col less-padding">
                 </div>
                 <div class="col-md-auto less-padding" align='right' *ngIf='now_user.id_branch != "0000"'>
-                    <nb-select class="ctr-btn" [(ngModel)]='camera' (ngModelChange)='cam($event)' size="small">
+                    <nb-select  [(ngModel)]='camera' (ngModelChange)='cam($event)' size="small">
                         <nb-option value="" disabled>Choose a camera:</nb-option>
                         <nb-option *ngFor='let cam of cameras' [value]=cam.id>{{cam.name}}</nb-option>
                     </nb-select>
                 </div>
                 <div class="col-md-auto less-padding" >
-                    <button style = "width: 130px" class="ctr-btn" #popover (click) = "showRangeSelector(true)" [nbPopover]="rangeSelector" nbPopoverTrigger="noop" nbPopoverPlacement="bottom" size="small" nbButton>{{currentSelection}} <nb-icon icon="calendar"></nb-icon></button>
+                    <button style = "width: 130px"  #popover (click) = "showRangeSelector(true)" [nbPopover]="rangeSelector" nbPopoverTrigger="noop" nbPopoverPlacement="bottom" size="small" nbButton>{{currentSelection}} <nb-icon icon="calendar"></nb-icon></button>
                 </div>
                 <div class = "col-md-auto less-padding">
-                    <button style = "min-height: 32px"  class="ctr-btn" nbButton status="primary" (click)="reload()" size="small"><i class="fas fa-sync-alt"></i></button>
+                    <button style = "min-height: 32px"   (click)="reload()" size="small" nbButton><i style = "font-weight: 600" class="fas fa-sync-alt"></i></button>
                 </div>
                 <div class = "col-md-auto less-padding" >
                     <nb-select class="ctr-btn" [(ngModel)]='reTime' (ngModelChange)='set($event)' id='select' size="small">
@@ -28,10 +35,6 @@
                         <nb-option [value]=300>5 m</nb-option>
                         <nb-option [value]=600>10 m</nb-option>
                     </nb-select>
-                </div>
-                <div class = "col-md-auto less-padding">
-                    <button [nbContextMenu]="items"  size  = "small" nbButton ghost status="primary"><nb-icon  icon="more-vertical-outline"></nb-icon></button>
-            
                 </div>
             </div>
         </div>

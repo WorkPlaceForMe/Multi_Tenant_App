@@ -16,6 +16,7 @@ export class ControlComponent implements OnInit, OnDestroy {
   @Input() analytic;
   @Input() cameras;
   @Input() rel;
+
   max: Date;
   fin: Date;
   range: NbCalendarRange<Date>;
@@ -38,6 +39,7 @@ export class ControlComponent implements OnInit, OnDestroy {
     {
       title: 'Cameras',
       icon: 'video-outline',
+      link: '/pages/camerasList',
       children: [
         {
           title: 'Add Camera',
@@ -52,17 +54,13 @@ export class ControlComponent implements OnInit, OnDestroy {
       ],
     },
     {
-      title: 'Dashboards',
-      icon: 'bar-chart-outline',
-      link: '/pages/graphs'
-    },
-    {
       title: 'Tickets',
       icon: 'done-all-outline',
       link: '/pages/tickets'
     },
   ];
 
+ 
 
   constructor(
     private toastrService: NbToastrService,
