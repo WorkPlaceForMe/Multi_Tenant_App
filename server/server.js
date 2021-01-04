@@ -41,6 +41,16 @@ app.use(morgan('Date: :date[web] // Url: :remote-addr // Method: :method:url // 
 
 const db = require("./app/models");
 
+process.on('unhandledRejection', (error, promise) => {
+    console.log(' Oh Lord! We forgot to handle a promise rejection here: ', promise);
+    console.log(' The error was: ', error );
+  });
+
+process.on('uncaughtException', function (err, promise) {
+    console.log(' Oh Lord! We forgot to handle a promise rejection here: ', promise);
+    console.log(' The error was: ', err );
+});
+
 if(process.env.INSTALL === 'true'){
   mysql.createConnection({
     user     : process.env.USERM,

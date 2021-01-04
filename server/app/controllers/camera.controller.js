@@ -9,7 +9,8 @@ const fs = require('fs');
 const { rejects } = require("assert");
 const { resolve } = require("path");
 Stream = require('node-rtsp-stream')
-const path = process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+const path = process.env.home + process.env.username + process.env.pathDocker + process.env.resources;
+const my_ip = process.env.my_ip;
 
 
 exports.addCamera = (req,res) => {
@@ -165,7 +166,7 @@ exports.addCamera = (req,res) => {
             let port = 9999
             port = port - streams.length
             stream = getStream(camera,port,data.id).then((stream)=> {
-              res.status(200).send({ success: true, port: stream.port});
+              res.status(200).send({ success: true, my_ip: my_ip, port: stream.port});
             }).catch((err)=>{
               res.status(500).send({ success: false, message: err});
             })
