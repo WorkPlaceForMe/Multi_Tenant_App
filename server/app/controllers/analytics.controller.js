@@ -545,7 +545,7 @@ exports.queue = async (req, res) =>{
         }else{
           v['wait'] = (v.end_time - v.start_time)/1000;
           v['wait'] = display(v['wait'])
-         times.push({time: (v.end_time - v.start_time)/60000, queue: v.zone})
+         times.push({time: (v.end_time - v.start_time)/60000, queue: v.qid})
         }
         let d = v.start_time
         let se = d.getSeconds()
@@ -604,6 +604,30 @@ exports.queueLite = async (req, res) =>{
       }
       res.status(200).json({success: true, data: a})
     });
+  });
+}
+
+exports.pcLite = async (req, res) =>{
+  const data = req.body;
+     await db.con().query(`SELECT (count2 - count1) as count FROM pcount where ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time desc limit 1;`,async function (err, result) {
+      if (err) return res.status(500).json({success: false, message: err});
+      const a = {
+        currentCount: result[0].count,
+      }
+      res.status(200).json({success: true, data: a})
+
+  });
+}
+
+exports.premises = async (req, res) =>{
+  const data = req.body;
+     await db.con().query(`SELECT (count2 - count1) as count FROM pcount where ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time desc limit 1;`,async function (err, result) {
+      if (err) return res.status(500).json({success: false, message: err});
+      const a = {
+        currentCount: result[0].count,
+      }
+      res.status(200).json({success: true, data: a})
+
   });
 }
 
