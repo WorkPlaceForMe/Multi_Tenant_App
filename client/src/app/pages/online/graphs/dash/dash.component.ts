@@ -81,6 +81,9 @@ export class DashComponent implements OnInit , OnDestroy {
       end: this.range.end,
       type: type
     }
+    this.serv.ticketsGet(l).subscribe(res=>{
+      this.source = res['data']['raw']
+    },err=> console.error(err))
       this.serv.ticketsCount(l).subscribe(
         res=>{
           this.tickets = res['data']
@@ -92,10 +95,7 @@ export class DashComponent implements OnInit , OnDestroy {
           this.counts.noMask = this.tickets.count.find(element => element.type === 'noMask');
           this.counts.social = this.tickets.count.find(element => element.type === 'sociald');
           this.counts.intr = this.tickets.count.find(element => element.type === 'intrusion');
-          // for(var m of this.tickets.raw){
-          //   m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/tickets/' + m['cam_id'] + '/' + m['picture'])
-          // }
-          // this.source = this.tickets.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
+
           if(this.now_user.id_branch != '0000'){
             type = 'cam_id';
           }else{
@@ -302,7 +302,7 @@ export class DashComponent implements OnInit , OnDestroy {
             ],
             };
       
-          })
+          })            
                         },
                         err =>{
                           console.error(err)
@@ -351,13 +351,14 @@ export class DashComponent implements OnInit , OnDestroy {
   got(id){
     this.route.navigate([`/pages/tickets`])
   }
+
   settings = {
     mode: 'external',
     actions: {
       position: 'right',
-      columnTitle: 'ACTIONS',
       add: false,
       edit: true,
+      columnTitle: 'ACTIONS',
       delete: false,
     },
     edit: {
@@ -372,73 +373,17 @@ export class DashComponent implements OnInit , OnDestroy {
       },
     noDataMessage: "No data found",
     columns: {
-      picture: {
-        title: 'PHOTO',
-        type: 'custom',
-        filter: false,
-        renderComponent: ButtonViewComponent,
-        onComponentInitFunction(instance) {
-          instance.save.subscribe(row => {
-            alert(`${row.name} saved!`)
-          });
-        }
-      },
-      track_id: {
-        title: 'QUEUE NO.',
-        type: 'number',
+      type: {
+        title: 'INCIDENT TYPE',
+        type: 'string',
         filter: false
       },
-      wait: {
-        title: 'WAIT TIME',
+      createdAt: {
+        title: 'TIME',
         type: 'string',
         filter: false
       }
     },
   };
 
-}
-
-@Component({
-  selector: 'button-view',
-  template: `
-    <img [src]="rowData.picture" width='60' height='60'>
-  `,
-})
-export class ButtonViewComponent implements ViewCell, OnInit {
-
-  constructor(){
-  }
-
-  @Input() value: string | number;
-  @Input() rowData: any;
-  @Output() save: EventEmitter<any> = new EventEmitter();
-
-  ngOnInit() {
-  }
-}
-
-
-@Component({
-  selector: 'button-view',
-  template: `
-    <button class='btn btn-primary btn-block' (click)="openVideo()"><i class="fas fa-play-circle"></i></button>
-  `,
-})
-export class ButtonViewComponent1 implements ViewCell, OnInit {
-  renderValue: string;
-
-  constructor(private windowService: NbWindowService){
-  }
-
-  @Input() value: string | number;
-  @Input() rowData: any;
-
-  @Output() save: EventEmitter<any> = new EventEmitter();
-
-  openVideo(){
-    this.save.emit(this.rowData.picture)
-  }
-  ngOnInit() {
-    this.renderValue = this.value.toString().toUpperCase();
-  }
 }

@@ -56,6 +56,9 @@ API_URI = api
   ticketsCount(some:any){
     return this.http.post(`${this.API_URI}/ticket/counts/`,some)
   }
+  ticketsGet(some:any){
+    return this.http.post(`${this.API_URI}/ticket/some/`,some)
+  }
   queueLite(some:any,id:string){
     return this.http.post(`${this.API_URI}/analytics/queueLite/${id}`,some)
   }

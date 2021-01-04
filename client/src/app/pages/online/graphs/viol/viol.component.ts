@@ -234,7 +234,7 @@ export class ViolComponent implements OnInit, OnDestroy {
         filter: false
       },
       severity: {
-        title: 'Severity',
+        title: 'SEVERITY',
         type: 'string',
         filter: false
       }
