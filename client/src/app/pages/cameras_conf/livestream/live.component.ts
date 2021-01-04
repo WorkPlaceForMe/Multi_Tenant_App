@@ -77,7 +77,7 @@ newLink:TrustedUrlPipe;
         this.live =res['data'];
           this.face.camera({id: this.live.id}).subscribe(
             res =>{
-              this.player = new JSMpeg.Player(`ws://localhost:${res['port']}`, {
+              this.player = new JSMpeg.Player(`ws://${res['my_ip']}:${res['port']}`, {
                 canvas: this.streamingcanvas.nativeElement, autoplay: true, audio: false, loop: true
               })
             },

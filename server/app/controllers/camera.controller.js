@@ -9,7 +9,8 @@ const fs = require('fs');
 const { rejects } = require("assert");
 const { resolve } = require("path");
 Stream = require('node-rtsp-stream')
-const path = process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+const path = process.env.home + process.env.username + process.env.pathDocker + process.env.resources;
+const my_ip = process.env.my_ip;
 
 
 exports.addCamera = (req,res) => {
@@ -112,7 +113,10 @@ exports.addCamera = (req,res) => {
   })
   }
   
-  function getStream(camera,port,id, tries = 0){
+  function getStream(camera,port,id, tries){
+    if(tries == undefined){
+      tries = 0;
+    }
     return new Promise((resolve, reject) => {
       if (tries >= 3) {
         return reject()
@@ -133,7 +137,8 @@ exports.addCamera = (req,res) => {
       })
   
       stream.on("exitWithError", (error) => {
-        resolve(getStream(camera, port-1, tries+1))
+        stream.stop();
+        resolve(getStream(camera, port-1, id, tries+1))
       })
 
       let sent = false
@@ -165,8 +170,9 @@ exports.addCamera = (req,res) => {
             let port = 9999
             port = port - streams.length
             stream = getStream(camera,port,data.id).then((stream)=> {
-              res.status(200).send({ success: true, port: stream.port});
+              res.status(200).send({ success: true, my_ip: my_ip, port: stream.port});
             }).catch((err)=>{
+              stream.stop();
               res.status(500).send({ success: false, message: err});
             })
           }).catch(err => {

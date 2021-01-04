@@ -35,10 +35,12 @@ export class PagesComponent {
       if (val instanceof NavigationEnd) {
         if(val.url == '/pages/graphs'){
           this.showHeader = false;
+          this.state = "collapsed";
         }else{
           this.showHeader = true;
+          this.state = "compacted";
         }
-        this.state = "collapsed";
+        
       }
   });
   }

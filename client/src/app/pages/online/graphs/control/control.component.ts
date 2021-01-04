@@ -38,6 +38,7 @@ export class ControlComponent implements OnInit, OnDestroy {
     {
       title: 'Cameras',
       icon: 'video-outline',
+      link:  '/pages/camerasList',
       children: [
         {
           title: 'Add Camera',
@@ -50,11 +51,6 @@ export class ControlComponent implements OnInit, OnDestroy {
           home: true,
         }
       ],
-    },
-    {
-      title: 'Dashboards',
-      icon: 'bar-chart-outline',
-      link: '/pages/graphs'
     },
     {
       title: 'Tickets',
