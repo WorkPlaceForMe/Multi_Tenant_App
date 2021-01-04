@@ -100,4 +100,22 @@ module.exports = function(app) {
     [authJwt.verifyToken],
     controller.queueLite
   );
+
+  app.post(
+    "/api/analytics/pcLite/:id",
+    [authJwt.verifyToken],
+    controller.pcLite
+  );
+
+  app.post(
+    "/api/analytics/premises/:id",
+    [authJwt.verifyToken],
+    controller.premises
+  );
+
+  app.post(
+    "/api/analytics/threats/:id",
+    [authJwt.verifyToken],
+    controller.threats
+  );
 }

@@ -59,4 +59,13 @@ API_URI = api
   queueLite(some:any,id:string){
     return this.http.post(`${this.API_URI}/analytics/queueLite/${id}`,some)
   }
+  pcLite(some:any,id:string){
+    return this.http.post(`${this.API_URI}/analytics/pcLite/${id}`,some)
+  }
+  premises(some:any,id:string){
+    return this.http.post(`${this.API_URI}/analytics/premises/${id}`,some)
+  }
+  threats(some:any,id:string){
+    return this.http.post(`${this.API_URI}/analytics/threats/${id}`,some)
+  }
 }

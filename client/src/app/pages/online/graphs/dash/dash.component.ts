@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { NbCalendarRange } from '@nebular/theme';
+import { NbCalendarRange, NbColorHelper, NbThemeService, NbWindowService } from '@nebular/theme';
 import { LocalDataSource, ViewCell } from 'ng2-smart-table';
 import { FacesService } from '../../../../services/faces.service';
 import { Router } from '@angular/router';
@@ -21,6 +21,7 @@ export class DashComponent implements OnInit , OnDestroy {
   player: any;
   now_user: Account;
   queue: any = {}
+  pc: any = {}
   counts = {
     aod: {type: "", count: 0},
     loit: {type: "", count: 0},
@@ -39,9 +40,22 @@ export class DashComponent implements OnInit , OnDestroy {
     public sanitizer: DomSanitizer,
     private face: FacesService,
     public datepipe: DatePipe,
-    private route: Router
+    private route: Router,
+    private theme: NbThemeService,
   ) { }
   source:any = new LocalDataSource();
+
+  themeSubscription: any;
+  dataPre: any;
+  optionsPre: any;
+  dataThr: any;
+  optionsThr: any;
+  dataBPre: any;
+  optionsBPre: any;
+  dataBThr: any;
+  optionsBThr: any;
+  premises: any;
+  threats: any;
 
   ngOnDestroy(){
     if(this.player != undefined){
@@ -76,7 +90,7 @@ export class DashComponent implements OnInit , OnDestroy {
           this.counts.violence = this.tickets.count.find(element => element.type === 'violence');
           this.counts.helm = this.tickets.count.find(element => element.type === 'helm');
           this.counts.noMask = this.tickets.count.find(element => element.type === 'noMask');
-          this.counts.social = this.tickets.count.find(element => element.type === 'social');
+          this.counts.social = this.tickets.count.find(element => element.type === 'sociald');
           this.counts.intr = this.tickets.count.find(element => element.type === 'intrusion');
           // for(var m of this.tickets.raw){
           //   m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/tickets/' + m['cam_id'] + '/' + m['picture'])
@@ -95,6 +109,215 @@ export class DashComponent implements OnInit , OnDestroy {
           this.serv.queueLite(l,this.camera).subscribe(
             res=>{
               this.queue = res['data']
+              this.serv.pcLite(l,this.camera).subscribe(
+                res=>{
+                  this.pc = res['data']
+                  this.serv.premises(l,this.camera).subscribe(
+                    res=>{
+                      this.premises = res['data']
+                      this.serv.threats(l,this.camera).subscribe(
+                        res=>{
+                          this.threats = res['data']
+
+          this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
+            
+            const colors: any = config.variables;
+            const chartjs: any = config.variables.chartjs;
+      
+            this.optionsBPre = {
+              maintainAspectRatio: false,
+              responsive: true,
+              legend: {
+                labels: {
+                  fontColor: chartjs.textColor,
+                },
+              },
+              scales: {
+                xAxes: [
+                  {
+                    stacked: true,
+                    gridLines: {
+                      display: false,
+                      color: chartjs.axisLineColor,
+                    },
+                    ticks: {
+                      fontColor: chartjs.textColor,
+                    },
+                  },
+                ],
+                yAxes: [
+                  {
+                    stacked: true,
+                    gridLines: {
+                      display: true,
+                      color: chartjs.axisLineColor,
+                    },
+                    ticks: {
+                      fontColor: chartjs.textColor,
+                    },
+                  },
+                ],
+              },
+            };
+
+            this.dataPre = {
+              labels: Object.keys(this.premises.loit),
+              datasets: [{
+                label: 'People Count',
+                data: Object.values(this.premises.pcount),
+                borderColor: colors.primary,
+                backgroundColor: colors.primary,
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              },{
+                label: 'Queue Management',
+                data: Object.values(this.premises.queue),
+                borderColor: colors.success,
+                backgroundColor: colors.success,
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              },{
+                label: 'Loitering',
+                data: Object.values(this.premises.loit),
+                borderColor: colors.danger,
+                backgroundColor: colors.danger,
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              },{
+                label: 'Vault Door',
+                data: Object.values(this.premises.vault),
+                borderColor: colors.warning,
+                backgroundColor: colors.warning,
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              }
+            ],
+            };
+      
+            this.optionsPre = {
+              responsive: true,
+              maintainAspectRatio: false,
+              legend: {
+                display: true,
+                position: 'bottom',
+                labels: {
+                  fontColor: chartjs.textColor,
+                },
+              },
+              hover: {
+                mode: 'index',
+              },
+              scales: {
+                xAxes: [
+                  {
+                    display: false,
+                    scaleLabel: {
+                      display: false,
+                      labelString: 'Month',
+                    },
+                    gridLines: {
+                      display: true,
+                      color: chartjs.axisLineColor,
+                    },
+                    ticks: {
+                      fontColor: chartjs.textColor,
+                    },
+                  },
+                ],
+                yAxes: [
+                  {
+                    display: true,
+                    scaleLabel: {
+                      display: false,
+                      labelString: 'Value',
+                    },
+                    gridLines: {
+                      display: true,
+                      color: chartjs.axisLineColor,
+                    },
+                    ticks: {
+                      fontColor: chartjs.textColor,
+                    },
+                  },
+                ],
+              },
+            };
+
+
+            this.dataThr = {
+              labels: Object.keys(this.threats.violence),
+              datasets: [{
+                label: 'Violence',
+                data: Object.values(this.threats.violence),
+                borderColor: colors.primary,
+                backgroundColor: colors.primary,
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              },{
+                label: 'Helmet',
+                data: Object.values(this.threats.helmet),
+                borderColor: colors.success,
+                backgroundColor: colors.success,
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              },{
+                label: 'Covered Face',
+                data: Object.values(this.threats.covered),
+                borderColor: colors.danger,
+                backgroundColor: colors.danger,
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              },{
+                label: 'Unattended Object',
+                data: Object.values(this.threats.aod),
+                borderColor: colors.warning,
+                backgroundColor: colors.warning,
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              },{
+                label: 'Social Distancing',
+                data: Object.values(this.threats.social),
+                borderColor: colors.info,
+                backgroundColor: colors.info,
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              },{
+                label: 'Intrusions',
+                data: Object.values(this.threats.intr),
+                borderColor: colors.warning,
+                backgroundColor: colors.warning,
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              }
+            ],
+            };
+      
+          })
+                        },
+                        err =>{
+                          console.error(err)
+                        }
+                      )
+                    },
+                    err =>{
+                      console.error(err)
+                    }
+                  )
+                },
+                err =>{
+                  console.error(err)
+                }
+              )
             },
             err =>{
               console.error(err)
@@ -108,6 +331,23 @@ export class DashComponent implements OnInit , OnDestroy {
       )
 
   }
+  
+
+  @ViewChild("videoPlayer", { static: false }) videoplayer: ElementRef;
+  isPlay: boolean = false;
+  toggleVideo(event: any) {
+    this.videoplayer.nativeElement.play();
+  }
+
+  videoFile:string = "";
+  
+  pass(vid:string){
+    this.videoplayer.nativeElement.src = vid    
+    this.videoplayer.nativeElement.load();
+    this.videoplayer.nativeElement.play();
+
+  }
+
   got(id){
     this.route.navigate([`/pages/tickets`])
   }
@@ -174,5 +414,31 @@ export class ButtonViewComponent implements ViewCell, OnInit {
   @Output() save: EventEmitter<any> = new EventEmitter();
 
   ngOnInit() {
+  }
+}
+
+
+@Component({
+  selector: 'button-view',
+  template: `
+    <button class='btn btn-primary btn-block' (click)="openVideo()"><i class="fas fa-play-circle"></i></button>
+  `,
+})
+export class ButtonViewComponent1 implements ViewCell, OnInit {
+  renderValue: string;
+
+  constructor(private windowService: NbWindowService){
+  }
+
+  @Input() value: string | number;
+  @Input() rowData: any;
+
+  @Output() save: EventEmitter<any> = new EventEmitter();
+
+  openVideo(){
+    this.save.emit(this.rowData.picture)
+  }
+  ngOnInit() {
+    this.renderValue = this.value.toString().toUpperCase();
   }
 }
