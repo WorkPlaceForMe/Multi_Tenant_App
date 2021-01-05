@@ -54,6 +54,18 @@ export class HelmComponent implements OnInit, OnDestroy {
     }
   }
 
+  @ViewChild("videoPlayer", { static: false }) videoplayer: ElementRef;
+  isPlay: boolean = false;
+  toggleVideo(event: any) {
+    this.videoplayer.nativeElement.play();
+  }
+  videoFile:string = "";
+  pass(vid:string){
+    this.videoplayer.nativeElement.src = vid    
+    this.videoplayer.nativeElement.load();
+    this.videoplayer.nativeElement.play();
+  }
+
   ngOnInit(): void {
     if(api.length <= 1){
       setTimeout(()=>{
@@ -91,7 +103,7 @@ export class HelmComponent implements OnInit, OnDestroy {
         res=>{
           this.helm = res['data']
           for(var m of this.helm.raw){
-            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/helm/' + m['cam_id'] + '/' + m['picture'])
+            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/helm/' + m['cam_id'] + '/' + m['clip_path'])
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
             switch(m['alert_type']){
               case '0':{
@@ -216,13 +228,13 @@ export class HelmComponent implements OnInit, OnDestroy {
     noDataMessage: "No data found",
     columns: {
       picture: {
-        title: 'PHOTO',
+        title: 'VIDEO',
         type: 'custom',
         filter: false,
         renderComponent: ButtonViewComponent,
-        onComponentInitFunction(instance) {
-          instance.save.subscribe(row => {
-            alert(`${row.name} saved!`)
+        onComponentInitFunction:(instance) => {
+          instance.save.subscribe((row: string)  => {
+            this.pass(row)
           });
         }
       },
@@ -249,18 +261,25 @@ export class HelmComponent implements OnInit, OnDestroy {
 @Component({
   selector: 'button-view',
   template: `
-    <img [src]="rowData.picture" width='60' height='60'>
+    <button class='btn btn-primary btn-block' (click)="openVideo()"><i class="fas fa-play-circle"></i></button>
   `,
 })
 export class ButtonViewComponent implements ViewCell, OnInit {
+  renderValue: string;
 
   constructor(){
   }
 
   @Input() value: string | number;
   @Input() rowData: any;
+
   @Output() save: EventEmitter<any> = new EventEmitter();
 
+  openVideo(){
+    this.save.emit(this.rowData.picture)
+  }
+
   ngOnInit() {
+    this.renderValue = this.value.toString().toUpperCase();
   }
 }
