@@ -138,7 +138,7 @@ exports.addCamera = (req,res) => {
   
       stream.on("exitWithError", (error) => {
         stream.stop();
-        resolve(getStream(camera, port-1, id, tries+1))
+        reject(error)
       })
 
       let sent = false
@@ -172,7 +172,8 @@ exports.addCamera = (req,res) => {
             stream = getStream(camera,port,data.id).then((stream)=> {
               res.status(200).send({ success: true, my_ip: my_ip, port: stream.port});
             }).catch((err)=>{
-              stream.stop();
+              if(stream && stream.stop)
+                stream.stop();
               res.status(500).send({ success: false, message: err});
             })
           }).catch(err => {
@@ -205,6 +206,9 @@ exports.addCamera = (req,res) => {
       return res.status(200).send({ success: true, message: 'Skipping'});
     }
     if(data.algo_id == -3){
+      return res.status(200).send({ success: true, fact: true});
+    }
+    if(data.algo_id == -4){
       return res.status(200).send({ success: true, fact: true});
     }
     let wh;
