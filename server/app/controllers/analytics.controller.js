@@ -220,7 +220,7 @@ exports.violence = async (req, res) =>{
 exports.aod = async (req, res) =>{
   
   const data = req.body;
-    await db.con().query(`SELECT * from alerts WHERE alert= 'aod' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+    await db.con().query(`SELECT * from aod WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {}
       let cache = '';
@@ -692,7 +692,7 @@ exports.threats = async (req, res) =>{
         if (err) return res.status(500).json({success: false, message: err});
         await db.con().query(`SELECT HOUR(time) as hour, COUNT(*) as count FROM alerts where alert = 'no mask' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`, async function (err, result2) {
           if (err) return res.status(500).json({success: false, message: err});
-          await db.con().query(`SELECT HOUR(time) as hour, COUNT(*) as count FROM alerts where alert = 'aod' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`, async function (err, result3) {
+          await db.con().query(`SELECT HOUR(time) as hour, COUNT(*) as count FROM aod where ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`, async function (err, result3) {
             if (err) return res.status(500).json({success: false, message: err});
             await db.con().query(`SELECT HOUR(time) as hour, COUNT(*) as count FROM alerts where alert = 'sociald' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`, async function (err, result4) {
               if (err) return res.status(500).json({success: false, message: err});
