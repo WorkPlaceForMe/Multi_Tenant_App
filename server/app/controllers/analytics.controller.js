@@ -545,7 +545,7 @@ exports.queue = async (req, res) =>{
         }else{
           v['wait'] = (v.end_time - v.start_time)/1000;
           v['wait'] = display(v['wait'])
-         times.push({time: (v.end_time - v.start_time)/60000, queue: v.zone})
+         times.push({time: (v.end_time - v.start_time)/60000, queue: v.qid})
         }
         let d = v.start_time
         let se = d.getSeconds()
@@ -603,6 +603,177 @@ exports.queueLite = async (req, res) =>{
         count: result2[0].count
       }
       res.status(200).json({success: true, data: a})
+    });
+  });
+}
+
+exports.pcLite = async (req, res) =>{
+  const data = req.body;
+     await db.con().query(`SELECT (count2 - count1) as count FROM pcount where ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time desc limit 1;`,async function (err, result) {
+      if (err) return res.status(500).json({success: false, message: err});
+      const a = {
+        currentCount: result[0].count,
+      }
+      res.status(200).json({success: true, data: a})
+
+  });
+}
+
+exports.premises = async (req, res) =>{
+  const data = req.body;
+     await db.con().query(`SELECT HOUR(start_time) as hour, COUNT(*) as count FROM queue_mgt where ${data.type} = '${req.params.id}' and start_time >= '${data.start}' and  start_time <= '${data.end}' GROUP BY HOUR(start_time);`, async function (err, result0) {
+      if (err) return res.status(500).json({success: false, message: err});
+      await db.con().query(`SELECT HOUR(time) as hour, COUNT(*) as count FROM pcount where ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`, async function (err, result1) {
+        if (err) return res.status(500).json({success: false, message: err});
+        await db.con().query(`SELECT HOUR(time) as hour, COUNT(*) as count FROM loitering where ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`, async function (err, result2) {
+          if (err) return res.status(500).json({success: false, message: err});
+          await db.con().query(`SELECT HOUR(time) as hour, COUNT(*) as count FROM vault where ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`, async function (err, result3) {
+            if (err) return res.status(500).json({success: false, message: err});
+            let arr = [{hour:0, count:0},{hour:1, count:0},{hour:2, count:0},{hour:3, count:0},{hour:4, count:0},{hour:5, count:0},{hour:6, count:0},{hour:7, count:0},{hour:8, count:0},{hour:9, count:0},{hour:10, count:0},{hour:11, count:0},{hour:12, count:0},{hour:13, count:0},{hour:14, count:0},{hour:15, count:0},{hour:16, count:0},{hour:17, count:0},{hour:18, count:0},{hour:19, count:0},{hour:20, count:0},{hour:21, count:0},{hour:22, count:0},{hour:23, count:0}]
+            let res0 = {}
+            let res1 = {}
+            let res2 = {}
+            let res3 = {}
+            let a = 0
+            let b = 0
+            let c = 0
+            let d = 0
+            for(let i = 0; i < arr.length; i++){
+              if(result0[a].hour != arr[i].hour){
+                res0[arr[i].hour] = arr[i].count
+              }else{
+                res0[arr[i].hour] = result0[a].count
+                if(a < result0.length - 1)
+                a++;
+              }
+
+              if(result1[b].hour != arr[i].hour){
+                res1[arr[i].hour] = arr[i].count
+              }else{
+                res1[arr[i].hour] = result1[b].count
+                if(b < result1.length - 1)
+                b++;
+              }
+
+              if(result2[c].hour != arr[i].hour){
+                res2[arr[i].hour] = arr[i].count
+              }else{
+                res2[arr[i].hour] = result2[c].count
+                if(c < result2.length - 1)
+                c++;
+              }
+              if(result3[d].hour != arr[i].hour){
+                res3[arr[i].hour] = arr[i].count
+              }else{
+                res3[arr[i].hour] = result3[d].count
+                if(d < result3.length - 1)
+                d++;
+              }
+            }
+
+      const send = {
+        queue: res0,
+        pcount: res1,
+        loit: res2,
+        vault: res3
+      }
+      res.status(200).json({success: true, data: send})
+    });
+    });
+    });
+  });
+}
+
+exports.threats = async (req, res) =>{
+  const data = req.body;
+     await db.con().query(`SELECT HOUR(time) as hour, COUNT(*) as count FROM violence where ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`, async function (err, result0) {
+      if (err) return res.status(500).json({success: false, message: err});
+      await db.con().query(`SELECT HOUR(time) as hour, COUNT(*) as count FROM alerts where alert = 'helmet' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`, async function (err, result1) {
+        if (err) return res.status(500).json({success: false, message: err});
+        await db.con().query(`SELECT HOUR(time) as hour, COUNT(*) as count FROM alerts where alert = 'no mask' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`, async function (err, result2) {
+          if (err) return res.status(500).json({success: false, message: err});
+          await db.con().query(`SELECT HOUR(time) as hour, COUNT(*) as count FROM aod where ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`, async function (err, result3) {
+            if (err) return res.status(500).json({success: false, message: err});
+            await db.con().query(`SELECT HOUR(time) as hour, COUNT(*) as count FROM alerts where alert = 'sociald' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`, async function (err, result4) {
+              if (err) return res.status(500).json({success: false, message: err});
+              await db.con().query(`SELECT HOUR(time) as hour, COUNT(*) as count FROM intrude where ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`, async function (err, result5) {
+                if (err) return res.status(500).json({success: false, message: err});
+            let arr = [{hour:0, count:0},{hour:1, count:0},{hour:2, count:0},{hour:3, count:0},{hour:4, count:0},{hour:5, count:0},{hour:6, count:0},{hour:7, count:0},{hour:8, count:0},{hour:9, count:0},{hour:10, count:0},{hour:11, count:0},{hour:12, count:0},{hour:13, count:0},{hour:14, count:0},{hour:15, count:0},{hour:16, count:0},{hour:17, count:0},{hour:18, count:0},{hour:19, count:0},{hour:20, count:0},{hour:21, count:0},{hour:22, count:0},{hour:23, count:0}]
+            let res0 = {}
+            let res1 = {}
+            let res2 = {}
+            let res3 = {}
+            let res4 = {}
+            let res5 = {}
+            let a = 0
+            let b = 0
+            let c = 0
+            let d = 0
+            let e = 0
+            let f = 0
+            for(let i = 0; i < arr.length; i++){
+              if(result0[a].hour != arr[i].hour){
+                res0[arr[i].hour] = arr[i].count
+              }else{
+                res0[arr[i].hour] = result0[a].count
+                if(a < result0.length - 1)
+                a++;
+              }
+
+              if(result1[b].hour != arr[i].hour){
+                res1[arr[i].hour] = arr[i].count
+              }else{
+                res1[arr[i].hour] = result1[b].count
+                if(b < result1.length - 1)
+                b++;
+              }
+
+              if(result2[c].hour != arr[i].hour){
+                res2[arr[i].hour] = arr[i].count
+              }else{
+                res2[arr[i].hour] = result2[c].count
+                if(c < result2.length - 1)
+                c++;
+              }
+
+              if(result3[d].hour != arr[i].hour){
+                res3[arr[i].hour] = arr[i].count
+              }else{
+                res3[arr[i].hour] = result3[d].count
+                if(d < result3.length - 1)
+                d++;
+              }
+
+              if(result4[e].hour != arr[i].hour){
+                res4[arr[i].hour] = arr[i].count
+              }else{
+                res4[arr[i].hour] = result4[e].count
+                if(e < result4.length - 1)
+                e++;
+              }
+
+              if(result5[f].hour != arr[i].hour){
+                res5[arr[i].hour] = arr[i].count
+              }else{
+                res5[arr[i].hour] = result5[f].count
+                if(f < result5.length - 1)
+                f++;
+              }
+            }
+
+      const send = {
+        violence: res0,
+        helmet: res1,
+        covered: res2,
+        aod: res3,
+        social: res4,
+        intr: res5
+      }
+      res.status(200).json({success: true, data: send})
+    });
+    });
+    });
+    });
     });
   });
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, Input } from '@angular/core';
 import { Camera } from '../../../models/Camera';
 import { FacesService } from '../../../services/faces.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,6 +12,8 @@ import JSMpeg from '@cycjimmy/jsmpeg-player';
   styleUrls: ['./live.component.css']
 })
 export class LiveComponent implements OnInit {
+
+  @Input() camera: string;
 
   live: Camera ={
     id:'',
@@ -34,13 +36,21 @@ on:boolean = false;
     this.link = sanitizer.bypassSecurityTrustResourceUrl(this.live.rtsp_out);
 
   }
+  
 
 @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef; 
 
 
+
+
 ngOnDestroy(){
+  this.destroy();
+}
+
+destroy(){
   if(this.player != undefined){
     this.player.destroy()
+    this.player = null;
     this.face.cameraStop({id: this.live.id}).subscribe(
       res =>{
       },
@@ -71,8 +81,21 @@ stre: any = []
 newLink:TrustedUrlPipe;
 
   ngOnInit() {
-    const params = this.activatedRoute.snapshot.params;
-    this.facesService.getCamera(params.id).subscribe(
+    let camId: string;
+    if(this.camera){
+      this.loadCam(this.camera)
+    }
+    else if(this.activatedRoute.snapshot && this.activatedRoute.snapshot.params){
+      const params = this.activatedRoute.snapshot.params;
+      camId = params.id;
+      if(camId)
+        this.loadCam(camId)
+    }
+    
+  }
+
+  loadCam(camId){
+    this.facesService.getCamera(camId ).subscribe(
       res =>{
         this.live =res['data'];
           this.face.camera({id: this.live.id}).subscribe(
@@ -85,7 +108,7 @@ newLink:TrustedUrlPipe;
           )
         if(window.innerWidth >= 1200){
           this.width = 835;
-          this.height = 626;
+          this.height = 400;
         }else if(window.innerWidth < 1200 && window.innerWidth >= 992){
           this.width = 640;
           this.height = 480

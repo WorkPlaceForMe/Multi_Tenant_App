@@ -32,6 +32,12 @@ export class CenterComponent implements OnInit {
     status: "'primary"
   }
 
+  liveView  = {
+    algo_id: -4,
+    name: 'Live View',
+    status: "'primary"
+  }
+
 
   aaa(event){
     this.camera = event
