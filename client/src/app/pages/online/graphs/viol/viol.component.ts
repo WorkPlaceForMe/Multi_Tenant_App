@@ -15,7 +15,7 @@ import { emit } from 'process';
 @Component({
   selector: 'ngx-viol',
   templateUrl: './viol.component.html',
-  styleUrls: ['./viol.component.scss']
+  styleUrls: ['./viol.component.scss', '../smart-table.scss']
 })
 export class ViolComponent implements OnInit, OnDestroy {
 

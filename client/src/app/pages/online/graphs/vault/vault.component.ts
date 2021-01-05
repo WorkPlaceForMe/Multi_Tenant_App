@@ -14,7 +14,7 @@ import { Account } from '../../../../models/Account';
 @Component({
   selector: 'ngx-vault',
   templateUrl: './vault.component.html',
-  styleUrls: ['./vault.component.scss']
+  styleUrls: ['./vault.component.scss', '../smart-table.scss']
 })
 export class VaultComponent implements OnInit, OnDestroy {
 

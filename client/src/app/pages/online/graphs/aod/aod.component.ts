@@ -13,7 +13,7 @@ import { Account } from '../../../../models/Account';
 @Component({
   selector: 'ngx-aod',
   templateUrl: './aod.component.html',
-  styleUrls: ['./aod.component.scss']
+  styleUrls: ['./aod.component.scss', '../smart-table.scss']
 })
 export class AodComponent implements OnInit, OnDestroy {
 

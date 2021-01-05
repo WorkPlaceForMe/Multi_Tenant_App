@@ -14,7 +14,7 @@ import { Account } from '../../../../models/Account';
 @Component({
   selector: 'ngx-helm',
   templateUrl: './helm.component.html',
-  styleUrls: ['./helm.component.scss']
+  styleUrls: ['./helm.component.scss', '../smart-table.scss']
 })
 export class HelmComponent implements OnInit, OnDestroy {
 

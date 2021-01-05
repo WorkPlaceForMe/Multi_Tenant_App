@@ -13,7 +13,7 @@ import { Account } from '../../../../models/Account';
 @Component({
   selector: 'ngx-social',
   templateUrl: './social.component.html',
-  styleUrls: ['./social.component.scss']
+  styleUrls: ['./social.component.scss', '../smart-table.scss']
 })
 export class SocialComponent implements OnInit, OnDestroy {
 
@@ -234,7 +234,7 @@ export class SocialComponent implements OnInit, OnDestroy {
 @Component({
   selector: 'button-view',
   template: `
-    <img [src]="rowData.picture" width='60' height='60'>
+    <img [src]="rowData.picture" width='100' height='100'>
   `,
 })
 export class ButtonViewComponent implements ViewCell, OnInit {

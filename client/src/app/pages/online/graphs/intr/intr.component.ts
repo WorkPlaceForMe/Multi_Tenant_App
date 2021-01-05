@@ -14,7 +14,7 @@ import { Account } from '../../../../models/Account';
 @Component({
   selector: 'ngx-intr',
   templateUrl: './intr.component.html',
-  styleUrls: ['./intr.component.scss']
+  styleUrls: ['./intr.component.scss', '../smart-table.scss']
 })
 export class IntrComponent implements OnInit, OnDestroy {
 
