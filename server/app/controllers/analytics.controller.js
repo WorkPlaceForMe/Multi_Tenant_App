@@ -692,7 +692,7 @@ exports.threats = async (req, res) =>{
         if (err) return res.status(500).json({success: false, message: err});
         await db.con().query(`SELECT HOUR(time) as hour, COUNT(*) as count FROM alerts where alert = 'no mask' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`, async function (err, result2) {
           if (err) return res.status(500).json({success: false, message: err});
-          await db.con().query(`SELECT HOUR(time) as hour, COUNT(*) as count FROM aod where ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`, async function (err, result3) {
+          await db.con().query(`SELECT HOUR(time) as hour, COUNT(*) as count FROM alerts where alert = 'aod' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`, async function (err, result3) {
             if (err) return res.status(500).json({success: false, message: err});
             await db.con().query(`SELECT HOUR(time) as hour, COUNT(*) as count FROM alerts where alert = 'sociald' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`, async function (err, result4) {
               if (err) return res.status(500).json({success: false, message: err});
