@@ -91,7 +91,7 @@ export class IntrComponent implements OnInit, OnDestroy {
         res=>{
           this.intrude = res['data']
           for(var m of this.intrude.raw){
-            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/intrusion/' + m['cam_id'] + '/' + m['clip_path'])
+            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/intrusion/' + m['cam_id'] + '/' + m['picture'])
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
           }
           this.source = this.intrude.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
@@ -251,13 +251,13 @@ export class IntrComponent implements OnInit, OnDestroy {
     noDataMessage: "No data found",
     columns: {
       picture: {
-        title: 'VIDEO',
+        title: 'PHOTO',
         type: 'custom',
         filter: false,
         renderComponent: ButtonViewComponent,
-        onComponentInitFunction:(instance) => {
-          instance.save.subscribe((row: string)  => {
-            this.pass(row)
+        onComponentInitFunction(instance) {
+          instance.save.subscribe(row => {
+            alert(`${row.name} saved!`)
           });
         }
       },
@@ -318,7 +318,7 @@ export class IntrComponent implements OnInit, OnDestroy {
 @Component({
   selector: 'button-view',
   template: `
-    <button class='btn btn-primary btn-block' (click)="openVideo()"><i class="fas fa-play-circle"></i></button>
+  <img [src]="rowData.picture" width='60' height='60'>
   `,
 })
 export class ButtonViewComponent implements ViewCell, OnInit {

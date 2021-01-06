@@ -76,7 +76,7 @@ export class QueueComponent implements OnInit, OnDestroy {
           this.queue = res['data']
           console.log(this.queue)
           for(var m of this.queue.raw){
-            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['clip_path'])
+            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['picture'])
           }
           this.source = this.queue.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
 
@@ -113,13 +113,13 @@ export class QueueComponent implements OnInit, OnDestroy {
     noDataMessage: "No data found",
     columns: {
       picture: {
-        title: 'VIDEO',
+        title: 'PHOTO',
         type: 'custom',
         filter: false,
         renderComponent: ButtonViewComponent,
-        onComponentInitFunction:(instance) => {
-          instance.save.subscribe((row: string)  => {
-            this.pass(row)
+        onComponentInitFunction(instance) {
+          instance.save.subscribe(row => {
+            alert(`${row.name} saved!`)
           });
         }
       },
@@ -141,7 +141,7 @@ export class QueueComponent implements OnInit, OnDestroy {
 @Component({
   selector: 'button-view',
   template: `
-    <button class='btn btn-primary btn-block' (click)="openVideo()"><i class="fas fa-play-circle"></i></button>
+  <img [src]="rowData.picture" width='60' height='60'>
   `,
 })
 export class ButtonViewComponent implements ViewCell, OnInit {
