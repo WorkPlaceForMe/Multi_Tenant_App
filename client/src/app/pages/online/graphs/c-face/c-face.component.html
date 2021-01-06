@@ -30,7 +30,10 @@
             <div class="col-md-4 less-padding">
                 <nb-card>
                     <nb-card-body align='center' style = "min-height: 300px">
-                        
+                        <video controls (click)="toggleVideo($event)" #videoPlayer class="responsive" muted loop controls preload="none">
+                            <source [src]="videoFile" type="video/mp4"/>
+                            Browser not supported
+                        </video>
                     </nb-card-body>
                 </nb-card>
             </div>

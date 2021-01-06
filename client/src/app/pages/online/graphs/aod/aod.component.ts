@@ -54,6 +54,19 @@ export class AodComponent implements OnInit, OnDestroy {
     }
   }
 
+  @ViewChild("videoPlayer", { static: false }) videoplayer: ElementRef;
+  isPlay: boolean = false;
+  toggleVideo(event: any) {
+    this.videoplayer.nativeElement.play();
+  }
+  videoFile:string = "";
+  pass(vid:string){
+    this.videoplayer.nativeElement.src = vid    
+    this.videoplayer.nativeElement.load();
+    this.videoplayer.nativeElement.play();
+
+  }
+
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
     var time = new Date();
@@ -79,7 +92,7 @@ export class AodComponent implements OnInit, OnDestroy {
         res=>{
           this.aod = res['data']
           for(var m of this.aod.raw){
-            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/aod/' + m['cam_id'] + '/' + m['picture'])
+            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/aod/' + m['cam_id'] + '/' + m['clip_path'])
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
           }
           this.source = this.aod.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
@@ -188,13 +201,13 @@ export class AodComponent implements OnInit, OnDestroy {
     noDataMessage: "No data found",
     columns: {
       picture: {
-        title: 'PHOTO',
+        title: 'VIDEO',
         type: 'custom',
         filter: false,
         renderComponent: ButtonViewComponent,
-        onComponentInitFunction(instance) {
-          instance.save.subscribe(row => {
-            alert(`${row.name} saved!`)
+        onComponentInitFunction:(instance) => {
+          instance.save.subscribe((row: string)  => {
+            this.pass(row)
           });
         }
       },
@@ -213,21 +226,29 @@ export class AodComponent implements OnInit, OnDestroy {
 
 }
 
+
 @Component({
   selector: 'button-view',
   template: `
-    <img [src]="rowData.picture" width='60' height='60'>
+    <button class='btn btn-primary btn-block' (click)="openVideo()"><i class="fas fa-play-circle"></i></button>
   `,
 })
 export class ButtonViewComponent implements ViewCell, OnInit {
+  renderValue: string;
 
   constructor(){
   }
 
   @Input() value: string | number;
   @Input() rowData: any;
+
   @Output() save: EventEmitter<any> = new EventEmitter();
 
+  openVideo(){
+    this.save.emit(this.rowData.picture)
+  }
+
   ngOnInit() {
+    this.renderValue = this.value.toString().toUpperCase();
   }
 }

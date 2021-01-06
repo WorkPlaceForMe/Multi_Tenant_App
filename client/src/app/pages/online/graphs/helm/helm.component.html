@@ -28,11 +28,14 @@
                 </nb-card>
             </div>
             <div class="col-md-5">
-                <!-- <nb-card>
+                <nb-card>
                     <nb-card-body align='center'>
-                        <canvas #streaming id="canvas"  width="640" height="480" style="display: block; width: 90%;"></canvas>
+                        <video controls (click)="toggleVideo($event)" #videoPlayer class="responsive" muted loop controls preload="none">
+                            <source [src]="videoFile" type="video/mp4"/>
+                            Browser not supported
+                        </video>
                     </nb-card-body>
-                </nb-card> -->
+                </nb-card>
             </div>
         </div>
 
