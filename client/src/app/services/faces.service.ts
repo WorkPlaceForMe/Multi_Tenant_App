@@ -180,5 +180,7 @@ return this.http.post(`${this.API_URI}/images`, image);
   checkRel(id){
     return this.http.post(`${this.API_URI}/camera/checkRel/`,id);
   }
-
+  checkVideo(id:number,cam:string){
+    return this.http.get(`${this.API_URI}/relations/check/${id}/${cam}`);
+  }
 }

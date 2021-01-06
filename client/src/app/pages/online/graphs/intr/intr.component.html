@@ -34,7 +34,7 @@
                 </nb-card>
             </div>
             <div class="col-md-5 less-padding">
-                <nb-card>
+                <nb-card *ngIf=video>
                     <nb-card-body align='center' style = "min-height: 300px">
                         <video controls (click)="toggleVideo($event)" #videoPlayer class="responsive" muted loop controls preload="none">
                             <source [src]="videoFile" type="video/mp4"/>

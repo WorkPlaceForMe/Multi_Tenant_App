@@ -277,3 +277,19 @@ exports.createRel = (req, res) =>{
               })
         });
     }
+
+    exports.checkVideo = (req,res) => {
+      const id = req.params.id
+      const cam_id = req.params.cam
+
+      Relation.findOne({
+          where: { algo_id: id, camera_id: cam_id  }
+      }).then(rel => {
+          let status = false;
+          if(rel.atributes[0]['time'] > 0)
+          status = !status;
+          res.status(200).send({ success: true, video:status });
+      }).catch(err => {
+          res.status(500).send({success:false, message: err.message });
+      });
+      };

@@ -57,6 +57,7 @@ export class QueueComponent implements OnInit, OnDestroy {
     this.videoplayer.nativeElement.play();
 
   }
+  video:boolean = false;
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
@@ -71,6 +72,25 @@ export class QueueComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type
     }
+    this.face.checkVideo(22,this.camera).subscribe(
+      res=>{
+        this.video = res['video']
+        if(this.video === true){
+          this.settings['columns']['clip_path'] = {
+            title: 'VIDEO',
+            type: 'custom',
+            filter: false,
+            renderComponent: ButtonViewComponent,
+            onComponentInitFunction:(instance) => {
+              instance.save.subscribe((row: string)  => {
+                this.pass(row)
+              });
+            }
+          }
+          this.settings = Object.assign({},this.settings)
+        }
+      }, err => console.error(err)
+    )
       this.serv.queue(this.camera,l).subscribe(
         res=>{
           this.queue = res['data']
@@ -113,13 +133,12 @@ export class QueueComponent implements OnInit, OnDestroy {
     noDataMessage: "No data found",
     columns: {
       picture: {
-        title: 'VIDEO',
+        title: 'PICTURE',
         type: 'custom',
         filter: false,
         renderComponent: ButtonViewComponent,
         onComponentInitFunction:(instance) => {
           instance.save.subscribe((row: string)  => {
-            this.pass(row)
           });
         }
       },
@@ -161,5 +180,24 @@ export class ButtonViewComponent implements ViewCell, OnInit {
 
   ngOnInit() {
     this.renderValue = this.value.toString().toUpperCase();
+  }
+}
+
+@Component({
+  selector: 'button-view',
+  template: `
+    <img [src]="rowData.picture" width='60' height='60'>
+  `,
+})
+export class ButtonViewComponentPic implements ViewCell, OnInit {
+
+  constructor(){
+  }
+
+  @Input() value: string | number;
+  @Input() rowData: any;
+  @Output() save: EventEmitter<any> = new EventEmitter();
+
+  ngOnInit() {
   }
 }

@@ -63,6 +63,8 @@ export class ViolComponent implements OnInit, OnDestroy {
 
   videoFile:string = "";
 
+  video:boolean= false;
+
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
     var time = new Date();
@@ -84,11 +86,31 @@ export class ViolComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type
     }
+    this.face.checkVideo(19,this.camera).subscribe(
+      res=>{
+        this.video = res['video']
+        if(this.video === true){
+          this.settings['columns']['clip_path'] = {
+            title: 'VIDEO',
+            type: 'custom',
+            filter: false,
+            renderComponent: ButtonViewComponent,
+            onComponentInitFunction:(instance) => {
+              instance.save.subscribe((row: string)  => {
+                this.pass(row)
+              });
+            }
+          }
+          this.settings = Object.assign({},this.settings)
+        }
+      }, err => console.error(err)
+    )
       this.serv.violence(this.camera,l).subscribe(
         res=>{
           this.violence = res['data']
           for(var m of this.violence.raw){
-            m['picture']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/violence/' + m['cam_id'] + '/' +m['clip_path']
+            m['picture']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/violence/' + m['cam_id'] + '/' +m['picture']
+            m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/violence/' + m['cam_id'] + '/' +m['clip_path']
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
             switch(m['severity']){
               case '0':{
@@ -213,13 +235,13 @@ export class ViolComponent implements OnInit, OnDestroy {
     noDataMessage: "No data found",
     columns: {
       picture: {
-        title: 'VIDEO',
+        title: 'PICTURE',
         type: 'custom',
         filter: false,
-        renderComponent: ButtonViewComponent,
+        renderComponent: ButtonViewComponentPic,
         onComponentInitFunction:(instance) => {
           instance.save.subscribe((row: string)  => {
-            this.pass(row)
+
           });
         }
       },
@@ -246,13 +268,32 @@ export class ViolComponent implements OnInit, OnDestroy {
 @Component({
   selector: 'button-view',
   template: `
+    <img [src]="rowData.picture" width='60' height='60'>
+  `,
+})
+export class ButtonViewComponentPic implements ViewCell, OnInit {
+
+  constructor(){
+  }
+
+  @Input() value: string | number;
+  @Input() rowData: any;
+  @Output() save: EventEmitter<any> = new EventEmitter();
+
+  ngOnInit() {
+  }
+}
+
+@Component({
+  selector: 'button-view',
+  template: `
     <button class='btn btn-primary btn-block' (click)="openVideo()"><i class="fas fa-play-circle"></i></button>
   `,
 })
 export class ButtonViewComponent implements ViewCell, OnInit {
   renderValue: string;
 
-  constructor(private windowService: NbWindowService){
+  constructor(){
   }
 
   @Input() value: string | number;
@@ -261,15 +302,7 @@ export class ButtonViewComponent implements ViewCell, OnInit {
   @Output() save: EventEmitter<any> = new EventEmitter();
 
   openVideo(){
-    this.save.emit(this.rowData.picture)
-  }
-
-  openWindowForm() {
-    window.open(this.rowData.picture, "_blank");
-  }
-
-  openWindowForm1() {
-    this.windowService.open(VideoComponent, { title: `Video clip at: ${this.rowData.time}`, context: { path: this.rowData.picture}});
+    this.save.emit(this.rowData.clip_path)
   }
 
   ngOnInit() {
