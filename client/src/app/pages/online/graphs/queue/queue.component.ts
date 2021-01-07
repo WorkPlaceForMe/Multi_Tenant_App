@@ -76,7 +76,7 @@ export class QueueComponent implements OnInit, OnDestroy {
       res=>{
         this.video = res['video']
         if(this.video === true){
-          this.settings['columns']['clip_path'] = {
+          this.settings['columns']['picture'] = {
             title: 'VIDEO',
             type: 'custom',
             filter: false,
@@ -96,7 +96,8 @@ export class QueueComponent implements OnInit, OnDestroy {
           this.queue = res['data']
           console.log(this.queue)
           for(var m of this.queue.raw){
-            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['clip_path'])
+            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['picture'])
+            m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['clip_path']
           }
           this.source = this.queue.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
 
@@ -139,6 +140,7 @@ export class QueueComponent implements OnInit, OnDestroy {
         renderComponent: ButtonViewComponentPic,
         onComponentInitFunction:(instance) => {
           instance.save.subscribe((row: string)  => {
+            this.pass(row)
           });
         }
       },
@@ -159,8 +161,14 @@ export class QueueComponent implements OnInit, OnDestroy {
 
 @Component({
   selector: 'button-view',
+  styles: ['.play-btn { position: absolute; left: 50%; top: 50%; margin-top: -17px; margin-left: -20px; color: #f7f9fc47}'],
   template: `
-    <button class='btn btn-primary btn-block' (click)="openVideo()"><i class="fas fa-play-circle"></i></button>
+  <div >
+  <div style = "width:60px; height: 60px">
+    <img [src]="rowData.picture" width='60' height='60'>
+    <button class='btn btn-link play-btn' (click)="openVideo()"><i class="fas fa-play"></i></button>
+  </div>
+</div>
   `,
 })
 export class ButtonViewComponent implements ViewCell, OnInit {
@@ -175,7 +183,7 @@ export class ButtonViewComponent implements ViewCell, OnInit {
   @Output() save: EventEmitter<any> = new EventEmitter();
 
   openVideo(){
-    this.save.emit(this.rowData.picture)
+    this.save.emit(this.rowData.clip_path)
   }
 
   ngOnInit() {

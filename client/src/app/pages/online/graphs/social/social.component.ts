@@ -92,7 +92,7 @@ export class SocialComponent implements OnInit, OnDestroy {
       res=>{
         this.video = res['video']
         if(this.video === true){
-          this.settings['columns']['clip_path'] = {
+          this.settings['columns']['picture'] = {
             title: 'VIDEO',
             type: 'custom',
             filter: false,
@@ -112,7 +112,7 @@ export class SocialComponent implements OnInit, OnDestroy {
           this.social = res['data']
           for(var m of this.social.raw){
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/social/' + m['cam_id'] + '/' + m['picture'])
-            m['clip_path']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/social/' + m['cam_id'] + '/' + m['clip_path'])
+            m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/social/' + m['cam_id'] + '/' + m['clip_path']
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
             switch(m['alert_type']){
               case '0':{
@@ -285,8 +285,14 @@ export class ButtonViewComponentPic implements ViewCell, OnInit {
 
 @Component({
   selector: 'button-view',
+  styles: ['.play-btn { position: absolute; left: 50%; top: 50%; margin-top: -17px; margin-left: -20px; color: #f7f9fc47}'],
   template: `
-    <button class='btn btn-primary btn-block' (click)="openVideo()"><i class="fas fa-play-circle"></i></button>
+  <div >
+  <div style = "width:60px; height: 60px">
+    <img [src]="rowData.picture" width='60' height='60'>
+    <button class='btn btn-link play-btn' (click)="openVideo()"><i class="fas fa-play"></i></button>
+  </div>
+</div>
   `,
 })
 export class ButtonViewComponent implements ViewCell, OnInit {
