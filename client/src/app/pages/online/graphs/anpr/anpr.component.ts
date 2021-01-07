@@ -133,7 +133,7 @@ export class AnprComponent implements OnInit {
         title: 'PHOTO',
         type: 'custom',
         filter: false,
-        renderComponent: ButtonViewComponentPic,
+        renderComponent: ButtonViewComponent,
         onComponentInitFunction(instance) {
           instance.save.subscribe(row => {
             alert(`${row.name} saved!`)
