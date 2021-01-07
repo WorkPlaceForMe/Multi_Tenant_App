@@ -164,16 +164,16 @@ exports.signin = (req, res) => {
         return res.status(401).send({success: false, message: "This account has been disabled, please get in contact with the Administator." , type:'disable' });
       }
       let exp = 43200;
-      for(a of usersIn){
-        if (user.username == a.name){
-          if((Date.now() - a.time ) > exp *1000){
-            usersIn = arrayRemove(usersIn, user.username)
-            continue;
-          }
-          //return res.status(401).send({success: false, message: "This account is still logged in, please log out from the other device." , type:'logged' });
-        }
-      }
-      usersIn.push({name:user.username, time: Date.now()})
+      // for(a of usersIn){
+      //   if (user.username == a.name){
+      //     if((Date.now() - a.time ) > exp *1000){
+      //       usersIn = arrayRemove(usersIn, user.username)
+      //       continue;
+      //     }
+      //     //return res.status(401).send({success: false, message: "This account is still logged in, please log out from the other device." , type:'logged' });
+      //   }
+      // }
+      // usersIn.push({name:user.username, time: Date.now()})
 
       var token = jwt.sign({ id: user.id, id_account: user.id_account, id_branch: user.id_branch }, process.env.secret, {
         expiresIn: exp // 12 hours
