@@ -13,7 +13,7 @@ import { Account } from '../../../../models/Account';
 @Component({
   selector: 'ngx-c-face',
   templateUrl: './c-face.component.html',
-  styleUrls: ['./c-face.component.scss']
+  styleUrls: ['./c-face.component.scss', '../smart-table.scss']
 })
 export class CFaceComponent implements OnInit, OnDestroy {
 

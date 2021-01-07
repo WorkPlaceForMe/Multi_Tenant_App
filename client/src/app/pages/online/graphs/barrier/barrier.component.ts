@@ -13,7 +13,7 @@ import { Account } from '../../../../models/Account';
 @Component({
   selector: 'ngx-barrier',
   templateUrl: './barrier.component.html',
-  styleUrls: ['./barrier.component.scss']
+  styleUrls: ['./barrier.component.scss', '../smart-table.scss']
 })
 export class BarrierComponent implements OnInit {
 

@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'ngx-loit',
   templateUrl: './loit.component.html',
-  styleUrls: ['./loit.component.scss']
+  styleUrls: ['./loit.component.scss', '../smart-table.scss']
 })
 export class LoitComponent implements OnInit, OnDestroy {
 

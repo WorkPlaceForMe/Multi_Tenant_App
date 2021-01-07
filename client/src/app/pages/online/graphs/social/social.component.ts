@@ -13,7 +13,7 @@ import { Account } from '../../../../models/Account';
 @Component({
   selector: 'ngx-social',
   templateUrl: './social.component.html',
-  styleUrls: ['./social.component.scss']
+  styleUrls: ['./social.component.scss', '../smart-table.scss']
 })
 export class SocialComponent implements OnInit, OnDestroy {
 

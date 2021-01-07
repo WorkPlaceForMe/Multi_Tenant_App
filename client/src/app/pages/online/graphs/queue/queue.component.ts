@@ -13,7 +13,7 @@ import { Account } from '../../../../models/Account';
 @Component({
   selector: 'ngx-queue',
   templateUrl: './queue.component.html',
-  styleUrls: ['./queue.component.scss']
+  styleUrls: ['./queue.component.scss', '../smart-table.scss']
 })
 export class QueueComponent implements OnInit, OnDestroy {
 
@@ -121,7 +121,7 @@ export class QueueComponent implements OnInit, OnDestroy {
       delete: false,
     },
     edit: {
-      editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
+      editButtonContent: '<i class="fa fa-ellipsis-h"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
       cancelButtonContent: '<i class="nb-close"></i>',
       confirmSave: true,

@@ -13,7 +13,7 @@ import { Account } from '../../../../models/Account';
 @Component({
   selector: 'ngx-anpr',
   templateUrl: './anpr.component.html',
-  styleUrls: ['./anpr.component.scss']
+  styleUrls: ['./anpr.component.scss', '../smart-table.scss']
 })
 export class AnprComponent implements OnInit {
 

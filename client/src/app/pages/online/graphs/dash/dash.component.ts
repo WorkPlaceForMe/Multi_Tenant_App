@@ -11,7 +11,7 @@ import { AccountService } from '../../../../services/account.service';
 @Component({
   selector: 'ngx-dash',
   templateUrl: './dash.component.html',
-  styleUrls: ['./dash.component.scss'],
+  styleUrls: ['./dash.component.scss', '../smart-table.scss'],
   providers: [DatePipe]
 })
 export class DashComponent implements OnInit , OnDestroy {
