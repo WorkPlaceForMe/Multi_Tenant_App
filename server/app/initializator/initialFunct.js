@@ -122,6 +122,11 @@ exports.initial = function() {
         id: 26,
         name: 'Vehicle Counting'
       })
+      algo.create({
+        id: 27,
+        name: 'Camera Tampering'
+      })
 }
+// INSERT INTO `multi_tenant`.`algorithms` (`id`, `name`, `createdAt`, `updatedAt`) VALUES ('27', 'Camera Tampering', '2020-10-05 07:31:29', '2020-10-05 07:31:29');
 
 //Remember to add any new algorithm into ../models/index.js DB.Algorithms

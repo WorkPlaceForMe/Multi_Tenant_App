@@ -65,7 +65,7 @@ export class AlgorithmsComponent implements OnInit {
               this.Calgos.push(this.algos[i]);
             }else if(this.algos[i]['id'] > 3 && this.algos[i]['id'] <= 8 || this.algos[i]['id'] == 13 || this.algos[i]['id'] == 25 || this.algos[i]['id'] == 26){
               this.Balgos.push(this.algos[i]);
-            }else if(this.algos[i]['id'] > 8 && this.algos[i]['id'] <= 11){
+            }else if(this.algos[i]['id'] > 8 && this.algos[i]['id'] <= 11 || this.algos[i]['id'] === 27){
               this.Aalgos.push(this.algos[i]);
             }
           }

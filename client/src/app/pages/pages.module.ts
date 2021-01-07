@@ -85,6 +85,7 @@ import { AnprComponent } from './online/graphs/anpr/anpr.component';
 import { BarrierComponent } from './online/graphs/barrier/barrier.component';
 import { VehicleComponent } from './online/graphs/vehicle/vehicle.component';
 import { DashComponent } from './online/graphs/dash/dash.component';
+import { TamperComponent } from './online/graphs/tamper/tamper.component';
 
 // import { OverallComponent } from './facial_recognition/overall/overall.component';
 
@@ -180,7 +181,8 @@ import { DashComponent } from './online/graphs/dash/dash.component';
     AnprComponent,
     BarrierComponent,
     VehicleComponent,
-    DashComponent
+    DashComponent,
+    TamperComponent
   ],
   providers: [
     FacesService,

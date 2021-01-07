@@ -67,5 +67,9 @@ export class AnalyticsService {
     return this.http.post(`${this.API_URL}vehicle/${id}`, dates);
   }
 
+  tamper(id:string,dates){
+    return this.http.post(`${this.API_URL}tamper/${id}`, dates);
+  }
+
   constructor(private http: HttpClient) { }
 }

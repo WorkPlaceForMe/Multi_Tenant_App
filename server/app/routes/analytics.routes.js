@@ -118,4 +118,10 @@ module.exports = function(app) {
     [authJwt.verifyToken],
     controller.threats
   );
+
+  app.post(
+    "/api/analytics/tamper/:id",
+    [authJwt.verifyToken],
+    controller.tamper
+  );
 }
