@@ -27,9 +27,9 @@
                     </nb-card-body>
                 </nb-card>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-4 less-padding" *ngIf=video>
                 <nb-card>
-                    <nb-card-body align='center'>
+                    <nb-card-body align='center' >
                         <video controls (click)="toggleVideo($event)" #videoPlayer class="responsive" muted loop controls preload="none">
                             <source [src]="videoFile" type="video/mp4"/>
                             Browser not supported

@@ -59,4 +59,9 @@ module.exports = function(app) {
     controller.configsRoi
   );
 
+  app.get(
+    "/api/relations/check/:id/:cam",
+    [authJwt.verifyToken],
+    controller.checkVideo
+  );
 }

@@ -66,6 +66,7 @@ export class AodComponent implements OnInit, OnDestroy {
     this.videoplayer.nativeElement.play();
 
   }
+  video:boolean = false;
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
@@ -88,11 +89,31 @@ export class AodComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type
     }
+    this.face.checkVideo(16,this.camera).subscribe(
+      res=>{
+        this.video = res['video']
+        if(this.video === true){
+          this.settings['columns']['clip_path'] = {
+            title: 'VIDEO',
+            type: 'custom',
+            filter: false,
+            renderComponent: ButtonViewComponent,
+            onComponentInitFunction:(instance) => {
+              instance.save.subscribe((row: string)  => {
+                this.pass(row)
+              });
+            }
+          }
+          this.settings = Object.assign({},this.settings)
+        }
+      }, err => console.error(err)
+    )
       this.serv.aod(this.camera,l).subscribe(
         res=>{
           this.aod = res['data']
           for(var m of this.aod.raw){
-            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/aod/' + m['cam_id'] + '/' + m['clip_path'])
+            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/aod/' + m['cam_id'] + '/' + m['picture'])
+            m['clip_path']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/aod/' + m['cam_id'] + '/' + m['clip_path'])
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
           }
           this.source = this.aod.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
@@ -201,13 +222,12 @@ export class AodComponent implements OnInit, OnDestroy {
     noDataMessage: "No data found",
     columns: {
       picture: {
-        title: 'VIDEO',
+        title: 'PICTURE',
         type: 'custom',
         filter: false,
         renderComponent: ButtonViewComponent,
         onComponentInitFunction:(instance) => {
           instance.save.subscribe((row: string)  => {
-            this.pass(row)
           });
         }
       },
@@ -226,6 +246,24 @@ export class AodComponent implements OnInit, OnDestroy {
 
 }
 
+@Component({
+  selector: 'button-view',
+  template: `
+    <img [src]="rowData.picture" width='60' height='60'>
+  `,
+})
+export class ButtonViewComponentPic implements ViewCell, OnInit {
+
+  constructor(){
+  }
+
+  @Input() value: string | number;
+  @Input() rowData: any;
+  @Output() save: EventEmitter<any> = new EventEmitter();
+
+  ngOnInit() {
+  }
+}
 
 @Component({
   selector: 'button-view',
@@ -245,7 +283,7 @@ export class ButtonViewComponent implements ViewCell, OnInit {
   @Output() save: EventEmitter<any> = new EventEmitter();
 
   openVideo(){
-    this.save.emit(this.rowData.picture)
+    this.save.emit(this.rowData.clip_path)
   }
 
   ngOnInit() {
