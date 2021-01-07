@@ -170,7 +170,7 @@ exports.signin = (req, res) => {
             usersIn = arrayRemove(usersIn, user.username)
             continue;
           }
-          return res.status(401).send({success: false, message: "This account is still logged in, please log out from the other device." , type:'logged' });
+          //return res.status(401).send({success: false, message: "This account is still logged in, please log out from the other device." , type:'logged' });
         }
       }
       usersIn.push({name:user.username, time: Date.now()})
