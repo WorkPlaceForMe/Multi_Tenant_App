@@ -253,7 +253,7 @@ export class HelmComponent implements OnInit, OnDestroy {
         title: 'PICTURE',
         type: 'custom',
         filter: false,
-        renderComponent: ButtonViewComponent,
+        renderComponent: ButtonViewComponentPic,
         onComponentInitFunction:(instance) => {
           instance.save.subscribe((row: string)  => {
           });

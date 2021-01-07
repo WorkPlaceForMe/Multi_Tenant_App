@@ -4,6 +4,9 @@
   </nb-card-header>
     <nb-card-body>
       <div align='center'>
+          <video src="http://13.212.140.81:8090/stream3.mjpeg" controls>
+            Your browser does not support the <code>video</code> element.
+         </video>
       <canvas #streaming id="canvas"  width="640" height="480" style="display: block; width: 640px !important; height: 480px !important;"></canvas>
     </div>
     <div class="p-2" *ngIf = "!camera">
