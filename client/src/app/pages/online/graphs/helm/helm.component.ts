@@ -124,8 +124,8 @@ export class HelmComponent implements OnInit, OnDestroy {
         res=>{
           this.helm = res['data']
           for(var m of this.helm.raw){
-            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/helm/' + m['cam_id'] + '/' + m['picture'])
-            m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/helm/' + m['cam_id'] + '/' + m['clip_path']
+            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/helmet/' + m['cam_id'] + '/' + m['picture'])
+            m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/helmet/' + m['cam_id'] + '/' + m['clip_path']
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
             switch(m['alert_type']){
               case '0':{
