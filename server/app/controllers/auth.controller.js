@@ -39,7 +39,7 @@ exports.signupClient = (req, res) => {
           }
         }).then(roles => {
           user.setAlgorithms(roles).then(() => {
-            const pathPic = `${path}${user.id_account}`
+            const pathPic = `${path}/${user.id_account}`
             if (!fs.existsSync(pathPic)){
               fs.mkdirSync(pathPic);
           }
