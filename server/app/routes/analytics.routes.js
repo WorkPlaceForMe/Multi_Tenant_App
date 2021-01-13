@@ -17,6 +17,12 @@ module.exports = function(app) {
     controller.loitering
   );
 
+  app.get(
+    "/api/analytics/loitering/alerts/:id",
+    [authJwt.verifyToken],
+    controller.loiteringAlerts
+  );
+
   app.post(
     "/api/analytics/intrude/:id",
     [authJwt.verifyToken],

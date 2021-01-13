@@ -22,7 +22,7 @@ var connection = {
         this.pool.on('enqueue', function () {
             console.log('Waiting for available connection slot');
         });
-        pool.on('release', function (connection) {
+        this.pool.on('release', function (connection) {
             console.log('Connection %d released', connection.threadId);
         });
     }
@@ -30,4 +30,3 @@ var connection = {
  }}
  
   module.exports=connection;
- 

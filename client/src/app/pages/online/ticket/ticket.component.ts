@@ -8,6 +8,8 @@ import { NbComponentStatus, NbGlobalPhysicalPosition, NbGlobalPosition, NbToastr
 import { ReviewComponent } from '../review/review.component';
 import { DatePipe } from '@angular/common';
 import { SeverityComponent } from '../severity/severity.component';
+import { ServerDataSource } from 'ng2-smart-table';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-ticket',
@@ -18,7 +20,7 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   @HostBinding('class') classes ='row';
   constructor(private accountserv: AccountService,private router: Router,private windowService: NbWindowService,public datepipe: DatePipe,
-    private toastrService: NbToastrService) { 
+    private toastrService: NbToastrService, private http: HttpClient) { 
       this.router.routeReuseStrategy.shouldReuseRoute = function (){
         return false;
       }
@@ -28,6 +30,7 @@ export class TicketComponent implements OnInit, OnDestroy {
         }
       });
     }
+
     mySubscription: any
 
     ngOnDestroy(){
@@ -46,21 +49,33 @@ export class TicketComponent implements OnInit, OnDestroy {
       p = '+'
     }
     this.timezone = p + JSON.stringify(this.timezone) + '00';
-    this.getTickets()
+    let a = {
+      type: 'id_branch',
+      id: this.now_user.id_branch
+    }
+    this.source = new ServerDataSource(this.http, {
+      endPoint: `http://localhost:4200/api/ticket/all?type=id_branch&id=${this.now_user.id_branch}&_sort=createdAt&_order=DESC`,  
+      dataKey: 'data',
+      totalKey: 'total',
+    });   
+    //this.getTickets();
   }
 
   timezone: any;
   now_user:Account;
-  source:any = new LocalDataSource();
-  source1:any = new LocalDataSource();
+  data:any = [];
+  source: ServerDataSource;
+  tempSource: ServerDataSource;
+  pageSize = 25;
+  source1:ServerDataSource;// = new LocalDataSource();
   count: any ={
-    st0: 0,
-    st1: 0,
-    l0: 0,
-    l0r:0,
-    l1: 0,
-    l1r: 0,
-    l2: 0,
+    st0: 0,  //st0 - Total Alerts remaining
+    st1: 0,  //st1 - Total Alerts solved
+    l0: 0,   //l0 - low level alerts
+    l0r:0,   //l0r - low level alerts remaining
+    l1: 0,   //l1 - Medium level
+    l1r: 0,  //l1r - Medium rem
+    l2: 0,   //l2 - high level
     l2r: 0
   }
   
@@ -96,7 +111,7 @@ export class TicketComponent implements OnInit, OnDestroy {
     pager : {
       display : true,
       perPage:5
-      },
+    },
     edit: {
       editButtonContent: '<i class="fas fa-child"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
@@ -159,22 +174,32 @@ export class TicketComponent implements OnInit, OnDestroy {
     },
   };
 
-  check(){
+  check(event){
     this.show = false;
     if(this.searchStr != ''){
-      this.search(this.searchStr)
+      this.search(this.searchStr, event)
     }
   }
 
-  search(query: string){
+  search(query: string, searchField: string){
     if(this.searchWr == ''){
       return this.show = true;
     }else{
       this.show = false;
     }
-    this.source = this.source1.filter(data => data[this.searchWr].includes(query))
+    //this.source = this.source1.filter(data => data[this.searchWr].includes(query))
+    this.source = new ServerDataSource(this.http, {
+      endPoint: `http://localhost:4200/api/ticket/search/all?type=id_branch&id=${this.now_user.id_branch}&_sort=createdAt&_order=DESC&searchField=${searchField}&searchStr=${this.searchStr}`,  
+      dataKey: 'data',
+      totalKey: 'total',
+    });  
     if(query == ''){
-      this.source = this.source1;
+      //this.source = this.source1;
+      this.source = this.source = new ServerDataSource(this.http, {
+        endPoint: `http://localhost:4200/api/ticket/all?type=id_branch&id=${this.now_user.id_branch}&_sort=createdAt&_order=DESC`,
+        dataKey: 'data',
+        totalKey: 'total',
+      });
     }
   }
 

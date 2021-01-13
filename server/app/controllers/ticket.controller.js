@@ -1,17 +1,107 @@
 require('dotenv').config({ path: '../../config.env'});
 var jwt = require("jsonwebtoken");
+const { con } = require('../models/dbmysql');
 var db=require('../models/dbmysql');
+const dateFormat = require('dateformat');
 
+let total_row_count = 0;
+let search_total_row_count = 0;
 
 exports.getAll = (req, res) =>{
+    const data = req.query;
     let token = req.headers["x-access-token"];
-    const data = req.body
-    jwt.verify(token, process.env.secret, (err, decoded) => {
-       db.con().query(`SELECT * FROM tickets WHERE ${data.type} = '${data.id}' LIMIT 500;`, function (err, result) {
-        if (err) return res.status(500).json({success: false, message: err});
-        res.status(200).json({success: true, data: result})
-      });
+    let id = Array.isArray(data.id) ? data.id[data.id.length-1] : data.id;
+    let type = Array.isArray(data.type) ? data.type[data.type.length-1] : data.type;
+    jwt.verify(token, process.env.secret, async(err, decoded) => {
+        if(total_row_count == 0) {
+          await db.con().query(`SELECT count(*) as count FROM tickets WHERE ${type} = '${id}';`, function(err, resp) {
+            total_row_count = resp[0].count;
+            getAllTickets(total_row_count, type, id, data, res);
+          })
+        } else {
+          getAllTickets(total_row_count, type, id, data, res);
+        }
+    })
+}
+
+var getAllTickets = async(row_count, type, id, data, res) => {
+  let page = parseInt(data._page);
+  let limit = parseInt(data._limit);
+  let offset = (row_count === (page*limit)) ? (page-1) * limit : (page-1) * limit;
+  let _sort = Array.isArray(data._sort) ? data._sort[data._sort.length-1] : data._sort;
+  let _order = Array.isArray(data._order) ? data._order[data._order.length-1] : data._order;
+  await db.con().query(`SELECT * FROM tickets WHERE BINARY ${type} = '${id}' ORDER BY ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, function (err, result) {
+    if (err) return res.status(500).json({success: false, message: err});
+    result.forEach(element => {
+      element.createdAt = dateFormat(element.createdAt, 'yyyy-mm-dd HH:MM:ss');
+      element.updatedAt = dateFormat(element.updatedAt, 'yyyy-mm-dd HH:MM:ss');
+      switch(element['type']){
+        case 'loitering':{
+          element['type'] = 'Loitering Detection';
+          break;
+        }
+        case 'intrusion':{
+          element['type'] = 'Intrusion Detection';
+          break;
+        }
+        case 'aod':{
+          element['type'] = 'Abandoned Object Detection';
+          break;
+        }
+      }
+    })
+    res.status(200).json({success: true, data: result, total: row_count});
+  });
+}
+
+exports.searchAllTickets = (req, res) => {
+  const data = req.query;
+  let token = req.headers["x-access-token"];
+  let id = Array.isArray(data.id) ? data.id[data.id.length-1] : data.id;
+  let type = Array.isArray(data.type) ? data.type[data.type.length-1] : data.type;
+  let searchStr = Array.isArray(data.searchStr) ? data.searchStr[data.searchStr.length-1] : data.searchStr;
+  let searchField = Array.isArray(data.searchField) ? data.searchField[data.searchField.length-1] : data.searchField;
+  jwt.verify(token, process.env.secret, async(err, decoded) => {
+      if(search_total_row_count == 0) {
+        await db.con().query(`SELECT count(*) as count FROM tickets WHERE ${type} = '${id}' AND ${searchField} = '${searchStr}';`, function(err, resp) {
+          search_total_row_count = resp[0].count;
+          searchTickets(search_total_row_count, type, id, searchField, searchStr, data, res);
+        })
+      } else {
+        searchTickets(search_total_row_count, type, id, searchField, searchStr, data, res);
+      }
   })
+}
+
+var searchTickets = async(row_count, type, id, searchField, searchStr, data, res) => {
+  let page = parseInt(data._page);
+  let limit = parseInt(data._limit);
+  let offset = (row_count === (page*limit)) ? (page-1) * limit : (page-1) * limit;
+  let _sort = Array.isArray(data._sort) ? data._sort[data._sort.length-1] : data._sort;
+  let _order = Array.isArray(data._order) ? data._order[data._order.length-1] : data._order;
+  
+  await db.con().query(`SELECT * FROM tickets WHERE BINARY ${type} = '${id}' AND ${searchField} = '${searchStr}' ORDER BY ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, function (err, result) {
+    if (err) return res.status(500).json({success: false, message: err});
+    result.forEach(element => {
+      element.createdAt = dateFormat(element.createdAt, 'yyyy-mm-dd HH:MM:ss');
+      element.updatedAt = dateFormat(element.updatedAt, 'yyyy-mm-dd HH:MM:ss');
+      switch(element['type']){
+        case 'loitering':{
+          element['type'] = 'Loitering Detection';
+          break;
+        }
+        case 'intrusion':{
+          element['type'] = 'Intrusion Detection';
+          break;
+        }
+        case 'aod':{
+          element['type'] = 'Abandoned Object Detection';
+          break;
+        }
+      }
+    })
+    res.status(200).json({success: true, data: result, total: row_count});
+  });
 }
 
 exports.countTypes = async (req, res) =>{

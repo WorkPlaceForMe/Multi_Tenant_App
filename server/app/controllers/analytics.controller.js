@@ -15,10 +15,119 @@ exports.loitering = async (req, res) =>{
       }else{
         wh = {id_account: decoded.id_account, algo_id : 2 }
       }
-        Relation.findOne({
-            where: wh
-          }).then(async rel => {
+      Relation.findOne({
+        where: wh
+      }).then(async rel => {
       await db.con().query(`SELECT * from loitering WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+        if (err) return res.status(500).json({success: false, message: err});
+        let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
+        let avg = 0;
+        let min = 0;
+        let max = 0;
+        var ress = {};
+        var dwell = []
+        var labelsD = []
+          result.forEach(function(v) {
+            ress[v.time.getHours()] = (ress[v.time.getHours()] || 0) + 1;
+            dwell.push(v.dwell)
+            labelsD.push(v.time)
+            avg = avg + v.dwell;
+            if(min == 0){
+              min = v.dwell
+            }else if(v.dwell < min){
+              min = v.dwell
+            }
+            if(max == 0){
+              max = v.dwell
+            }else if(v.dwell > max){
+              max = v.dwell
+            }
+            let d = v.time
+            let se = d.getSeconds()
+            let mi = d.getMinutes()
+            let ho = d.getHours()
+            if(se < 10){
+              se = '0' + se;
+            }
+            if(mi < 10){
+              mi = '0' + mi;
+            }
+            if(ho < 10){
+              ho = '0' + ho;
+            }
+            d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
+            v['picture'] = `${d}_${v.track_id}.jpg`;
+            let l = (v.dwell/rel.atributes[1].time) - 1
+            if(l >= 2){
+                l = 2
+            }
+            let r;
+            switch(l){
+                case 0:{
+                  r = 'Low';
+                  break;
+                }
+                case 1:{
+                  r = 'Med';
+                  break;
+                }
+                case 2:{
+                  r = 'High';
+                  break;
+                }
+              }
+            v['severity'] = l;
+            v['alert'] = r;
+            v['clip_path'] = `${d}_${v.track_id}.mp4`;
+          })
+          avg = Math.round((avg/ result.length) * 100) / 100;
+        let av = result.length/(24 * days)
+        let a = {
+            total: result.length,
+            avgH: Math.round(av * 100) / 100,
+            avgS: Math.round((av/(60*60))* 100) /100,
+            raw: result,
+            dwell: dwell,
+            labelsD: labelsD,
+            histogram: ress,
+            min: min,
+            max: max,
+            avg: avg
+        }
+        res.status(200).json({success: true, data: a})
+      });
+    }).catch(
+        err=>{
+            return res.status(500).send({ success: false, message: err });
+        }
+    )
+  })
+}
+
+exports.loiteringAlerts = async(req, res) => {
+    let token = req.headers["x-access-token"];
+    const data = req.query;
+    let id = Array.isArray(data.id) ? data.id[data.id.length-1] : data.id;
+    let type = Array.isArray(data.type) ? data.type[data.type.length-1] : data.type;
+    let start = Array.isArray(data.start) ? data.start[data.start.length-1] : data.start;
+    let end = Array.isArray(data.end) ? data.end[data.end.length-1] : data.end;
+    let page = parseInt(data._page);
+    let limit = parseInt(data._limit);
+    let offset = (row_count === (page*limit)) ? (page-1) * limit : (page-1) * limit;
+    console.log('offset : ', offset); 
+    let _sort = Array.isArray(data._sort) ? data._sort[data._sort.length-1] : data._sort;
+    let _order = Array.isArray(data._order) ? data._order[data._order.length-1] : data._order;
+    jwt.verify(token, process.env.secret, async (err, decoded) => {
+      let wh;
+      if(decoded.id_branch != 0000){
+        wh = {id_branch: decoded.id_branch, algo_id : 2 }
+      }else{
+        wh = {id_account: decoded.id_account, algo_id : 2 }
+      }
+      Relation.findOne({
+        where: wh
+      }).then(async rel => {
+      await db.con().query(`SELECT * from loitering WHERE ${type} = '${id}' and time >= '${start}' and  time <= '${end}' order by ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, function (err, result) {
         if (err) return res.status(500).json({success: false, message: err});
         let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
         let avg = 0;
