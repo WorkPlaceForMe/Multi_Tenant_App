@@ -7,7 +7,7 @@ exports.getAll = (req, res) =>{
     let token = req.headers["x-access-token"];
     const data = req.body
     jwt.verify(token, process.env.secret, (err, decoded) => {
-       db.con().query(`SELECT * FROM tickets WHERE ${data.type} = '${data.id}';`, function (err, result) {
+       db.con().query(`SELECT * FROM tickets WHERE ${data.type} = '${data.id}' LIMIT 500;`, function (err, result) {
         if (err) return res.status(500).json({success: false, message: err});
         res.status(200).json({success: true, data: result})
       });
