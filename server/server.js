@@ -9,6 +9,8 @@ const path = require('path');
 const init = require('./app/initializator/initialFunct')
 const mysql=require('mysql2/promise');
 var compression = require('compression')
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 const resourcesFolderPath = process.env.home + process.env.username + process.env.pathDocker + process.env.resources
 const picResourceFolderPath = path.join(resourcesFolderPath);
@@ -68,6 +70,38 @@ if(process.env.INSTALL === 'true'){
 })
 }
 
+const opt = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Graymatics API",
+      version: "5.0.2",
+      description:
+        "Graymatics API Information",
+      // license: {
+      //   name: "MIT",
+      //   url: "https://spdx.org/licenses/MIT.html",
+      // },
+      contact: {
+        name: "Alex Kaiser",
+        url: "https://www.graymatics.com",
+        email: "alex@graymatics.com",
+      },
+    },
+    servers: [
+      {
+        url: `http://localhost:${process.env.PORT}`,
+      },
+    ],
+  },
+  apis: ["server.js","./app/routes/*.js"],
+};
+
+
+const swaggerDocs = swaggerJsDoc(opt);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, { explorer: true }));
+
 // routes
 require('./app/routes/auth.routes')(app);
 require('./app/routes/user.routes')(app);
@@ -82,6 +116,15 @@ require('./app/routes/ticket.routes')(app);
 require('./app/routes/analytics.routes')(app);
 
 //resources being served
+/**
+ * @swagger
+ * /api/pictures:
+ * get:
+ *   description: Use to get all algorithms for the user.
+ *   responses:
+ *      '200':
+ *         description: Successfully showing the manual
+*/
 app.use('/api/pictures', express.static(picResourceFolderPath))
 
 // client side

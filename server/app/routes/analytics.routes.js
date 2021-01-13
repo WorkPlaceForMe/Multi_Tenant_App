@@ -11,6 +11,50 @@ module.exports = function(app) {
      next();
    });
 
+/**
+ * @swagger
+ * /api/analytics/loitering/{id}:
+ *   post:
+  *    tags:
+  *       - Analytics
+  *    summary: "Loitering results"
+  *    description: "Use to obtain results from Loitering algorithm for an specific camera under a range of time"
+  *    parameters:
+  *      - in: path
+  *        name: id
+  *        schema:
+  *          type: string
+  *        required: true
+  *      - in: header
+  *        name: x-access-token
+  *        schema:
+  *          type: string
+  *        required: true
+  *    requestBody:
+  *       content:
+  *          application/json:
+  *            schema:
+  *              type: object
+  *              properties:
+  *                type:
+  *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+  *                  type: string
+  *                start:
+  *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+  *                  type: string
+  *                end:
+  *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+  *                  type: string
+  *    responses:
+  *      '200':
+  *        description: "A successful response"
+  *      '404':
+  *        description: "Not found"
+  *      '403':
+  *        description: "No token provided"
+  *      '500':
+  *        description: "Server error"
+ */
    app.post(
     "/api/analytics/loitering/:id",
     [authJwt.verifyToken],

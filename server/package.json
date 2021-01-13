@@ -24,6 +24,8 @@
     "mysql2": "^2.2.5",
     "node-rtsp-stream": "0.0.9",
     "sequelize": "^6.3.5",
+    "swagger-jsdoc": "^6.0.1",
+    "swagger-ui-express": "^4.1.6",
     "uuid": "^8.3.0"
   }
 }
