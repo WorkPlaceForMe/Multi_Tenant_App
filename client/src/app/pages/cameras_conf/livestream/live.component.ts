@@ -30,9 +30,11 @@ export class LiveComponent implements OnInit {
 ports:any = [];
 message:boolean = false;
 status:any = {};
+sanitizer: DomSanitizer;
 on:boolean = false;
 
   constructor(private facesService: FacesService, private router: Router, private activatedRoute: ActivatedRoute,sanitizer: DomSanitizer, private face: FacesService,) { 
+    this.sanitizer = sanitizer;
     this.link = sanitizer.bypassSecurityTrustResourceUrl(this.live.rtsp_out);
 
   }
@@ -94,9 +96,22 @@ newLink:TrustedUrlPipe;
     
   }
 
+  isHttpStream: boolean = false;
+  rtspIn: SafeResourceUrl;
   loadCam(camId){
     this.facesService.getCamera(camId ).subscribe(
       res =>{
+        let rtspIn = res['data']['rtsp_in'];
+        if(rtspIn.startsWith("http")){
+           //temparary line
+          rtspIn = rtspIn.replace('172.30.0.6', '10.241.149.167')
+          this.isHttpStream =true
+          this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(rtspIn);
+    
+          return;
+        }else{
+          this.isHttpStream = false;
+        }
         this.live =res['data'];
           this.face.camera({id: this.live.id}).subscribe(
             res =>{

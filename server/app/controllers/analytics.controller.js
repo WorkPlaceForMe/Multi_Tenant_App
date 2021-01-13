@@ -312,7 +312,7 @@ exports.covered = async (req, res) =>{
         }
         d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
         v['picture'] = `${d}_${v.trackid}.jpg`;
-        v['clip_path'] = `${d}_${v.track_id}.mp4`;
+        v['clip_path'] = `${d}_${v.trackid}.mp4`;
       }
       let a = {
           total: result.length,
@@ -365,7 +365,7 @@ exports.social = async (req, res) =>{
           }
           d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
           v['picture'] = `${d}_${v.trackid}.jpg`;
-          v['clip_path'] = `${d}_${v.track_id}.mp4`;
+          v['clip_path'] = `${d}_${v.trackid}.mp4`;
       })
       let a = {
           total: result.length,
@@ -517,7 +517,7 @@ exports.tamper = async (req, res) =>{
         }
         d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
         v['picture'] = `${d}_${v.trackid}.jpg`;
-        v['clip_path'] = `${d}_${v.track_id}.mp4`;
+        v['clip_path'] = `${d}_${v.trackid}.mp4`;
       }
       let a = {
           total: result.length,
@@ -570,7 +570,7 @@ exports.helm = async (req, res) =>{
         }
         d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
         v['picture'] = `${d}_${v.trackid}.jpg`;
-        v['clip_path'] = `${d}_${v.track_id}.mp4`;
+        v['clip_path'] = `${d}_${v.trackid}.mp4`;
       }
       let a = {
           total: result.length,
