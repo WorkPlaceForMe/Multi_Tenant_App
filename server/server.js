@@ -100,7 +100,11 @@ const opt = {
 
 const swaggerDocs = swaggerJsDoc(opt);
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, { explorer: true, customCss: "img[alt='Swagger UI'] { content:url('http://localhost:3300/api/pictures/graymaticsLogo.png');}" }));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
+  explorer: true, 
+  customCss: "img[alt='Swagger UI'] { content:url('http://localhost:3300/api/pictures/graymaticsLogo.png');}",
+  customSiteTitle: "Graymatics API Manual",
+  customfavIcon: "http://localhost:3300/api/pictures/favicon1.ico" }));
 
 // routes
 require('./app/routes/auth.routes')(app);
