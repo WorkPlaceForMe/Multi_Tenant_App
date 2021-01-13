@@ -49,7 +49,7 @@ exports.signupClient = (req, res) => {
               fs.mkdirSync(`${pathBranch}/pictures`);
               fs.mkdirSync(`${pathBranch}/heatmap_pics`);
           }
-              res.status(200).send({ message: "User was registered successfully!" });
+              res.status(201).send({ message: "User was registered successfully!" });
           });
         });
       } 
@@ -84,7 +84,7 @@ exports.signupBranch = (req, res) => {
       fs.mkdirSync(`${pathPic}/pictures`);
       fs.mkdirSync(`${pathPic}/heatmap_pics`);
         }
-          res.status(200).send({ message: "User was registered successfully!" });
+          res.status(201).send({ message: "User was registered successfully!" });
     })
     .catch(err => {
       res.status(500).send({ message: err.message });
@@ -96,7 +96,6 @@ exports.signupUser = (req, res) => {
   let token = req.headers["x-access-token"];
 
   jwt.verify(token, process.env.secret, (err, decoded) => {
-  // Save User to Database
   User.create({
     id: uuidv4(),
     username: req.body.username,
@@ -108,8 +107,7 @@ exports.signupUser = (req, res) => {
     disabled : '0'
   })
     .then(user => {
-        // user role = 1
-          res.status(200).send({success: true, message: "User was registered successfully!" });
+          res.status(201).send({success: true, message: "User was registered successfully!" });
     })
     .catch(err => {
       res.status(500).send({success: false, message: err.message });
@@ -118,7 +116,6 @@ exports.signupUser = (req, res) => {
 };
 
 exports.signupAdmin = (req, res) => {
-  // Save User to Database
   User.create({
     id: uuidv4(),
     username: req.body.username,
@@ -128,7 +125,7 @@ exports.signupAdmin = (req, res) => {
     disabled : '0'
   })
     .then(user => {
-          res.status(200).send({success: true, message: "User was registered successfully!" });
+          res.status(201).send({success: true, message: "User was registered successfully!" });
     })
     .catch(err => {
       res.status(500).send({success: false, message: err.message });
@@ -154,7 +151,7 @@ exports.signin = (req, res) => {
       );
 
       if (!passwordIsValid) {
-        return res.status(401).send({
+        return res.status(400).send({
           accessToken: null,
           message: "Invalid Password",
           type:'password'
@@ -194,7 +191,7 @@ exports.signin = (req, res) => {
       });
     })
     .catch(err => {
-      console.log(err)
+      console.error(err)
       res.status(500).send({success: false, message: err.message });
     });
 };
