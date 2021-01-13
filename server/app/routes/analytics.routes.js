@@ -39,12 +39,15 @@ module.exports = function(app) {
   *                type:
   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
   *                  type: string
+  *                  example: cam_id
   *                start:
   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
   *                  type: string
+  *                  example: 2020-10-01T03:00:00.000Z
   *                end:
   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
   *                  type: string
+  *                  example: 2020-11-01T02:59:59.000Z
   *    responses:
   *      '200':
   *        description: "A successful response"
