@@ -11,6 +11,7 @@ const mysql=require('mysql2/promise');
 var compression = require('compression')
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const YAML = require('js-yaml');
 
 const resourcesFolderPath = process.env.home + process.env.username + process.env.pathDocker + process.env.resources
 const picResourceFolderPath = path.join(resourcesFolderPath);
@@ -83,7 +84,7 @@ const opt = {
       //   url: "https://spdx.org/licenses/MIT.html",
       // },
       contact: {
-        name: "Alex Kaiser",
+        name: "Graymatics",
         url: "https://www.graymatics.com",
         email: "alex@graymatics.com",
       },
@@ -100,11 +101,22 @@ const opt = {
 
 const swaggerDocs = swaggerJsDoc(opt);
 
+if(1 == 2){
+  const doc = YAML.dump(swaggerDocs);
+  fs.writeFileSync('./resources/swagger.yaml', doc, 'utf8')
+};
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
   explorer: true, 
   customCss: "img[alt='Swagger UI'] { content:url('http://localhost:3300/api/pictures/graymaticsLogo.png');}",
   customSiteTitle: "Graymatics API Manual",
-  customfavIcon: "http://localhost:3300/api/pictures/favicon1.ico" }));
+  customfavIcon: "http://localhost:3300/api/pictures/favicon1.ico",
+  swaggerOptions: {
+    url:'http://localhost:3300/api/pictures/swagger.json',
+    docExpansion: 'none',
+    validatorUrl: null
+  },
+}));
 
 // routes
 require('./app/routes/auth.routes')(app);
@@ -120,15 +132,6 @@ require('./app/routes/ticket.routes')(app);
 require('./app/routes/analytics.routes')(app);
 
 //resources being served
-/**
- * @swagger
- * /api/pictures:
- * get:
- *   description: Use to get all algorithms for the user.
- *   responses:
- *      '200':
- *         description: Successfully showing the manual
-*/
 app.use('/api/pictures', express.static(picResourceFolderPath))
 
 // client side
