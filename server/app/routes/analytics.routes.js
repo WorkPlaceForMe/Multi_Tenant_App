@@ -78,6 +78,12 @@ module.exports = function(app) {
   );
 
   app.get(
+    "/api/analytics/loitering/alerts",
+    [authJwt.verifyToken],
+    controller.loiteringAlerts
+  );
+
+  app.get(
     "/api/analytics/loitering/alerts/:id",
     [authJwt.verifyToken],
     controller.loiteringAlerts
@@ -134,6 +140,12 @@ module.exports = function(app) {
     "/api/analytics/intrude/:id",
     [authJwt.verifyToken],
     controller.intrude
+  );
+
+  app.get(
+    "/api/analytics/intrude/alerts",
+    [authJwt.verifyToken],
+    controller.intrudeAlerts
   );
 
   /**
@@ -294,6 +306,12 @@ module.exports = function(app) {
     controller.covered
   );
 
+  app.get(
+    "/api/analytics/covered/alerts",
+    [authJwt.verifyToken],
+    controller.coveredAlerts
+  );
+
 /**
   * @swagger
   * /api/analytics/social/{id}:
@@ -345,6 +363,12 @@ module.exports = function(app) {
     "/api/analytics/social/:id",
     [authJwt.verifyToken],
     controller.social
+  );
+
+  app.get(
+    "/api/analytics/social/alerts",
+    [authJwt.verifyToken],
+    controller.socialAlerts
   );
 
 /**
@@ -504,6 +528,12 @@ module.exports = function(app) {
     "/api/analytics/queue/:id",
     [authJwt.verifyToken],
     controller.queue
+  );
+
+  app.get(
+    "/api/analytics/queue/alerts",
+    [authJwt.verifyToken],
+    controller.queueAlerts
   );
 
 /**

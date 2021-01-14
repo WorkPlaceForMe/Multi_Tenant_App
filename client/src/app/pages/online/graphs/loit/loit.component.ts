@@ -9,6 +9,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { FacesService } from '../../../../services/faces.service';
 import { Router } from '@angular/router';
+import { ServerDataSource } from 'ng2-smart-table';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-loit',
@@ -27,7 +29,8 @@ export class LoitComponent implements OnInit, OnDestroy {
     public datepipe: DatePipe, 
     public sanitizer: DomSanitizer,
     private face: FacesService,
-    private route: Router
+    private route: Router,
+    private http: HttpClient
   ) {}
 
   themeSubscription: any;
@@ -87,6 +90,11 @@ export class LoitComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type
     }
+    this.source = new ServerDataSource(this.http, {
+      endPoint: `http://localhost:4200/api/analytics/loitering/alerts?type=${type}&id=${this.camera}&start=${l.start}&end=${l.end}&_sort=time&_order=DESC`,  
+      dataKey: 'data',
+      totalKey: 'total',
+    });  
     this.face.checkVideo(2,this.camera).subscribe(
       res=>{
         this.video = res['video']
@@ -114,7 +122,7 @@ export class LoitComponent implements OnInit, OnDestroy {
           m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/loitering/' + m['cam_id'] + '/' + m['picture'])
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
         }
-        this.source = this.loitering.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
+        //this.source = this.loitering.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
         if(Object.keys(this.loitering.histogram).length != 0){
           let labels = []
           for(var o of Object.keys(this.loitering.histogram)){
@@ -248,7 +256,7 @@ export class LoitComponent implements OnInit, OnDestroy {
     )
   }
 
-  source:any = new LocalDataSource();
+  source: ServerDataSource;
 
   settings = {
     mode: 'external',

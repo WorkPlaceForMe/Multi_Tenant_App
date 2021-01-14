@@ -2,12 +2,14 @@ require('dotenv').config({ path: '../../config.env'});
 const db1 = require("../models");
 var jwt = require("jsonwebtoken");
 var db=require('../models/dbmysql');
+const dateFormat = require('dateformat');
 const Relation = db1.relation
 
 exports.loitering = async (req, res) =>{
   
     let token = req.headers["x-access-token"];
     const data = req.body;
+    console.log('***********************', data.start + '***************', data.end);
     jwt.verify(token, process.env.secret, async (err, decoded) => {
       let wh;
       if(decoded.id_branch != 0000){
@@ -113,10 +115,9 @@ exports.loiteringAlerts = async(req, res) => {
     let end = Array.isArray(data.end) ? data.end[data.end.length-1] : data.end;
     let page = parseInt(data._page);
     let limit = parseInt(data._limit);
-    let offset = (row_count === (page*limit)) ? (page-1) * limit : (page-1) * limit;
-    console.log('offset : ', offset); 
     let _sort = Array.isArray(data._sort) ? data._sort[data._sort.length-1] : data._sort;
     let _order = Array.isArray(data._order) ? data._order[data._order.length-1] : data._order;
+    console.log('...................',type , id , dateFormat(start, 'isoUtcDateTime') , dateFormat(end, 'isoUtcDateTime'));
     jwt.verify(token, process.env.secret, async (err, decoded) => {
       let wh;
       if(decoded.id_branch != 0000){
@@ -127,84 +128,92 @@ exports.loiteringAlerts = async(req, res) => {
       Relation.findOne({
         where: wh
       }).then(async rel => {
-      await db.con().query(`SELECT * from loitering WHERE ${type} = '${id}' and time >= '${start}' and  time <= '${end}' order by ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, function (err, result) {
-        if (err) return res.status(500).json({success: false, message: err});
-        let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
-        let avg = 0;
-        let min = 0;
-        let max = 0;
-        var ress = {};
-        var dwell = []
-        var labelsD = []
+        
+      await db.con().query(`SELECT count(*) as count from loitering WHERE ${type} = '${id}' and time >= '${dateFormat(start, 'isoUtcDateTime')}' and  time <= '${dateFormat(end, 'isoUtcDateTime')}';`, async function(err, resp) {
+        console.log('resp.........', resp);
+        let row_count = resp[0].count;
+        let offset = (row_count === (page*limit)) ? (page-1) * limit : (page-1) * limit;
+        console.log('offset : ', offset); 
+        await db.con().query(`SELECT * from loitering WHERE ${type} = '${id}' and time >= '${dateFormat(start, 'isoUtcDateTime')}' and  time <= '${dateFormat(end, 'isoUtcDateTime')}' order by ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, function (err, result) {
+          if (err) return res.status(500).json({success: false, message: err});
+          let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
+          let avg = 0;
+          let min = 0;
+          let max = 0;
+          var ress = {};
+          var dwell = []
+          var labelsD = []
           result.forEach(function(v) {
             ress[v.time.getHours()] = (ress[v.time.getHours()] || 0) + 1;
-            dwell.push(v.dwell)
-            labelsD.push(v.time)
-            avg = avg + v.dwell;
-            if(min == 0){
-              min = v.dwell
-            }else if(v.dwell < min){
-              min = v.dwell
-            }
-            if(max == 0){
-              max = v.dwell
-            }else if(v.dwell > max){
-              max = v.dwell
-            }
-            let d = v.time
-            let se = d.getSeconds()
-            let mi = d.getMinutes()
-            let ho = d.getHours()
-            if(se < 10){
-              se = '0' + se;
-            }
-            if(mi < 10){
-              mi = '0' + mi;
-            }
-            if(ho < 10){
-              ho = '0' + ho;
-            }
-            d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
-            v['picture'] = `${d}_${v.track_id}.jpg`;
-            let l = (v.dwell/rel.atributes[1].time) - 1
-            if(l >= 2){
-                l = 2
-            }
-            let r;
-            switch(l){
-                case 0:{
-                  r = 'Low';
-                  break;
-                }
-                case 1:{
-                  r = 'Med';
-                  break;
-                }
-                case 2:{
-                  r = 'High';
-                  break;
-                }
+              dwell.push(v.dwell)
+              labelsD.push(v.time)
+              avg = avg + v.dwell;
+              if(min == 0){
+                min = v.dwell
+              }else if(v.dwell < min){
+                min = v.dwell
               }
-            v['severity'] = l;
-            v['alert'] = r;
-            v['clip_path'] = `${d}_${v.track_id}.mp4`;
+              if(max == 0){
+                max = v.dwell
+              }else if(v.dwell > max){
+                max = v.dwell
+              }
+              let d = v.time
+              let se = d.getSeconds()
+              let mi = d.getMinutes()
+              let ho = d.getHours()
+              v.time = dateFormat(v.time, 'yyyy-mm-dd HH:MM:ss');
+              if(se < 10){
+                se = '0' + se;
+              }
+              if(mi < 10){
+                mi = '0' + mi;
+              }
+              if(ho < 10){
+                ho = '0' + ho;
+              }
+              d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
+              v['picture'] = `${d}_${v.track_id}.jpg`;
+              let l = (v.dwell/rel.atributes[1].time) - 1
+              if(l >= 2){
+                  l = 2
+              }
+              let r;
+              switch(l){
+                  case 0:{
+                    r = 'Low';
+                    break;
+                  }
+                  case 1:{
+                    r = 'Med';
+                    break;
+                  }
+                  case 2:{
+                    r = 'High';
+                    break;
+                  }
+                }
+              v['severity'] = l;
+              v['alert'] = r;
+              v['clip_path'] = `${d}_${v.track_id}.mp4`;
           })
           avg = Math.round((avg/ result.length) * 100) / 100;
-        let av = result.length/(24 * days)
-        let a = {
-            total: result.length,
-            avgH: Math.round(av * 100) / 100,
-            avgS: Math.round((av/(60*60))* 100) /100,
-            raw: result,
-            dwell: dwell,
-            labelsD: labelsD,
-            histogram: ress,
-            min: min,
-            max: max,
-            avg: avg
-        }
-        res.status(200).json({success: true, data: a})
-      });
+          let av = result.length/(24 * days)
+          let a = {
+              total: result.length,
+              avgH: Math.round(av * 100) / 100,
+              avgS: Math.round((av/(60*60))* 100) /100,
+              raw: result,
+              dwell: dwell,
+              labelsD: labelsD,
+              histogram: ress,
+              min: min,
+              max: max,
+              avg: avg
+          }
+          res.status(200).json({success: true, data: a.raw, total: row_count})
+        });
+      })
     }).catch(
         err=>{
             return res.status(500).send({ success: false, message: err });
@@ -214,7 +223,6 @@ exports.loiteringAlerts = async(req, res) => {
 }
 
 exports.intrude = async (req, res) =>{
-
   const data = req.body;
     await db.con().query(`SELECT * from intrude WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
@@ -274,6 +282,85 @@ exports.intrude = async (req, res) =>{
       }
       res.status(200).json({success: true, data: a})
     });
+}
+
+exports.intrudeAlerts = async (req, res) => {
+  let token = req.headers["x-access-token"];
+  const data = req.query;
+  let id = Array.isArray(data.id) ? data.id[data.id.length-1] : data.id;
+  let type = Array.isArray(data.type) ? data.type[data.type.length-1] : data.type;
+  let start = Array.isArray(data.start) ? data.start[data.start.length-1] : data.start;
+  let end = Array.isArray(data.end) ? data.end[data.end.length-1] : data.end;
+  let page = parseInt(data._page);
+  let limit = parseInt(data._limit);
+  let _sort = Array.isArray(data._sort) ? data._sort[data._sort.length-1] : data._sort;
+  let _order = Array.isArray(data._order) ? data._order[data._order.length-1] : data._order;
+  console.log('...................',type , id , dateFormat(start, 'isoUtcDateTime') , dateFormat(end, 'isoUtcDateTime'));
+  await db.con().query(`SELECT count(*) as count from intrude WHERE ${type} = '${id}' and time >= '${dateFormat(start, 'isoUtcDateTime')}' and  time <= '${dateFormat(end, 'isoUtcDateTime')}';`, async(err, resp) => {
+    let row_count = resp[0].count;
+    console.log('row count :', row_count);
+    let offset = (row_count === (page*limit)) ? (page-1) * limit : (page-1) * limit;
+    console.log('offset : ', offset); 
+    await db.con().query(`SELECT * from intrude WHERE ${type} = '${id}' and time >= '${dateFormat(start, 'isoUtcDateTime')}' and  time <= '${dateFormat(end, 'isoUtcDateTime')}' order by ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, function (err, result) {
+      if (err) return res.status(500).json({success: false, message: err});
+      let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
+      let ress = {}
+      let avg = 0;
+      let cache = '';
+      let ressover = {};
+      result.forEach(function(v) {
+        if(cache == ''){
+          cache = v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()
+        }
+        
+        if(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
+          
+          while(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
+            let t = new Date(cache + ':00:00').getTime();
+            t += (60 * 60*1000)
+            cache = new Date(t)
+            ressover[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours())] = 0;
+            cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours());
+          }
+        }
+        if(cache == v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
+          ressover[v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()] = (ressover[v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()] || 0) + 1;
+        }
+        ress[v.zone] = (ress[v.zone] || 0) + 1;
+        avg = avg + v.dwell;
+        let d = v.time
+        let se = d.getSeconds()
+        let mi = d.getMinutes()
+        let ho = d.getHours()
+        if(se < 10){
+          se = '0' + se;
+        }
+        if(mi < 10){
+          mi = '0' + mi;
+        }
+        if(ho < 10){
+          ho = '0' + ho;
+        }
+        d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
+        v['picture'] = `${d}_${v.track_id}_zone${v.zone}.jpg`;
+        v['clip_path'] = `${d}_${v.track_id}_zone${v.zone}.mp4`;
+        v.time = dateFormat(v.time, 'yyyy-mm-dd HH:MM:ss');
+      })
+      let lo = []
+      for(var l of Object.keys(ress)){
+        lo.push({name: l, value: ress[l], perc: JSON.stringify(Math.round((ress[l]/result.length) * 100)) + '%'})
+      }
+      let av = result.length/(24 * days)
+      let a = {
+          total: result.length,
+          avgH: Math.round(av * 100) / 100,
+          raw: result,
+          donut: lo,
+          over: ressover
+      }
+      res.status(200).json({success: true, data: a.raw, total: row_count})
+    });
+  })
 }
 
 exports.violence = async (req, res) =>{
@@ -383,8 +470,72 @@ exports.aod = async (req, res) =>{
 
 exports.covered = async (req, res) =>{
   const data = req.body;
+  await db.con().query(`SELECT * from alerts WHERE alert= 'no mask' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+    if (err) return res.status(500).json({success: false, message: err});
+    let ress = {};
+    let cache = '';
+    for(var v of result){
+      if(cache == ''){
+        cache = v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()
+      }
+      
+      if(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
+        while(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
+          let t = new Date(cache + ':00:00').getTime();
+          //Add one hours to date
+          t += (60 * 60*1000)
+          cache = new Date(t)
+          ress[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours())] = 0;
+          cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours());
+        }
+      }
+      if(cache == v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
+        ress[v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()] = (ress[v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()] || 0) + 1;
+      }
+      let d = v.time
+      let se = d.getSeconds()
+      let mi = d.getMinutes()
+      let ho = d.getHours()
+      if(se < 10){
+        se = '0' + se;
+      }
+      if(mi < 10){
+        mi = '0' + mi;
+      }
+      if(ho < 10){
+        ho = '0' + ho;
+      }
+      d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
+      v['picture'] = `${d}_${v.trackid}.jpg`;
+      v['clip_path'] = `${d}_${v.trackid}.mp4`;
+    }
+    let a = {
+        total: result.length,
+        raw: result,
+        over: ress
+    }
+    res.status(200).json({success: true, data: a})
+  });
+}
 
-    await db.con().query(`SELECT * from alerts WHERE alert= 'no mask' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+exports.coveredAlerts = async(req, res) => {
+  let token = req.headers["x-access-token"];
+  const data = req.query;
+  let id = Array.isArray(data.id) ? data.id[data.id.length-1] : data.id;
+  let type = Array.isArray(data.type) ? data.type[data.type.length-1] : data.type;
+  let start = Array.isArray(data.start) ? data.start[data.start.length-1] : data.start;
+  let end = Array.isArray(data.end) ? data.end[data.end.length-1] : data.end;
+  let page = parseInt(data._page);
+  let limit = parseInt(data._limit);
+  let _sort = Array.isArray(data._sort) ? data._sort[data._sort.length-1] : data._sort;
+  let _order = Array.isArray(data._order) ? data._order[data._order.length-1] : data._order;
+  console.log('...................',type , id , dateFormat(start, 'isoUtcDateTime') , dateFormat(end, 'isoUtcDateTime'));
+  await db.con().query(`SELECT count(*) as count from alerts WHERE alert= 'no mask' and ${type} = '${id}' and time >= '${dateFormat(start, 'isoUtcDateTime')}' and  time <= '${dateFormat(end, 'isoUtcDateTime')}';`, async(err, resp) => {
+    let row_count = resp[0].count;
+    console.log('row count :', row_count);
+    let offset = (row_count === (page*limit)) ? (page-1) * limit : (page-1) * limit;
+    console.log('offset : ', offset); 
+    await db.con().query(`SELECT * from alerts WHERE alert= 'no mask' and ${type} = '${id}' and time >= '${dateFormat(start, 'isoUtcDateTime')}' and  time <= '${dateFormat(end, 'isoUtcDateTime')}' order by ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {};
       let cache = '';
@@ -422,19 +573,90 @@ exports.covered = async (req, res) =>{
         d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
         v['picture'] = `${d}_${v.trackid}.jpg`;
         v['clip_path'] = `${d}_${v.trackid}.mp4`;
+        v.time = dateFormat(v.time, 'yyyy-mm-dd HH:MM:ss');
       }
       let a = {
           total: result.length,
           raw: result,
           over: ress
       }
-      res.status(200).json({success: true, data: a})
+      res.status(200).json({success: true, data: a.raw, total: row_count})
     });
+  })
 }
 
 exports.social = async (req, res) =>{
   const data = req.body;
-    await db.con().query(`SELECT * from alerts WHERE alert= 'sociald' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+  await db.con().query(`SELECT * from alerts WHERE alert= 'sociald' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+    if (err) return res.status(500).json({success: false, message: err});
+    let ress = {"0": 0, "1":0, "2": 0}
+    let ressover = {};
+    let cache = '';
+    result.forEach(function(v) {
+      if(cache == ''){
+        cache = v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()
+      }
+      
+      if(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
+        
+        while(cache != v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
+          let t = new Date(cache + ':00:00').getTime();
+          //Add one hours to date
+          t += (60 * 60*1000)
+          cache = new Date(t)
+          ressover[cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours())] = 0;
+          cache = cache.getFullYear()  + "-" + (cache.getMonth()+1) + "-" + cache.getDate() + ' ' +(cache.getHours());
+        }
+      }
+      if(cache == v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours() ){
+        ressover[v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()] = (ressover[v.time.getFullYear()  + "-" + (v.time.getMonth()+1) + "-" + v.time.getDate() + ' ' + v.time.getHours()] || 0) + 1;
+      }
+      ress[v.alert_type] = (ress[v.alert_type] || 0) + 1;
+        let d = v.time
+        let se = d.getSeconds()
+        let mi = d.getMinutes()
+        let ho = d.getHours()
+        if(se < 10){
+          se = '0' + se;
+        }
+        if(mi < 10){
+          mi = '0' + mi;
+        }
+        if(ho < 10){
+          ho = '0' + ho;
+        }
+        d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
+        v['picture'] = `${d}_${v.trackid}.jpg`;
+        v['clip_path'] = `${d}_${v.trackid}.mp4`;
+    })
+    let a = {
+        total: result.length,
+        raw: result,
+        types: ress,
+        over:ressover
+    }
+    res.status(200).json({success: true, data: a})
+  });
+}
+
+exports.socialAlerts = async(req, res) => {
+  let token = req.headers["x-access-token"];
+  const data = req.query;
+  let id = Array.isArray(data.id) ? data.id[data.id.length-1] : data.id;
+  let type = Array.isArray(data.type) ? data.type[data.type.length-1] : data.type;
+  let start = Array.isArray(data.start) ? data.start[data.start.length-1] : data.start;
+  let end = Array.isArray(data.end) ? data.end[data.end.length-1] : data.end;
+  let page = parseInt(data._page);
+  let limit = parseInt(data._limit);
+  let _sort = Array.isArray(data._sort) ? data._sort[data._sort.length-1] : data._sort;
+  let _order = Array.isArray(data._order) ? data._order[data._order.length-1] : data._order;
+  console.log('...................',type , id , dateFormat(start, 'isoUtcDateTime') , dateFormat(end, 'isoUtcDateTime'));
+  await db.con().query(`SELECT count(*) as count from alerts WHERE alert= 'sociald' and ${type} = '${id}' and time >= '${dateFormat(start, 'isoUtcDateTime')}' and  time <= '${dateFormat(end, 'isoUtcDateTime')}';`, async(err, resp) => {
+    let row_count = resp[0].count;
+    console.log('row count*************8 :', row_count);
+    let offset = (row_count === (page*limit)) ? (page-1) * limit : (page-1) * limit;
+    console.log('offset : ', offset);
+    await db.con().query(`SELECT * from alerts WHERE alert= 'sociald' and ${type} = '${id}' and time >= '${dateFormat(start, 'isoUtcDateTime')}' and  time <= '${dateFormat(end, 'isoUtcDateTime')}' order by ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let ress = {"0": 0, "1":0, "2": 0}
       let ressover = {};
@@ -475,6 +697,7 @@ exports.social = async (req, res) =>{
           d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
           v['picture'] = `${d}_${v.trackid}.jpg`;
           v['clip_path'] = `${d}_${v.trackid}.mp4`;
+          v.time = dateFormat(v.time, 'yyyy-mm-dd HH:MM:ss');
       })
       let a = {
           total: result.length,
@@ -482,8 +705,9 @@ exports.social = async (req, res) =>{
           types: ress,
           over:ressover
       }
-      res.status(200).json({success: true, data: a})
+      res.status(200).json({success: true, data: a.raw, total: row_count})
     });
+  })
 }
 
 exports.pc = async (req, res) =>{
@@ -700,7 +924,7 @@ function display (seconds) {
 
 exports.queue = async (req, res) =>{
   const data = req.body;
-     await db.con().query(`SELECT * from queue_mgt WHERE ${data.type} = '${req.params.id}' and start_time >= '${data.start}' and  start_time <= '${data.end}' order by start_time asc;`, function (err, result) {
+  await db.con().query(`SELECT * from queue_mgt WHERE ${data.type} = '${req.params.id}' and start_time >= '${data.start}' and  start_time <= '${data.end}' order by start_time asc;`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       let countIn = 0;
       let avg = 0;
@@ -759,7 +983,88 @@ exports.queue = async (req, res) =>{
       }
       res.status(200).json({success: true, data: a})
     });
+}
 
+exports.queueAlerts = async(req, res) => {
+  let token = req.headers["x-access-token"];
+  const data = req.query;
+  console.log('data...................', data)
+  let id = Array.isArray(data.id) ? data.id[data.id.length-1] : data.id;
+  let type = Array.isArray(data.type) ? data.type[data.type.length-1] : data.type;
+  let start = Array.isArray(data.start) ? data.start[data.start.length-1] : data.start;
+  let end = Array.isArray(data.end) ? data.end[data.end.length-1] : data.end;
+  let page = parseInt(data._page);
+  let limit = parseInt(data._limit);
+  let _sort = Array.isArray(data._sort) ? data._sort[data._sort.length-1] : data._sort;
+  let _order = Array.isArray(data._order) ? data._order[data._order.length-1] : data._order;
+  console.log('...................',type , id , dateFormat(start, 'isoUtcDateTime') , dateFormat(end, 'isoUtcDateTime'));
+  await db.con().query(`SELECT count(*) as count from queue_mgt WHERE ${type} = '${id}' and start_time >= '${dateFormat(start, 'isoUtcDateTime')}' and  start_time <= '${dateFormat(end, 'isoUtcDateTime')}';`, async(err, resp) => {
+    console.log('resp : ', resp);
+    let row_count = resp[0].count;
+    console.log('row_count : ', row_count);
+    let offset = (row_count === (page*limit)) ? (page-1) * limit : (page-1) * limit;
+    console.log('offset : ', offset);
+    console.log('query...............', `SELECT * from queue_mgt WHERE ${type} = '${id}' and start_time >= '${dateFormat(start, 'isoUtcDateTime')}' and  start_time <= '${dateFormat(end, 'isoUtcDateTime')}' order by ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset}`)
+    await db.con().query(`SELECT * from queue_mgt WHERE ${type} = '${id}' and start_time >= '${dateFormat(start, 'isoUtcDateTime')}' and  start_time <= '${dateFormat(end, 'isoUtcDateTime')}' order by ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, function (err, result) {
+      if (err) return res.status(500).json({success: false, message: err});
+      let countIn = 0;
+      let avg = 0;
+      let min = 0;
+      let max = 0;
+      let minQ, maxQ;
+      let times = []
+      for(var v of result){
+        if(v.queuing == 1){
+          countIn++
+        }else{
+          v['wait'] = (v.end_time - v.start_time)/1000;
+          v['wait'] = display(v['wait'])
+         times.push({time: (v.end_time - v.start_time)/60000, queue: v.qid})
+        }
+        let d = v.start_time
+        let se = d.getSeconds()
+        let mi = d.getMinutes()
+        let ho = d.getHours()
+        if(se < 10){
+          se = '0' + se;
+        }
+        if(mi < 10){
+          mi = '0' + mi;
+        }
+        if(ho < 10){
+          ho = '0' + ho;
+        }
+        d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
+        v['picture'] = `${d}_${v.track_id}.jpg`;
+        v['clip_path'] = `${d}_${v.track_id}.mp4`;
+      }
+      for(var e of times){
+        avg = avg + e.time;
+        if(min == 0){
+          min = e.time;
+          minQ = e.queue;
+        }else if(e.time < min){
+          min = e.time;
+          minQ = e.queue;
+        }
+        if(max == 0){
+          max = e.time
+          maxQ = e.queue
+        }else if(e.time > max){
+          max = e.time
+          maxQ = e.queue
+        }
+      }
+      let a = {
+          raw: result,
+          count: countIn,
+          avg: Math.round((avg/ times.length) * 100) / 100,
+          min: minQ,
+          max: maxQ,
+      }
+      res.status(200).json({success: true, data: a.raw, total: row_count})
+    });
+  })
 }
 
 exports.queueLite = async (req, res) =>{

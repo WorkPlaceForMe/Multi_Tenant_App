@@ -2,13 +2,14 @@ import { DatePipe } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NbCalendarRange, NbColorHelper, NbThemeService } from '@nebular/theme';
-import { LocalDataSource, ViewCell } from 'ng2-smart-table';
+import { LocalDataSource, ViewCell, ServerDataSource } from 'ng2-smart-table';
 import { api } from '../../../../models/API';
 import { AnalyticsService } from '../../../../services/analytics.service';
 import { FacesService } from '../../../../services/faces.service';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-social',
@@ -34,11 +35,12 @@ export class SocialComponent implements OnInit, OnDestroy {
     private face: FacesService,
     public datepipe: DatePipe,
     private theme: NbThemeService,
-    private route: Router
+    private route: Router,
+    private http: HttpClient
   ) { }
   single: any;
   colorScheme: any;
-  source:any = new LocalDataSource();
+  source:ServerDataSource;
   dataL: any;
   optionsL: any;
 
@@ -88,6 +90,11 @@ export class SocialComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type
     }
+    this.source = new ServerDataSource(this.http, {
+      endPoint: `http://localhost:4200/api/analytics/social/alerts?type=${type}&id=${this.camera}&start=${l.start}&end=${l.end}&_sort=time&_order=DESC`,  
+      dataKey: 'data',
+      totalKey: 'total',
+    });  
     this.face.checkVideo(21,this.camera).subscribe(
       res=>{
         this.video = res['video']
@@ -129,7 +136,7 @@ export class SocialComponent implements OnInit, OnDestroy {
               }
             }
           }
-          this.source = this.social.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
+          //this.source = this.social.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
 
           let labels = []
           for(var o of Object.keys(this.social.over)){

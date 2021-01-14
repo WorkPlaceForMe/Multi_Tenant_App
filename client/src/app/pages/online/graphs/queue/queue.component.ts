@@ -9,6 +9,8 @@ import { FacesService } from '../../../../services/faces.service';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
+import { ServerDataSource } from 'ng2-smart-table';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-queue',
@@ -30,9 +32,10 @@ export class QueueComponent implements OnInit, OnDestroy {
     public sanitizer: DomSanitizer,
     private face: FacesService,
     public datepipe: DatePipe,
-    private route: Router
+    private route: Router,
+    private http: HttpClient
   ) { }
-  source:any = new LocalDataSource();
+  source: ServerDataSource;
 
   ngOnDestroy(){
     if(this.player != undefined){
@@ -72,6 +75,11 @@ export class QueueComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type
     }
+    this.source = new ServerDataSource(this.http, {
+      endPoint: `http://localhost:4200/api/analytics/queue/alerts?type=${type}&id=${this.camera}&start=${l.start}&end=${l.end}&_sort=start_time&_order=DESC`,  
+      dataKey: 'data',
+      totalKey: 'total',
+    });  
     this.face.checkVideo(22,this.camera).subscribe(
       res=>{
         this.video = res['video']
@@ -99,7 +107,7 @@ export class QueueComponent implements OnInit, OnDestroy {
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['picture'])
             m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['clip_path']
           }
-          this.source = this.queue.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
+          //this.source = this.queue.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
 
         },
         err => {

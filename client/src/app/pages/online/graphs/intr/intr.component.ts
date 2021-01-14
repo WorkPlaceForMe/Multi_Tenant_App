@@ -2,13 +2,14 @@ import { DatePipe } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NbCalendarRange, NbColorHelper, NbThemeService } from '@nebular/theme';
-import { LocalDataSource, ViewCell } from 'ng2-smart-table';
+import { LocalDataSource, ViewCell, ServerDataSource } from 'ng2-smart-table';
 import { api } from '../../../../models/API';
 import { AnalyticsService } from '../../../../services/analytics.service';
 import { FacesService } from '../../../../services/faces.service';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
+import { HttpClient } from '@angular/common/http';
 
 
 @Component({
@@ -37,7 +38,8 @@ export class IntrComponent implements OnInit, OnDestroy {
     private theme: NbThemeService,
     private face: FacesService,
     public datepipe: DatePipe,
-    private route: Router
+    private route: Router,
+    private http: HttpClient
   ) { }
   single: any;
   colorScheme: any;
@@ -89,6 +91,11 @@ export class IntrComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type
     }
+    this.source = new ServerDataSource(this.http, {
+      endPoint: `http://localhost:4200/api/analytics/intrude/alerts?type=${type}&id=${this.camera}&start=${l.start}&end=${l.end}&_sort=time&_order=DESC`,  
+      dataKey: 'data',
+      totalKey: 'total',
+    });  
     this.face.checkVideo(17,this.camera).subscribe(
       res=>{
         this.video = res['video']
@@ -116,7 +123,7 @@ export class IntrComponent implements OnInit, OnDestroy {
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/intrusion/' + m['cam_id'] + '/' + m['picture'])
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
           }
-          this.source = this.intrude.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
+          //this.source = this.intrude.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
           if(this.intrude.donut.length != 0){
             this.source2 = this.intrude.donut;
 
@@ -244,7 +251,7 @@ export class IntrComponent implements OnInit, OnDestroy {
       )
   }
 
-  source:any = new LocalDataSource();
+  source: ServerDataSource;
   source2:any = new LocalDataSource();
   got(id){
     this.route.navigate([`/pages/tickets`])
