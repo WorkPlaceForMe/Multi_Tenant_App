@@ -30,4 +30,3 @@ var connection = {
  }}
  
   module.exports=connection;
- 

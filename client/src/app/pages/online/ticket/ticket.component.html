@@ -1,8 +1,8 @@
 <nb-card>
     <nb-card-body>
       <div style='margin-bottom: 10px;' class='row'>
-      <input class="search" nbInput type="text" placeholder="Search..." [(ngModel)]="searchStr" (ngModelChange)="search(searchStr)">
-      <nb-select [(ngModel)]='searchWr' style="margin-left: 5px;" (ngModelChange)=check()>
+      <input class="search" nbInput type="text" placeholder="Search..." [(ngModel)]="searchStr" (ngModelChange)="search(searchStr, searchWr)">
+      <nb-select [(ngModel)]='searchWr' style="margin-left: 5px;" (ngModelChange)=check($event)>
         <nb-option value="" disabled>Choose where to filter:</nb-option>
         <nb-option *ngFor='let obj of searchFields' [value]="obj.value">{{obj.show}}</nb-option>
       </nb-select>

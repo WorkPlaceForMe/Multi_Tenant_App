@@ -1,3 +1,5 @@
+//tickets.routes.js
+
 const controller = require("../controllers/ticket.controller");
 const { authJwt } = require("../middleware");
 
@@ -10,11 +12,17 @@ module.exports = function(app) {
      );
      next();
    });
-
-   app.post(
+//app.post
+   app.get(
     "/api/ticket/all/",
     [authJwt.verifyToken, authJwt.isClientOrBranch],
     controller.getAll
+  );
+
+  app.get(
+    "/api/ticket/search/all/",
+    [authJwt.verifyToken, authJwt.isClientOrBranch],
+    controller.searchAllTickets
   );
 
   app.post(

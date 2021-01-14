@@ -8,83 +8,108 @@ import { NbComponentStatus, NbGlobalPhysicalPosition, NbGlobalPosition, NbToastr
 import { ReviewComponent } from '../review/review.component';
 import { DatePipe } from '@angular/common';
 import { SeverityComponent } from '../severity/severity.component';
+import { ServerDataSource } from 'ng2-smart-table';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-ticket',
   templateUrl: './ticket.component.html',
-  styleUrls: ['./ticket.component.scss']
+  styleUrls: ['./ticket.component.scss'],
 })
 export class TicketComponent implements OnInit, OnDestroy {
 
-  @HostBinding('class') classes ='row';
-  constructor(private accountserv: AccountService,private router: Router,private windowService: NbWindowService,public datepipe: DatePipe,
-    private toastrService: NbToastrService) { 
+  @HostBinding('class') classes = 'row';
+  constructor(private accountserv: AccountService, private router: Router, private windowService: NbWindowService, public datepipe: DatePipe,
+    private toastrService: NbToastrService, private http: HttpClient) {
       this.router.routeReuseStrategy.shouldReuseRoute = function (){
         return false;
-      }
-      this.mySubscription = this.router.events.subscribe((event) =>{
-        if(event instanceof NavigationEnd){
+      };
+      this.mySubscription = this.router.events.subscribe((event) => {
+        if (event instanceof NavigationEnd) {
           this.router.navigated = false;
         }
       });
     }
-    mySubscription: any
 
-    ngOnDestroy(){
-      if(this.mySubscription){
+    mySubscription: any;
+
+    ngOnDestroy() {
+      if (this.mySubscription) {
         this.mySubscription.unsubscribe();
       }
     }
 
   ngOnInit(): void {
-    this.now_user = JSON.parse(localStorage.getItem('now_user'))
-    var time = new Date();
-    this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0,3);
+    this.now_user = JSON.parse(localStorage.getItem('now_user'));
+    const time = new Date();
+    this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0, 3);
     // this.timezone = parseInt(this.timezone) * 2;
-    let p = ''
-    if(this.timezone > 0){
-      p = '+'
+    let p = '';
+    if (this.timezone > 0) {
+      p = '+';
     }
     this.timezone = p + JSON.stringify(this.timezone) + '00';
-    this.getTickets()
+    const a = {
+      type: 'id_branch',
+      id: this.now_user.id_branch,
+    };
+    let rol = this.now_user.role;
+    if (this.now_user.role === 'client' && this.now_user.id_branch !== '0000') {
+      rol = 'branch';
+    }
+    if (rol === 'branch' || rol === 'user') {
+      this.a = {
+        type: 'id_branch',
+        id: this.now_user.id_branch,
+      };
+    }else if (rol === 'client') {
+      this.a = {
+        type: 'id_account',
+        id: this.now_user.id_account,
+      };
+    }
+    this.getTickets();
   }
 
+  a: object = {};
   timezone: any;
-  now_user:Account;
-  source:any = new LocalDataSource();
-  source1:any = new LocalDataSource();
-  count: any ={
-    st0: 0,
-    st1: 0,
-    l0: 0,
-    l0r:0,
-    l1: 0,
-    l1r: 0,
-    l2: 0,
-    l2r: 0
-  }
-  
+  now_user: Account;
+  data: any = [];
+  source: ServerDataSource;
+  tempSource: ServerDataSource;
+  pageSize = 25;
+  source1: ServerDataSource; // = new LocalDataSource();
+  count: any = {
+    st0: 0,  // st0 - Total Alerts remaining
+    st1: 0,  // st1 - Total Alerts solved
+    l0: 0,   // l0 - low level alerts
+    l0r: 0,   // l0r - low level alerts remaining
+    l1: 0,   // l1 - Medium level
+    l1r: 0,  // l1r - Medium rem
+    l2: 0,   // l2 - high level
+    l2r: 0,
+  };
 
-  stat:string = 'success'
-  searchStr:string = ''
+  stat: string = 'success';
+  searchStr: string = '';
   searchFields = [
   {
     value: 'type',
-    show: 'Type of alert'
+    show: 'Type of alert',
   },
   {
     value: 'assigned',
-    show: 'Assigned User'
-  }
+    show: 'Assigned User',
+  },
 ];
-  searchWr:string = '';
-  show:boolean = false;
+  searchWr: string = '';
+  show: boolean = false;
 
   settings = {
     mode: 'external',
     actions: {
       position: 'right',
-      //custom: [{ name: 'routeToAPage', title: `<img src="/icon.png">` }]
+      // custom: [{ name: 'routeToAPage', title: `<img src="/icon.png">` }]
       columnTitle: 'Asign / Update',
       add: false,
     //   edit: true,
@@ -95,8 +120,8 @@ export class TicketComponent implements OnInit, OnDestroy {
     },
     pager : {
       display : true,
-      perPage:5
-      },
+      perPage: 5,
+    },
     edit: {
       editButtonContent: '<i class="fas fa-child"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
@@ -107,32 +132,32 @@ export class TicketComponent implements OnInit, OnDestroy {
       deleteButtonContent: '<i class="far fa-file"></i>',
       confirmDelete: true,
     },
-    noDataMessage: "No tickets found",
+    noDataMessage: 'No tickets found',
     columns: {
       createdAt: {
         title: 'Occurance',
         type: 'string',
-        filter: false
+        filter: false,
       },
       updatedAt: {
         title: 'Finished',
         type: 'string',
-        filter: false
+        filter: false,
       },
       type: {
         title: 'Type of alert',
         type: 'string',
-        filter: false
+        filter: false,
       },
       assigned: {
         title: 'Assigned User',
         type: 'string',
-        filter: false
+        filter: false,
       },
       assignedBy: {
         title: 'Assigned By',
         type: 'string',
-        filter: false
+        filter: false,
       },
       level: {
         title: 'Severity',
@@ -141,9 +166,9 @@ export class TicketComponent implements OnInit, OnDestroy {
         renderComponent: SeverityComponent,
         onComponentInitFunction(instance) {
           instance.save.subscribe(row => {
-            alert(`${row.name} saved!`)
+            alert(`${row.name} saved!`);
           });
-        }
+        },
       },
       status: {
         title: 'Reviewed',
@@ -152,121 +177,129 @@ export class TicketComponent implements OnInit, OnDestroy {
         renderComponent: StatusComponent,
         onComponentInitFunction(instance) {
           instance.save.subscribe(row => {
-            alert(`${row.name} saved!`)
+            alert(`${row.name} saved!`);
           });
-        }
+        },
       },
     },
   };
 
-  check(){
+  check(event) {
     this.show = false;
-    if(this.searchStr != ''){
-      this.search(this.searchStr)
+    if (this.searchStr !== '') {
+      this.search(this.searchStr, event);
     }
   }
 
-  search(query: string){
-    if(this.searchWr == ''){
+  search(query: string, searchField: string) {
+    if (this.searchWr === '') {
       return this.show = true;
-    }else{
+    }else {
       this.show = false;
     }
-    this.source = this.source1.filter(data => data[this.searchWr].includes(query))
-    if(query == ''){
-      this.source = this.source1;
+    this.a['searchField'] = searchField;
+    this.a['searchStr'] = this.searchStr;
+    // this.source = this.source1.filter(data => data[this.searchWr].includes(query))
+    this.source = this.accountserv.searchTickets(this.a);
+    if (query === '') {
+      // this.source = this.source1;
+      this.source = this.accountserv.tickets(this.a);
     }
   }
 
-  getTickets(){
-    let rol = this.now_user.role
+  getTickets() {
+    this.source = this.accountserv.tickets(this.a);
+  }
+
+  /* getTickets() {
+    let rol = this.now_user.role;
     let a;
-    if(this.now_user.role === 'client' && this.now_user.id_branch != '0000'){
-      rol = 'branch'
+    if (this.now_user.role === 'client' && this.now_user.id_branch !== '0000'){
+      rol = 'branch';
     }
-    if(rol == 'branch' || rol == 'user'){
+    if (rol === 'branch' || rol === 'user'){
       a = {
         type: 'id_branch',
-        id: this.now_user.id_branch
-      }
-    }else if(rol == 'client'){
+        id: this.now_user.id_branch,
+      };
+    }else if (rol === 'client'){
       a = {
         type: 'id_account',
-        id: this.now_user.id_account
-      }
+        id: this.now_user.id_account,
+      };
     }
     this.accountserv.tickets(a).subscribe(
       res => {
-        let cli = res
-        for(var a of cli['data']){
-          a['createdAt'] = this.datepipe.transform(a['createdAt'], 'yyyy-M-dd HH:mm:ss', this.timezone)
-          a['updatedAt'] = this.datepipe.transform(a['updatedAt'], 'yyyy-M-dd HH:mm:ss', this.timezone)
-          if(a['createdAt'] == a['updatedAt']){
+        const cli = res;
+        for (const a of cli['data']){
+          a['createdAt'] = this.datepipe.transform(a['createdAt'], 'yyyy-M-dd HH:mm:ss', this.timezone);
+          a['updatedAt'] = this.datepipe.transform(a['updatedAt'], 'yyyy-M-dd HH:mm:ss', this.timezone);
+          if (a['createdAt'] === a['updatedAt']){
             a['status'] = 0;
             a['updatedAt'] = '';
           }else{
             a['status'] = 1;
           }
-          switch(a['type']){
-            case 'loitering':{
+          switch (a['type']){
+            case 'loitering': {
               a['type'] = 'Loitering Detection';
               break;
             }
-            case 'intrusion':{
+            case 'intrusion': {
               a['type'] = 'Intrusion Detection';
               break;
             }
-            case 'aod':{
+            case 'aod': {
               a['type'] = 'Abandoned Object Detection';
               break;
             }
           }
-          if(a['status'] == 0){
-            ++this.count.st0
-          }else if(a['status'] == 1){
-            ++this.count.st1
+          if (a['status'] === 0){
+            ++this.count.st0;
+          }else if (a['status'] === 1){
+            ++this.count.st1;
           }
-          if(a['level'] == 0){
-            ++this.count.l0
-            if(a['status'] == 0){
-              ++this.count.l0r
+          if (a['level'] === 0){
+            ++this.count.l0;
+            if (a['status'] === 0){
+              ++this.count.l0r;
             }
-          }else if(a['level'] == 1){
-            ++this.count.l1
-            if(a['status'] == 0){
-              ++this.count.l1r
+          }else if (a['level'] === 1){
+            ++this.count.l1;
+            if (a['status'] === 0){
+              ++this.count.l1r;
             }
-          }else if(a['level'] == 2){
-            ++this.count.l2
-            if(a['status'] == 0){
-              ++this.count.l2r
+          }else if (a['level'] === 2){
+            ++this.count.l2;
+            if (a['status'] === 0){
+              ++this.count.l2r;
             }
           }
         }
         // this.source = cli['data'];
-        this.source = cli['data'].slice().sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt))
+        this.source = cli['data'].slice().sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
         this.source1 = this.source;
       },
-      err => console.error(err)
+      err => console.error(err),
     );
-  }
+  } */
 
   selected(event): void {
-    this.router.navigateByUrl(`pages/tickets/view/${event.data.id}`)
+    this.router.navigateByUrl(`pages/tickets/view/${event.data.id}`);
 }
 
-  hola1(event): void{
-    if(event.data.assigned != null && this.now_user.role == 'user'){
-      return this.showToast('User has been assigned previously.', 'warning')
-    }else{
+  hola1(event): void {
+    if (event.data.assigned != null && this.now_user.role === 'user'){
+      return this.showToast('User has been assigned previously.', 'warning');
+    }else {
       this.windowService.open(ReviewComponent, { title: `Assign for ${event.data.type}`, context: { type: 'assign', id: event.data.id, assigned: event.data.assigned}});
     }
   }
-  
-  hola3(event): void{
-    if(event.data.assigned != null && this.now_user.role == 'user'){
-     return this.showToast(`This task has been finished by: ${event.data.reviewed}.`, 'danger')
-  }else{
+
+  hola3(event): void {
+    if (event.data.assigned != null && this.now_user.role === 'user'){
+     return this.showToast(`This task has been finished by: ${event.data.reviewed}.`, 'danger');
+  }else {
     this.windowService.open(ReviewComponent, { title: `Update for ${event.data.type}`, context: { type: 'update' , id: event.data.id, reviewed: event.data.reviewed, date: event.data.createdAt}});
   }
 }
@@ -277,7 +310,7 @@ hasIcon = true;
 position: NbGlobalPosition = NbGlobalPhysicalPosition.TOP_RIGHT;
 preventDuplicates = false;
 
-private showToast( body: string, status:NbComponentStatus) {
+private showToast( body: string, status: NbComponentStatus) {
   const config = {
     status: status,
     destroyByClick: this.destroyByClick,
@@ -286,12 +319,12 @@ private showToast( body: string, status:NbComponentStatus) {
     position: this.position,
     preventDuplicates: this.preventDuplicates,
   };
-  var titleContent;
-  if(status == 'warning'){
-    titleContent = 'Warning'
-  }else{
-    titleContent = 'Danger'
-  }    
+  let titleContent;
+  if (status === 'warning') {
+    titleContent = 'Warning';
+  }else {
+    titleContent = 'Danger';
+  }
 
   this.toastrService.show(
     body,
