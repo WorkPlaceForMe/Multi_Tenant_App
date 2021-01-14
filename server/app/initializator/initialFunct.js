@@ -14,6 +14,16 @@ exports.initial = function() {
       id_branch:"0000",
       disabled: 0
     })
+    usr.create({
+      id: "3333-666666-cccccc-nnnnnn",
+      username: "test",
+      password: bcrypt.hashSync("test", 12),
+      email:"test@graymatics.com",
+      role:"client",
+      id_account:"3333-666666-cccccc-nnnnnn",
+      id_branch:"0000",
+      disabled: 0
+    })
     algo.create({
         id: 0,
         name: 'Facial Recognition'
