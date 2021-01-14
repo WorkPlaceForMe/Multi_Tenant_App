@@ -4,24 +4,17 @@ const { con } = require('../models/dbmysql');
 var db=require('../models/dbmysql');
 const dateFormat = require('dateformat');
 
-let total_row_count = 0;
-let search_total_row_count = 0;
-
 exports.getAll = (req, res) =>{
     const data = req.query;
     let token = req.headers["x-access-token"];
     let id = Array.isArray(data.id) ? data.id[data.id.length-1] : data.id;
     let type = Array.isArray(data.type) ? data.type[data.type.length-1] : data.type;
     jwt.verify(token, process.env.secret, async(err, decoded) => {
-        if(total_row_count == 0) {
-          await db.con().query(`SELECT count(*) as count FROM tickets WHERE ${type} = '${id}';`, function(err, resp) {
-            total_row_count = resp[0].count;
-            getAllTickets(total_row_count, type, id, data, res);
-          })
-        } else {
-          getAllTickets(total_row_count, type, id, data, res);
-        }
-    })
+      await db.con().query(`SELECT count(*) as count FROM tickets WHERE ${type} = '${id}';`, function(err, resp) {
+        total_row_count = resp[0].count;
+        getAllTickets(total_row_count, type, id, data, res);
+      });
+    });
 }
 
 var getAllTickets = async(row_count, type, id, data, res) => {
@@ -61,16 +54,19 @@ exports.searchAllTickets = (req, res) => {
   let type = Array.isArray(data.type) ? data.type[data.type.length-1] : data.type;
   let searchStr = Array.isArray(data.searchStr) ? data.searchStr[data.searchStr.length-1] : data.searchStr;
   let searchField = Array.isArray(data.searchField) ? data.searchField[data.searchField.length-1] : data.searchField;
+  if(searchStr === 'Loitering Detection') {
+    searchStr = 'loitering';
+  } else if(searchStr === 'Intrusion Detection') {
+    searchStr = 'intrusion';
+  } else if(searchStr === 'Abandoned Object Detection') {
+    searchStr = 'aod';
+  }
   jwt.verify(token, process.env.secret, async(err, decoded) => {
-      if(search_total_row_count == 0) {
-        await db.con().query(`SELECT count(*) as count FROM tickets WHERE ${type} = '${id}' AND ${searchField} = '${searchStr}';`, function(err, resp) {
-          search_total_row_count = resp[0].count;
-          searchTickets(search_total_row_count, type, id, searchField, searchStr, data, res);
-        })
-      } else {
-        searchTickets(search_total_row_count, type, id, searchField, searchStr, data, res);
-      }
-  })
+    await db.con().query(`SELECT count(*) as count FROM tickets WHERE ${type} = '${id}' AND ${searchField} = '${searchStr}';`, function(err, resp) {
+      search_total_row_count = resp[0].count;
+      searchTickets(search_total_row_count, type, id, searchField, searchStr, data, res);
+    });
+  });
 }
 
 var searchTickets = async(row_count, type, id, searchField, searchStr, data, res) => {
