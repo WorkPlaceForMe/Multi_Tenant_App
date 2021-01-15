@@ -15,7 +15,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'ngx-queue',
   templateUrl: './queue.component.html',
-  styleUrls: ['./queue.component.scss', '../smart-table.scss']
+  styleUrls: ['./queue.component.scss', '../smart-table.scss'],
 })
 export class QueueComponent implements OnInit, OnDestroy {
 
@@ -25,7 +25,7 @@ export class QueueComponent implements OnInit, OnDestroy {
   player: any;
   now_user: Account;
 
-  @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef; 
+  @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef;
 
   constructor(
     private serv: AnalyticsService,
@@ -33,92 +33,88 @@ export class QueueComponent implements OnInit, OnDestroy {
     private face: FacesService,
     public datepipe: DatePipe,
     private route: Router,
-    private http: HttpClient
+    private http: HttpClient,
   ) { }
   source: ServerDataSource;
 
   ngOnDestroy(){
-    if(this.player != undefined){
-      this.player.destroy()
+    if (this.player !== undefined){
+      this.player.destroy();
       this.face.cameraStop({id: this.camera}).subscribe(
-        res =>{
+        res => {
         },
-        err=> console.error(err)
-      )
+        err => console.error(err),
+      );
     }
   }
 
-  @ViewChild("videoPlayer", { static: false }) videoplayer: ElementRef;
+  @ViewChild('videoPlayer', { static: false }) videoplayer: ElementRef;
   isPlay: boolean = false;
   toggleVideo(event: any) {
     this.videoplayer.nativeElement.play();
   }
-  videoFile:string = "";
-  pass(vid:string){
-    this.videoplayer.nativeElement.src = vid    
+  videoFile: string = '';
+  pass(vid: string){
+    this.videoplayer.nativeElement.src = vid;
     this.videoplayer.nativeElement.load();
     this.videoplayer.nativeElement.play();
 
   }
-  video:boolean = false;
+  video: boolean = false;
 
   ngOnInit(): void {
-    this.now_user = JSON.parse(localStorage.getItem('now_user'))
+    this.now_user = JSON.parse(localStorage.getItem('now_user'));
     let type;
-    if(this.now_user.id_branch != '0000'){
+    if (this.now_user.id_branch !== '0000'){
       type = 'cam_id';
     }else{
-      type = 'id_account'
+      type = 'id_account';
     }
-    let l = {
+    const l = {
       start: this.range.start,
       end: this.range.end,
-      type: type
-    }
-    this.source = new ServerDataSource(this.http, {
-      endPoint: `http://localhost:4200/api/analytics/queue/alerts?type=${type}&id=${this.camera}&start=${l.start}&end=${l.end}&_sort=start_time&_order=DESC`,  
-      dataKey: 'data',
-      totalKey: 'total',
-    });  
-    this.face.checkVideo(22,this.camera).subscribe(
-      res=>{
-        this.video = res['video']
-        if(this.video === true){
+      type: type,
+    };
+    this.source = this.serv.queueAlerts(this.camera, l);
+    this.face.checkVideo(22, this.camera).subscribe(
+      res => {
+        this.video = res['video'];
+        if (this.video === true){
           this.settings['columns']['picture'] = {
             title: 'VIDEO',
             type: 'custom',
             filter: false,
             renderComponent: ButtonViewComponent,
-            onComponentInitFunction:(instance) => {
+            onComponentInitFunction: (instance) => {
               instance.save.subscribe((row: string)  => {
-                this.pass(row)
+                this.pass(row);
               });
-            }
-          }
-          this.settings = Object.assign({},this.settings)
+            },
+          };
+          this.settings = Object.assign({}, this.settings);
         }
-      }, err => console.error(err)
-    )
-      this.serv.queue(this.camera,l).subscribe(
-        res=>{
-          this.queue = res['data']
-          console.log(this.queue)
-          for(var m of this.queue.raw){
-            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['picture'])
-            m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['clip_path']
+      }, err => console.error(err),
+    );
+      this.serv.queue(this.camera, l).subscribe(
+        res => {
+          this.queue = res['data'];
+          console.log(this.queue);
+          for (const m of this.queue.raw){
+            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/queue/' + m['cam_id'] + '/' + m['picture']);
+            m['clip_path']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/queue/' + m['cam_id'] + '/' + m['clip_path'];
           }
-          //this.source = this.queue.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
+          // this.source = this.queue.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
 
         },
         err => {
-          console.error(err)
+          console.error(err);
           this.queue = undefined;
-        }
-      )
+        },
+      );
 
   }
   got(id){
-    this.route.navigate([`/pages/tickets`])
+    this.route.navigate([`/pages/tickets`]);
   }
   settings = {
     mode: 'external',
@@ -137,31 +133,31 @@ export class QueueComponent implements OnInit, OnDestroy {
     },
     pager : {
       display : true,
-      perPage:5
+      perPage: 5,
       },
-    noDataMessage: "No data found",
+    noDataMessage: 'No data found',
     columns: {
       picture: {
         title: 'PICTURE',
         type: 'custom',
         filter: false,
         renderComponent: ButtonViewComponentPic,
-        onComponentInitFunction:(instance) => {
+        onComponentInitFunction: (instance) => {
           instance.save.subscribe((row: string)  => {
-            this.pass(row)
+            this.pass(row);
           });
-        }
+        },
       },
       track_id: {
         title: 'QUEUE NO.',
         type: 'number',
-        filter: false
+        filter: false,
       },
       wait: {
         title: 'WAIT TIME',
         type: 'string',
-        filter: false
-      }
+        filter: false,
+      },
     },
   };
 
@@ -191,7 +187,7 @@ export class ButtonViewComponent implements ViewCell, OnInit {
   @Output() save: EventEmitter<any> = new EventEmitter();
 
   openVideo(){
-    this.save.emit(this.rowData.clip_path)
+    this.save.emit(this.rowData.clip_path);
   }
 
   ngOnInit() {

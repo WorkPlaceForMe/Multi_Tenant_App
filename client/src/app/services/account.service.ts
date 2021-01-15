@@ -53,8 +53,7 @@ API_URI = api;
   searchTickets(some: any) {
     // return this.http.post(`${this.API_URI}/ticket/all`, some);
     return new ServerDataSource(this.http, {
-      endPoint: `${this.API_URI}/ticket/search/all?type=${some.type}&id=${some.id}&_sort=createdAt
-      &_order=DESC&searchField=${some.searchField}&searchStr=${some.searchStr}`,
+      endPoint: `${this.API_URI}/ticket/search/all?type=${some.type}&id=${some.id}&_sort=createdAt&_order=DESC&searchField=${some.searchField}&searchStr=${some.searchStr}`,
       dataKey: 'data',
       totalKey: 'total',
     });

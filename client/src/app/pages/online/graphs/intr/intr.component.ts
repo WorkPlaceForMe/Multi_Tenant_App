@@ -15,7 +15,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'ngx-intr',
   templateUrl: './intr.component.html',
-  styleUrls: ['./intr.component.scss', '../smart-table.scss']
+  styleUrls: ['./intr.component.scss', '../smart-table.scss'],
 })
 export class IntrComponent implements OnInit, OnDestroy {
 
@@ -30,7 +30,7 @@ export class IntrComponent implements OnInit, OnDestroy {
   optionsL: any;
   options: any;
 
-  @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef; 
+  @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef;
 
   constructor(
     private serv: AnalyticsService,
@@ -39,98 +39,94 @@ export class IntrComponent implements OnInit, OnDestroy {
     private face: FacesService,
     public datepipe: DatePipe,
     private route: Router,
-    private http: HttpClient
+    private http: HttpClient,
   ) { }
   single: any;
   colorScheme: any;
 
   ngOnDestroy(){
-    if(this.player != undefined){
-      this.player.destroy()
+    if(this.player !== undefined){
+      this.player.destroy();
       this.face.cameraStop({id: this.camera}).subscribe(
-        res =>{
+        res => {
         },
-        err=> console.error(err)
-      )
+        err => console.error(err),
+      );
     }
   }
 
-  @ViewChild("videoPlayer", { static: false }) videoplayer: ElementRef;
+  @ViewChild('videoPlayer', { static: false }) videoplayer: ElementRef;
   isPlay: boolean = false;
   toggleVideo(event: any) {
     this.videoplayer.nativeElement.play();
   }
-  videoFile:string = "";
-  pass(vid:string){
-    this.videoplayer.nativeElement.src = vid    
+  videoFile: string = '';
+  pass(vid: string){
+    this.videoplayer.nativeElement.src = vid;
     this.videoplayer.nativeElement.load();
     this.videoplayer.nativeElement.play();
 
   }
 
-  video:boolean = false;
+  video: boolean = false;
 
   ngOnInit(): void {
-    this.now_user = JSON.parse(localStorage.getItem('now_user'))
-    var time = new Date();
-    this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0,3);
+    this.now_user = JSON.parse(localStorage.getItem('now_user'));
+    const time = new Date();
+    this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0, 3);
     this.timezone = parseInt(this.timezone) * 2;
-    let p = ''
-    if(this.timezone > 0){
-      p = '+'
+    let p = '';
+    if (this.timezone > 0){
+      p = '+';
     }
     this.timezone = p + JSON.stringify(this.timezone) + '00';
     let type;
-    if(this.now_user.id_branch != '0000'){
+    if (this.now_user.id_branch !== '0000'){
       type = 'cam_id';
     }else{
-      type = 'id_account'
+      type = 'id_account';
     }
-    let l = {
+    const l = {
       start: this.range.start,
       end: this.range.end,
-      type: type
-    }
-    this.source = new ServerDataSource(this.http, {
-      endPoint: `http://localhost:4200/api/analytics/intrude/alerts?type=${type}&id=${this.camera}&start=${l.start}&end=${l.end}&_sort=time&_order=DESC`,  
-      dataKey: 'data',
-      totalKey: 'total',
-    });  
-    this.face.checkVideo(17,this.camera).subscribe(
-      res=>{
-        this.video = res['video']
-        if(this.video === true){
+      type: type,
+    };
+    this.source = this.serv.intrudeAlerts(this.camera, l);
+    this.face.checkVideo(17, this.camera).subscribe(
+      res => {
+        this.video = res['video'];
+        if (this.video === true){
           this.settings['columns']['picture'] = {
             title: 'VIDEO',
             type: 'custom',
             filter: false,
             renderComponent: ButtonViewComponent,
-            onComponentInitFunction:(instance) => {
+            onComponentInitFunction: (instance) => {
               instance.save.subscribe((row: string)  => {
-                this.pass(row)
+                this.pass(row);
               });
-            }
-          }
-          this.settings = Object.assign({},this.settings)
+            },
+          };
+          this.settings = Object.assign({}, this.settings);
         }
-      }, err => console.error(err)
-    )
-      this.serv.intrude(this.camera,l).subscribe(
-        res=>{
-          this.intrude = res['data']
-          for(var m of this.intrude.raw){
-            m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/intrusion/' + m['cam_id'] + '/' + m['clip_path']
-            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/intrusion/' + m['cam_id'] + '/' + m['picture'])
-            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
+      }, err => console.error(err),
+    );
+      this.serv.intrude(this.camera, l).subscribe(
+        res => {
+          this.intrude = res['data'];
+          for (const m of this.intrude.raw){
+            m['clip_path']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/intrusion/' + m['cam_id'] + '/' + m['clip_path'];
+            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/intrusion/' + m['cam_id'] + '/' + m['picture']);
+            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone);
           }
-          //this.source = this.intrude.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
-          if(this.intrude.donut.length != 0){
+          // this.source = this.intrude.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
+          if (this.intrude.donut.length !== 0){
             this.source2 = this.intrude.donut;
 
-          let labels = []
-          for(var o of Object.keys(this.intrude.over)){
-            o = o + ':00:00'
-            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm', this.timezone))
+          const labels = [];
+          for (let o of Object.keys(this.intrude.over)){
+            o = o + ':00:00';
+            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm', this.timezone));
           }
 
             this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
@@ -148,7 +144,7 @@ export class IntrComponent implements OnInit, OnDestroy {
                 borderColor: colors.primary,
               }],
             };
-      
+
             this.optionsL = {
               responsive: true,
               maintainAspectRatio: false,
@@ -197,7 +193,7 @@ export class IntrComponent implements OnInit, OnDestroy {
                 ],
               },
             };
-        
+
               this.options = {
                 backgroundColor: echarts.bg,
                 color: [colors.warningLight, colors.infoLight, colors.dangerLight, colors.successLight, colors.primaryLight],
@@ -247,14 +243,14 @@ export class IntrComponent implements OnInit, OnDestroy {
             });
         }
         },
-        err => console.error(err)
-      )
+        err => console.error(err),
+      );
   }
 
   source: ServerDataSource;
-  source2:any = new LocalDataSource();
+  source2: any = new LocalDataSource();
   got(id){
-    this.route.navigate([`/pages/tickets`])
+    this.route.navigate([`/pages/tickets`]);
     // this.route.navigate([`/pages/tickets/view/${id.data.id}`], {queryParams: id.data})
 }
 
@@ -275,36 +271,36 @@ export class IntrComponent implements OnInit, OnDestroy {
     },
     pager : {
       display : true,
-      perPage:5
+      perPage: 5,
       },
-    noDataMessage: "No data found",
+    noDataMessage: 'No data found',
     columns: {
       picture: {
         title: 'PICTURE',
         type: 'custom',
         filter: false,
         renderComponent: ButtonViewComponentPic,
-        onComponentInitFunction:(instance) => {
+        onComponentInitFunction: (instance) => {
           instance.save.subscribe((row: string)  => {
             // this.pass(row)
           });
-        }
+        },
       },
       time: {
         title: 'TIME',
         type: 'string',
-        filter: false
+        filter: false,
       },
       camera_name: {
         title: 'CAM',
         type: 'string',
-        filter: false
+        filter: false,
       },
       zone: {
         title: 'ZONE',
         type: 'string',
-        filter: false
-      }
+        filter: false,
+      },
     },
   };
 
@@ -318,25 +314,25 @@ export class IntrComponent implements OnInit, OnDestroy {
     },
     pager : {
       display : true,
-      perPage:5
+      perPage: 5,
       },
-    noDataMessage: "No data found",
+    noDataMessage: 'No data found',
     columns: {
       name: {
         title: 'ZONE',
         type: 'string',
-        filter: false
+        filter: false,
       },
       value: {
         title: 'TOTAL',
         type: 'string',
-        filter: false
+        filter: false,
       },
       perc: {
         title: 'PERCENTAGE',
         type: 'string',
-        filter: false
-      }
+        filter: false,
+      },
     },
   };
 
@@ -368,7 +364,7 @@ export class ButtonViewComponent implements ViewCell, OnInit {
   @Output() save: EventEmitter<any> = new EventEmitter();
 
   openVideo(){
-    this.save.emit(this.rowData.clip_path)
+    this.save.emit(this.rowData.clip_path);
   }
 
   ngOnInit() {
