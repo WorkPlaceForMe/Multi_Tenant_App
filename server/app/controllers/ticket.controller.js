@@ -1,7 +1,6 @@
 require('dotenv').config({ path: '../../config.env'});
 var jwt = require("jsonwebtoken");
-const { con } = require('../models/dbmysql');
-var db=require('../models/dbmysql');
+var db = require('../models/dbmysql');
 const dateFormat = require('dateformat');
 
 exports.getAll = (req, res) =>{
