@@ -27,6 +27,9 @@ var getAllTickets = async(row_count, type, id, data, res) => {
     result.forEach(element => {
       element.createdAt = dateFormat(element.createdAt, 'yyyy-mm-dd HH:MM:ss');
       element.updatedAt = dateFormat(element.updatedAt, 'yyyy-mm-dd HH:MM:ss');
+      if(element.createdAt === element.updatedAt) {
+        element.updatedAt = '';
+      }
       switch(element['type']){
         case 'loitering':{
           element['type'] = 'Loitering Detection';
@@ -80,6 +83,9 @@ var searchTickets = async(row_count, type, id, searchField, searchStr, data, res
     result.forEach(element => {
       element.createdAt = dateFormat(element.createdAt, 'yyyy-mm-dd HH:MM:ss');
       element.updatedAt = dateFormat(element.updatedAt, 'yyyy-mm-dd HH:MM:ss');
+      if(element.createdAt === element.updatedAt) {
+        element.updatedAt = '';
+      }
       switch(element['type']){
         case 'loitering':{
           element['type'] = 'Loitering Detection';
