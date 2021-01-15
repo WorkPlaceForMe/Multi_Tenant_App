@@ -83,7 +83,7 @@ export class TicketComponent implements OnInit, OnDestroy {
     st0: 0,  // st0 - Total Alerts remaining
     st1: 0,  // st1 - Total Alerts solved
     l0: 0,   // l0 - low level alerts
-    l0r: 0,   // l0r - low level alerts remaining
+    l0r: 0,  // l0r - low level alerts remaining
     l1: 0,   // l1 - Medium level
     l1r: 0,  // l1r - Medium rem
     l2: 0,   // l2 - high level
