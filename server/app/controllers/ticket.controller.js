@@ -4,6 +4,17 @@ const { con } = require('../models/dbmysql');
 var db=require('../models/dbmysql');
 const dateFormat = require('dateformat');
 
+let count = {
+  st0: 0,  // st0 - Total Alerts remaining
+  st1: 0,  // st1 - Total Alerts solved
+  l0: 0,   // l0 - low level alerts
+  l0r: 0,  // l0r - low level alerts remaining
+  l1: 0,   // l1 - Medium level
+  l1r: 0,  // l1r - Medium rem
+  l2: 0,   // l2 - high level
+  l2r: 0,
+};
+
 exports.getAll = (req, res) =>{
     const data = req.query;
     let token = req.headers["x-access-token"];
@@ -103,6 +114,70 @@ var searchTickets = async(row_count, type, id, searchField, searchStr, data, res
       }
     })
     res.status(200).json({success: true, data: result, total: row_count});
+  });
+}
+
+exports.alertsOverview = async(req, res) => {
+  const data = req.query;
+  let token = req.headers["x-access-token"];
+  let id = Array.isArray(data.id) ? data.id[data.id.length-1] : data.id;
+  let type = Array.isArray(data.type) ? data.type[data.type.length-1] : data.type;
+  jwt.verify(token, process.env.secret, async(err, decoded) => {
+    let st0 = new Promise((resolve, reject) => {
+      db.con().query(`select count(*) as count from tickets where ${type} = '${id}' and createdAt = updatedAt;`, (err, resp) => {
+        resolve(resp[0].count);
+      });
+    });
+    let st1 = new Promise((resolve, reject) => {
+      db.con().query(`select count(*) as count from tickets where ${type} = '${id}' and createdAt != updatedAt;`, (err, resp) => {
+        resolve(resp[0].count);
+      });
+    });
+    let l0 = new Promise((resolve, reject) => {
+      db.con().query(`select count(*) as count from tickets where ${type} = '${id}' and level=0;`, (err, resp) => {
+        resolve(resp[0].count);
+      });
+    });
+    let l1 = new Promise((resolve, reject) => {
+      db.con().query(`select count(*) as count from tickets where ${type} = '${id}' and level=1;`, (err, resp) => {
+        resolve(resp[0].count);
+      });
+    });
+    let l2 = new Promise((resolve, reject) => {
+      db.con().query(`select count(*) as count from tickets where ${type} = '${id}' and level=2;`, (err, resp) => {
+        resolve(resp[0].count);
+      });
+    });
+    let l0r = new Promise((resolve, reject) => {
+      db.con().query(`select count(*) as count from tickets where ${type} = '${id}' and createdAt = updatedAt and level=0;`, (err, resp) => {
+        resolve(resp[0].count);
+      });
+    });
+    let l1r = new Promise((resolve, reject) => {
+      db.con().query(`select count(*) as count from tickets where ${type} = '${id}' and createdAt = updatedAt and level=1;`, (err, resp) => {
+        resolve(resp[0].count);
+      });
+    });
+    let l2r = new Promise((resolve, reject) => {
+      db.con().query(`select count(*) as count from tickets where ${type} = '${id}' and createdAt = updatedAt and level=2;`, (err, resp) => {
+        resolve(resp[0].count);
+      });
+    });
+    Promise.all([st0, st1, l0, l1, l2, l0r, l1r, l2r])
+    .then(values => {
+      count.st0 = values[0];
+      count.st1 = values[1];
+      count.l0 = values[2];
+      count.l1 = values[3];
+      count.l2 = values[4];
+      count.l0r = values[5];
+      count.l1r = values[6];
+      count.l2r = values[7];
+      res.status(200).json({success: true, data:count});
+    })
+    .catch(error => {
+      throw error;
+    });
   });
 }
 

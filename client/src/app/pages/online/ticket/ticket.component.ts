@@ -69,6 +69,7 @@ export class TicketComponent implements OnInit, OnDestroy {
       };
     }
     this.getTickets();
+    this.alertsOverview();
   }
 
   a: object = {};
@@ -209,6 +210,12 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   getTickets() {
     this.source = this.accountserv.tickets(this.a);
+  }
+
+  alertsOverview() {
+    this.accountserv.alertsOverview(this.a).subscribe(res => {
+      this.count = res['data'];
+    });
   }
 
   /* getTickets() {
