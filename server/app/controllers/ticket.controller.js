@@ -20,10 +20,50 @@ exports.getAll = (req, res) =>{
     let token = req.headers["x-access-token"];
     let id = Array.isArray(data.id) ? data.id[data.id.length-1] : data.id;
     let type = Array.isArray(data.type) ? data.type[data.type.length-1] : data.type;
+    let page = parseInt(data._page);
+    let limit = parseInt(data._limit);
+    let offset = (page-1) * limit;
+    let _sort = Array.isArray(data._sort) ? data._sort[data._sort.length-1] : data._sort;
+    let _order = Array.isArray(data._order) ? data._order[data._order.length-1] : data._order;
+
     jwt.verify(token, process.env.secret, async(err, decoded) => {
-      await db.con().query(`SELECT count(*) as count FROM tickets WHERE ${type} = '${id}';`, function(err, resp) {
-        total_row_count = resp[0].count;
-        getAllTickets(total_row_count, type, id, data, res);
+      let promise1 = new Promise((resolve, reject) => {
+        db.con().query(`SELECT count(*) as count FROM tickets WHERE ${type} = '${id}';`, (err, resp) => {
+          resolve(resp[0].count);
+        });
+      });
+      let promise2 = new Promise((resolve, reject) => {
+        db.con().query(`SELECT type, createdAt, updatedAt, assigned, level, reviewed, assignedBy FROM tickets WHERE BINARY ${type} = '${id}' ORDER BY ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, (err, resp) => {
+          resolve(resp);
+        });
+      });
+      Promise.all([promise1, promise2])
+      .then(values => {
+        values[1].forEach(element => {
+          element.createdAt = dateFormat(element.createdAt, 'yyyy-mm-dd HH:MM:ss');
+          element.updatedAt = dateFormat(element.updatedAt, 'yyyy-mm-dd HH:MM:ss');
+          if(element.createdAt === element.updatedAt) {
+            element.updatedAt = '';
+          }
+          switch(element['type']){
+            case 'loitering':{
+              element['type'] = 'Loitering Detection';
+              break;
+            }
+            case 'intrusion':{
+              element['type'] = 'Intrusion Detection';
+              break;
+            }
+            case 'aod':{
+              element['type'] = 'Abandoned Object Detection';
+              break;
+            }
+          }
+        })
+        res.status(200).json({success: true, data: values[1], total: values[0]});
+      })
+      .catch(error => {
+        throw error;
       });
     });
 }
@@ -34,7 +74,7 @@ var getAllTickets = async(row_count, type, id, data, res) => {
   let offset = (row_count === (page*limit)) ? (page-1) * limit : (page-1) * limit;
   let _sort = Array.isArray(data._sort) ? data._sort[data._sort.length-1] : data._sort;
   let _order = Array.isArray(data._order) ? data._order[data._order.length-1] : data._order;
-  await db.con().query(`SELECT * FROM tickets WHERE BINARY ${type} = '${id}' ORDER BY ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, function (err, result) {
+  await db.con().query(`SELECT type, createdAt, updatedAt, assigned, level, reviewed, assignedBy FROM tickets WHERE BINARY ${type} = '${id}' ORDER BY ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, function (err, result) {
     if (err) return res.status(500).json({success: false, message: err});
     result.forEach(element => {
       element.createdAt = dateFormat(element.createdAt, 'yyyy-mm-dd HH:MM:ss');
@@ -68,6 +108,11 @@ exports.searchAllTickets = (req, res) => {
   let type = Array.isArray(data.type) ? data.type[data.type.length-1] : data.type;
   let searchStr = Array.isArray(data.searchStr) ? data.searchStr[data.searchStr.length-1] : data.searchStr;
   let searchField = Array.isArray(data.searchField) ? data.searchField[data.searchField.length-1] : data.searchField;
+  let page = parseInt(data._page);
+  let limit = parseInt(data._limit);
+  let offset = (page-1) * limit;
+  let _sort = Array.isArray(data._sort) ? data._sort[data._sort.length-1] : data._sort;
+  let _order = Array.isArray(data._order) ? data._order[data._order.length-1] : data._order;
   if(searchStr === 'Loitering Detection') {
     searchStr = 'loitering';
   } else if(searchStr === 'Intrusion Detection') {
@@ -76,9 +121,47 @@ exports.searchAllTickets = (req, res) => {
     searchStr = 'aod';
   }
   jwt.verify(token, process.env.secret, async(err, decoded) => {
-    await db.con().query(`SELECT count(*) as count FROM tickets WHERE ${type} = '${id}' AND ${searchField} = '${searchStr}';`, function(err, resp) {
+    /* await db.con().query(`SELECT count(*) as count FROM tickets WHERE ${type} = '${id}' AND ${searchField} = '${searchStr}';`, function(err, resp) {
       search_total_row_count = resp[0].count;
       searchTickets(search_total_row_count, type, id, searchField, searchStr, data, res);
+    }); */
+    let promise1 = new Promise((resolve, reject) => {
+      db.con().query(`SELECT count(*) as count FROM tickets WHERE ${type} = '${id}' AND ${searchField} = '${searchStr}';`, (err, resp) => {
+        resolve(resp[0].count);
+      });
+    });
+    let promise2 = new Promise((resolve, reject) => {
+      db.con().query(`SELECT type, createdAt, updatedAt, assigned, level, reviewed, assignedBy FROM tickets WHERE BINARY ${type} = '${id}' AND ${searchField} = '${searchStr}' ORDER BY ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, (err, resp) => {
+        resolve(resp);
+      });
+    });
+    Promise.all([promise1, promise2])
+    .then(values => {
+      values[1].forEach(element => {
+        element.createdAt = dateFormat(element.createdAt, 'yyyy-mm-dd HH:MM:ss');
+        element.updatedAt = dateFormat(element.updatedAt, 'yyyy-mm-dd HH:MM:ss');
+        if(element.createdAt === element.updatedAt) {
+          element.updatedAt = '';
+        }
+        switch(element['type']){
+          case 'loitering':{
+            element['type'] = 'Loitering Detection';
+            break;
+          }
+          case 'intrusion':{
+            element['type'] = 'Intrusion Detection';
+            break;
+          }
+          case 'aod':{
+            element['type'] = 'Abandoned Object Detection';
+            break;
+          }
+        }
+      })
+      res.status(200).json({success: true, data: values[1], total: values[0]});
+    })
+    .catch(error => {
+      throw error;
     });
   });
 }
