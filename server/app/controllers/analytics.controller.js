@@ -117,7 +117,7 @@ exports.loiteringAlerts = async(req, res) => {
     let limit = parseInt(data._limit);
     let _sort = Array.isArray(data._sort) ? data._sort[data._sort.length-1] : data._sort;
     let _order = Array.isArray(data._order) ? data._order[data._order.length-1] : data._order;
-    console.log('...................',type , id , dateFormat(start, 'isoUtcDateTime') , dateFormat(end, 'isoUtcDateTime'));
+    let offset = (page-1) * limit;
     jwt.verify(token, process.env.secret, async (err, decoded) => {
       let wh;
       if(decoded.id_branch != 0000){
@@ -128,41 +128,24 @@ exports.loiteringAlerts = async(req, res) => {
       Relation.findOne({
         where: wh
       }).then(async rel => {
-        
-      await db.con().query(`SELECT count(*) as count from loitering WHERE ${type} = '${id}' and time >= '${dateFormat(start, 'isoUtcDateTime')}' and  time <= '${dateFormat(end, 'isoUtcDateTime')}';`, async function(err, resp) {
-        console.log('resp.........', resp);
-        let row_count = resp[0].count;
-        let offset = (row_count === (page*limit)) ? (page-1) * limit : (page-1) * limit;
-        console.log('offset : ', offset); 
-        await db.con().query(`SELECT * from loitering WHERE ${type} = '${id}' and time >= '${dateFormat(start, 'isoUtcDateTime')}' and  time <= '${dateFormat(end, 'isoUtcDateTime')}' order by ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, function (err, result) {
+        let promise1 = new Promise((resolve, reject) => {
+          db.con().query(`SELECT count(*) as count from loitering WHERE ${type} = '${id}' and time >= '${dateFormat(start, 'isoUtcDateTime')}' and  time <= '${dateFormat(end, 'isoUtcDateTime')}';`, (err, resp) => {
+            resolve(resp[0].count);
+          });
+        });
+        let promise2 = new Promise((resolve, reject) => {
+          db.con().query(`SELECT id, time, dwell, camera_name, track_id from loitering WHERE binary ${type} = '${id}' and time >= '${dateFormat(start, 'isoUtcDateTime')}' and  time <= '${dateFormat(end, 'isoUtcDateTime')}' order by ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, (err, resp) => {
+            resolve(resp);
+          });
+        });
+        Promise.all([promise1, promise2])
+        .then(values => {
           if (err) return res.status(500).json({success: false, message: err});
-          let days = Math.round((new Date(data.end) - new Date(data.start))/(1000 * 60 * 60 * 24));
-          let avg = 0;
-          let min = 0;
-          let max = 0;
-          var ress = {};
-          var dwell = []
-          var labelsD = []
-          result.forEach(function(v) {
-            ress[v.time.getHours()] = (ress[v.time.getHours()] || 0) + 1;
-              dwell.push(v.dwell)
-              labelsD.push(v.time)
-              avg = avg + v.dwell;
-              if(min == 0){
-                min = v.dwell
-              }else if(v.dwell < min){
-                min = v.dwell
-              }
-              if(max == 0){
-                max = v.dwell
-              }else if(v.dwell > max){
-                max = v.dwell
-              }
-              let d = v.time
-              let se = d.getSeconds()
-              let mi = d.getMinutes()
-              let ho = d.getHours()
-              v.time = dateFormat(v.time, 'yyyy-mm-dd HH:MM:ss');
+          values[1].forEach(function(v) {
+              let d = v.time;
+              let se = d.getSeconds();
+              let mi = d.getMinutes();
+              let ho = d.getHours();
               if(se < 10){
                 se = '0' + se;
               }
@@ -196,30 +179,19 @@ exports.loiteringAlerts = async(req, res) => {
               v['severity'] = l;
               v['alert'] = r;
               v['clip_path'] = `${d}_${v.track_id}.mp4`;
-          })
-          avg = Math.round((avg/ result.length) * 100) / 100;
-          let av = result.length/(24 * days)
-          let a = {
-              total: result.length,
-              avgH: Math.round(av * 100) / 100,
-              avgS: Math.round((av/(60*60))* 100) /100,
-              raw: result,
-              dwell: dwell,
-              labelsD: labelsD,
-              histogram: ress,
-              min: min,
-              max: max,
-              avg: avg
-          }
-          res.status(200).json({success: true, data: a.raw, total: row_count})
+              v['time'] = dateFormat(v.time, 'yyyy-mm-dd HH:MM:ss');
+          });
+          res.status(200).json({success: true, data: values[1], total: values[0]})
+        })
+        .catch(error => {
+          throw error;
         });
-      })
+    });
     }).catch(
         err=>{
             return res.status(500).send({ success: false, message: err });
         }
     )
-  })
 }
 
 exports.intrude = async (req, res) =>{
@@ -986,9 +958,7 @@ exports.queue = async (req, res) =>{
 }
 
 exports.queueAlerts = async(req, res) => {
-  let token = req.headers["x-access-token"];
   const data = req.query;
-  console.log('data...................', data)
   let id = Array.isArray(data.id) ? data.id[data.id.length-1] : data.id;
   let type = Array.isArray(data.type) ? data.type[data.type.length-1] : data.type;
   let start = Array.isArray(data.start) ? data.start[data.start.length-1] : data.start;
@@ -997,8 +967,49 @@ exports.queueAlerts = async(req, res) => {
   let limit = parseInt(data._limit);
   let _sort = Array.isArray(data._sort) ? data._sort[data._sort.length-1] : data._sort;
   let _order = Array.isArray(data._order) ? data._order[data._order.length-1] : data._order;
-  console.log('...................',type , id , dateFormat(start, 'isoUtcDateTime') , dateFormat(end, 'isoUtcDateTime'));
-  await db.con().query(`SELECT count(*) as count from queue_mgt WHERE ${type} = '${id}' and start_time >= '${dateFormat(start, 'isoUtcDateTime')}' and  start_time <= '${dateFormat(end, 'isoUtcDateTime')}';`, async(err, resp) => {
+  let offset = (page-1) * limit;
+  let promise1 = new Promise((resolve, reject) => {
+    db.con().query(`SELECT count(*) as count from queue_mgt WHERE ${type} = '${id}' and start_time >= '${dateFormat(start, 'isoUtcDateTime')}' and  start_time <= '${dateFormat(end, 'isoUtcDateTime')}';`, (err, resp) => {
+      resolve(resp[0].count);
+    });
+  });
+  let promise2 = new Promise((resolve, reject) => {
+    db.con().query(`SELECT track_id, start_time, queuing, end_time from queue_mgt WHERE ${type} = '${id}' and start_time >= '${dateFormat(start, 'isoUtcDateTime')}' and  start_time <= '${dateFormat(end, 'isoUtcDateTime')}' order by ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, (err, resp) => {
+      resolve(resp);
+    });
+  });
+  Promise.all([promise1, promise2])
+  .then(values => {
+    console.log('values***************', values);
+    for(var v of values[1]){
+      if(v.queuing != 1){
+        v['wait'] = (v.end_time - v.start_time)/1000;
+        v['wait'] = display(v['wait'])
+      }
+      let d = v.start_time
+      let se = d.getSeconds()
+      let mi = d.getMinutes()
+      let ho = d.getHours()
+      if(se < 10){
+        se = '0' + se;
+      }
+      if(mi < 10){
+        mi = '0' + mi;
+      }
+      if(ho < 10){
+        ho = '0' + ho;
+      }
+      d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
+      v['picture'] = `${d}_${v.track_id}.jpg`;
+      v['clip_path'] = `${d}_${v.track_id}.mp4`;
+    }
+    res.status(200).json({success: true, data: values[1], total: values[0]})
+  })
+  .catch(error => {
+    console.log(error)
+    throw error;
+  });
+  /* await db.con().query(`SELECT count(*) as count from queue_mgt WHERE ${type} = '${id}' and start_time >= '${dateFormat(start, 'isoUtcDateTime')}' and  start_time <= '${dateFormat(end, 'isoUtcDateTime')}';`, async(err, resp) => {
     console.log('resp : ', resp);
     let row_count = resp[0].count;
     console.log('row_count : ', row_count);
@@ -1064,7 +1075,7 @@ exports.queueAlerts = async(req, res) => {
       }
       res.status(200).json({success: true, data: a.raw, total: row_count})
     });
-  })
+  }) */
 }
 
 exports.queueLite = async (req, res) =>{
