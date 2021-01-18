@@ -11,51 +11,51 @@ const path = process.env.home + process.env.username + process.env.pathDocker + 
 const Op = db.Sequelize.Op;
 
 exports.signupClient = (req, res) => {
-  // Save User to Database
-  var branch = '0000'
-  let id = uuidv4()
-  if(req.body.unique == true){
-    branch = id;
-  }
-  User.create({
-    id: id,
-    username: req.body.username,
-    email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 12),
-    id_account: id,
-    id_branch: branch,
-    cameras: req.body.cameras,
-    analytics: req.body.analytics,
-    role: 'client',
-    disabled : '0'
-  })
-    .then(user => {
-      if (req.body.algorithm) {
-        Algorithm.findAll({
-          where: {
-            name: {
-              [Op.or]: req.body.algorithm
-            }
-          }
-        }).then(roles => {
-          user.setAlgorithms(roles).then(() => {
-            const pathPic = `${path}/${user.id_account}`
-            if (!fs.existsSync(pathPic)){
-              fs.mkdirSync(pathPic);
-          }
-          if(req.body.unique == true){
-            const pathBranch = `${pathPic}/${branch}`
-              fs.mkdirSync(pathBranch);
-              fs.mkdirSync(`${pathBranch}/pictures`);
-              fs.mkdirSync(`${pathBranch}/heatmap_pics`);
-          }
-              res.status(201).send({ message: "User was registered successfully!" });
-          });
-        });
-      } 
+    // Save User to Database
+    var branch = '0000'
+    let id = uuidv4()
+    if(req.body.unique == true){
+      branch = id;
+    }
+    User.create({
+      id: id,
+      username: req.body.username,
+      email: req.body.email,
+      password: bcrypt.hashSync(req.body.password, 12),
+      id_account: id,
+      id_branch: branch,
+      cameras: req.body.cameras,
+      analytics: req.body.analytics,
+      role: 'client',
+      disabled : '0'
     })
-    .catch(err => {
-      res.status(500).send({ message: err.message });
+      .then(user => {
+        if (req.body.algorithm) {
+          Algorithm.findAll({
+            where: {
+              name: {
+                [Op.or]: req.body.algorithm
+              }
+            }
+          }).then(roles => {
+            user.setAlgorithms(roles).then(() => {
+              const pathPic = `${path}${user.id_account}`
+              if (!fs.existsSync(pathPic)){
+                fs.mkdirSync(pathPic);
+            }
+            if(req.body.unique == true){
+              const pathBranch = `${pathPic}/${branch}`
+                fs.mkdirSync(pathBranch);
+                fs.mkdirSync(`${pathBranch}/pictures`);
+                fs.mkdirSync(`${pathBranch}/heatmap_pics`);
+            }
+                res.status(201).send({ message: "User was registered successfully!" });
+            });
+          });
+        } 
+      })
+      .catch(err => {
+        res.status(500).send({ message: err.message });
     });
 };
 
@@ -191,7 +191,6 @@ exports.signin = (req, res) => {
       });
     })
     .catch(err => {
-      console.error(err)
       res.status(500).send({success: false, message: err.message });
     });
 };
