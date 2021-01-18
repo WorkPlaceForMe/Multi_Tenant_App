@@ -560,7 +560,7 @@ exports.pc = async (req, res) =>{
         totalEx = result[result.length - 1]['count1']
       }      
       if(ins < 0){
-        ins = 0;
+        ins = JSON.stringify(ins * -1) + ' exiting' ;
       }
       let a = {
           totalEn: totalEn,
