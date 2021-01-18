@@ -281,6 +281,30 @@ module.exports = function(app) {
   *    responses:
   *      '200':
   *        description: "A successful response"
+  *        content:
+  *          application/json:
+  *            schema:
+  *             type: object
+  *             properties:
+  *               success:
+  *                 description: "Result type"
+  *                 type: boolean
+  *                 example: true
+  *               data:
+  *                 type: object
+  *                 properties:
+  *                   total:
+  *                     description: "Total alerts"
+  *                     type: number
+  *                     example: 156
+  *                   raw:
+  *                     description: "Raw data from MySQL."
+  *                     type: array
+  *                     example: []                         
+  *                   over:
+  *                     description: "Over time data graph"
+  *                     type: object
+  *                     example: {}
   *      '500':
   *        description: "Server error"
   *        content:
@@ -344,6 +368,30 @@ module.exports = function(app) {
   *    responses:
   *      '200':
   *        description: "A successful response"
+  *        content:
+  *          application/json:
+  *            schema:
+  *             type: object
+  *             properties:
+  *               success:
+  *                 description: "Result type"
+  *                 type: boolean
+  *                 example: true
+  *               data:
+  *                 type: object
+  *                 properties:
+  *                   total:
+  *                     description: "Total alerts"
+  *                     type: number
+  *                     example: 156
+  *                   raw:
+  *                     description: "Raw data from MySQL."
+  *                     type: array
+  *                     example: []                         
+  *                   over:
+  *                     description: "Over time data graph"
+  *                     type: object
+  *                     example: {}
   *      '500':
   *        description: "Server error"
   *        content:
@@ -406,6 +454,30 @@ module.exports = function(app) {
   *    responses:
   *      '200':
   *        description: "A successful response"
+  *        content:
+  *          application/json:
+  *            schema:
+  *             type: object
+  *             properties:
+  *               success:
+  *                 description: "Result type"
+  *                 type: boolean
+  *                 example: true
+  *               data:
+  *                 type: object
+  *                 properties:
+  *                   total:
+  *                     description: "Total alerts"
+  *                     type: number
+  *                     example: 156
+  *                   raw:
+  *                     description: "Raw data from MySQL."
+  *                     type: array
+  *                     example: []                         
+  *                   over:
+  *                     description: "Over time data graph"
+  *                     type: object
+  *                     example: {}
   *      '500':
   *        description: "Server error"
   *        content:
@@ -469,6 +541,34 @@ module.exports = function(app) {
   *    responses:
   *      '200':
   *        description: "A successful response"
+  *        content:
+  *          application/json:
+  *            schema:
+  *             type: object
+  *             properties:
+  *               success:
+  *                 description: "Result type"
+  *                 type: boolean
+  *                 example: true
+  *               data:
+  *                 type: object
+  *                 properties:
+  *                   total:
+  *                     description: "Total alerts"
+  *                     type: number
+  *                     example: 156
+  *                   raw:
+  *                     description: "Raw data from MySQL."
+  *                     type: array
+  *                     example: []   
+  *                   types:
+  *                     description: "Object of the result level count."
+  *                     type: object
+  *                     example: {}                 
+  *                   over:
+  *                     description: "Over time data graph"
+  *                     type: object
+  *                     example: {}
   *      '500':
   *        description: "Server error"
   *        content:
@@ -532,6 +632,93 @@ module.exports = function(app) {
   *    responses:
   *      '200':
   *        description: "A successful response"
+  *        content:
+  *          application/json:
+  *            schema:
+  *             type: object
+  *             properties:
+  *               success:
+  *                 description: "Result type"
+  *                 type: boolean
+  *                 example: true
+  *               data:
+  *                 type: object
+  *                 properties:
+  *                   totalEn:
+  *                     description: "Total entrance alerts"
+  *                     type: number
+  *                     example: 156
+  *                   totalEx:
+  *                     description: "Total exit alerts"
+  *                     type: number
+  *                     example: 156
+  *                   in:
+  *                     description: "Total people inside"
+  *                     type: number
+  *                     example: 156
+  *                   avg:
+  *                     description: "Avarage values for people inside, getting out and in."
+  *                     type: object
+  *                     properties:
+  *                       in:
+  *                         type: number
+  *                         example: 1
+  *                       en:
+  *                         type: number
+  *                         example: 11
+  *                       ex:
+  *                         type: number
+  *                         example: 10
+  *                   min:
+  *                     description: "Minimun values for people inside, getting out and in."
+  *                     type: object
+  *                     properties:
+  *                       in:
+  *                         type: number
+  *                         example: 1
+  *                       en:
+  *                         type: number
+  *                         example: 11
+  *                       ex:
+  *                         type: number
+  *                         example: 10
+  *                   max:
+  *                     description: "Maximun values for people inside, getting out and in."
+  *                     type: object
+  *                     properties:
+  *                       in:
+  *                         type: number
+  *                         example: 1
+  *                       en:
+  *                         type: number
+  *                         example: 11
+  *                       ex:
+  *                         type: number
+  *                         example: 10
+  *                   histogramEn:
+  *                     description: "Object of the histogram entrance count."
+  *                     type: object
+  *                     example: {}            
+  *                   histogramEx:
+  *                     description: "Object of the histogram exit count."
+  *                     type: object
+  *                     example: {}        
+  *                   label:
+  *                     description: "Labels for graphs."
+  *                     type: object
+  *                     example: {}      
+  *                   dataIn:
+  *                     description: "Data for graphs, inside people."
+  *                     type: array
+  *                     example: []   
+  *                   dataEn:
+  *                     description: "Data for graphs, entry people."
+  *                     type: array
+  *                     example: []   
+  *                   dataEx:
+  *                     description: "Data for graphs, exiting people"
+  *                     type: array
+  *                     example: []   
   *      '500':
   *        description: "Server error"
   *        content:
@@ -595,6 +782,30 @@ module.exports = function(app) {
   *    responses:
   *      '200':
   *        description: "A successful response"
+  *        content:
+  *          application/json:
+  *            schema:
+  *             type: object
+  *             properties:
+  *               success:
+  *                 description: "Result type"
+  *                 type: boolean
+  *                 example: true
+  *               data:
+  *                 type: object
+  *                 properties:
+  *                   total:
+  *                     description: "Total alerts"
+  *                     type: number
+  *                     example: 156
+  *                   raw:
+  *                     description: "Raw data from MySQL."
+  *                     type: array
+  *                     example: []                         
+  *                   over:
+  *                     description: "Over time data graph"
+  *                     type: object
+  *                     example: {}
   *      '500':
   *        description: "Server error"
   *        content:
@@ -658,6 +869,38 @@ module.exports = function(app) {
   *    responses:
   *      '200':
   *        description: "A successful response"
+  *        content:
+  *          application/json:
+  *            schema:
+  *             type: object
+  *             properties:
+  *               success:
+  *                 description: "Result type"
+  *                 type: boolean
+  *                 example: true
+  *               data:
+  *                 type: object
+  *                 properties:
+  *                   raw:
+  *                     description: "Raw data from MySQL."
+  *                     type: array
+  *                     example: []                         
+  *                   count:
+  *                     description: "Count queueing"
+  *                     type: number
+  *                     example: 12
+  *                   avg:
+  *                     description: "Avarage time of wait."
+  *                     type: number
+  *                     example: 00:01:02
+  *                   min:
+  *                     description: "Minimun time of wait."
+  *                     type: number
+  *                     example: 00:00:30
+  *                   max:
+  *                     description: "Maximun time of wait."
+  *                     type: number
+  *                     example: 00:10:02
   *      '500':
   *        description: "Server error"
   *        content:
@@ -721,6 +964,38 @@ module.exports = function(app) {
   *    responses:
   *      '200':
   *        description: "A successful response"
+  *        content:
+  *          application/json:
+  *            schema:
+  *             type: object
+  *             properties:
+  *               success:
+  *                 description: "Result type"
+  *                 type: boolean
+  *                 example: true
+  *               data:
+  *                 type: object
+  *                 properties:                   
+  *                   total:
+  *                     description: "Total number of alerts."
+  *                     type: number
+  *                     example: 12
+  *                   avg:
+  *                     description: "Avarage alerts per day."
+  *                     type: number
+  *                     example: 00:01:02
+  *                   raw:
+  *                     description: "Raw data from MySQL."
+  *                     type: array
+  *                     example: []
+  *                   org:
+  *                     description: "Values with the duration of the queue."
+  *                     type: array
+  *                     example: []
+  *                   over:
+  *                     description: "Over time data graph"
+  *                     type: object
+  *                     example: {}
   *      '500':
   *        description: "Server error"
   *        content:
@@ -784,6 +1059,26 @@ module.exports = function(app) {
   *    responses:
   *      '200':
   *        description: "A successful response"
+  *        content:
+  *          application/json:
+  *            schema:
+  *             type: object
+  *             properties:
+  *               success:
+  *                 description: "Result type"
+  *                 type: boolean
+  *                 example: true
+  *               data:
+  *                 type: object
+  *                 properties:
+  *                   total:
+  *                     description: "Total alerts"
+  *                     type: number
+  *                     example: 156
+  *                   raw:
+  *                     description: "Raw data from MySQL."
+  *                     type: array
+  *                     example: []                         
   *      '500':
   *        description: "Server error"
   *        content:
@@ -847,6 +1142,26 @@ module.exports = function(app) {
   *    responses:
   *      '200':
   *        description: "A successful response"
+  *        content:
+  *          application/json:
+  *            schema:
+  *             type: object
+  *             properties:
+  *               success:
+  *                 description: "Result type"
+  *                 type: boolean
+  *                 example: true
+  *               data:
+  *                 type: object
+  *                 properties:
+  *                   total:
+  *                     description: "Total alerts"
+  *                     type: number
+  *                     example: 156
+  *                   raw:
+  *                     description: "Raw data from MySQL."
+  *                     type: array
+  *                     example: []                         
   *      '500':
   *        description: "Server error"
   *        content:
@@ -910,6 +1225,26 @@ module.exports = function(app) {
   *    responses:
   *      '200':
   *        description: "A successful response"
+  *        content:
+  *          application/json:
+  *            schema:
+  *             type: object
+  *             properties:
+  *               success:
+  *                 description: "Result type"
+  *                 type: boolean
+  *                 example: true
+  *               data:
+  *                 type: object
+  *                 properties:
+  *                   total:
+  *                     description: "Total alerts"
+  *                     type: number
+  *                     example: 156
+  *                   raw:
+  *                     description: "Raw data from MySQL."
+  *                     type: array
+  *                     example: []                         
   *      '500':
   *        description: "Server error"
   *        content:
@@ -973,6 +1308,93 @@ module.exports = function(app) {
   *    responses:
   *      '200':
   *        description: "A successful response"
+  *        content:
+  *          application/json:
+  *            schema:
+  *             type: object
+  *             properties:
+  *               success:
+  *                 description: "Result type"
+  *                 type: boolean
+  *                 example: true
+  *               data:
+  *                 type: object
+  *                 properties:
+  *                   totalEn:
+  *                     description: "Total entrance alerts"
+  *                     type: number
+  *                     example: 156
+  *                   totalEx:
+  *                     description: "Total exit alerts"
+  *                     type: number
+  *                     example: 156
+  *                   in:
+  *                     description: "Total vehicles inside"
+  *                     type: number
+  *                     example: 156
+  *                   avg:
+  *                     description: "Avarage values for vehicles inside, getting out and in."
+  *                     type: object
+  *                     properties:
+  *                       in:
+  *                         type: number
+  *                         example: 1
+  *                       en:
+  *                         type: number
+  *                         example: 11
+  *                       ex:
+  *                         type: number
+  *                         example: 10
+  *                   min:
+  *                     description: "Minimun values for vehicles inside, getting out and in."
+  *                     type: object
+  *                     properties:
+  *                       in:
+  *                         type: number
+  *                         example: 1
+  *                       en:
+  *                         type: number
+  *                         example: 11
+  *                       ex:
+  *                         type: number
+  *                         example: 10
+  *                   max:
+  *                     description: "Maximun values for vehicles inside, getting out and in."
+  *                     type: object
+  *                     properties:
+  *                       in:
+  *                         type: number
+  *                         example: 1
+  *                       en:
+  *                         type: number
+  *                         example: 11
+  *                       ex:
+  *                         type: number
+  *                         example: 10
+  *                   histogramEn:
+  *                     description: "Object of the histogram entrance count."
+  *                     type: object
+  *                     example: {}            
+  *                   histogramEx:
+  *                     description: "Object of the histogram exit count."
+  *                     type: object
+  *                     example: {}        
+  *                   label:
+  *                     description: "Labels for graphs."
+  *                     type: object
+  *                     example: {}      
+  *                   dataIn:
+  *                     description: "Data for graphs, inside vehicles."
+  *                     type: array
+  *                     example: []   
+  *                   dataEn:
+  *                     description: "Data for graphs, entry vehicles."
+  *                     type: array
+  *                     example: []   
+  *                   dataEx:
+  *                     description: "Data for graphs, exiting vehicles"
+  *                     type: array
+  *                     example: []   
   *      '500':
   *        description: "Server error"
   *        content:
@@ -1036,6 +1458,26 @@ module.exports = function(app) {
   *    responses:
   *      '200':
   *        description: "A successful response"
+  *        content:
+  *          application/json:
+  *            schema:
+  *             type: object
+  *             properties:
+  *               success:
+  *                 description: "Result type"
+  *                 type: boolean
+  *                 example: true
+  *               data:
+  *                 type: object
+  *                 properties:
+  *                   avg:
+  *                     description: "Avarage time in queue."
+  *                     type: number
+  *                     example: 00:01:03
+  *                   count:
+  *                     description: "Quantity of people in queue."
+  *                     type: number
+  *                     example: 12                         
   *      '500':
   *        description: "Server error"
   *        content:
@@ -1099,6 +1541,22 @@ module.exports = function(app) {
   *    responses:
   *      '200':
   *        description: "A successful response"
+  *        content:
+  *          application/json:
+  *            schema:
+  *             type: object
+  *             properties:
+  *               success:
+  *                 description: "Result type"
+  *                 type: boolean
+  *                 example: true
+  *               data:
+  *                 type: object
+  *                 properties:
+  *                   currentCount:
+  *                     description: "Current count of people."
+  *                     type: number
+  *                     example: 13
   *      '500':
   *        description: "Server error"
   *        content:
@@ -1162,6 +1620,34 @@ module.exports = function(app) {
   *    responses:
   *      '200':
   *        description: "A successful response"
+  *        content:
+  *          application/json:
+  *            schema:
+  *             type: object
+  *             properties:
+  *               success:
+  *                 description: "Result type"
+  *                 type: boolean
+  *                 example: true
+  *               data:
+  *                 type: object
+  *                 properties:
+  *                   queue:
+  *                     description: "Data for queue graph."
+  *                     type: object
+  *                     example: {}
+  *                   pcount:
+  *                     description: "Data for people count graph."
+  *                     type: object
+  *                     example: {}
+  *                   loit:
+  *                     description: "Data for loitering graph."
+  *                     type: object
+  *                     example: {}
+  *                   vault:
+  *                     description: "Data for vault graph."
+  *                     type: object
+  *                     example: {}
   *      '500':
   *        description: "Server error"
   *        content:
@@ -1225,6 +1711,42 @@ module.exports = function(app) {
   *    responses:
   *      '200':
   *        description: "A successful response"
+  *        content:
+  *          application/json:
+  *            schema:
+  *             type: object
+  *             properties:
+  *               success:
+  *                 description: "Result type"
+  *                 type: boolean
+  *                 example: true
+  *               data:
+  *                 type: object
+  *                 properties:
+  *                   violence:
+  *                     description: "Data for violence graph."
+  *                     type: object
+  *                     example: {}
+  *                   helmet:
+  *                     description: "Data for helmet graph."
+  *                     type: object
+  *                     example: {}
+  *                   covered:
+  *                     description: "Data for no-mask graph."
+  *                     type: object
+  *                     example: {}
+  *                   aod:
+  *                     description: "Data for abandoned object graph."
+  *                     type: object
+  *                     example: {}
+  *                   social:
+  *                     description: "Data for social distancing graph."
+  *                     type: object
+  *                     example: {}
+  *                   intr:
+  *                     description: "Data for intrusion graph."
+  *                     type: object
+  *                     example: {}
   *      '500':
   *        description: "Server error"
   *        content:
@@ -1287,6 +1809,30 @@ module.exports = function(app) {
   *    responses:
   *      '200':
   *        description: "A successful response"
+  *        content:
+  *          application/json:
+  *            schema:
+  *             type: object
+  *             properties:
+  *               success:
+  *                 description: "Result type"
+  *                 type: boolean
+  *                 example: true
+  *               data:
+  *                 type: object
+  *                 properties:
+  *                   total:
+  *                     description: "Total alerts"
+  *                     type: number
+  *                     example: 156
+  *                   raw:
+  *                     description: "Raw data from MySQL."
+  *                     type: array
+  *                     example: []                         
+  *                   over:
+  *                     description: "Over time data graph"
+  *                     type: object
+  *                     example: {}
   *      '500':
   *        description: "Server error"
   *        content:
