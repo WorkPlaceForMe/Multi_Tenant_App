@@ -120,7 +120,7 @@ module.exports = function(app) {
   *                    id_branch:
   *                      description: "Id associated with the branch account"
   *                      type: string
-  *                      example: 0000
+  *                      example: "0000"
   *                    cameras:
   *                      description: "Cameras available for the user" 
   *                      type: boolean
