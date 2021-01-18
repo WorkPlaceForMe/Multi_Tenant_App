@@ -50,6 +50,9 @@ API_URI = api;
       totalKey: 'total',
     });
   }
+  alertsOverview(some: any) {
+    return this.http.get(`${this.API_URI}/ticket/alerts/overview?type=${some.type}&id=${some.id}`);
+  }
   searchTickets(some: any) {
     // return this.http.post(`${this.API_URI}/ticket/all`, some);
     return new ServerDataSource(this.http, {

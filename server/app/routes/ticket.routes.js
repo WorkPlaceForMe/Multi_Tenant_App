@@ -25,6 +25,12 @@ module.exports = function(app) {
     controller.searchAllTickets
   );
 
+  app.get(
+    "/api/ticket/alerts/overview/",
+    [authJwt.verifyToken, authJwt.isClientOrBranch],
+    controller.alertsOverview
+  );
+
   app.post(
     "/api/ticket/counts/",
     [authJwt.verifyToken, authJwt.isClientOrBranch],
