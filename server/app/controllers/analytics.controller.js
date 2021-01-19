@@ -784,7 +784,10 @@ exports.pcLite = async (req, res) =>{
       var cou = 0;
       if(result.length != 0){
         cou = result[0].count
-      }      
+        if(cou < 0){
+          cou = JSON.stringify(cou * -1) + ' exiting' ;
+        }
+      }
       const a = {
         currentCount: cou,
       }

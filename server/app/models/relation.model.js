@@ -4,7 +4,7 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING
       },
       algo_id: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       roi_id: {
         type: Sequelize.JSON
