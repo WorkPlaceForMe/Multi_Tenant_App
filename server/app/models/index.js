@@ -43,7 +43,7 @@ db.user.belongsToMany(db.algorithm, {
 });
 
 
-db.ALGORITHMS = ['Facial Recognition','Person Climbing Barricade','Loitering Detection','D&C of human, animal and vehicle','Parking Violation','Speeding Vehicle','Helmet detection on two-wheeler','Banned vehicle detection','Wrong way or illegal turn detection','Graffiti & Vandalism detection','Debris & Garbage detection','Garbage bin, cleanned or not','People Count','ANPR','Heatmap','Demographics','Abandoned Object','Intrusion Alert','Attendance Management','Violence','No Mask','Social Distancing','Queue Management','Helmet Detection','Vault Open','Barrier Not Closed','Vehicle Counting','Camera Tampering','Animals on Road','Accident','ANPR In City Traffic','ANPR In Highway Traffic','Axle','Carmake','Illegal Parking'];
+db.ALGORITHMS = ['Facial Recognition','Person Climbing Barricade','Loitering Detection','D&C of human, animal and vehicle','Parking Violation','Speeding Vehicle','Helmet detection on two-wheeler','Banned vehicle detection','Wrong way or illegal turn detection','Graffiti & Vandalism detection','Debris & Garbage detection','Garbage bin, cleanned or not','People Count','ANPR','Heatmap','Demographics','Abandoned Object','Intrusion Alert','Attendance Management','Violence','No Mask','Social Distancing','Queue Management','Helmet Detection','Vault Open','Barrier Not Closed','Vehicle Counting','Camera Tampering','Animals Detection','Accident Detection','Axle Count','Car make Classification'];
 
 module.exports = db;
 
