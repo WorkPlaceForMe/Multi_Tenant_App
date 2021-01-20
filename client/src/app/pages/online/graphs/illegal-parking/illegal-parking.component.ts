@@ -11,12 +11,12 @@ import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
 
 @Component({
-  selector: 'ngx-anpr',
-  templateUrl: './anpr.component.html',
-  styleUrls: ['./anpr.component.scss', '../smart-table.scss'],
+  selector: 'ngx-illegal-parking',
+  templateUrl: './illegal-parking.component.html',
+  styleUrls: ['./illegal-parking.component.scss', '../smart-table.scss']
 })
-export class AnprComponent implements OnInit, OnDestroy {
 
+export class IllegalParkingComponent implements OnInit, OnDestroy {
 
   @Input() range: NbCalendarRange<Date>;
   @Input() camera;
@@ -123,7 +123,7 @@ export class AnprComponent implements OnInit, OnDestroy {
         }
       }, err => console.error(err),
     );
-    this.serv.anpr(this.camera, l).subscribe(
+    this.serv.parking(this.camera, l).subscribe(
       res => {
         this.anpr = res['data'];
         for (const m of this.anpr.raw) {
@@ -175,11 +175,6 @@ export class AnprComponent implements OnInit, OnDestroy {
           });
         },
       },
-      plate: {
-        title: 'LICENSE PLATE',
-        type: 'string',
-        filter: false,
-      },
       time: {
         title: 'TIME',
         type: 'string',
@@ -192,7 +187,6 @@ export class AnprComponent implements OnInit, OnDestroy {
       },
     },
   };
-
 }
 
 @Component({
@@ -213,3 +207,6 @@ export class ButtonViewComponent implements ViewCell, OnInit {
   ngOnInit() {
   }
 }
+
+
+

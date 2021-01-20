@@ -2,12 +2,12 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } 
 import { NbCalendarRange, NbComponentStatus, NbDateService, NbGlobalPhysicalPosition, NbGlobalPosition, NbToastrService } from '@nebular/theme';
 import { Account } from '../../../../models/Account';
 import { NbPopoverDirective } from '@nebular/theme';
-import { AuthService } from "../../../../services/auth.service";
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'ngx-control',
   templateUrl: './control.component.html',
-  styleUrls: ['./control.component.scss']
+  styleUrls: ['./control.component.scss'],
 })
 export class ControlComponent implements OnInit, OnDestroy {
 
@@ -27,13 +27,13 @@ export class ControlComponent implements OnInit, OnDestroy {
   renew: any;
   timezone: string;
   now_user: Account;
-  calMonths: string[] = ["Jan", "Feb", "March", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+  calMonths: string[] = ['Jan', 'Feb', 'March', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   selectedDate: Date;
   selectedMonth: Date;
   lastMonths: Date[] = [];
-  
-  currentSelection: string  = "Date";
+
+  currentSelection: string  = 'Date';
   items = [
     {
       title: 'Cameras',
@@ -49,13 +49,13 @@ export class ControlComponent implements OnInit, OnDestroy {
           title: 'Cameras List',
           link: '/pages/camerasList',
           home: true,
-        }
+        },
       ],
     },
     {
       title: 'Tickets',
       icon: 'done-all-outline',
-      link: '/pages/tickets'
+      link: '/pages/tickets',
     },
   ];
 
@@ -63,19 +63,19 @@ export class ControlComponent implements OnInit, OnDestroy {
   constructor(
     private toastrService: NbToastrService,
     protected dateService: NbDateService<Date>,
-    private authService: AuthService
-  ) { 
-    if(authService.isAdmin){
+    private authService: AuthService,
+  ) {
+    if (authService.isAdmin){
         this.items = [
           {
             title: 'Accounts',
             icon: 'people-outline',
-            link: '/pages/accounts'
-          }
+            link: '/pages/accounts',
+          },
         ];
     }
-    
-    
+
+
   }
 
   @Output() cameraSel = new EventEmitter<string>();
@@ -85,7 +85,7 @@ export class ControlComponent implements OnInit, OnDestroy {
   }
 
   showRangeSelector(show: boolean){
-    if(show){
+    if (show){
       this.rangeSelector.show();
     }else{
       this.rangeSelector.hide();
@@ -93,48 +93,48 @@ export class ControlComponent implements OnInit, OnDestroy {
   }
 
   setDate(){
-    if(this.selectedDate){
-      let start = this.selectedDate;
-      //Add one data and minus 1 sec to set time to end of the day
+    if (this.selectedDate){
+      const start = this.selectedDate;
+      // Add one data and minus 1 sec to set time to end of the day
       let end = this.dateService.addDay(start, 1);
-      end = new Date(end.getTime()-1000);
+      end = new Date(end.getTime() - 1000);
       this.range = {
         start: new Date(start),
-        end: new Date(end)
-      }
-      this.cam(this.camera)
+        end: new Date(end),
+      };
+      this.cam(this.camera);
       this.showRangeSelector(false);
     }
   }
 
   setMonth(){
-    if(this.selectedMonth){
-      let start = this.selectedMonth;
-      //Add one month and minus 1 second to go to the end of the month
+    if (this.selectedMonth){
+      const start = this.selectedMonth;
+      // Add one month and minus 1 second to go to the end of the month
       let end = this.dateService.addMonth(start, 1);
-      end = new Date(end.getTime()-1000);
+      end = new Date(end.getTime() - 1000);
       this.range = {
         start: new Date(start),
-        end: new Date(end)
-      }
-      this.cam(this.camera)
+        end: new Date(end),
+      };
+      this.cam(this.camera);
       this.showRangeSelector(false);
-      
+
     }
-    
+
   }
 
   changeRange(event){
-    if(event.end != undefined){
+    if (event.end !== undefined){
       this.showRange = false;
-      event.end = new Date(event.end.setHours(event.end.getHours() + 23))
-      event.end = new Date(event.end.setMinutes(event.end.getMinutes() + 59))
-      event.end = new Date(event.end.setSeconds(event.end.getSeconds() + 59))
+      event.end = new Date(event.end.setHours(event.end.getHours() + 23));
+      event.end = new Date(event.end.setMinutes(event.end.getMinutes() + 59));
+      event.end = new Date(event.end.setSeconds(event.end.getSeconds() + 59));
       this.range = {
         start: new Date(event.start),
-        end: new Date(event.end)
-      }
-      this.cam(this.camera)
+        end: new Date(event.end),
+      };
+      this.cam(this.camera);
       this.showRangeSelector(false);
     }else{
       this.showRange = true;
@@ -142,60 +142,60 @@ export class ControlComponent implements OnInit, OnDestroy {
   }
 
   set(event){
-    if(this.renew){
+    if (this.renew){
       clearInterval(this.renew);
     }
     this.refresh = event * 1000;
-    if(event != 0){
-      this.cam(this.camera)
-      this.renew = setInterval(()=>{
-        this.cam(this.camera)
-      },this.refresh)
+    if (event !== 0){
+      this.cam(this.camera);
+      this.renew = setInterval(() => {
+        this.cam(this.camera);
+      }, this.refresh);
     }
   }
 
   cam(event){
     this.cameraSel.emit(event);
-    setTimeout(()=>{
-      if(this.rel != false){
-        if(event === ''){
-          if(this.camera == ''){
+    setTimeout(() => {
+      if (this.rel !== false){
+        if (event === ''){
+          if (this.camera === ''){
             return this.showToast('Please choose a camera.', 'info');
           }
         }else{
-          if(this.range.end == undefined){
+          if (this.range.end === undefined){
             return;
           }
-          let algo_id = this.analytic.algo_id;
+          const algo_id = this.analytic.algo_id;
           this.analytic.algo_id = -1;
-          setTimeout(()=>{            
+          setTimeout(() => {
             this.camera = event;
-            this.analytic.algo_id = algo_id
-          },50)
+            this.analytic.algo_id = algo_id;
+          }, 50);
         }
       }
-    },50)
+    }, 50);
   }
 
   reload(){
-    this.cam(this.camera)
+    this.cam(this.camera);
   }
 
   ngOnInit(): void {
-    this.now_user = JSON.parse(localStorage.getItem('now_user'))
+    this.now_user = JSON.parse(localStorage.getItem('now_user'));
     // if(this.now_user.id_branch == '0000'){
     //   this.camera = this.now_user.id_account
     //   this.analytic.algo_id = -2;
     // }
     this.max = this.dateService.addDay(this.dateService.today(), 0);
-    let a = this.dateService.addDay(this.dateService.today(), 0);
-    this.fin = new Date(a.setHours(a.getHours() + 23))
-    this.fin = new Date(this.fin.setMinutes(this.fin.getMinutes() + 59))
-    this.fin = new Date(this.fin.setSeconds(this.fin.getSeconds() + 59))
+    const a = this.dateService.addDay(this.dateService.today(), 0);
+    this.fin = new Date(a.setHours(a.getHours() + 23));
+    this.fin = new Date(this.fin.setMinutes(this.fin.getMinutes() + 59));
+    this.fin = new Date(this.fin.setSeconds(this.fin.getSeconds() + 59));
     this.range = {
       start: new Date(this.max),
-      end: new Date(this.fin)
-    }
+      end: new Date(this.fin),
+    };
 
     this.initMonths();
     this.selectedDate =  this.dateService.addDay(this.dateService.today(), 0);
@@ -205,21 +205,21 @@ export class ControlComponent implements OnInit, OnDestroy {
     let t = this.dateService.today();
 
     // Go to start of the month
-    let daysToMinus = t.getDate()-1;
+    let daysToMinus = t.getDate() - 1;
     daysToMinus *= -1;
-    t = this.dateService.addDay(t, daysToMinus)
+    t = this.dateService.addDay(t, daysToMinus);
 
 
     this.lastMonths.push(t);
-    for(let i = 1; i <= 12; i++){
-        let a = -1 * i;
+    for (let i = 1; i <= 12; i++){
+        const a = -1 * i;
         this.lastMonths.push(this.dateService.addMonth(t, a));
     }
 
   }
 
   ngOnDestroy(){
-    if(this.renew){
+    if (this.renew){
       clearInterval(this.renew);
     }
   }
@@ -231,7 +231,7 @@ hasIcon = true;
 position: NbGlobalPosition = NbGlobalPhysicalPosition.TOP_RIGHT;
 preventDuplicates = false;
 
-private showToast( body: string, status:NbComponentStatus) {
+private showToast( body: string, status: NbComponentStatus) {
   const config = {
     status: status,
     destroyByClick: this.destroyByClick,
@@ -240,7 +240,7 @@ private showToast( body: string, status:NbComponentStatus) {
     position: this.position,
     preventDuplicates: this.preventDuplicates,
   };
-  var titleContent = 'Look!';
+  const titleContent = 'Look!';
 
   this.toastrService.show(
     body,

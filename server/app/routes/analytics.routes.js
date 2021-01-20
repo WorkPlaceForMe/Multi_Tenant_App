@@ -1854,4 +1854,28 @@ module.exports = function(app) {
     [authJwt.verifyToken],
     controller.tamper
   );
+
+  app.post(
+    "/api/analytics/accident/:id",
+    [authJwt.verifyToken],
+    controller.accident
+  );
+
+  app.post(
+    "/api/analytics/animal/:id",
+    [authJwt.verifyToken],
+    controller.animal
+  );
+
+  app.post(
+    "/api/analytics/axle/:id",
+    [authJwt.verifyToken],
+    controller.axle
+  );
+
+  app.post(
+    "/api/analytics/carmake/:id",
+    [authJwt.verifyToken],
+    controller.carmake
+  );
 }
