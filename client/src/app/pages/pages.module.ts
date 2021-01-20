@@ -86,6 +86,11 @@ import { BarrierComponent } from './online/graphs/barrier/barrier.component';
 import { VehicleComponent } from './online/graphs/vehicle/vehicle.component';
 import { DashComponent } from './online/graphs/dash/dash.component';
 import { TamperComponent } from './online/graphs/tamper/tamper.component';
+import { AnimalsOnRoadComponent } from './online/graphs/animals-on-road/animals-on-road.component';
+import { AccidentComponent } from './online/graphs/accident/accident.component';
+import { AxleComponent } from './online/graphs/axle/axle.component';
+import { CarmakeComponent } from './online/graphs/carmake/carmake.component';
+import { IllegalParkingComponent } from './online/graphs/illegal-parking/illegal-parking.component';
 
 // import { OverallComponent } from './facial_recognition/overall/overall.component';
 
@@ -182,7 +187,12 @@ import { TamperComponent } from './online/graphs/tamper/tamper.component';
     BarrierComponent,
     VehicleComponent,
     DashComponent,
-    TamperComponent
+    TamperComponent,
+    AnimalsOnRoadComponent,
+    AccidentComponent,
+    AxleComponent,
+    CarmakeComponent,
+    IllegalParkingComponent,
   ],
   providers: [
     FacesService,

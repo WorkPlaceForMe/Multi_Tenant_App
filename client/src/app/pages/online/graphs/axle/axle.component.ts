@@ -11,12 +11,12 @@ import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
 
 @Component({
-  selector: 'ngx-anpr',
-  templateUrl: './anpr.component.html',
-  styleUrls: ['./anpr.component.scss', '../smart-table.scss'],
+  selector: 'ngx-axle',
+  templateUrl: './axle.component.html',
+  styleUrls: ['./axle.component.scss', '../smart-table.scss']
 })
-export class AnprComponent implements OnInit, OnDestroy {
 
+export class AxleComponent implements OnInit, OnDestroy {
 
   @Input() range: NbCalendarRange<Date>;
   @Input() camera;
@@ -114,7 +114,7 @@ export class AnprComponent implements OnInit, OnDestroy {
             filter: false,
             renderComponent: ButtonViewComponent,
             onComponentInitFunction: (instance) => {
-              instance.save.subscribe((row: string)  => {
+              instance.save.subscribe((row: string) => {
                 this.pass(row);
               });
             },
@@ -123,7 +123,7 @@ export class AnprComponent implements OnInit, OnDestroy {
         }
       }, err => console.error(err),
     );
-    this.serv.anpr(this.camera, l).subscribe(
+    this.serv.axle(this.camera, l).subscribe(
       res => {
         this.anpr = res['data'];
         for (const m of this.anpr.raw) {
@@ -131,15 +131,14 @@ export class AnprComponent implements OnInit, OnDestroy {
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone);
         }
         this.source = this.anpr.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
-
       },
       err => {
         console.error(err);
         this.anpr = undefined;
       },
     );
-
   }
+
   got(id) {
     this.route.navigate([`/pages/tickets`]);
   }
@@ -175,11 +174,6 @@ export class AnprComponent implements OnInit, OnDestroy {
           });
         },
       },
-      plate: {
-        title: 'LICENSE PLATE',
-        type: 'string',
-        filter: false,
-      },
       time: {
         title: 'TIME',
         type: 'string',
@@ -188,6 +182,11 @@ export class AnprComponent implements OnInit, OnDestroy {
       cam_name: {
         title: 'CAM',
         type: 'string',
+        filter: false,
+      },
+      axle_count: {
+        title: 'AXLE COUNT',
+        type: 'int',
         filter: false,
       },
     },
@@ -213,3 +212,4 @@ export class ButtonViewComponent implements ViewCell, OnInit {
   ngOnInit() {
   }
 }
+

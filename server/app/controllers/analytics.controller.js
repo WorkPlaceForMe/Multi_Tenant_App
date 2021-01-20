@@ -114,7 +114,6 @@ exports.loiteringAlerts = async(req, res) => {
     let page = parseInt(data._page);
     let limit = parseInt(data._limit);
     let offset = (row_count === (page*limit)) ? (page-1) * limit : (page-1) * limit;
-    console.log('offset : ', offset); 
     let _sort = Array.isArray(data._sort) ? data._sort[data._sort.length-1] : data._sort;
     let _order = Array.isArray(data._order) ? data._order[data._order.length-1] : data._order;
     jwt.verify(token, process.env.secret, async (err, decoded) => {
@@ -1028,7 +1027,7 @@ exports.vault = async (req, res) =>{
 exports.parking = async (req, res) =>{
   
   const data = req.body;
-    await db.con().query(`SELECT * from alerts WHERE alert = 'park' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+    await db.con().query(`SELECT * from parking WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc`, function (err, result) {
       if (err) return res.status(500).json({success: false, message: err});
       for(var v of result){
 
@@ -1086,7 +1085,6 @@ exports.anpr = async (req, res) =>{
       res.status(200).json({success: true, data: a})
     });
 }
-
 
 exports.barrier = async (req, res) =>{
   
@@ -1215,4 +1213,128 @@ exports.vc = async (req, res) =>{
       }
       res.status(200).json({success: true, data: a})
     });
+}
+
+exports.accident = async (req, res) =>{
+  
+  const data = req.body;
+    await db.con().query(`SELECT * from accident WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+      if (err) return res.status(500).json({success: false, message: err});
+      for(var v of result){
+
+        let d = v.time
+        let se = d.getSeconds()
+        let mi = d.getMinutes()
+        let ho = d.getHours()
+        if(se < 10){
+          se = '0' + se;
+        }
+        if(mi < 10){
+          mi = '0' + mi;
+        }
+        if(ho < 10){
+          ho = '0' + ho;
+        }
+        d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
+        v['picture'] = `${d}_${v.track_id}.jpg`;
+      }
+      const a = {
+          total: result.length,
+          raw: result
+      }
+      res.status(200).json({success: true, data: a})
+  });
+}
+
+exports.animal = async (req, res) =>{
+  
+  const data = req.body;
+    await db.con().query(`SELECT * from animal WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+      if (err) return res.status(500).json({success: false, message: err});
+      for(var v of result){
+
+        let d = v.time
+        let se = d.getSeconds()
+        let mi = d.getMinutes()
+        let ho = d.getHours()
+        if(se < 10){
+          se = '0' + se;
+        }
+        if(mi < 10){
+          mi = '0' + mi;
+        }
+        if(ho < 10){
+          ho = '0' + ho;
+        }
+        d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
+        v['picture'] = `${d}_${v.track_id}.jpg`;
+      }
+      const a = {
+          total: result.length,
+          raw: result
+      }
+      res.status(200).json({success: true, data: a})
+  });
+}
+
+exports.axle = async (req, res) =>{
+  
+  const data = req.body;
+    await db.con().query(`SELECT * from axle WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+      if (err) return res.status(500).json({success: false, message: err});
+      for(var v of result){
+
+        let d = v.time
+        let se = d.getSeconds()
+        let mi = d.getMinutes()
+        let ho = d.getHours()
+        if(se < 10){
+          se = '0' + se;
+        }
+        if(mi < 10){
+          mi = '0' + mi;
+        }
+        if(ho < 10){
+          ho = '0' + ho;
+        }
+        d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
+        v['picture'] = `${d}_${v.track_id}.jpg`;
+      }
+      const a = {
+          total: result.length,
+          raw: result
+      }
+      res.status(200).json({success: true, data: a})
+  });
+}
+
+exports.carmake = async (req, res) =>{
+  
+  const data = req.body;
+    await db.con().query(`SELECT * from carmake WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+      if (err) return res.status(500).json({success: false, message: err});
+      for(var v of result){
+
+        let d = v.time
+        let se = d.getSeconds()
+        let mi = d.getMinutes()
+        let ho = d.getHours()
+        if(se < 10){
+          se = '0' + se;
+        }
+        if(mi < 10){
+          mi = '0' + mi;
+        }
+        if(ho < 10){
+          ho = '0' + ho;
+        }
+        d = d.getFullYear()  + "-" + (d.getMonth()+1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
+        v['picture'] = `${d}_${v.track_id}.jpg`;
+      }
+      const a = {
+          total: result.length,
+          raw: result
+      }
+      res.status(200).json({success: true, data: a})
+  });
 }

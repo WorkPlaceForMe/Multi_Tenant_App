@@ -6,17 +6,15 @@ import { LocalDataSource, ViewCell } from 'ng2-smart-table';
 import { api } from '../../../../models/API';
 import { AnalyticsService } from '../../../../services/analytics.service';
 import { FacesService } from '../../../../services/faces.service';
-import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
 
 @Component({
-  selector: 'ngx-anpr',
-  templateUrl: './anpr.component.html',
-  styleUrls: ['./anpr.component.scss', '../smart-table.scss'],
+  selector: 'ngx-accident',
+  templateUrl: './accident.component.html',
+  styleUrls: ['./accident.component.scss', '../smart-table.scss'],
 })
-export class AnprComponent implements OnInit, OnDestroy {
-
+export class AccidentComponent implements OnInit, OnDestroy {
 
   @Input() range: NbCalendarRange<Date>;
   @Input() camera;
@@ -104,7 +102,7 @@ export class AnprComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type,
     };
-    this.face.checkVideo(2, this.camera).subscribe(
+    this.face.checkVideo(29, this.camera).subscribe(
       res => {
         this.video = res['video'];
         if (this.video === true) {
@@ -123,7 +121,7 @@ export class AnprComponent implements OnInit, OnDestroy {
         }
       }, err => console.error(err),
     );
-    this.serv.anpr(this.camera, l).subscribe(
+    this.serv.accident(this.camera, l).subscribe(
       res => {
         this.anpr = res['data'];
         for (const m of this.anpr.raw) {
@@ -138,11 +136,12 @@ export class AnprComponent implements OnInit, OnDestroy {
         this.anpr = undefined;
       },
     );
-
   }
+
   got(id) {
     this.route.navigate([`/pages/tickets`]);
   }
+
   settings = {
     mode: 'external',
     actions: {
@@ -174,11 +173,6 @@ export class AnprComponent implements OnInit, OnDestroy {
             alert(`${row.name} saved!`);
           });
         },
-      },
-      plate: {
-        title: 'LICENSE PLATE',
-        type: 'string',
-        filter: false,
       },
       time: {
         title: 'TIME',
@@ -212,4 +206,5 @@ export class ButtonViewComponent implements ViewCell, OnInit {
 
   ngOnInit() {
   }
+
 }
