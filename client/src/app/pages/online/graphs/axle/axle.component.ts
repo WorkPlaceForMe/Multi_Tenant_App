@@ -26,6 +26,7 @@ export class AxleComponent implements OnInit, OnDestroy {
   now_user: Account;
   themeSubscription: any;
   options: any = {};
+  axleCount: any;
 
   @ViewChild('streaming', { static: false }) streamingcanvas: ElementRef;
 
@@ -125,11 +126,14 @@ export class AxleComponent implements OnInit, OnDestroy {
     );
     this.serv.axle(this.camera, l).subscribe(
       res => {
+        let count = 0;
         this.anpr = res['data'];
         for (const m of this.anpr.raw) {
           m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/anpr/' + m['cam_id'] + '/' + m['picture']);
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone);
+          count = count + m['axle_count'];
         }
+        this.axleCount = count;
         this.source = this.anpr.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
       },
       err => {

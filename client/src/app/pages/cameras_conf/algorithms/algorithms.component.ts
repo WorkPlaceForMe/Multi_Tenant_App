@@ -76,27 +76,27 @@ export class AlgorithmsComponent implements OnInit {
               this.relations = res['data'];
               for (let i = 0; i < this.algos.length; i++) {
                 for (let e = 0; e < this.relations.length; e++) {
-                  if (this.algos[i].id === this.relations[e]['algo_id']) {
+                  if (this.algos[i].id == this.relations[e]['algo_id']) {
                     this.algos[i].activated = true;
                     this.algos[i].conf = this.relations[e]['atributes'][0]['conf'];
                     this.algos[i].save = this.relations[e]['atributes'][0]['save'];
                     this.algos[i].time = this.relations[e]['atributes'][0]['time'];
                     if (this.relations[e]['atributes'].length === 2) {
-                      if (this.relations[e]['algo_id'] === 1) {
+                      if (this.relations[e]['algo_id'] == 1) {
                         this.climb = this.relations[e]['atributes'][1];
-                      } else if (this.relations[e]['algo_id'] === 7) {
+                      } else if (this.relations[e]['algo_id'] == 7) {
                         this.unwanted = this.relations[e]['atributes'][1];
-                      } else if (this.relations[e]['algo_id'] === 5) {
+                      } else if (this.relations[e]['algo_id'] == 5) {
                         this.speed = this.relations[e]['atributes'][1];
-                      } else if (this.relations[e]['algo_id'] === 2) {
+                      } else if (this.relations[e]['algo_id'] == 2) {
                         this.loiteringTime = this.relations[e]['atributes'][1];
-                      } else if (this.relations[e]['algo_id'] === 3) {
+                      } else if (this.relations[e]['algo_id'] == 3) {
                         this.dac = this.relations[e]['atributes'][1];
-                      } else if (this.relations[e]['algo_id'] === 12) {
+                      } else if (this.relations[e]['algo_id'] == 12) {
                         this.quantity = this.relations[e]['atributes'][1];
-                      } else if (this.relations[e]['algo_id'] === 16) {
+                      } else if (this.relations[e]['algo_id'] == 16) {
                         this.aod = this.relations[e]['atributes'][1];
-                      } else if (this.relations[e]['algo_id'] === 32) {
+                      } else if (this.relations[e]['algo_id'] == 32) {
                         this.parkingTime = this.relations[e]['atributes'][1];
                       }
                     }

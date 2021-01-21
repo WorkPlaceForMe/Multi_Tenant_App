@@ -41,7 +41,7 @@ exports.initial = function() {
         name: 'D&C of human, animal and vehicle'
     })
     algo.create({
-        id: 4,
+        id: 32,
         name: 'Parking Violation'
     })
     algo.create({
@@ -142,32 +142,17 @@ exports.initial = function() {
       })
       algo.create({
         id: 29,
-        name: 'Accidents'
+        name: 'Accidents Detection'
       })
       algo.create({
         id: 30,
-        name: 'ANPR In City Traffic'
+        name: 'Axle Detection'
       })
       algo.create({
         id: 31,
-        name: 'ANPR In Highway Traffic'
-      })
-      algo.create({
-        id: 32,
-        name: 'Axle'
-      })
-      algo.create({
-        id: 33,
         name: 'Carmake'
-      })
-      algo.create({
-        id: 34,
-        name: 'Illegal parking'
       })
 }
 // INSERT INTO `multi_tenant`.`algorithms` (`id`, `name`, `createdAt`, `updatedAt`) VALUES ('27', 'Camera Tampering', '2020-10-05 07:31:29', '2020-10-05 07:31:29');
 
 //Remember to add any new algorithm into ../models/index.js DB.Algorithms
-
-// New traffic analytics
-// INSERT INTO `algorithms` VALUES (28,'Animals On Road','2021-01-18 11:50:00','2021-01-18 11:50:00'),(29,'Accident','2021-01-18 11:50:00','2021-01-18 11:50:00'),(30,'ANPR In City Traffic','2021-01-18 11:50:00','2021-01-18 11:50:00'),(31,'ANPR In Highway Traffic','2021-01-18 11:50:00','2021-01-18 11:50:00'),(32,'Axle','2021-01-18 11:50:00','2021-01-18 11:50:00'),(33,'Carmake','2021-01-18 11:50:00','2021-01-18 11:50:00'),(34,'Illegal Parking','2021-01-18 11:50:00','2021-01-18 11:50:00');
