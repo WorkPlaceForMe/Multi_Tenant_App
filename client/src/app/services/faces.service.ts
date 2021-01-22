@@ -183,4 +183,7 @@ return this.http.post(`${this.API_URI}/images`, image);
   checkVideo(id:number,cam:string){
     return this.http.get(`${this.API_URI}/relations/check/${id}/${cam}`);
   }
+  uploadVid(upl){
+    return this.http.post(`${this.API_URI}/upload/video`, upl);
+  }
 }
