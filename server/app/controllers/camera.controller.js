@@ -124,7 +124,7 @@ exports.addCamera = (req,res) => {
       console.log('Proando stream', port, tries);
       const stream = new Stream({
         name: camera.name,
-        streamUrl: camera.http_in,
+        streamUrl: 'http://' + camera.http_in,
         height: 480,
         width: 640,
         wsPort: port,
