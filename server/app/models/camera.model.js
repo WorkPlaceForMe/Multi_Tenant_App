@@ -10,6 +10,9 @@ module.exports = (sequelize, Sequelize) => {
       rtsp_in: {
         type: Sequelize.STRING
       },
+      http_in: {
+        type: Sequelize.STRING
+      },
       heatmap_pic:{
         type: Sequelize.STRING
       },
