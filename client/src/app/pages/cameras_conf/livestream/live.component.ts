@@ -101,13 +101,12 @@ newLink:TrustedUrlPipe;
   loadCam(camId){
     this.facesService.getCamera(camId ).subscribe(
       res =>{
-        let rtspIn = res['data']['rtsp_in'];
+        let rtspIn = res['data']['http_in'];
         if(rtspIn.startsWith("http")){
            //temparary line
           rtspIn = rtspIn.replace('172.30.0.6', '10.241.149.167')
           this.isHttpStream =true
           this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(rtspIn);
-    
           return;
         }else{
           this.isHttpStream = false;
