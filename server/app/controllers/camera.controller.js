@@ -114,74 +114,79 @@ exports.addCamera = (req,res) => {
         }
   
   function getStream(camera,port,id, tries){
-          if(tries == undefined){
-                    tries = 0;
-                  }
-          return new Promise((resolve, reject) => {
-                    if (tries >= 3) {
-                                return reject()
-                              }
-                    console.log('Proando stream', port, tries);
-                    const stream = new Stream({
-                                name: camera.name,
-                                streamUrl: 'http://' + camera.http_in,
-                                height: 480,
-                                width: 640,
-                                wsPort: port,
-                                fps: 15,
-                                ffmpegOptions: { // options ffmpeg flags
-                                              '-stats': '', // an option with no neccessary value uses a blank string
-                                              '-r': 30 ,// options with required values specify the value after the key
-                                              '-s' : '640x480'
-                                            }
-                              })
-                
-                    stream.on("exitWithError", (error) => {
-                                stream.stop();
-                                reject(error)
-                              })
-
-                    let sent = false
-
-                    stream.on("camdata", (data) => {
-                                if (sent) return
-                            
-                                streams.push({str:stream, id: id, port: port})
-                                resolve({str:stream,port: port})
-                                
-                                sent = true
-                              })
-                
-                    stream.on("connection", () => {
-                                console.log("=====================================================================")
-                              })
-                  })
-         
+    if(tries == undefined){
+      tries = 0;
+    }
+    return new Promise((resolve, reject) => {
+      if (tries >= 3) {
+        return reject()
+      }
+      console.log('camera ...........', camera);
+      console.log('http ...........', 'http://' + camera.http_in);
+      console.log('Proando stream', port, tries);
+      const stream = new Stream({
+        name: camera.name,
+        streamUrl: 'http://' + camera.http_in,
+        height: 480,
+        width: 640,
+        wsPort: port,
+        fps: 15,
+        ffmpegOptions: { // options ffmpeg flags
+          '-stats': '', // an option with no neccessary value uses a blank string
+          '-r': 30 ,// options with required values specify the value after the key
+          '-s' : '640x480'
         }
+      })
+  
+      stream.on("exitWithError", (error) => {
+        console.log('error11.............', error);
+        stream.stop();
+        reject(error)
+      })
+
+      let sent = false
+
+      stream.on("camdata", (data) => {
+        if (sent) return
+    
+        streams.push({str:stream, id: id, port: port})
+        resolve({str:stream,port: port})
+        
+        sent = true
+      })
+  
+      stream.on("connection", () => {
+        console.log("=====================================================================")
+      })
+    })
+   
+  }
 
   exports.cam = (req,res)=>{
-          const data = req.body;
-          let token = req.headers["x-access-token"];
+    const data = req.body;
+    let token = req.headers["x-access-token"];
 
-          jwt.verify(token, process.env.secret, async (err, decoded) => {
-                      Camera.findOne({
-                                      where: { id :  data.id, id_branch: decoded.id_branch},
-                                    }).then(camera => {
-                                                    let port = 9999
-                                                    port = port - streams.length
-                                                    stream = getStream(camera,port,data.id).then((stream)=> {
-                                                                      res.status(200).send({ success: true, my_ip: my_ip, port: stream.port});
-                                                                    }).catch((err)=>{
-                                                                                      if(stream && stream.stop)
-                                                                                            stream.stop();
-                                                                                      res.status(500).send({ success: false, message: err});
-                                                                                    })
-                                                  }).catch(err => {
-                                                                  res.status(500).send({  success: false, message: err.message });
-                                                                });
-                        })
+    jwt.verify(token, process.env.secret, async (err, decoded) => {
+        Camera.findOne({
+            where: { id :  data.id, id_branch: decoded.id_branch},
+          }).then(camera => {
+            let port = 9999
+            port = port - streams.length
+            stream = getStream(camera,port,data.id).then((stream)=> {
+              res.status(200).send({ success: true, my_ip: my_ip, port: stream.port});
+            }).catch((err)=>{
+              console.log('error22.............', err);
+              if(stream && stream.stop)
+                stream.stop();
+              res.status(500).send({ success: false, message: err});
+            })
+          }).catch(err => {
+            console.log('error33.............', err);
+            res.status(500).send({  success: false, message: err.message });
+          });
+          })
 
-        }
+  }
 
   exports.stopCam = (req,res) =>{
           const data = req.body;
