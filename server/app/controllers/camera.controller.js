@@ -121,10 +121,10 @@ exports.addCamera = (req,res) => {
       if (tries >= 3) {
         return reject()
       }
-      console.log('Proando stream', port, tries)
+      console.log('Proando stream', port, tries);
       const stream = new Stream({
         name: camera.name,
-        streamUrl: camera.rtsp_in,
+        streamUrl: camera.http_in,
         height: 480,
         width: 640,
         wsPort: port,
