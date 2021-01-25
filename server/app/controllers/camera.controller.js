@@ -182,13 +182,10 @@ function getStream(camera, port, id, tries) {
     if (tries >= 3) {
       return reject()
     }
-    console.log('camera ...........', camera);
-    console.log('http ...........', 'http://' + camera.http_in);
-    console.log('http ...........', camera.http_in);
     console.log('Proando stream', port, tries);
     const stream = new Stream({
       name: camera.name,
-      streamUrl: camera.http_in,
+      streamUrl: camera.rtsp_in,
       height: 480,
       width: 640,
       wsPort: port,
@@ -201,7 +198,6 @@ function getStream(camera, port, id, tries) {
     })
 
     stream.on("exitWithError", (error) => {
-      console.log('error11.............', error);
       stream.stop();
       reject(error)
     })
@@ -251,7 +247,6 @@ exports.cam = (req, res) => {
           port: stream.port
         });
       }).catch((err) => {
-        console.log('error22.............', err);
         if (stream && stream.stop)
           stream.stop();
         res.status(500).send({
@@ -260,7 +255,6 @@ exports.cam = (req, res) => {
         });
       })
     }).catch(err => {
-      console.log('error33.............', err);
       res.status(500).send({
         success: false,
         message: err.message
