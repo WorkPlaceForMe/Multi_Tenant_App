@@ -1,4 +1,4 @@
-const db = require("../models");
+iconst db = require("../models");
 require('dotenv').config({ path: '../../config.env'});
 const Camera = db.camera;
 const Relations = db.relation
@@ -122,9 +122,10 @@ exports.addCamera = (req,res) => {
         return reject()
       }
       console.log('Proando stream', port, tries);
+      console.log('http url..................', 'http://' + camera.http_in);
       const stream = new Stream({
         name: camera.name,
-        streamUrl: camera.http_in,
+        streamUrl: 'http://' + camera.http_in,,
         height: 480,
         width: 640,
         wsPort: port,
@@ -171,7 +172,7 @@ exports.addCamera = (req,res) => {
             port = port - streams.length
             stream = getStream(camera,port,data.id).then((stream)=> {
               res.status(200).send({ success: true, my_ip: my_ip, port: stream.port});
-            }).catch((err)=>{
+            }).catch((err)= {
               if(stream && stream.stop)
                 stream.stop();
               res.status(500).send({ success: false, message: err});

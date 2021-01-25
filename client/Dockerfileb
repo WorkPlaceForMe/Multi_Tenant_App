@@ -1,0 +1,4 @@
+FROM node AS stage1
+RUN npm install -g @angular/cli@9.1.11
+RUN ng build --prod
+
