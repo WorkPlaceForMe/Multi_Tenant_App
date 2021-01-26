@@ -1,7 +1,7 @@
 <div class="card border-primary mb-3">
         <label class="custom-file-label" for="exampleInputFile">{{fileName == '' ? 'Choose a File' : fileName}}</label>
-        <input type="file" (change)=change() #fileInput class="custom-file-input" id="exampleInputFile" aria-describedby="fileHelp" name="file">
+        <input type="file" (change)=change() [uploader]="uploader" ng2FileSelect #fileInput class="custom-file-input" id="exampleInputFile" aria-describedby="fileHelp" name="file">
         <button class="btn btn-success btn-sm" style="margin-bottom: 2px;" (click)='uploa()' [disabled]='up == false' *ngIf='!load'>Upload</button>
-        <button class="btn btn-success btn-sm" disabled *ngIf='load'><mat-spinner diameter='20' class='mx-auto'></mat-spinner></button>
+        <button class="btn btn-success btn-sm" disabled *ngIf='load'>aaaaaaaaaaaaa</button>
 
     </div>

@@ -1,5 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FacesService } from '../../../services/faces.service';
+import { FileUploader, FileLikeObject } from 'ng2-file-upload';
+import { api } from '../../../models/API';
+
+const URL = `${api}/elastic/video`
 
 @Component({
   selector: 'ngx-upload',
@@ -14,12 +19,33 @@ export class UploadComponent implements OnInit {
   fileName: string;
   up:boolean = false;
   load:boolean = false;
+
   @ViewChild("fileInput", {static:false}) fileInputVariable: any;
-  upload: any = {
-    base64: '',
-    format: ''
-  }
+  public uploader:FileUploader = new FileUploader({
+    url: URL, 
+    itemAlias: 'file'
+  });
+
   ngOnInit(): void {
+
+    this.uploader.onAfterAddingFile = (file)=> { 
+      file.withCredentials = false; 
+      file.file.name = this.fileName;
+      console.log(file)
+    };  
+    this.uploader.onCompleteItem = (item:any, response:any, status:any, headers:any) => {
+      console.log("Uploaded:", status, response, headers);
+      this.up = false;
+      this.load = false;
+       this.fileInputVariable.nativeElement.value = '';
+       this.fileName = '';
+  };   
+  this.uploader.onProgressItem = (progress: any) => {
+   console.log(progress['progress']);
+   if(progress['progress'] == 100){
+   }
+  };
+
   }
 
   change(){
@@ -27,6 +53,7 @@ export class UploadComponent implements OnInit {
     if(this.fileInputVariable.nativeElement.files.length != 0){
       this.up = true;
       this.fileName = this.fileInputVariable.nativeElement.files[0]['name']
+      this.load = false;
     }else{
       this.up = false;
     }
@@ -34,27 +61,6 @@ export class UploadComponent implements OnInit {
   uploa(){
     this.up = true;
     this.load = true;
-    const files = this.fileInputVariable.nativeElement.files[0];
-    this.upload.format = this.fileInputVariable.nativeElement.files[0]['name'].split('.')[1]
-    var reader = new FileReader();
-    reader.onload =this._handleReaderLoaded.bind(this);
-    reader.readAsBinaryString(files);
+    this.uploader.uploadAll();
   }
-
-  _handleReaderLoaded(readerEvt) {
-    var binaryString = readerEvt.target.result;
-           binaryString = btoa(binaryString);
-           this.upload.base64 = ';base64,' + binaryString
-           this.face.uploadVid(this.upload).subscribe(
-             res =>{
-              this.up = false;
-              this.load = false;
-               this.fileInputVariable.nativeElement.value = '';
-               this.fileName = '';
-             },
-             err => console.error(err)
-           )
-           
-   }
-
 }

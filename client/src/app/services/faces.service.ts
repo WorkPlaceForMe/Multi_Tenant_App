@@ -184,6 +184,6 @@ return this.http.post(`${this.API_URI}/images`, image);
     return this.http.get(`${this.API_URI}/relations/check/${id}/${cam}`);
   }
   uploadVid(upl){
-    return this.http.post(`${this.API_URI}/upload/video`, upl);
+    return this.http.post(`${this.API_URI}/elastic/video`, upl);
   }
 }

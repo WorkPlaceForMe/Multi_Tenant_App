@@ -4,6 +4,7 @@ import { UploadComponent } from './upload/upload.component';
 import { SearchComponent } from './search.component';
 import { OtherGuard } from '../../guard/other.guard';
 import { PagenotfoundComponent } from '../pagenotfound/pagenotfound.component';
+import { BarComponent } from './bar/bar.component';
 
 const routes: Routes = [
   {path: '',
@@ -12,6 +13,11 @@ const routes: Routes = [
       {
         path: 'upload',
         component: UploadComponent,
+        canActivate: [OtherGuard]
+      },
+      {
+        path: 'bar',
+        component: BarComponent,
         canActivate: [OtherGuard]
       },
       { path: '', 
