@@ -11,8 +11,22 @@ module.exports = function(app) {
   });
 
   app.get(
-    "/api/elastic/get",
+    "/api/elastic/ping",
     [],
-    controller.get
+    controller.ping
+  );
+
+
+  app.get(
+    "/api/elastic/search/:query",
+    [],
+    controller.search
+  );
+
+
+  app.get(
+    "/api/elastic/info",
+    [],
+    controller.info
   );
 }
