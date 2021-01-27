@@ -1,7 +1,6 @@
 const { authJwt, verifyCam } = require("../middleware");
 const controller = require("../controllers/elastic.controller");
 
-
 module.exports = function(app) {
   app.use(function(req, res, next) {
     res.header(
@@ -23,7 +22,6 @@ module.exports = function(app) {
     [],
     controller.search
   );
-
 
   app.post(
     "/api/elastic/video",

@@ -38,7 +38,8 @@ exports.ping = async (req,res) => {
 
   var stor = multer.diskStorage({ //multers disk storage settings
     filename: function (req, file, cb) {
-        var newName = file.originalname.toString()
+        var format = file.originalname.split('.')[1]
+        var newName =  Date.now() + "." + format
         cb(null, newName)
     },
     destination: function (req, file, cb) {        
@@ -52,11 +53,13 @@ var upVideo = multer({ //multer settings
   exports.upload = (req,res) => {
     upVideo(req,res,function(err){           
       if(err){
-           res.status(500).json({success: false, error_code:1,err_desc:err});
-           return;
-      }else{       
-        res.status(200).json({success: true})
+           return res.status(500).json({success: false, error_code:1,err_desc:err});
+      }else{
+        if(!req.file){
+          return res.status(500).json({success: false, error_code:1});
+        }
+        console.log(req.file)
+        res.status(200).json({success: true, name: req.file.filename})
   }
   })
-    
   };

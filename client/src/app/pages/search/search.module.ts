@@ -9,7 +9,7 @@ import { FileUploadModule } from "ng2-file-upload";
 
 
 @NgModule({
-  declarations: [SearchComponent, UploadComponent, BarComponent ],
+  declarations: [SearchComponent, UploadComponent, BarComponent],
   imports: [
     FileUploadModule,
     CommonModule,
