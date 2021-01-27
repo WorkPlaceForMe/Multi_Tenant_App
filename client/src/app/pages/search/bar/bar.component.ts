@@ -14,10 +14,13 @@ export class BarComponent implements OnInit {
   }
   results: any;
   query: string;
+  loading: boolean = false;
 
   search(inp){
+    this.loading = true;
     this.face.searchElast(inp).subscribe(
       res =>{
+        this.loading = false;
         this.results = JSON.stringify(res)
       },
       err =>{
