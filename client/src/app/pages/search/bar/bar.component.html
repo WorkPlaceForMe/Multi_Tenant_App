@@ -1,1 +1,8 @@
-<p>bar works!</p>
+<div class="row">
+    <div class="col-md-12">
+        <input [(ngModel)]='query' style="width: auto" type="text" nbInput id="search" placeholder="Input your search..." [status]="'primary'">
+        <button [status]="'success'" nbButton  (click)="search(query)">Search</button>
+    </div>
+</div>
+
+{{results}}

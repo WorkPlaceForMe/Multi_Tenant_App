@@ -7,10 +7,24 @@ import { UploadComponent } from './upload/upload.component';
 import { BarComponent } from './bar/bar.component';
 import { FileUploadModule } from "ng2-file-upload";
 
+import { NbCardModule, NbIconModule, NbInputModule, NbTreeGridModule, NbAccordionModule, NbButtonModule, NbListModule,NbRouteTabsetModule,
+  NbStepperModule,
+  NbTabsetModule, NbUserModule,    NbActionsModule,
+  NbCheckboxModule,
+  NbRadioModule,
+  NbDatepickerModule,
+  NbFormFieldModule,
+  NbSelectModule, NbSpinnerModule,
+  NbContextMenuModule } from '@nebular/theme';
+import { FormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [SearchComponent, UploadComponent, BarComponent],
   imports: [
+    NbButtonModule,
+    FormsModule,
+    NbInputModule,
     FileUploadModule,
     CommonModule,
     SearchRoutingModule
