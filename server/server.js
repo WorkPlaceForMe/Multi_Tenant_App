@@ -91,7 +91,7 @@ const opt = {
     },
     servers: [
       {
-        url: `http://${process.env.my_ip}:${process.env.PORT}`,
+        url: `http://localhost:${process.env.PORT}`,
       },
     ],
   },
@@ -108,11 +108,11 @@ if(1 == 2){
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
   explorer: true, 
-  customCss: `img[alt='Swagger UI'] { content:url(http://${process.env.my_ip}:${process.env.PORT}/api/pictures/graymaticsLogo.png);}`,
+  customCss: "img[alt='Swagger UI'] { content:url('http://localhost:3300/api/pictures/graymaticsLogo.png');}",
   customSiteTitle: "Graymatics API Manual",
-  customfavIcon: `http://${process.env.my_ip}:${process.env.PORT}/api/pictures/favicon1.ico`,
+  customfavIcon: "http://localhost:3300/api/pictures/favicon1.ico",
   swaggerOptions: {
-    url:`http://${process.env.my_ip}:${process.env.PORT}/api/pictures/swagger.json`,
+    url:'http://localhost:3300/api/pictures/swagger.json',
     docExpansion: 'none',
     validatorUrl: null
   },
