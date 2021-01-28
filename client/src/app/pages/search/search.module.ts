@@ -17,11 +17,13 @@ import { NbCardModule, NbIconModule, NbInputModule, NbTreeGridModule, NbAccordio
   NbSelectModule, NbSpinnerModule,
   NbContextMenuModule } from '@nebular/theme';
 import { FormsModule } from '@angular/forms';
+import { ListComponent } from './list/list.component';
 
 
 @NgModule({
-  declarations: [SearchComponent, UploadComponent, BarComponent],
+  declarations: [SearchComponent, UploadComponent, BarComponent, ListComponent],
   imports: [
+    NbCardModule,
     NbButtonModule,
     FormsModule,
     NbInputModule,

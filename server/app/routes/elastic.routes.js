@@ -25,7 +25,13 @@ module.exports = function(app) {
 
   app.post(
     "/api/elastic/video",
-    [],
+    [authJwt.verifyToken],
     controller.upload
+  );
+
+  app.get(
+    "/api/elastic/video/list",
+    [authJwt.verifyToken],
+    controller.viewVids
   );
 }

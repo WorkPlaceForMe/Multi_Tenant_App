@@ -5,6 +5,7 @@ import { SearchComponent } from './search.component';
 import { OtherGuard } from '../../guard/other.guard';
 import { PagenotfoundComponent } from '../pagenotfound/pagenotfound.component';
 import { BarComponent } from './bar/bar.component';
+import { ListComponent } from './list/list.component';
 
 const routes: Routes = [
   {path: '',
@@ -20,8 +21,13 @@ const routes: Routes = [
         component: BarComponent,
         canActivate: [OtherGuard]
       },
+      {
+        path: 'list',
+        component: ListComponent,
+        canActivate: [OtherGuard]
+      },
       { path: '', 
-      redirectTo: 'upload',
+      redirectTo: 'list',
       pathMatch: 'full',
       },
       {

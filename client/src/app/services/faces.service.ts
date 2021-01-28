@@ -186,4 +186,7 @@ return this.http.post(`${this.API_URI}/images`, image);
   searchElast(query:string){
     return this.http.get(`${this.API_URI}/elastic/search/${query}`);
   }
+  viewVids(){
+    return this.http.get(`${this.API_URI}/elastic/video/list`);
+  }
 }

@@ -57,6 +57,21 @@ export class ControlComponent implements OnInit, OnDestroy {
       icon: 'done-all-outline',
       link: '/pages/tickets',
     },
+    {
+      title: 'Stored Videos',
+      icon: 'film-outline',
+      link: '/pages/search/list',
+      children: [
+        {
+          title: 'Video List',
+          link: '/pages/search/list',
+        },
+        {
+          title: 'Add Video',
+          link: '/pages/search/upload',
+        },
+      ],
+    },
   ];
 
 
