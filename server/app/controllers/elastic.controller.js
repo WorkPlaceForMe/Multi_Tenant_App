@@ -95,3 +95,19 @@ var upVideo = multer({ //multer settings
        res.status(200).json({ success: true , data: arreglo })
           })
   };
+  
+
+  exports.delVid = (req, res) =>{
+    const name = req.body.vidName
+    let token = req.headers["x-access-token"];
+
+    jwt.verify(token, process.env.secret, async (err, decoded) => {
+  const img = `${path}${decoded.id_account}/${decoded.id_branch}/videos/${name}`
+  fs.unlink(img, (err) => {
+      if(err) res.status(500).send({ success: false ,message: "Image error: " + err, name: name });
+      else{
+          res.status(200).send({ success: true ,message: "Image deleted", name: name });
+      }
+  })
+  })
+}

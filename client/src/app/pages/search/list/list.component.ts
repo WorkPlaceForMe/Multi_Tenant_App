@@ -15,10 +15,28 @@ export class ListComponent implements OnInit {
     videos: Array<any> = [];
 
   ngOnInit(): void {
+    this.getVids();
+  }
+
+  getVids(){
     this.face.viewVids().subscribe(
       res => {
         this.videos = res['data']
+      },
+      err => {
+        console.error(err)
+      }
+    );
+  }
+
+  deleteVideo(name:string){
+    let body = {
+      vidName: name
+    }
+    this.face.delVid(body).subscribe(
+      res =>{
         console.log(res)
+        this.getVids();
       },
       err => {
         console.error(err)

@@ -34,4 +34,10 @@ module.exports = function(app) {
     [authJwt.verifyToken],
     controller.viewVids
   );
+
+  app.post(
+    "/api/elastic/video/del",
+    [authJwt.verifyToken],
+    controller.delVid
+  );
 }
