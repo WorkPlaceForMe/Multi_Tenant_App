@@ -136,3 +136,16 @@
         </nb-accordion-item>
       </nb-accordion>
     </div>
+    <div class="col-md-6">
+        <div class="card border-info mb-3">
+          <canvas #polygon id="jPolygon" width='{{width}}' height='{{height}}'
+            style="background-repeat: no-repeat; background-size: 100% 100%;" [style.background-image]="link">
+            Your browser does not support the HTML5 canvas tag.
+          </canvas>
+        </div>
+        <div class='buttons-row'>
+          <button nbButton [status]="'success'">Save and back</button>
+          <!-- <button nbButton [status]="'info'"(click)="saave()">Save</button> -->
+          <button nbButton [status]="'warning'" [routerLink]="['/pages/search/list']">Back</button>
+        </div>
+    </div>
