@@ -24,6 +24,7 @@ import { SettingsComponent } from './settings/settings.component';
 @NgModule({
   declarations: [SearchComponent, UploadComponent, BarComponent, ListComponent, SettingsComponent],
   imports: [
+    NbAccordionModule,
     NbCardModule,
     NbButtonModule,
     FormsModule,
