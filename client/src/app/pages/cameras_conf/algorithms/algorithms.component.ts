@@ -44,6 +44,7 @@ export class AlgorithmsComponent implements OnInit {
           this.width = 485;
           this.height = this.width * this.resRelation;
         }
+        console.log(this.camera)
         this.link = sanitizer.bypassSecurityTrustStyle('url(' + this.camera.heatmap_pic + ')');
       },
       err => console.error(err),
@@ -224,6 +225,14 @@ export class AlgorithmsComponent implements OnInit {
   remaining: any = {
     analytics: 0,
   };
+
+  back(which){
+    if(which === "Yes"){
+      this.router.navigateByUrl("/pages/search/list")
+    } else {
+      this.router.navigateByUrl("/pages/camerasList")
+    }
+  }
 
   ngOnInit() {
     this.setBcg();

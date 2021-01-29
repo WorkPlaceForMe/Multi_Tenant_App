@@ -35,7 +35,6 @@ export class ListComponent implements OnInit {
     }
     this.face.delVid(body).subscribe(
       res =>{
-        console.log(res)
         this.getVids();
       },
       err => {
