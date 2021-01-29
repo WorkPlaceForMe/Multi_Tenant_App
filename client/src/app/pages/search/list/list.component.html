@@ -17,8 +17,8 @@
             <td><button [routerLink]="['/pages/cameras/live/', camera.id]" class='btn-block' nbButton [status]="'warning'">
                 <i class="fas fa-play"></i>
             </button></td>
-            <td><button [routerLink]="['/pages/search/settings', camera.id]" class='btn-block' nbButton [status]="'info'">
-              Analyze
+            <td><button [routerLink]="['/pages/cameras/algorithms', camera.id]" class='btn-block' nbButton [status]="'info'">
+              Algorithms
             </button></td>
             <td><button  class='btn-block' nbButton [status]="'danger'" (click)="deleteVideo(camera.file)">
               <i class="far fa-trash-alt"></i>

@@ -183,6 +183,9 @@ return this.http.post(`${this.API_URI}/images`, image);
   checkVideo(id:number,cam:string){
     return this.http.get(`${this.API_URI}/relations/check/${id}/${cam}`);
   }
+  saveElast(query:string){
+    return this.http.get(`${this.API_URI}/elastic/save/${query}`);
+  }
   searchElast(query:string){
     return this.http.get(`${this.API_URI}/elastic/search/${query}`);
   }

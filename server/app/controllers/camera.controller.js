@@ -24,7 +24,8 @@ exports.addCamera = (req,res) => {
     name: req.body.name,
     rtsp_in: req.body.rtsp_in,
     id_account: decoded.id_account,
-    id_branch: decoded.id_branch
+    id_branch: decoded.id_branch,
+    stored_vid: 'No'
   })
     .then(camera => {
           res.status(200).send({success: true, message: "Camera was registered successfully!", id: uuid});
@@ -40,8 +41,8 @@ exports.addCamera = (req,res) => {
 
     jwt.verify(token, process.env.secret, async (err, decoded) => {
         Camera.findAll({
-            where: { id_branch: decoded.id_branch  },
-            attributes: ['name', 'id','createdAt', 'updatedAt']
+            where: { id_branch: decoded.id_branch, stored_vid: 'No'  },
+            attributes: ['name', 'id','createdAt', 'updatedAt'],
           }).then(cameras => {
               res.status(200).send({ success: true, data: cameras });
           }).catch(err => {
@@ -55,7 +56,7 @@ exports.addCamera = (req,res) => {
 
     jwt.verify(token, process.env.secret, async (err, decoded) => {
         Camera.findOne({
-            where: { id :  req.params.id, id_branch: decoded.id_branch},
+            where: { id :  req.params.id, id_branch: decoded.id_branch },
           }).then(camera => {
               res.status(200).send({ success: true, data: camera });
           }).catch(err => {
@@ -69,14 +70,14 @@ exports.addCamera = (req,res) => {
 
     jwt.verify(token, process.env.secret, async (err, decoded) => {
       Relations.destroy({
-        where: {  camera_id: req.params.id  }
+        where: {  camera_id: req.params.id  },
     })
     const img = `${path}${decoded.id_account}/${decoded.id_branch}/heatmap_pics/${req.params.id}_heatmap.png`
     fs.unlink(img, (err) => {
         if(err) console.log({ success: false ,message: "Image error: " + err});
     })
     Camera.destroy({
-        where: {  id: req.params.id, id_branch: decoded.id_branch  }
+        where: {  id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'No'  },
       }).then(cam => {
           res.status(200).send({ success: true, camera: req.params.uuid });
       }).catch(err => {
@@ -91,7 +92,7 @@ exports.addCamera = (req,res) => {
 
     jwt.verify(token, process.env.secret, async (err, decoded) => {
     Camera.update(updt,{
-      where: {   id: req.params.id, id_branch: decoded.id_branch  }
+      where: {   id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'No'  },
     }).then(cam => {
         res.status(200).send({ success: true, data: updt });
     }).catch(err => {
@@ -165,7 +166,7 @@ exports.addCamera = (req,res) => {
 
     jwt.verify(token, process.env.secret, async (err, decoded) => {
         Camera.findOne({
-            where: { id :  data.id, id_branch: decoded.id_branch},
+            where: { id :  data.id, id_branch: decoded.id_branch, stored_vid: 'No'},
           }).then(camera => {
             let port = 9999
             port = port - streams.length

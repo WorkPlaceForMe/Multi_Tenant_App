@@ -30,7 +30,10 @@ module.exports = (sequelize, Sequelize) => {
       },
       cam_width:{
         type: Sequelize.INTEGER
-      }
+      },
+      stored_vid: {
+        type: Sequelize.STRING
+      },
     });
   
     return Camera;
