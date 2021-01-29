@@ -63,7 +63,7 @@ export class AlgorithmsComponent implements OnInit {
               if (this.algos[i]['available'] === 1) {
                 if (this.algos[i]['id'] <= 3 || this.algos[i]['id'] === 12 || this.algos[i]['id'] === 14 || this.algos[i]['id'] === 15 || this.algos[i]['id'] === 16 || this.algos[i]['id'] === 17 || this.algos[i]['id'] === 18 || this.algos[i]['id'] === 19 || this.algos[i]['id'] === 20 || this.algos[i]['id'] === 21 || this.algos[i]['id'] === 22 || this.algos[i]['id'] === 23 || this.algos[i]['id'] === 24) {
                   this.Calgos.push(this.algos[i]);
-                } else if (this.algos[i]['id'] > 3 && this.algos[i]['id'] <= 8 || this.algos[i]['id'] === 13 || this.algos[i]['id'] === 25 || this.algos[i]['id'] === 26 || this.algos[i]['id'] === 27 || this.algos[i]['id'] >= 28 || this.algos[i]['id'] === 29 || this.algos[i]['id'] === 30 || this.algos[i]['id'] === 31 || this.algos[i]['id'] === 32) {
+                } else if (this.algos[i]['id'] > 3 && this.algos[i]['id'] <= 8 || this.algos[i]['id'] === 13 || this.algos[i]['id'] === 25 || this.algos[i]['id'] === 26 || this.algos[i]['id'] === 27 || this.algos[i]['id'] >= 28 || this.algos[i]['id'] === 29 || this.algos[i]['id'] === 30 || this.algos[i]['id'] === 31 || this.algos[i]['id'] === 32 || this.algos[i]['id'] === 33) {
                   this.Balgos.push(this.algos[i]);
                 } else if (this.algos[i]['id'] > 8 && this.algos[i]['id'] <= 11) { // || this.algos[i]['id'] === 27
                 this.Aalgos.push(this.algos[i]);
@@ -184,7 +184,7 @@ export class AlgorithmsComponent implements OnInit {
   perimeter = [];
   relations: any = [];
   algos: any = [
-    { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false },{ activated: false }
+    { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false },{ activated: false }
   ];
   Aalgos: any = [];
   Balgos: any = [];
