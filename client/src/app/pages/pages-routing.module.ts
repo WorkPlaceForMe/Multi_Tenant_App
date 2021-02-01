@@ -131,6 +131,11 @@ canActivate: [AuthGuard]
   component: CenterComponent,
   canActivate: [AuthGuard]
 },
+{
+  path: 'search',
+  loadChildren: () => import('./search/search.module')
+    .then(m => m.SearchModule),
+},
 { path: '', 
 redirectTo: 'sign-in',
 pathMatch: 'full',
@@ -139,7 +144,8 @@ pathMatch: 'full',
 path: '**',
 component: PagenotfoundComponent
 },
-]}
+]},
+    
   
   // {
   // path: '',
