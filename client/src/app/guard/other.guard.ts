@@ -18,18 +18,22 @@ export class OtherGuard implements CanActivate {
   state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     if(this.authService.isClientorBranch !== true){
       if(this.authService.isLoggedIn !== true) {
+            window.localStorage.clear();
+            window.sessionStorage.clear();
+            // window.location.reload()
+            this.router.navigate(['/pages'])
         this.authService.signOut(JSON.parse(localStorage.getItem('now_user'))['username']).subscribe(
           res=>{
             window.localStorage.clear();
             window.sessionStorage.clear();
-            window.location.reload()
-            this.router.navigate(['/'])
+            // window.location.reload()
+            this.router.navigate(['/pages'])
           }, err =>{ 
             console.error(err)
             window.localStorage.clear();
             window.sessionStorage.clear();
-            window.location.reload()
-            this.router.navigate(['/'])
+            // window.location.reload()
+            this.router.navigate(['/pages'])
           }
       )
       } else {
@@ -47,14 +51,14 @@ export class OtherGuard implements CanActivate {
           res=>{
             window.localStorage.clear();
             window.sessionStorage.clear();
-            window.location.reload()
-            this.router.navigate(['/'])
+            // window.location.reload()
+            this.router.navigate(['/pages'])
           }, err =>{ 
             console.error(err)
             window.localStorage.clear();
             window.sessionStorage.clear();
-            window.location.reload()
-            this.router.navigate(['/'])
+            // window.location.reload()
+            this.router.navigate(['/pages'])
           }
       )
       }

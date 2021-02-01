@@ -39,7 +39,7 @@ export class ListComponent implements OnInit {
           // console.log(res);
           this.getVids();
         },
-        err => console.log(err);
+        err => console.log(err)
       )
       }
 

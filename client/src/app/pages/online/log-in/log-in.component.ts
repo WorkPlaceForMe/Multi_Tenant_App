@@ -57,6 +57,7 @@ export class LogInComponent implements OnInit {
       data => {
         this.authService.saveToken(data.user.accessToken);
         this.authService.saveUser(data.user);
+        this.router.navigate(['/pages'])
         this.isLoggedIn = true;
         this.roles = this.authService.getUser().roles;
         window.location.reload()
