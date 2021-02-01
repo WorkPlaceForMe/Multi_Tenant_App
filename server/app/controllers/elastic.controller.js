@@ -86,6 +86,7 @@ exports.upload = (req, res) => {
           id: uuid,
           name: req.file.originalname.split('.')[0],
           rtsp_in: process.env.app_url + req.file.path,
+          http_in: process.env.app_url + req.file.path,
           id_account: decoded.id_account,
           id_branch: decoded.id_branch,
           stored_vid: 'Yes'
@@ -99,6 +100,7 @@ exports.upload = (req, res) => {
             })
           })
           .catch(err => {
+            console.log('Error while uploading..............', err);
             res.status(500).send({
               success: false,
               message: err.message
@@ -137,19 +139,19 @@ exports.viewVids = async (req, res) => {
 }
 
 exports.delVid = (req, res) => {
-  const name = req.body.vidName
+  const name = req.body.vidName;
 
   const token = req.headers['x-access-token']
 
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
-    const vid = `${path}${decoded.id_account}/${decoded.id_branch}/videos/${name}`
+    /* const vid = `${path}${decoded.id_account}/${decoded.id_branch}/videos/${name}`
     const img = `${path}${decoded.id_account}/${decoded.id_branch}/heatmap_pics/${req.params.id}_heatmap.png`
     fs.unlink(img, err => {
       if (err) console.log({ success: false, message: 'Image error: ' + err })
     })
     fs.unlink(vid, err => {
       if (err) console.log({ success: false, message: 'Image error: ' + err })
-    })
+    }) */
 
     Camera.destroy({
       where: { id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'Yes' }
