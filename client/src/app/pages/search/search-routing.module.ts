@@ -6,7 +6,6 @@ import { OtherGuard } from '../../guard/other.guard';
 import { PagenotfoundComponent } from '../pagenotfound/pagenotfound.component';
 import { BarComponent } from './bar/bar.component';
 import { ListComponent } from './list/list.component';
-import { SettingsComponent } from './settings/settings.component';
 
 const routes: Routes = [
   {path: '',
@@ -25,11 +24,6 @@ const routes: Routes = [
       {
         path: 'list',
         component: ListComponent,
-        canActivate: [OtherGuard]
-      },
-      {
-        path: 'settings/:id',
-        component: SettingsComponent,
         canActivate: [OtherGuard]
       },
       { path: '', 

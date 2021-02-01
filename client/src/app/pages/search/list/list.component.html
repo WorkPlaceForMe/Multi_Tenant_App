@@ -20,7 +20,7 @@
             <td><button [routerLink]="['/pages/cameras/algorithms', camera.id]" class='btn-block' nbButton [status]="'info'">
               Algorithms
             </button></td>
-            <td><button  class='btn-block' nbButton [status]="'danger'" (click)="deleteVideo(camera.rtsp_in.split('/')[10], camera.id)">
+            <td><button  class='btn-block' nbButton [status]="'danger'" (click)="deleteVideo(camera.rtsp_in, camera.id, camera.stored_vid)">
               <i class="far fa-trash-alt"></i>
             </button></td>
         </tr>

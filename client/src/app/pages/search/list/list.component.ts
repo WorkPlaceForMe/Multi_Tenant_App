@@ -29,31 +29,23 @@ export class ListComponent implements OnInit {
     );
   }
 
-  deleteVideo(name: string, id) {
+  deleteVideo(name: string, id, where) {
+    if(name.split('/')[10]){
+      name = name.split('/')[10]
+    }
     const body = {
       vidName: name,
+      uuid: id,
+      which: where
     };
     if (confirm('Do you want to delete this camera?')) {
-      this.face.delVid(id).subscribe(
+      this.face.delVid(body).subscribe(
         res => {
-          // console.log(res);
           this.getVids();
         },
         err => console.log(err)
       )
       }
-
-/*     let body = {
-      vidName: name
-    }
-    this.face.delVid(body).subscribe(
-      res =>{
-        this.getVids();
-      },
-      err => {
-        console.error(err)
-      }
-    ) */
   }
 
 }
