@@ -1,7 +1,10 @@
 <div class="card border-primary mb-3">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <input [(ngModel)]='name' style="width: auto" type="text" nbInput id="search" placeholder="Choose a Name" [status]="'primary'">
+        </div>
+        <div class="col-md-2">
+            <nb-checkbox [(ngModel)]="s3">Upload to S3</nb-checkbox>
         </div>
         <div class="col-md-6 less-padding">
             <div class="custom-file">

@@ -166,29 +166,6 @@ exports.s3up = (req, res) => {
   })
 }
 
-exports.delVidS3 = (req, res) => {
-  const token = req.headers['x-access-token']
-  const params = {
-    Bucket: process.env.BUCKET_S3,
-    Key: `${req.body.name}`
-  }
-
-  jwt.verify(token, process.env.secret, async (_err, decoded) => {
-    s3.deleteObject(params, function (err, data) {
-      if (err) return res.status(500).json({ success: false, mess: err })
-      Camera.destroy({
-        where: { id: req.body.id, id_branch: decoded.id_branch, stored_vid: 's3' }
-      })
-        .then(cam => {
-          res.status(200).send({ success: true, camera: req.body.id })
-        })
-        .catch(err => {
-          res.status(500).send({ success: false, message: err.message })
-        })
-    })
-  })
-}
-
 exports.viewVids = async (req, res) => {
   const token = req.headers['x-access-token']
 
@@ -251,17 +228,6 @@ exports.delVid = (req, res) => {
         res.status(500).send({ success: false, message: err.message })
       })
   })
-  /* const token = req.headers['x-access-token']
-
-  jwt.verify(token, process.env.secret, async (_err, decoded) => {
-    const img = `${path}${decoded.id_account}/${decoded.id_branch}/videos/${name}`
-    fs.unlink(img, err => {
-      if (err) res.status(500).send({ success: false, message: 'Image error: ' + err, name: name })
-      else {
-        res.status(200).send({ success: true, message: 'Image deleted', name: name })
-      }
-    })
-  }) */
 }
 
 exports.editVid = (req, res) => {

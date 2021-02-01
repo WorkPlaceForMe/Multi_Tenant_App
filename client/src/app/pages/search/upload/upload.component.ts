@@ -24,6 +24,7 @@ export class UploadComponent implements OnInit {
   up: boolean = false;
   load: boolean = false;
   name: string;
+  s3:boolean = false;
 
   @ViewChild('fileInput', { static: false }) fileInputVariable: any;
   public uploader: FileUploader = new FileUploader({
@@ -34,12 +35,13 @@ export class UploadComponent implements OnInit {
     headers: [{ name: 'x-access-token', value: this.token.getToken() }],
   });
 
+
   ngOnInit(): void {
     this.uploader.onAfterAddingFile = (file) => {
       file.withCredentials = false;
       const format = file.file.name.split('.')[1];
       const name = this.name.split(' ').join('_');
-      const newName = name + '.' + format;
+      const newName = this.s3 + '-' + name + '.' + format;
       file.file.name = newName;
     };
     this.uploader.onErrorItem = (item, response, status, headers) => {

@@ -18,7 +18,5 @@ module.exports = function (app) {
 
   app.post('/api/elastic/video/del', [authJwt.verifyToken], controller.delVid)
 
-  app.post('/api/elastic/video/delS3', [authJwt.verifyToken], controller.delVidS3)
-
   app.post('/api/elastic/video/s3', [authJwt.verifyToken, multer().single('file')], controller.s3up)
 }
