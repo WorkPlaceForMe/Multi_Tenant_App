@@ -10,8 +10,14 @@ const client = new elasticsearch.Client({
   log: 'trace',
   apiVersion: '7.x' // use the same version of your Elasticsearch instance
 })
-const path = process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+const path =
+  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
 const multer = require('multer')
+const AWS = require('aws-sdk')
+const s3 = new AWS.S3({
+  accessKeyId: process.env.ACCESSKEY,
+  secretAccessKey: process.env.SECRETKEY
+})
 
 exports.ping = async (req, res) => {
   client.ping(
@@ -100,7 +106,7 @@ exports.upload = (req, res) => {
             })
           })
           .catch(err => {
-            console.log('Error while uploading..............', err);
+            console.log('Error while uploading..............', err)
             res.status(500).send({
               success: false,
               message: err.message
@@ -111,8 +117,26 @@ exports.upload = (req, res) => {
   })
 }
 
+exports.s3up = (req, res) => {
+  const myFile = req.file.originalname.split('.')
+  const fileType = myFile[myFile.length - 1]
+
+  const params = {
+    Bucket: process.env.BUCKET_S3,
+    Key: `${Date.now()()}.${fileType}`,
+    Body: req.file.buffer
+  }
+
+  s3.upload(params, (error, data) => {
+    if (error) {
+      res.status(500).send({ success: false, mess: error })
+    }
+
+    res.status(200).send({ success: true, result: data })
+  })
+}
+
 exports.viewVids = async (req, res) => {
-  const arreglo = []
   const token = req.headers['x-access-token']
 
   jwt.verify(token, process.env.secret, async (err, decoded) => {
@@ -139,7 +163,7 @@ exports.viewVids = async (req, res) => {
 }
 
 exports.delVid = (req, res) => {
-  const name = req.body.vidName;
+  const name = req.body.vidName
 
   const token = req.headers['x-access-token']
 
@@ -176,17 +200,19 @@ exports.delVid = (req, res) => {
   }) */
 }
 
-exports.editVid = (req,res) => {
-  var updt = req.body;
-  let token = req.headers["x-access-token"];
+exports.editVid = (req, res) => {
+  const updt = req.body
+  const token = req.headers['x-access-token']
 
   jwt.verify(token, process.env.secret, async (err, decoded) => {
-  Camera.update(updt,{
-    where: {   id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'Yes'  },
-  }).then(cam => {
-      res.status(200).send({ success: true, data: updt });
-  }).catch(err => {
-    res.status(500).send({ success: false, message: err.message });
-  });
+    Camera.update(updt, {
+      where: { id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'Yes' }
+    })
+      .then(cam => {
+        res.status(200).send({ success: true, data: updt })
+      })
+      .catch(err => {
+        res.status(500).send({ success: false, message: err.message })
+      })
   })
-};
+}
