@@ -10,8 +10,7 @@ const client = new elasticsearch.Client({
   log: 'trace',
   apiVersion: '7.x' // use the same version of your Elasticsearch instance
 })
-const path =
-  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+const path = process.env.home + process.env.username + process.env.pathDocker + process.env.resources
 const multer = require('multer')
 
 exports.ping = async (req, res) => {
@@ -86,7 +85,7 @@ exports.upload = (req, res) => {
         Camera.create({
           id: uuid,
           name: req.file.originalname.split('.')[0],
-          rtsp_in: req.file.path,
+          rtsp_in: process.env.app_url + req.file.path,
           id_account: decoded.id_account,
           id_branch: decoded.id_branch,
           stored_vid: 'Yes'
@@ -174,3 +173,18 @@ exports.delVid = (req, res) => {
     })
   }) */
 }
+
+exports.editVid = (req,res) => {
+  var updt = req.body;
+  let token = req.headers["x-access-token"];
+
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+  Camera.update(updt,{
+    where: {   id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'Yes'  },
+  }).then(cam => {
+      res.status(200).send({ success: true, data: updt });
+  }).catch(err => {
+    res.status(500).send({ success: false, message: err.message });
+  });
+  })
+};
