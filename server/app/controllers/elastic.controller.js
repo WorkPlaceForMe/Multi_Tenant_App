@@ -23,7 +23,8 @@ const s3 = new AWS.S3({
 })
 
 exports.ping = async (req, res) => {
-  client.ping({
+  client.ping(
+    {
       // ping usually has a 3000ms timeout
       requestTimeout: 30000
     },
@@ -267,4 +268,3 @@ exports.editVid = (req, res) => {
       })
   })
 }
-
