@@ -168,7 +168,7 @@ require('./app/routes/relations.routes')(app)
 require('./app/routes/schedule.routes')(app)
 require('./app/routes/ticket.routes')(app)
 require('./app/routes/analytics.routes')(app)
-/* require('./app/routes/email.routes')(app) */
+require('./app/routes/email.routes')(app)
 require('./app/routes/elastic.routes')(app)
 
 // resources being served
