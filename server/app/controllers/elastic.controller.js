@@ -12,8 +12,15 @@ const client = new elasticsearch.Client({
   log: 'trace',
   apiVersion: '7.x' // use the same version of your Elasticsearch instance
 })
-const path = process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+const { Op } = require('sequelize')
+const path =
+  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
 const multer = require('multer')
+const AWS = require('aws-sdk')
+const s3 = new AWS.S3({
+  accessKeyId: process.env.ACCESSKEY,
+  secretAccessKey: process.env.SECRETKEY
+})
 
 exports.ping = async (req, res) => {
   client.ping({
@@ -102,14 +109,14 @@ exports.upload = (req, res) => {
       jwt.verify(token, process.env.secret, async (_err, decoded) => {
         // Save User to Database
         Camera.create({
-            id: uuid,
-            name: req.file.originalname.split('.')[0],
-            rtsp_in: req.file.path,
-            http_in: `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/videos/${req.file.filename}`,
-            id_account: decoded.id_account,
-            id_branch: decoded.id_branch,
-            stored_vid: 'Yes'
-          })
+          id: uuid,
+          name: req.file.originalname.split('.')[0].split('_').join(' '),
+          rtsp_in: req.file.path,
+          http_in: req.file.path,
+          id_account: decoded.id_account,
+          id_branch: decoded.id_branch,
+          stored_vid: 'local'
+        })
           .then(camera => {
             res.status(200).send({
               success: true,
@@ -119,7 +126,7 @@ exports.upload = (req, res) => {
             })
           })
           .catch(err => {
-            console.log('Error while uploading..............', err);
+            console.log('Error while uploading..............', err)
             res.status(500).send({
               success: false,
               message: err.message
@@ -130,18 +137,66 @@ exports.upload = (req, res) => {
   })
 }
 
-exports.viewVids = async (req, res) => {
-  const arreglo = []
+exports.s3up = (req, res) => {
+  const uuid = uuidv4()
   const token = req.headers['x-access-token']
 
-  jwt.verify(token, process.env.secret, async (err, decoded) => {
-    Camera.findAll({
-        where: {
-          id_branch: decoded.id_branch,
-          stored_vid: 'Yes'
-        },
-        attributes: ['name', 'id', 'createdAt', 'updatedAt', 'rtsp_in']
+  const myFile = req.file.originalname.split('.')
+  const format = myFile[myFile.length - 1]
+  const newName = req.file.originalname.split('.')[0] + '-' + Date.now() + '.' + format
+
+  jwt.verify(token, process.env.secret, async (_err, decoded) => {
+    const params = {
+      Bucket: process.env.BUCKET_S3,
+      Key: `${decoded.id_account}/${decoded.id_branch}/${newName}`,
+      Body: req.file.buffer
+    }
+
+    s3.upload(params, (error, data) => {
+      if (error) {
+        return res.status(500).send({ success: false, mess: error })
+      }
+      Camera.create({
+        id: uuid,
+        name: req.file.originalname.split('.')[0],
+        rtsp_in: newName,
+        http_in: newName,
+        id_account: decoded.id_account,
+        id_branch: decoded.id_branch,
+        stored_vid: 's3'
       })
+        .then(camera => {
+          res.status(200).send({
+            success: true,
+            message: 'Stored video added successfully!',
+            id: uuid,
+            name: req.file.originalname.split('.')[0]
+          })
+        })
+        .catch(err => {
+          console.log('Error while uploading..............', err)
+          res.status(500).send({
+            success: false,
+            message: err.message
+          })
+        })
+    })
+  })
+}
+
+exports.viewVids = async (req, res) => {
+  const token = req.headers['x-access-token']
+
+  jwt.verify(token, process.env.secret, async (_err, decoded) => {
+    Camera.findAll({
+      where: {
+        id_branch: decoded.id_branch,
+        stored_vid: {
+          [Op.or]: ['s3', 'local']
+        }
+      },
+      attributes: ['name', 'id', 'createdAt', 'updatedAt', 'rtsp_in', 'stored_vid']
+    })
       .then(cameras => {
         res.status(200).send({
           success: true,
@@ -158,31 +213,33 @@ exports.viewVids = async (req, res) => {
 }
 
 exports.delVid = (req, res) => {
-  const name = req.body.vidName;
-
   const token = req.headers['x-access-token']
-  
+  const data = req.body
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
-    /* const vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/videos/${name}`
-    const img = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/heatmap_pics/${req.params.id}_heatmap.png`
-    fs.unlink(img, err => {
-      if (err) console.log({ success: false, message: 'Image error: ' + err })
-    })
-    fs.unlink(vid, err => {
-      if (err) console.log({ success: false, message: 'Image error: ' + err })
-    }) */
-    Camera.destroy({
-        where: {
-          id: req.params.id,
-          id_branch: decoded.id_branch,
-          stored_vid: 'Yes'
-        }
+    if (data.which === 'local') {
+      const vid = `${path}${decoded.id_account}/${decoded.id_branch}/videos/${data.vidName}`
+      const img = `${path}${decoded.id_account}/${decoded.id_branch}/heatmap_pics/${req.params.id}_heatmap.png`
+      fs.unlink(img, err => {
+        if (err) console.log({ success: false, message: 'Image error: ' + err })
       })
+      fs.unlink(vid, err => {
+        if (err) console.log({ success: false, message: 'Image error: ' + err })
+      })
+    } else if (data.which === 's3') {
+      const params = {
+        Bucket: process.env.BUCKET_S3,
+        Key: `${decoded.id_account}/${decoded.id_branch}/${req.body.vidName}`
+      }
+      s3.deleteObject(params, function (err, data) {
+        if (err) return res.status(500).json({ success: false, mess: err })
+      })
+    }
+
+    Camera.destroy({
+      where: { id: data.uuid, id_branch: decoded.id_branch, stored_vid: data.which }
+    })
       .then(cam => {
-        res.status(200).send({
-          success: true,
-          camera: req.params.uuid
-        })
+        res.status(200).send({ success: true, camera: data.uuid })
       })
       .catch(err => {
         console.log('err............', err)
@@ -192,40 +249,22 @@ exports.delVid = (req, res) => {
         })
       })
   })
-  /* const token = req.headers['x-access-token']
-
-  jwt.verify(token, process.env.secret, async (_err, decoded) => {
-    const img = `${path}${decoded.id_account}/${decoded.id_branch}/videos/${name}`
-    fs.unlink(img, err => {
-      if (err) res.status(500).send({ success: false, message: 'Image error: ' + err, name: name })
-      else {
-        res.status(200).send({ success: true, message: 'Image deleted', name: name })
-      }
-    })
-  }) */
 }
 
 exports.editVid = (req, res) => {
-  var updt = req.body;
-  let token = req.headers["x-access-token"];
+  const updt = req.body
+  const token = req.headers['x-access-token']
 
-  jwt.verify(token, process.env.secret, async (err, decoded) => {
+  jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Camera.update(updt, {
-      where: {
-        id: req.params.id,
-        id_branch: decoded.id_branch,
-        stored_vid: 'Yes'
-      },
-    }).then(cam => {
-      res.status(200).send({
-        success: true,
-        data: updt
-      });
-    }).catch(err => {
-      res.status(500).send({
-        success: false,
-        message: err.message
-      });
-    });
+      where: { id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'Yes' }
+    })
+      .then(_cam => {
+        res.status(200).send({ success: true, data: updt })
+      })
+      .catch(err => {
+        res.status(500).send({ success: false, message: err.message })
+      })
   })
 }
+

@@ -6,7 +6,7 @@ import { api } from '../../../models/API';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 
-const URL = `${api}/elastic/video`;
+const URL = `${api}/elastic/video/s3`;
 
 @Component({
   selector: 'ngx-upload',
@@ -24,15 +24,16 @@ export class UploadComponent implements OnInit {
   up: boolean = false;
   load: boolean = false;
   name: string;
+  s3:boolean = false;
 
   @ViewChild('fileInput', { static: false }) fileInputVariable: any;
   public uploader: FileUploader = new FileUploader({
     url: URL,
     itemAlias: 'file',
     allowedFileType: ['video'],
-    autoUpload: true,
     headers: [{ name: 'x-access-token', value: this.token.getToken() }],
   });
+
 
   ngOnInit(): void {
     this.uploader.onAfterAddingFile = (file) => {
@@ -63,7 +64,6 @@ export class UploadComponent implements OnInit {
   }
 
   change() {
-    console.log('===========');
     this.fileName = null;
     if (this.fileInputVariable.nativeElement.files.length !== 0) {
       this.up = true;

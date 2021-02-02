@@ -22,18 +22,18 @@ constructor(
             res=>{
               window.localStorage.clear();
               window.sessionStorage.clear();
-              window.location.reload()
-              this.router.navigate(['/'])
+              // window.location.reload()
+              this.router.navigate(['/pages'])
             }, err =>{ 
               console.error(err)
               window.localStorage.clear();
               window.sessionStorage.clear();
-              window.location.reload()
-              this.router.navigate(['/'])
+              // window.location.reload()
+              this.router.navigate(['/pages'])
             }
         )
         } else {
-          this.router.navigate(['/pages/dashboard'])
+          this.router.navigate(['/pages/graphs'])
         }
       }
       this.facesService.mess().subscribe(
@@ -43,18 +43,22 @@ constructor(
         err => {
           console.log(err)
           window.alert("Your session has expired, please log in again.");
+              window.localStorage.clear();
+              window.sessionStorage.clear();
+              window.location.reload()
+              this.router.navigate(['/pages'])
           this.authService.signOut(JSON.parse(localStorage.getItem('now_user'))['username']).subscribe(
             res=>{
               window.localStorage.clear();
               window.sessionStorage.clear();
-              window.location.reload()
-              this.router.navigate(['/'])
+              // window.location.reload()
+              this.router.navigate(['/pages'])
             }, err =>{ 
               console.error(err)
               window.localStorage.clear();
               window.sessionStorage.clear();
-              window.location.reload()
-              this.router.navigate(['/'])
+              // window.location.reload()
+              this.router.navigate(['/pages'])
             }
         )
         }

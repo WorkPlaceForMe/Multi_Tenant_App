@@ -18,12 +18,15 @@ import { NbCardModule, NbIconModule, NbInputModule, NbTreeGridModule, NbAccordio
   NbContextMenuModule } from '@nebular/theme';
 import { FormsModule } from '@angular/forms';
 import { ListComponent } from './list/list.component';
-import { SettingsComponent } from './settings/settings.component';
-
+import { authInterceptorProviders } from '../../_helpers/auth.interceptor';
 
 @NgModule({
-  declarations: [SearchComponent, UploadComponent, BarComponent, ListComponent, SettingsComponent],
+  declarations: [SearchComponent, UploadComponent, BarComponent, ListComponent],
   imports: [
+    CommonModule,
+    NbSpinnerModule,
+    NbFormFieldModule,
+    NbCheckboxModule,
     NbAccordionModule,
     NbCardModule,
     NbButtonModule,
@@ -32,6 +35,9 @@ import { SettingsComponent } from './settings/settings.component';
     FileUploadModule,
     CommonModule,
     SearchRoutingModule
-  ]
+  ],
+    providers: [
+    authInterceptorProviders
+  ],
 })
 export class SearchModule { }
