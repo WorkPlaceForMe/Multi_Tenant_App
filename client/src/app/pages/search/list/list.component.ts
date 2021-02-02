@@ -30,17 +30,16 @@ export class ListComponent implements OnInit {
   }
 
   deleteVideo(name: string, id) {
+    let split_rtsp = name.split('/');
     const body = {
-      vidName: name,
+      vidName: split_rtsp[split_rtsp.length - 1],
     };
     if (confirm('Do you want to delete this camera?')) {
-      this.face.delVid(id).subscribe(
+      this.face.delVid(id, body).subscribe(
         res => {
           // console.log(res);
           this.getVids();
-        },
-        err => console.log(err);
-      )
+        });
       }
 
 /*     let body = {

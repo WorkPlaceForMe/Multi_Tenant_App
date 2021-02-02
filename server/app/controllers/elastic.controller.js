@@ -1,5 +1,7 @@
 const elasticsearch = require('elasticsearch')
-require('dotenv').config({ path: '../../config.env' })
+require('dotenv').config({
+  path: '../../config.env'
+})
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const db = require('../models')
@@ -14,8 +16,7 @@ const path = process.env.home + process.env.username + process.env.pathDocker + 
 const multer = require('multer')
 
 exports.ping = async (req, res) => {
-  client.ping(
-    {
+  client.ping({
       // ping usually has a 3000ms timeout
       requestTimeout: 30000
     },
@@ -23,10 +24,15 @@ exports.ping = async (req, res) => {
       if (error) {
         console.trace('elasticsearch cluster is down!')
         console.error(error)
-        res.status(500).json({ success: false, mess: error })
+        res.status(500).json({
+          success: false,
+          mess: error
+        })
       } else {
         console.log('All is well')
-        res.status(200).json({ success: true })
+        res.status(200).json({
+          success: true
+        })
       }
     }
   )
@@ -38,10 +44,16 @@ exports.search = async (req, res) => {
       q: req.params.query
     })
     const hits = body.hits.hits
-    res.status(200).json({ success: true, data: hits })
+    res.status(200).json({
+      success: true,
+      data: hits
+    })
   } catch (error) {
     console.trace(error.message)
-    res.status(500).json({ success: false, mess: error })
+    res.status(500).json({
+      success: false,
+      mess: error
+    })
   }
 }
 
@@ -74,23 +86,30 @@ exports.upload = (req, res) => {
   const token = req.headers['x-access-token']
   upVideo(req, res, function (err) {
     if (err) {
-      return res.status(500).json({ success: false, error_code: 1, err_desc: err })
+      return res.status(500).json({
+        success: false,
+        error_code: 1,
+        err_desc: err
+      })
     } else {
       if (!req.file) {
-        return res.status(500).json({ success: false, error_code: 1 })
+        return res.status(500).json({
+          success: false,
+          error_code: 1
+        })
       }
       // res.status(200).json({ success: true, name: req.file.filename });
       jwt.verify(token, process.env.secret, async (_err, decoded) => {
         // Save User to Database
         Camera.create({
-          id: uuid,
-          name: req.file.originalname.split('.')[0],
-          rtsp_in: process.env.app_url + req.file.path,
-          http_in: process.env.app_url + req.file.path,
-          id_account: decoded.id_account,
-          id_branch: decoded.id_branch,
-          stored_vid: 'Yes'
-        })
+            id: uuid,
+            name: req.file.originalname.split('.')[0],
+            rtsp_in: req.file.path,
+            http_in: `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/videos/${req.file.filename}`,
+            id_account: decoded.id_account,
+            id_branch: decoded.id_branch,
+            stored_vid: 'Yes'
+          })
           .then(camera => {
             res.status(200).send({
               success: true,
@@ -117,12 +136,12 @@ exports.viewVids = async (req, res) => {
 
   jwt.verify(token, process.env.secret, async (err, decoded) => {
     Camera.findAll({
-      where: {
-        id_branch: decoded.id_branch,
-        stored_vid: 'Yes'
-      },
-      attributes: ['name', 'id', 'createdAt', 'updatedAt', 'rtsp_in']
-    })
+        where: {
+          id_branch: decoded.id_branch,
+          stored_vid: 'Yes'
+        },
+        attributes: ['name', 'id', 'createdAt', 'updatedAt', 'rtsp_in']
+      })
       .then(cameras => {
         res.status(200).send({
           success: true,
@@ -142,25 +161,35 @@ exports.delVid = (req, res) => {
   const name = req.body.vidName;
 
   const token = req.headers['x-access-token']
-
+  
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
-    /* const vid = `${path}${decoded.id_account}/${decoded.id_branch}/videos/${name}`
-    const img = `${path}${decoded.id_account}/${decoded.id_branch}/heatmap_pics/${req.params.id}_heatmap.png`
+    /* const vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/videos/${name}`
+    const img = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/heatmap_pics/${req.params.id}_heatmap.png`
     fs.unlink(img, err => {
       if (err) console.log({ success: false, message: 'Image error: ' + err })
     })
     fs.unlink(vid, err => {
       if (err) console.log({ success: false, message: 'Image error: ' + err })
     }) */
-
     Camera.destroy({
-      where: { id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'Yes' }
-    })
+        where: {
+          id: req.params.id,
+          id_branch: decoded.id_branch,
+          stored_vid: 'Yes'
+        }
+      })
       .then(cam => {
-        res.status(200).send({ success: true, camera: req.params.uuid })
+        res.status(200).send({
+          success: true,
+          camera: req.params.uuid
+        })
       })
       .catch(err => {
-        res.status(500).send({ success: false, message: err.message })
+        console.log('err............', err)
+        res.status(500).send({
+          success: false,
+          message: err.message
+        })
       })
   })
   /* const token = req.headers['x-access-token']
@@ -176,17 +205,27 @@ exports.delVid = (req, res) => {
   }) */
 }
 
-exports.editVid = (req,res) => {
+exports.editVid = (req, res) => {
   var updt = req.body;
   let token = req.headers["x-access-token"];
 
   jwt.verify(token, process.env.secret, async (err, decoded) => {
-  Camera.update(updt,{
-    where: {   id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'Yes'  },
-  }).then(cam => {
-      res.status(200).send({ success: true, data: updt });
-  }).catch(err => {
-    res.status(500).send({ success: false, message: err.message });
-  });
+    Camera.update(updt, {
+      where: {
+        id: req.params.id,
+        id_branch: decoded.id_branch,
+        stored_vid: 'Yes'
+      },
+    }).then(cam => {
+      res.status(200).send({
+        success: true,
+        data: updt
+      });
+    }).catch(err => {
+      res.status(500).send({
+        success: false,
+        message: err.message
+      });
+    });
   })
-};
+}

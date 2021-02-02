@@ -44,7 +44,6 @@ export class AlgorithmsComponent implements OnInit {
           this.width = 485;
           this.height = this.width * this.resRelation;
         }
-        console.log(this.camera)
         this.link = sanitizer.bypassSecurityTrustStyle('url(' + this.camera.heatmap_pic + ')');
       },
       err => console.error(err),
@@ -185,7 +184,7 @@ export class AlgorithmsComponent implements OnInit {
   perimeter = [];
   relations: any = [];
   algos: any = [
-    { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false },{ activated: false }
+    { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false },
   ];
   Aalgos: any = [];
   Balgos: any = [];
@@ -227,10 +226,10 @@ export class AlgorithmsComponent implements OnInit {
   };
 
   back(which){
-    if(which === "Yes"){
-      this.router.navigateByUrl("/pages/search/list")
+    if (which === 'Yes'){
+      this.router.navigateByUrl('/pages/search/list');
     } else {
-      this.router.navigateByUrl("/pages/camerasList")
+      this.router.navigateByUrl('/pages/camerasList');
     }
   }
 
@@ -409,12 +408,17 @@ export class AlgorithmsComponent implements OnInit {
   }
 
   info() {
-    //console.log(this.algos, this.relations, this.polygons);
+    // console.log(this.algos, this.relations, this.polygons);
   }
 
-  saveAndBack() {
+  saveAndBack(which) {
     this.nSave();
-    this.router.navigateByUrl('/pages/camerasList');
+    if (which === 'Yes'){
+      this.router.navigateByUrl('/pages/search/list');
+    } else {
+      this.router.navigateByUrl('/pages/camerasList');
+    }
+    //this.router.navigateByUrl('/pages/camerasList');
   }
   saave() {
     const data = [];
@@ -426,7 +430,7 @@ export class AlgorithmsComponent implements OnInit {
         window.location.reload();
       },
       err => {
-        //console.log(err);
+        // console.log(err);
         // this.router.navigateByUrl(`/pages/cameras/algorithms/${id}`)
         window.location.reload();
       },
