@@ -154,7 +154,7 @@
         </canvas>
       </div>
       <div class='buttons-row'>
-        <button nbButton [status]="'success'" (click)="saveAndBack()">Save and back</button>
+        <button nbButton [status]="'success'" (click)="saveAndBack(camera.stored_vid)">Save and back</button>
         <!-- <button nbButton [status]="'info'"(click)="saave()">Save</button> -->
         <button nbButton [status]="'warning'" (click)="back(camera.stored_vid)">Back</button>
       </div>

@@ -35,8 +35,8 @@ module.exports = function(app) {
     controller.viewVids
   );
 
-  app.post(
-    "/api/elastic/video/del",
+  app.delete(
+    "/api/elastic/video/delete/:id",
     [authJwt.verifyToken],
     controller.delVid
   );
