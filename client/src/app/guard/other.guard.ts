@@ -47,6 +47,10 @@ export class OtherGuard implements CanActivate {
       err => {
         console.log(err)
         window.alert("Your session has expired, please log in again.");
+            window.localStorage.clear();
+            window.sessionStorage.clear();
+            window.location.reload()
+            this.router.navigate(['/pages'])
         this.authService.signOut(JSON.parse(localStorage.getItem('now_user'))['username']).subscribe(
           res=>{
             window.localStorage.clear();

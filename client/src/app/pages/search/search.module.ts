@@ -23,15 +23,8 @@ import { authInterceptorProviders } from '../../_helpers/auth.interceptor';
 @NgModule({
   declarations: [SearchComponent, UploadComponent, BarComponent, ListComponent],
   imports: [
-    NbTabsetModule,
-    NbTreeGridModule,
-    NbUserModule,
-    NbListModule,
-    NbStepperModule,
-    NbActionsModule,
-    NbSelectModule,
-    NbRouteTabsetModule,
-    NbContextMenuModule,
+    CommonModule,
+    NbSpinnerModule,
     NbFormFieldModule,
     NbCheckboxModule,
     NbAccordionModule,
