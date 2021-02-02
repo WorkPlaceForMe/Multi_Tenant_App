@@ -126,18 +126,17 @@ exports.s3up = (req, res) => {
   const format = myFile[myFile.length - 1]
   const newName = req.file.originalname.split('.')[0] + '-' + Date.now() + '.' + format
 
-  const params = {
-    Bucket: process.env.BUCKET_S3,
-    Key: `${newName}`,
-    Body: req.file.buffer
-  }
-
-  s3.upload(params, (error, data) => {
-    if (error) {
-      return res.status(500).send({ success: false, mess: error })
+  jwt.verify(token, process.env.secret, async (_err, decoded) => {
+    const params = {
+      Bucket: process.env.BUCKET_S3,
+      Key: `${decoded.id_account}/${decoded.id_branch}/${newName}`,
+      Body: req.file.buffer
     }
 
-    jwt.verify(token, process.env.secret, async (_err, decoded) => {
+    s3.upload(params, (error, data) => {
+      if (error) {
+        return res.status(500).send({ success: false, mess: error })
+      }
       Camera.create({
         id: uuid,
         name: req.file.originalname.split('.')[0],
@@ -210,9 +209,8 @@ exports.delVid = (req, res) => {
     } else if (data.which === 's3') {
       const params = {
         Bucket: process.env.BUCKET_S3,
-        Key: `${req.body.vidName}`
+        Key: `${decoded.id_account}/${decoded.id_branch}/${req.body.vidName}`
       }
-      console.log(data)
       s3.deleteObject(params, function (err, data) {
         if (err) return res.status(500).json({ success: false, mess: err })
       })

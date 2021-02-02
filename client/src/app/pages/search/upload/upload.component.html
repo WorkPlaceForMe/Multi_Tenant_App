@@ -4,13 +4,20 @@
             <input [(ngModel)]='name' style="width: auto" type="text" nbInput id="search" placeholder="Choose a Name" [status]="'primary'">
         </div>
         <div class="col-md-2">
-            <nb-checkbox [(ngModel)]="s3">Upload to S3</nb-checkbox>
+            <!-- <nb-checkbox [(ngModel)]="s3">Upload to S3</nb-checkbox> -->
         </div>
         <div class="col-md-6 less-padding">
             <div class="custom-file">
                 <label class="custom-file-label" for="exampleInputFile">{{fileName == null ? 'Choose a File to upload' : fileName}}</label>
                 <input type="file" (change)=change() [uploader]="uploader" ng2FileSelect #fileInput class="custom-file-input" id="exampleInputFile" aria-describedby="fileHelp" name="file" [disabled]="name == null">
             </div>
+        </div>
+    </div>
+
+    <div class='row'>
+        <div class='col-md-12'>
+            <button [status]="'success'" nbButton class="btn-block" (click)='uploa()' *ngIf='!load' [disabled]='fileName == null'>Upload</button>
+            <button [status]="'success'" nbButton class="btn-block" *ngIf='load' disabled [nbSpinner]="true" nbSpinnerSize="giant" nbSpinnerStatus="primary" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
         </div>
     </div>
 

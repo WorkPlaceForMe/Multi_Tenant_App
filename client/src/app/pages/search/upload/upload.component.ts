@@ -6,7 +6,7 @@ import { api } from '../../../models/API';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 
-const URL = `${api}/elastic/video`;
+const URL = `${api}/elastic/video/s3`;
 
 @Component({
   selector: 'ngx-upload',
@@ -31,7 +31,6 @@ export class UploadComponent implements OnInit {
     url: URL,
     itemAlias: 'file',
     allowedFileType: ['video'],
-    autoUpload: true,
     headers: [{ name: 'x-access-token', value: this.token.getToken() }],
   });
 
@@ -41,7 +40,7 @@ export class UploadComponent implements OnInit {
       file.withCredentials = false;
       const format = file.file.name.split('.')[1];
       const name = this.name.split(' ').join('_');
-      const newName = this.s3 + '-' + name + '.' + format;
+      const newName = name + '.' + format;
       file.file.name = newName;
     };
     this.uploader.onErrorItem = (item, response, status, headers) => {
@@ -65,7 +64,6 @@ export class UploadComponent implements OnInit {
   }
 
   change() {
-    console.log('===========');
     this.fileName = null;
     if (this.fileInputVariable.nativeElement.files.length !== 0) {
       this.up = true;
