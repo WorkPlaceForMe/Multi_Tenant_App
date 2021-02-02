@@ -41,7 +41,7 @@ exports.addCamera = (req,res) => {
 
     jwt.verify(token, process.env.secret, async (err, decoded) => {
         Camera.findAll({
-            where: { id_branch: decoded.id_branch, stored_vid: 'No'  },
+            where: { id_branch: decoded.id_branch  },
             attributes: ['name', 'id','createdAt', 'updatedAt'],
           }).then(cameras => {
               res.status(200).send({ success: true, data: cameras });

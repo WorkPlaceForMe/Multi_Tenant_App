@@ -113,9 +113,10 @@ const opt = {
     ]
   },
   apis: ['server.js', './app/routes/*.js']
-}
+})
+)
 
-const swaggerDocs = swaggerJsDoc(opt)
+//const swaggerDocs = swaggerJsDoc(opt)
 
 app.use(
   '/api-docs',
@@ -139,7 +140,7 @@ app.use(
 //   fs.writeFileSync('./resources/swagger.yaml', doc, 'utf8')
 // }
 
-app.use(
+/* app.use(
   '/api-docs',
   swaggerUi.serve,
   swaggerUi.setup(swaggerDocs, {
@@ -154,7 +155,7 @@ app.use(
       validatorUrl: null
     }
   })
-)
+) */
 
 // routes
 require('./app/routes/auth.routes')(app)
