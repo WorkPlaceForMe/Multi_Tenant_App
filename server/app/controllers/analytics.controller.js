@@ -1713,3 +1713,42 @@ exports.carmake = async (req, res) => {
     })
   });
 }
+
+exports.vcount = async (req, res) => {
+
+  const data = req.body;
+  console.log(`SELECT * from vcount WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`);
+  await db.con().query(`SELECT * from vcount WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
+    if (err) return res.status(500).json({
+      success: false,
+      message: err
+    });
+    console.log('result............',result);
+    for (var v of result) {
+
+      let d = v.time
+      let se = d.getSeconds()
+      let mi = d.getMinutes()
+      let ho = d.getHours()
+      if (se < 10) {
+        se = '0' + se;
+      }
+      if (mi < 10) {
+        mi = '0' + mi;
+      }
+      if (ho < 10) {
+        ho = '0' + ho;
+      }
+      d = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
+      v['picture'] = `${d}_${v.track_id}.jpg`;
+    }
+    const a = {
+      total: result.length,
+      raw: result
+    }
+    res.status(200).json({
+      success: true,
+      data: a
+    })
+  });
+}

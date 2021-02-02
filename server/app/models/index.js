@@ -36,6 +36,7 @@ db.user.belongsToMany(db.algorithm, {
   otherKey: 'algoId'
 })
 
+
 db.ALGORITHMS = [
   'Facial Recognition',
   'Person Climbing Barricade',

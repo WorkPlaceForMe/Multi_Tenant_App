@@ -1,5 +1,7 @@
 const elasticsearch = require('elasticsearch')
-require('dotenv').config({ path: '../../config.env' })
+require('dotenv').config({
+  path: '../../config.env'
+})
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const db = require('../models')
@@ -21,8 +23,7 @@ const s3 = new AWS.S3({
 })
 
 exports.ping = async (req, res) => {
-  client.ping(
-    {
+  client.ping({
       // ping usually has a 3000ms timeout
       requestTimeout: 30000
     },
@@ -30,10 +31,15 @@ exports.ping = async (req, res) => {
       if (error) {
         console.trace('elasticsearch cluster is down!')
         console.error(error)
-        res.status(500).json({ success: false, mess: error })
+        res.status(500).json({
+          success: false,
+          mess: error
+        })
       } else {
         console.log('All is well')
-        res.status(200).json({ success: true })
+        res.status(200).json({
+          success: true
+        })
       }
     }
   )
@@ -45,10 +51,16 @@ exports.search = async (req, res) => {
       q: req.params.query
     })
     const hits = body.hits.hits
-    res.status(200).json({ success: true, data: hits })
+    res.status(200).json({
+      success: true,
+      data: hits
+    })
   } catch (error) {
     console.trace(error.message)
-    res.status(500).json({ success: false, mess: error })
+    res.status(500).json({
+      success: false,
+      mess: error
+    })
   }
 }
 
@@ -81,10 +93,17 @@ exports.upload = (req, res) => {
   const token = req.headers['x-access-token']
   upVideo(req, res, function (err) {
     if (err) {
-      return res.status(500).json({ success: false, error_code: 1, err_desc: err })
+      return res.status(500).json({
+        success: false,
+        error_code: 1,
+        err_desc: err
+      })
     } else {
       if (!req.file) {
-        return res.status(500).json({ success: false, error_code: 1 })
+        return res.status(500).json({
+          success: false,
+          error_code: 1
+        })
       }
       // res.status(200).json({ success: true, name: req.file.filename });
       jwt.verify(token, process.env.secret, async (_err, decoded) => {
@@ -223,7 +242,11 @@ exports.delVid = (req, res) => {
         res.status(200).send({ success: true, camera: data.uuid })
       })
       .catch(err => {
-        res.status(500).send({ success: false, message: err.message })
+        console.log('err............', err)
+        res.status(500).send({
+          success: false,
+          message: err.message
+        })
       })
   })
 }
@@ -244,3 +267,4 @@ exports.editVid = (req, res) => {
       })
   })
 }
+

@@ -31,7 +31,7 @@ const fs = require('fs');
 
     jwt.verify(token, process.env.secret, (err, decoded) => {
     User.findAll({
-      where: { id_branch: decoded.id_branch, role: 'user'  },
+      where: { id_branch: decoded.id_branch, role: 'client'  },
       attributes: ['username', 'email', 'id_account', 'id_branch', 'createdAt', 'role', 'id', 'updatedAt', 'disabled']
     }).then(accounts => {
         res.status(200).send({ success: true, data:accounts });

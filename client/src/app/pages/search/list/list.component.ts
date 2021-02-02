@@ -29,6 +29,7 @@ export class ListComponent implements OnInit {
     );
   }
 
+
   deleteVideo(name: string, id, where) {
     if(name.split('/')[10]){
       name = name.split('/')[10]

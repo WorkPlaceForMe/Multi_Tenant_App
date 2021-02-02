@@ -41,10 +41,6 @@ exports.initial = function() {
         name: 'D&C of human, animal and vehicle'
     })
     algo.create({
-        id: 32,
-        name: 'Parking Violation'
-    })
-    algo.create({
         id: 5,
         name: 'Speeding Vehicle'
       })
@@ -151,6 +147,14 @@ exports.initial = function() {
       algo.create({
         id: 31,
         name: 'Carmake'
+      })
+      algo.create({
+        id: 32,
+        name: 'Parking Violation'
+    })
+      algo.create({
+        id: 33,
+        name: 'vcount'
       })
 }
 // INSERT INTO `multi_tenant`.`algorithms` (`id`, `name`, `createdAt`, `updatedAt`) VALUES ('27', 'Camera Tampering', '2020-10-05 07:31:29', '2020-10-05 07:31:29');
