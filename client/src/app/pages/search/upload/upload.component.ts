@@ -5,6 +5,7 @@ import { FileUploader, FileLikeObject, FileItem, ParsedResponseHeaders } from 'n
 import { api } from '../../../models/API';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 const URL = `${api}/elastic/video/s3`;
 
@@ -19,6 +20,7 @@ export class UploadComponent implements OnInit {
     private router: Router,
     private token: AuthService,
     private facesService: FacesService,
+    private SpinnerService: NgxSpinnerService,
   ) { }
   fileName: string;
   up: boolean = false;
@@ -37,6 +39,7 @@ export class UploadComponent implements OnInit {
 
   ngOnInit(): void {
     this.uploader.onAfterAddingFile = (file) => {
+      this.SpinnerService.show();
       file.withCredentials = false;
       const format = file.file.name.split('.')[1];
       const name = this.name.split(' ').join('_');
@@ -57,6 +60,7 @@ export class UploadComponent implements OnInit {
     this.uploader.onProgressItem = (progress: any) => {
       console.log(progress['progress']);
       if (progress['progress'] === 100) {
+        this.SpinnerService.hide();
         console.log('uploaded');
       }
     };

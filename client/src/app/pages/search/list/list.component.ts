@@ -31,11 +31,12 @@ export class ListComponent implements OnInit {
 
 
   deleteVideo(name: string, id, where) {
-    if(name.split('/')[10]){
-      name = name.split('/')[10]
-    }
+    /* if(name.split('/')[10]) {
+      name = name.split('/')[10];
+    } */
+    let split_rtsp = name.split('/');
     const body = {
-      vidName: name,
+      vidName: split_rtsp[split_rtsp.length - 1],
       uuid: id,
       which: where
     };
@@ -43,9 +44,7 @@ export class ListComponent implements OnInit {
       this.face.delVid(body).subscribe(
         res => {
           this.getVids();
-        },
-        err => console.log(err)
-      )
+        });
       }
   }
 

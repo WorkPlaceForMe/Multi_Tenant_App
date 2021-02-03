@@ -19,10 +19,12 @@ import { NbCardModule, NbIconModule, NbInputModule, NbTreeGridModule, NbAccordio
 import { FormsModule } from '@angular/forms';
 import { ListComponent } from './list/list.component';
 import { authInterceptorProviders } from '../../_helpers/auth.interceptor';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [SearchComponent, UploadComponent, BarComponent, ListComponent],
   imports: [
+    NgxSpinnerModule,
     CommonModule,
     NbSpinnerModule,
     NbFormFieldModule,
