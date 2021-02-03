@@ -20,7 +20,7 @@ export class CarmakeComponent implements OnInit, OnDestroy {
 
   @Input() range: NbCalendarRange<Date>;
   @Input() camera;
-  anpr: any = [];
+  carmake: any = [];
   player: any;
   timezone: any;
   now_user: Account;
@@ -104,7 +104,7 @@ export class CarmakeComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type,
     };
-    this.face.checkVideo(2, this.camera).subscribe(
+    this.face.checkVideo(31, this.camera).subscribe(
       res => {
         this.video = res['video'];
         if (this.video === true) {
@@ -125,17 +125,17 @@ export class CarmakeComponent implements OnInit, OnDestroy {
     );
     this.serv.carmake(this.camera, l).subscribe(
       res => {
-        this.anpr = res['data'];
-        for (const m of this.anpr.raw) {
-          m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/anpr/' + m['cam_id'] + '/' + m['picture']);
+        this.carmake = res['data'];
+        for (const m of this.carmake.raw) {
+          m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/carmake/' + m['cam_id'] + '/' + m['picture']);
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone);
         }
-        this.source = this.anpr.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+        this.source = this.carmake.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
 
       },
       err => {
         console.error(err);
-        this.anpr = undefined;
+        this.carmake = undefined;
       },
     );
 

@@ -11,16 +11,16 @@ import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
 
 @Component({
-  selector: 'ngx-illegal-parking',
-  templateUrl: './illegal-parking.component.html',
-  styleUrls: ['./illegal-parking.component.scss', '../smart-table.scss']
+  selector: 'ngx-speeding',
+  templateUrl: './speeding.component.html',
+  styleUrls: ['./speeding.component.scss', '../smart-table.scss']
 })
 
-export class IllegalParkingComponent implements OnInit, OnDestroy {
+export class SpeedingComponent implements OnInit, OnDestroy {
 
   @Input() range: NbCalendarRange<Date>;
   @Input() camera;
-  parking: any = [];
+  speeding: any = [];
   player: any;
   timezone: any;
   now_user: Account;
@@ -104,7 +104,7 @@ export class IllegalParkingComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type,
     };
-    this.face.checkVideo(32, this.camera).subscribe(
+    this.face.checkVideo(5, this.camera).subscribe(
       res => {
         this.video = res['video'];
         if (this.video === true) {
@@ -123,18 +123,19 @@ export class IllegalParkingComponent implements OnInit, OnDestroy {
         }
       }, err => console.error(err),
     );
-    this.serv.parking(this.camera, l).subscribe(
+    this.serv.speeding(this.camera, l).subscribe(
       res => {
-        this.parking = res['data'];
-        for (const m of this.parking.raw) {
-          m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/parking/' + m['cam_id'] + '/' + m['picture']);
+        this.speeding = res['data'];
+        for (const m of this.speeding.raw) {
+          m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/speeding/' + m['cam_id'] + '/' + m['picture']);
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone);
         }
-        this.source = this.parking.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+        this.source = this.speeding.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+
       },
       err => {
         console.error(err);
-        this.parking = undefined;
+        this.speeding = undefined;
       },
     );
 
@@ -179,13 +180,19 @@ export class IllegalParkingComponent implements OnInit, OnDestroy {
         type: 'string',
         filter: false,
       },
-      cam_name: {
+      speed: {
+        title: 'SPEED',
+        type: 'string',
+        filter: false,
+      },
+      camera_name: {
         title: 'CAM',
         type: 'string',
         filter: false,
       },
     },
   };
+
 }
 
 @Component({
@@ -206,6 +213,4 @@ export class ButtonViewComponent implements ViewCell, OnInit {
   ngOnInit() {
   }
 }
-
-
 

@@ -51,6 +51,21 @@ exports.addCamera = (req,res) => {
           })
   }
 
+  exports.viewLiveCams = (req, res) =>{
+    let token = req.headers["x-access-token"];
+
+    jwt.verify(token, process.env.secret, async (err, decoded) => {
+        Camera.findAll({
+            where: { id_branch: decoded.id_branch, stored_vid: 'No' },
+            attributes: ['name', 'id','createdAt', 'updatedAt'],
+          }).then(cameras => {
+              res.status(200).send({ success: true, data: cameras });
+          }).catch(err => {
+            res.status(500).send({ success: false, message: err.message });
+          });
+          })
+  }
+
   exports.viewCam = (req, res) =>{
     let token = req.headers["x-access-token"];
 

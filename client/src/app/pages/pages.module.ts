@@ -92,6 +92,8 @@ import { AxleComponent } from './online/graphs/axle/axle.component';
 import { CarmakeComponent } from './online/graphs/carmake/carmake.component';
 import { IllegalParkingComponent } from './online/graphs/illegal-parking/illegal-parking.component';
 import { VehicleCountComponent } from './online/graphs/vehicle-count/vehicle-count.component';
+import { WrongTurnComponent } from './online/graphs/wrong-turn/wrong-turn.component';
+import { SpeedingComponent } from './online/graphs/speeding/speeding.component';
 
 // import { OverallComponent } from './facial_recognition/overall/overall.component';
 
@@ -195,6 +197,8 @@ import { VehicleCountComponent } from './online/graphs/vehicle-count/vehicle-cou
     CarmakeComponent,
     IllegalParkingComponent,
     VehicleCountComponent,
+    WrongTurnComponent,
+    SpeedingComponent,
   ],
   providers: [
     FacesService,
