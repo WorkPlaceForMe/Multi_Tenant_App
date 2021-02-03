@@ -215,9 +215,9 @@ exports.delVid = (req, res) => {
   const token = req.headers['x-access-token']
   const data = req.body
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
-    /* if (data.which === 'local') {
-      const vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/videos/${data.vidName}`
-      const img = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/heatmap_pics/${req.params.id}_heatmap.png`
+    if (data.which === 'local') {
+      // const vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/videos/${data.vidName}`
+      // const img = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/heatmap_pics/${req.params.id}_heatmap.png`
       const vid = `${path}${decoded.id_account}/${decoded.id_branch}/videos/${data.vidName}`
       const img = `${path}${decoded.id_account}/${decoded.id_branch}/heatmap_pics/${req.params.id}_heatmap.png`
       fs.unlink(img, err => {
@@ -234,7 +234,7 @@ exports.delVid = (req, res) => {
       s3.deleteObject(params, function (err, data) {
         if (err) return res.status(500).json({ success: false, mess: err })
       })
-    } */
+    }
 
     Camera.destroy({
       where: { id: data.uuid, id_branch: decoded.id_branch, stored_vid: 'Yes' }
