@@ -6,7 +6,7 @@ import { api } from '../../../models/API';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 
-const URL = `${api}/elastic/video/s3`;
+const URL = `${api}/elastic/video`;
 
 @Component({
   selector: 'ngx-upload',
