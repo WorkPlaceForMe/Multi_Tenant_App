@@ -121,7 +121,7 @@ export class AlgorithmsComponent implements OnInit {
                     this.relations[u]['roi_id'][l]['y'] = this.relations[u]['roi_id'][l]['y'] * this.height / this.res_height;
                   }
 
-                  this.relations[u]['roi_id'].push(this.relations[u]['algo_id']);
+                  this.relations[u]['roi_id'].push(parseInt(this.relations[u]['algo_id']));
                   this.polygons.push(this.relations[u]['roi_id']);
                 }
                 if (u === this.relations.length - 1 && this.polygons != null) {
