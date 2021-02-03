@@ -195,7 +195,7 @@ return this.http.post(`${this.API_URI}/images`, image);
   viewVids(){
     return this.http.get(`${this.API_URI}/elastic/video/list`);
   }
-  delVid(id:any, data){
-    return this.http.delete(`${this.API_URI}/elastic/video/delete/${id}/`, data);
+  delVid(data){
+    return this.http.delete(`${this.API_URI}/elastic/video/delete/`, data);
   }
 }

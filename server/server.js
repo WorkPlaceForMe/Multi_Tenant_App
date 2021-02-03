@@ -27,9 +27,9 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // parse requests of content-type - application/json
-app.use(bodyParser.json({ limit: '2gb', extended: true }))
+app.use(bodyParser.json({ limit: '10mb', extended: true }))
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ limit: '2gb', extended: true }))
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
 app.all(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE')
@@ -108,43 +108,38 @@ const opt = {
     },
     servers: [
       {
-        url: `${process.env.app_url}`,
-      },
-    ],
-  },
-  apis: ["server.js","./app/routes/*.js"],
-};
-
-
-const swaggerDocs = swaggerJsDoc(opt);
-
-if(1 == 2){
-  const doc = YAML.dump(swaggerDocs);
-  fs.writeFileSync('./resources/swagger.yaml', doc, 'utf8')
-};
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
-  explorer: true, 
-  customCss: `img[alt='Swagger UI'] { content:url(${process.env.app_url}/api/pictures/graymaticsLogo.png);}`,
-  customSiteTitle: "Graymatics API Manual",
-  customfavIcon: `${process.env.app_url}/api/pictures/favicon1.ico`,
-  swaggerOptions: {
-    url:`${process.env.app_url}/api/pictures/swagger.json`,
-    docExpansion: 'none',
-    validatorUrl: null
+        url: `${process.env.app_url}`
+      }
+    ]
   },
   apis: ['server.js', './app/routes/*.js']
-})
-)
+}
 
-//const swaggerDocs = swaggerJsDoc(opt)
+const swaggerDocs = swaggerJsDoc(opt)
+
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocs, {
+    explorer: true,
+    customCss: `img[alt='Swagger UI'] { content:url(${process.env.app_url}/api/pictures/graymaticsLogo.png);}`,
+    customSiteTitle: 'Graymatics API Manual',
+    customfavIcon: `${process.env.app_url}/api/pictures/favicon1.ico`,
+    swaggerOptions: {
+      url: `${process.env.app_url}/api/pictures/swagger.json`,
+      docExpansion: 'none',
+      validatorUrl: null
+    },
+    apis: ['server.js', './app/routes/*.js']
+  })
+)
 
 // if (1 === 2) {
 //   const doc = YAML.dump(swaggerDocs)
 //   fs.writeFileSync('./resources/swagger.yaml', doc, 'utf8')
 // }
 
-/* app.use(
+app.use(
   '/api-docs',
   swaggerUi.serve,
   swaggerUi.setup(swaggerDocs, {
@@ -159,7 +154,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, {
       validatorUrl: null
     }
   })
-) */
+)
 
 // routes
 require('./app/routes/auth.routes')(app)
@@ -173,7 +168,7 @@ require('./app/routes/relations.routes')(app)
 require('./app/routes/schedule.routes')(app)
 require('./app/routes/ticket.routes')(app)
 require('./app/routes/analytics.routes')(app)
-/* require('./app/routes/email.routes')(app) */
+require('./app/routes/email.routes')(app)
 require('./app/routes/elastic.routes')(app)
 
 // resources being served
