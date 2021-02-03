@@ -78,6 +78,9 @@ return this.http.post(`${this.API_URI}/images`, image);
   getCameras(){
     return this.http.get(`${this.API_URI}/camera/viewAll`);
   }
+  getLiveCameras(){
+    return this.http.get(`${this.API_URI}/camera/viewLiveCams`);
+  }
   getCamera(uuid: string){
     return this.http.get(`${this.API_URI}/camera/viewOne/${uuid}`);
   }

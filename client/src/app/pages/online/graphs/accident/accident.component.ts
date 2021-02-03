@@ -18,7 +18,7 @@ export class AccidentComponent implements OnInit, OnDestroy {
 
   @Input() range: NbCalendarRange<Date>;
   @Input() camera;
-  anpr: any = [];
+  accident: any = [];
   player: any;
   timezone: any;
   now_user: Account;
@@ -123,17 +123,17 @@ export class AccidentComponent implements OnInit, OnDestroy {
     );
     this.serv.accident(this.camera, l).subscribe(
       res => {
-        this.anpr = res['data'];
-        for (const m of this.anpr.raw) {
-          m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/anpr/' + m['cam_id'] + '/' + m['picture']);
+        this.accident = res['data'];
+        for (const m of this.accident.raw) {
+          m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/accident/' + m['cam_id'] + '/' + m['picture']);
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone);
         }
-        this.source = this.anpr.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+        this.source = this.accident.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
 
       },
       err => {
         console.error(err);
-        this.anpr = undefined;
+        this.accident = undefined;
       },
     );
   }

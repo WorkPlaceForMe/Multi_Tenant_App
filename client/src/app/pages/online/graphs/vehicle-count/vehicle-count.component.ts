@@ -19,7 +19,7 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
 
   @Input() range: NbCalendarRange<Date>;
   @Input() camera;
-  anpr: any = [];
+  vcount: any = [];
   player: any;
   timezone: any;
   now_user: Account;
@@ -124,17 +124,16 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
     );
     this.serv.vcount(this.camera, l).subscribe(
       res => {
-        this.anpr = res['data'];
-        for (const m of this.anpr.raw) {
-          m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/anpr/' + m['cam_id'] + '/' + m['picture']);
+        this.vcount = res['data'];
+        for (const m of this.vcount.raw) {
+          m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/vcount/' + m['cam_id'] + '/' + m['picture']);
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone);
         }
-        this.source = this.anpr.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
-
+        this.source = this.vcount.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
       },
       err => {
         console.error(err);
-        this.anpr = undefined;
+        this.vcount = undefined;
       },
     );
   }

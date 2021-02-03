@@ -95,5 +95,13 @@ export class AnalyticsService {
     return this.http.post(`${this.API_URL}vcount/${id}`, dates);
   }
 
+  direction(id: string, dates){
+    return this.http.post(`${this.API_URL}direction/${id}`, dates);
+  }
+
+  speeding(id: string, dates){
+    return this.http.post(`${this.API_URL}speeding/${id}`, dates);
+  }
+
   constructor(private http: HttpClient) { }
 }

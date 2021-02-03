@@ -23,6 +23,12 @@ module.exports = function(app) {
   );
 
   app.get(
+    "/api/camera/viewLiveCams",
+    [authJwt.verifyToken],
+    controller.viewLiveCams
+  );
+
+  app.get(
     "/api/camera/viewOne/:id",
     [authJwt.verifyToken, authJwt.isClientOrBranch],
     controller.viewCam
