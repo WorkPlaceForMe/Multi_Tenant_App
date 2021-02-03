@@ -113,10 +113,10 @@ exports.upload = (req, res) => {
           id: uuid,
           name: req.file.originalname.split('.')[0].split('_').join(' '),
           rtsp_in: req.file.path,
-          http_in: req.file.path,
+          http_in: `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/videos/${req.file.filename}`,
           id_account: decoded.id_account,
           id_branch: decoded.id_branch,
-          stored_vid: 'local'
+          stored_vid: 'No'
         })
           .then(camera => {
             res.status(200).send({
@@ -192,9 +192,7 @@ exports.viewVids = async (req, res) => {
     Camera.findAll({
       where: {
         id_branch: decoded.id_branch,
-        stored_vid: {
-          [Op.or]: ['s3', 'local']
-        }
+        stored_vid: 'Yes'
       },
       attributes: ['name', 'id', 'createdAt', 'updatedAt', 'rtsp_in', 'stored_vid']
     })
@@ -217,7 +215,9 @@ exports.delVid = (req, res) => {
   const token = req.headers['x-access-token']
   const data = req.body
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
-    if (data.which === 'local') {
+    /* if (data.which === 'local') {
+      const vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/videos/${data.vidName}`
+      const img = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/heatmap_pics/${req.params.id}_heatmap.png`
       const vid = `${path}${decoded.id_account}/${decoded.id_branch}/videos/${data.vidName}`
       const img = `${path}${decoded.id_account}/${decoded.id_branch}/heatmap_pics/${req.params.id}_heatmap.png`
       fs.unlink(img, err => {
@@ -234,10 +234,10 @@ exports.delVid = (req, res) => {
       s3.deleteObject(params, function (err, data) {
         if (err) return res.status(500).json({ success: false, mess: err })
       })
-    }
+    } */
 
     Camera.destroy({
-      where: { id: data.uuid, id_branch: decoded.id_branch, stored_vid: data.which }
+      where: { id: data.uuid, id_branch: decoded.id_branch, stored_vid: 'Yes' }
     })
       .then(cam => {
         res.status(200).send({ success: true, camera: data.uuid })
