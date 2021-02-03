@@ -116,7 +116,7 @@ exports.upload = (req, res) => {
           http_in: `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/videos/${req.file.filename}`,
           id_account: decoded.id_account,
           id_branch: decoded.id_branch,
-          stored_vid: 'No'
+          stored_vid: 'Yes'
         })
           .then(camera => {
             res.status(200).send({
