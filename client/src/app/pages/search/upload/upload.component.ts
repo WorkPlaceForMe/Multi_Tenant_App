@@ -39,7 +39,7 @@ export class UploadComponent implements OnInit {
 
   ngOnInit(): void {
     this.uploader.onAfterAddingFile = (file) => {
-      this.SpinnerService.show();
+      //this.SpinnerService.show();
       file.withCredentials = false;
       const format = file.file.name.split('.')[1];
       const name = this.name.split(' ').join('_');
@@ -47,6 +47,7 @@ export class UploadComponent implements OnInit {
       file.file.name = newName;
     };
     this.uploader.onErrorItem = (item, response, status, headers) => {
+      //this.SpinnerService.hide();
       console.log(response);
     };
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
@@ -60,7 +61,7 @@ export class UploadComponent implements OnInit {
     this.uploader.onProgressItem = (progress: any) => {
       console.log(progress['progress']);
       if (progress['progress'] === 100) {
-        this.SpinnerService.hide();
+        //this.SpinnerService.hide();
         console.log('uploaded');
       }
     };
