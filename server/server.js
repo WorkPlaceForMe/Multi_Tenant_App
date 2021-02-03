@@ -139,23 +139,6 @@ app.use(
 //   fs.writeFileSync('./resources/swagger.yaml', doc, 'utf8')
 // }
 
-app.use(
-  '/api-docs',
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerDocs, {
-    explorer: true,
-    customCss:
-      "img[alt='Swagger UI'] { content:url('http://localhost:3300/api/pictures/graymaticsLogo.png');}",
-    customSiteTitle: 'Graymatics API Manual',
-    customfavIcon: 'http://localhost:3300/api/pictures/favicon1.ico',
-    swaggerOptions: {
-      url: 'http://localhost:3300/api/pictures/swagger.json',
-      docExpansion: 'none',
-      validatorUrl: null
-    }
-  })
-)
-
 // routes
 require('./app/routes/auth.routes')(app)
 require('./app/routes/user.routes')(app)
