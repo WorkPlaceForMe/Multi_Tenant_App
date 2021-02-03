@@ -70,7 +70,8 @@ db.ALGORITHMS = [
   'Accident Detection',
   'Axle Detection',
   'Carmake',
-  'Parking'
+  'Parking',
+  'Vehicle Count'
 ]
 
 module.exports = db
