@@ -235,6 +235,7 @@ exports.delVid = (req, res) => {
         if (err) return res.status(500).json({ success: false, mess: err })
       })
     }
+    console.log('Debug Data : ', data);
 
     Camera.destroy({
       where: { id: data.uuid, id_branch: decoded.id_branch, stored_vid: 'Yes' }
