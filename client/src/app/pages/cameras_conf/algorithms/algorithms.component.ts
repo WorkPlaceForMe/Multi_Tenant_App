@@ -81,7 +81,7 @@ export class AlgorithmsComponent implements OnInit {
                     this.algos[i].conf = this.relations[e]['atributes'][0]['conf'];
                     this.algos[i].save = this.relations[e]['atributes'][0]['save'];
                     this.algos[i].time = this.relations[e]['atributes'][0]['time'];
-                    if (this.relations[e]['atributes'].length === 2) {
+                    if (this.relations[e]['atributes'].length == 2) {
                       if (this.relations[e]['algo_id'] == 1) {
                         this.climb = this.relations[e]['atributes'][1];
                       } else if (this.relations[e]['algo_id'] == 7) {
@@ -184,7 +184,7 @@ export class AlgorithmsComponent implements OnInit {
   perimeter = [];
   relations: any = [];
   algos: any = [
-    { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false },
+    { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false },
   ];
   Aalgos: any = [];
   Balgos: any = [];

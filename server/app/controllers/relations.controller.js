@@ -76,8 +76,8 @@ exports.createRel = (req, res) =>{
       
     exports.configs = (req,res) =>{
       let token = req.headers["x-access-token"];
-      let inf = req.body
-      const id = req.params.id
+      let inf = req.body;
+      const id = req.params.id;
       var count = 0;
       jwt.verify(token, process.env.secret, (err, decoded) => {
       User.findOne({
@@ -92,7 +92,7 @@ exports.createRel = (req, res) =>{
             var stuff = [];
             var confStuff = {};
             var upAdd = 1;
-            if(a.activated == true && a.id != 4 && a.id != 8){
+            if(a.activated == true && a.id != 4){ // && a.id != 8
                 count++;
                 confStuff['conf'] = a.conf
                 confStuff['save'] = a.save
