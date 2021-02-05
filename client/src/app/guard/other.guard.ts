@@ -18,26 +18,24 @@ export class OtherGuard implements CanActivate {
   state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     if(this.authService.isClientorBranch !== true){
       if(this.authService.isLoggedIn !== true) {
-            window.localStorage.clear();
-            window.sessionStorage.clear();
             // window.location.reload()
-            this.router.navigate(['/pages'])
-        this.authService.signOut(JSON.parse(localStorage.getItem('now_user'))['username']).subscribe(
-          res=>{
-            window.localStorage.clear();
-            window.sessionStorage.clear();
-            // window.location.reload()
-            this.router.navigate(['/pages'])
-          }, err =>{ 
-            console.error(err)
-            window.localStorage.clear();
-            window.sessionStorage.clear();
-            // window.location.reload()
-            this.router.navigate(['/pages'])
-          }
-      )
+            return this.router.navigate(['/pages/sign-in'])
+      //   this.authService.signOut(JSON.parse(localStorage.getItem('now_user'))['username']).subscribe(
+      //     res=>{
+      //       window.localStorage.clear();
+      //       window.sessionStorage.clear();
+      //       // window.location.reload()
+      //       this.router.navigate(['/pages'])
+      //     }, err =>{ 
+      //       console.error(err)
+      //       window.localStorage.clear();
+      //       window.sessionStorage.clear();
+      //       // window.location.reload()
+      //       this.router.navigate(['/pages'])
+      //     }
+      // )
       } else {
-        this.router.navigate(['/pages/dashboard'])
+        return this.router.navigate(['/pages/graphs'])
       }
     }
     this.facesService.mess().subscribe(
@@ -46,25 +44,25 @@ export class OtherGuard implements CanActivate {
       },
       err => {
         console.log(err)
-        window.alert("Your session has expired, please log in again.");
             window.localStorage.clear();
             window.sessionStorage.clear();
             window.location.reload()
             this.router.navigate(['/pages'])
-        this.authService.signOut(JSON.parse(localStorage.getItem('now_user'))['username']).subscribe(
-          res=>{
-            window.localStorage.clear();
-            window.sessionStorage.clear();
-            // window.location.reload()
-            this.router.navigate(['/pages'])
-          }, err =>{ 
-            console.error(err)
-            window.localStorage.clear();
-            window.sessionStorage.clear();
-            // window.location.reload()
-            this.router.navigate(['/pages'])
-          }
-      )
+            window.alert("Your session has expired, please log in again.");
+      //   this.authService.signOut(JSON.parse(localStorage.getItem('now_user'))['username']).subscribe(
+      //     res=>{
+      //       window.localStorage.clear();
+      //       window.sessionStorage.clear();
+      //       // window.location.reload()
+      //       this.router.navigate(['/pages'])
+      //     }, err =>{ 
+      //       console.error(err)
+      //       window.localStorage.clear();
+      //       window.sessionStorage.clear();
+      //       // window.location.reload()
+      //       this.router.navigate(['/pages'])
+      //     }
+      // )
       }
     )
     return true;
