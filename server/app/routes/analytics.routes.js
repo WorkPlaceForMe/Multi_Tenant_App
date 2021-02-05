@@ -2272,7 +2272,7 @@ module.exports = function(app) {
   *    tags:
   *       - Analytics
   *    summary: "Wrong way or illegal turn detection analytic's results"
-  *    operationId: vcount
+  *    operationId: direction
   *    description: "Use to obtain results from Wrong way or illegal turn detection algorithm for an specific camera under a range of time"
   *    parameters:
   *      - in: path
@@ -2354,7 +2354,7 @@ app.post(
 *    tags:
 *       - Analytics
 *    summary: "Speeding Vehicle analytic's results"
-*    operationId: vcount
+*    operationId: speeding
 *    description: "Use to obtain results from Speeding Vehicle algorithm for an specific camera under a range of time"
 *    parameters:
 *      - in: path
