@@ -16,7 +16,7 @@ import { NbCardModule, NbIconModule, NbInputModule, NbTreeGridModule, NbAccordio
   NbFormFieldModule,
   NbSelectModule, NbSpinnerModule,
   NbContextMenuModule } from '@nebular/theme';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { ListComponent } from './list/list.component';
 import { authInterceptorProviders } from '../../_helpers/auth.interceptor';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -24,6 +24,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 @NgModule({
   declarations: [SearchComponent, UploadComponent, BarComponent, ListComponent],
   imports: [
+    ReactiveFormsModule,
     Ng2SmartTableModule,
     NgxSpinnerModule,
     CommonModule,
