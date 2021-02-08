@@ -4,6 +4,7 @@ import { FacesService } from '../../../services/faces.service';
 import { api } from '../../../models/API';
 import { Account } from '../../../models/Account';
 import { DatePipe } from '@angular/common';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'ngx-bar',
@@ -15,9 +16,13 @@ export class BarComponent implements OnInit {
   constructor(
     private face: FacesService,
     public datepipe: DatePipe,
+    private formBuilder: FormBuilder,
         ) { }
 
   ngOnInit(): void {
+    this.registerForm = this.formBuilder.group({
+    query: ['', [Validators.required]],
+    });
     this.now_user = JSON.parse(localStorage.getItem('now_user'));
     const time = new Date();
     this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0,3);
@@ -28,6 +33,7 @@ export class BarComponent implements OnInit {
     }
     this.timezone = p + JSON.stringify(this.timezone) + '00';
   }
+  registerForm: FormGroup;
   timezone: any;
   results: Array<any> = [];
   query: string;
@@ -38,7 +44,8 @@ export class BarComponent implements OnInit {
   now_user: Account;
   video: boolean = false;
 
-  search(inp){
+  search(){
+    let inp = this.registerForm.controls['query'].value
     this.loading = true;
     this.stuff = []
     this.face.searchElast(inp).subscribe(
@@ -71,8 +78,8 @@ export class BarComponent implements OnInit {
           this.stuff.push(m._source)
           }
         }
-        // this.source = this.results.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
-        this.source = this.stuff
+        this.source = this.stuff.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+        // this.source = this.stuff
       },
       err =>{
         this.touched = true;
@@ -117,6 +124,17 @@ export class BarComponent implements OnInit {
       },
     noDataMessage: 'No data found',
     columns: {
+      picture: {
+        title: 'Video',
+        type: 'custom',
+        filter: false,
+        renderComponent: ButtonViewComponent,
+        onComponentInitFunction: (instance) => {
+          instance.save.subscribe((row: string)  => {
+            this.pass(row);
+          });
+        },
+      },
       time: {
         title: 'Time',
         type: 'string',
@@ -137,9 +155,7 @@ export class BarComponent implements OnInit {
   template: `
     <div >
       <div style = "width:60px; height: 60px">
-      <video width='60px' controls="controls" preload="metadata">
-        <source src="rowData.pic" type="video/mp4">
-      </video>
+        <img [src]="rowData.pic" width='60' height='60'>
       </div>
     </div>
   `,
