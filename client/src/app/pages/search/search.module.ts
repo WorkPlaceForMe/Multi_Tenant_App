@@ -6,7 +6,7 @@ import { SearchComponent } from './search.component';
 import { UploadComponent } from './upload/upload.component';
 import { BarComponent } from './bar/bar.component';
 import { FileUploadModule } from "ng2-file-upload";
-
+import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { NbCardModule, NbIconModule, NbInputModule, NbTreeGridModule, NbAccordionModule, NbButtonModule, NbListModule,NbRouteTabsetModule,
   NbStepperModule,
   NbTabsetModule, NbUserModule,    NbActionsModule,
@@ -24,6 +24,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 @NgModule({
   declarations: [SearchComponent, UploadComponent, BarComponent, ListComponent],
   imports: [
+    Ng2SmartTableModule,
     NgxSpinnerModule,
     CommonModule,
     NbSpinnerModule,

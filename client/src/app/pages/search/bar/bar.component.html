@@ -4,5 +4,24 @@
         <button [status]="'success'" nbButton  (click)="search(query)">Search</button>
     </div>
 </div>
-
-{{results}}
+<div class="row" *ngIf= 'touched'>
+      <div class="col-md-8 less-padding">
+        <nb-card>
+          <nb-card-body style="padding: 0px">
+            <ng2-smart-table [settings]="settings" [source]="source" (edit)=pass($event)>
+            </ng2-smart-table>
+          </nb-card-body>
+        </nb-card>
+      </div>
+        <div class="col-md-4 less-padding">
+        <nb-card>
+          <nb-card-body align='center' style="min-height: 250px">
+            <video controls (click)="toggleVideo($event)" #videoPlayer class="responsive" muted loop controls
+              preload="none" style="width: 100%;height: 100%">
+              <source [src]="videoFile" type="video/mp4" />
+              Browser not supported
+            </video>
+          </nb-card-body>
+        </nb-card>
+      </div>
+</div>

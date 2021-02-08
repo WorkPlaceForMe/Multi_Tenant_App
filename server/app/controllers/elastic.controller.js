@@ -50,6 +50,7 @@ exports.ping = async (req, res) => {
 exports.search = async (req, res) => {
   try {
     const body = await client.search({
+      index: '_all',
       q: req.params.query
     })
     const hits = body.hits.hits
@@ -272,7 +273,7 @@ exports.editVid = (req, res) => {
 }
 
 exports.some = async (req, res) => {
-  const table = 'intrude'
+  const table = 'violence'
   client.cluster.health({}, async function (_err, resp, status) {
     console.log('-- Client Health --', resp)
     try {
@@ -286,7 +287,6 @@ exports.some = async (req, res) => {
 
 async function deleteIndex (table) {
   client.indices.delete({ index: table }, async function (_err, resp, status) {
-    console.log('delete', resp)
     await createIndex(table)
   })
 }
@@ -299,7 +299,6 @@ async function createIndex (table) {
       if (err) {
         console.log(err)
       } else {
-        // console.log('create', resp)
         await readMysql(table)
       }
     }
@@ -363,13 +362,8 @@ function printData (interval, table) {
       if (error) {
         console.log('search error: ' + error)
       } else {
-        console.log(
-          '================================ Data by ' +
-            interval +
-            '============================================'
-        )
         response.aggregations.simpleDatehHistogram.buckets.forEach(function (hit) {
-          console.log(hit)
+          return hit
         })
       }
     }
@@ -378,7 +372,7 @@ function printData (interval, table) {
 
 exports.loit = async (req, res) => {
   const interval = 'day'
-  const table = 'loitering'
+  const table = '_all'
   try {
     const search = await client.search({
       index: table,
