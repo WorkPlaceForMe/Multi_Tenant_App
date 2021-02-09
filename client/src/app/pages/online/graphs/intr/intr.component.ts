@@ -28,6 +28,7 @@ export class IntrComponent implements OnInit, OnDestroy {
   dataL: any;
   optionsL: any;
   options: any;
+  rtspIn: any;
 
   @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef;
 
@@ -92,6 +93,7 @@ export class IntrComponent implements OnInit, OnDestroy {
     this.face.checkVideo(17, this.camera).subscribe(
       res => {
         this.video = res['video'];
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
         if (this.video === true){
           this.settings['columns']['picture'] = {
             title: 'VIDEO',

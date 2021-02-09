@@ -41,6 +41,7 @@ export class AnprComponent implements OnInit, OnDestroy {
   source: any = new LocalDataSource();
   dataL: any;
   optionsL: any;
+  rtspIn: any;
 
   ngOnDestroy() {
     if (this.player !== undefined) {
@@ -104,9 +105,10 @@ export class AnprComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type,
     };
-    this.face.checkVideo(2, this.camera).subscribe(
+    this.face.checkVideo(13, this.camera).subscribe(
       res => {
         this.video = res['video'];
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
         if (this.video === true) {
           this.settings['columns']['picture'] = {
             title: 'VIDEO',

@@ -25,6 +25,7 @@ export class CFaceComponent implements OnInit, OnDestroy {
   now_user: Account;
   themeSubscription: any;
   options: any = {};
+  rtspIn: any;
 
   @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef; 
 
@@ -90,7 +91,8 @@ export class CFaceComponent implements OnInit, OnDestroy {
     }
     this.face.checkVideo(20,this.camera).subscribe(
       res=>{
-        this.video = res['video']
+        this.video = res['video'];
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
         if(this.video === true){
           this.settings['columns']['picture'] = {
             title: 'VIDEO',

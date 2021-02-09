@@ -41,6 +41,7 @@ export class WrongTurnComponent implements OnInit, OnDestroy {
   source: any = new LocalDataSource();
   dataL: any;
   optionsL: any;
+  rtspIn: any;
 
   ngOnDestroy() {
     if (this.player !== undefined) {
@@ -107,6 +108,7 @@ export class WrongTurnComponent implements OnInit, OnDestroy {
     this.face.checkVideo(8, this.camera).subscribe(
       res => {
         this.video = res['video'];
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
         if (this.video === true) {
           this.settings['columns']['picture'] = {
             title: 'VIDEO',
