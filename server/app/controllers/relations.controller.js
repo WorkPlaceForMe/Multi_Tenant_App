@@ -286,9 +286,10 @@ exports.createRel = (req, res) =>{
           where: { algo_id: id, camera_id: cam_id  }
       }).then(rel => {
           let status = false;
+          let http_out = rel.http_out;
           if(rel.atributes[0]['time'] > 0)
           status = !status;
-          res.status(200).send({ success: true, video:status });
+          res.status(200).send({ success: true, video:status, http_out: http_out});
       }).catch(err => {
           res.status(500).send({success:false, message: err.message });
       });

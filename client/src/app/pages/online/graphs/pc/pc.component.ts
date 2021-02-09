@@ -39,6 +39,7 @@ export class PcComponent implements OnInit, OnDestroy {
   dataH: any;
   optionsH: any;
   player: any;
+  rtspIn: any;
 
   @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef; 
 
@@ -86,7 +87,12 @@ export class PcComponent implements OnInit, OnDestroy {
       start: this.range.start,
       end: this.range.end,
       type: type
-    }
+    };
+    this.face.checkVideo(12, this.camera).subscribe(
+      res => {
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
+      }, err => console.error(err),
+    );
     this.serv.pc(this.camera,l).subscribe(
       res=>{
         this.pc = res['data']

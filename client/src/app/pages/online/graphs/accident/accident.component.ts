@@ -39,6 +39,7 @@ export class AccidentComponent implements OnInit, OnDestroy {
   source: any = new LocalDataSource();
   dataL: any;
   optionsL: any;
+  rtspIn: any;
 
   ngOnDestroy() {
     if (this.player !== undefined) {
@@ -106,6 +107,7 @@ export class AccidentComponent implements OnInit, OnDestroy {
     this.face.checkVideo(29, this.camera).subscribe(
       res => {
         this.video = res['video'];
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
         if (this.video === true) {
           this.settings['columns']['picture'] = {
             title: 'VIDEO',
