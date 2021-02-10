@@ -66,6 +66,7 @@ export class SocialComponent implements OnInit, OnDestroy {
 
   }
   video:boolean = false;
+  rtspIn: any;
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
@@ -91,6 +92,7 @@ export class SocialComponent implements OnInit, OnDestroy {
     this.face.checkVideo(21,this.camera).subscribe(
       res=>{
         this.video = res['video']
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
         if(this.video === true){
           this.settings['columns']['picture'] = {
             title: 'VIDEO',
