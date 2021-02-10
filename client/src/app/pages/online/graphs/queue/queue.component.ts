@@ -22,6 +22,7 @@ export class QueueComponent implements OnInit, OnDestroy {
   queue: any = [];
   player: any;
   now_user: Account;
+  rtspIn: any;
 
   @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef; 
 
@@ -74,7 +75,8 @@ export class QueueComponent implements OnInit, OnDestroy {
     }
     this.face.checkVideo(22,this.camera).subscribe(
       res=>{
-        this.video = res['video']
+        this.video = res['video'];
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
         if(this.video === true){
           this.settings['columns']['picture'] = {
             title: 'VIDEO',

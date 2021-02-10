@@ -25,6 +25,7 @@ export class CFaceComponent implements OnInit, OnDestroy {
   now_user: Account;
   themeSubscription: any;
   options: any = {};
+  rtspIn: any;
 
   @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef; 
 
@@ -66,6 +67,7 @@ export class CFaceComponent implements OnInit, OnDestroy {
 
   }
   video:boolean = false;
+  rel: any;
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
@@ -90,7 +92,8 @@ export class CFaceComponent implements OnInit, OnDestroy {
     }
     this.face.checkVideo(20,this.camera).subscribe(
       res=>{
-        this.video = res['video']
+        this.video = res['video'];
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
         if(this.video === true){
           this.settings['columns']['picture'] = {
             title: 'VIDEO',
@@ -110,6 +113,7 @@ export class CFaceComponent implements OnInit, OnDestroy {
       this.serv.covered(this.camera,l).subscribe(
         res=>{
           this.covered = res['data']
+          this.rel = res['rel']
           for(var m of this.covered.raw){
             m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/covered/' + m['cam_id'] + '/' + m['clip_path']
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/covered/' + m['cam_id'] + '/' + m['picture'])

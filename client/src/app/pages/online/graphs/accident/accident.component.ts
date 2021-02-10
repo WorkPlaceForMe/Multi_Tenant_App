@@ -39,6 +39,7 @@ export class AccidentComponent implements OnInit, OnDestroy {
   source: any = new LocalDataSource();
   dataL: any;
   optionsL: any;
+  rtspIn: any;
 
   ngOnDestroy() {
     if (this.player !== undefined) {
@@ -85,7 +86,8 @@ export class AccidentComponent implements OnInit, OnDestroy {
     this.now_user = JSON.parse(localStorage.getItem('now_user'));
     const time = new Date();
     this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0, 3);
-    this.timezone = parseInt(this.timezone) * 2;
+    //this.timezone = parseInt(this.timezone) * 2;
+    this.timezone = parseInt(this.timezone);
     let p = '';
     if (this.timezone > 0) {
       p = '+';
@@ -105,6 +107,7 @@ export class AccidentComponent implements OnInit, OnDestroy {
     this.face.checkVideo(29, this.camera).subscribe(
       res => {
         this.video = res['video'];
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
         if (this.video === true) {
           this.settings['columns']['picture'] = {
             title: 'VIDEO',

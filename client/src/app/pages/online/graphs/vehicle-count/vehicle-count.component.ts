@@ -40,6 +40,7 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
   source: any = new LocalDataSource();
   dataL: any;
   optionsL: any;
+  rtspIn: any;
 
   ngOnDestroy() {
     if (this.player !== undefined) {
@@ -106,6 +107,7 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
     this.face.checkVideo(33, this.camera).subscribe(
       res => {
         this.video = res['video'];
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
         if (this.video === true) {
           this.settings['columns']['picture'] = {
             title: 'VIDEO',
@@ -163,7 +165,7 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
     },
     noDataMessage: 'No data found',
     columns: {
-      picture: {
+      /* picture: {
         title: 'PHOTO',
         type: 'custom',
         filter: false,
@@ -173,29 +175,29 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
             alert(`${row.name} saved!`);
           });
         },
-      },
+      }, */
       time: {
         title: 'TIME',
         type: 'string',
         filter: false,
       },
       car_numbers: {
-        title: 'CAR NUMBER',
+        title: 'CAR COUNT',
         type: 'string',
         filter: false,
       },
       motorbike_numbers: {
-        title: 'MOTORBIKE NUMBER',
+        title: 'MOTORBIKE COUNT',
         type: 'string',
         filter: false,
       },
       truck_numbers: {
-        title: 'TRUCK NUMBER',
+        title: 'TRUCK COUNT',
         type: 'string',
         filter: false,
       },
       bus_numbers: {
-        title: 'BUS NUMBER',
+        title: 'BUS COUNT',
         type: 'string',
         filter: false,
       },

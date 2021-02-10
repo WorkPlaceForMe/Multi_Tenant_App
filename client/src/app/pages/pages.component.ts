@@ -40,6 +40,10 @@ export class PagesComponent {
           this.showHeader = true;
           this.state = "compacted";
         }
+        if(val.url.split('/').length === 7 ){
+          this.state ="collapsed"
+          this.showHeader = false;
+        }
         
       }
   });

@@ -20,6 +20,9 @@ module.exports = (sequelize, Sequelize) => {
       },
       stream: {
         type: Sequelize.INTEGER
+      },
+      http_out: {
+        type: Sequelize.STRING
       }
     });
   
