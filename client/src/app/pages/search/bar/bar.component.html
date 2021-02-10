@@ -1,8 +1,35 @@
 <div class="row">
     <div class="col-md-12">
-        <input [(ngModel)]='query' style="width: auto" type="text" nbInput id="search" placeholder="Input your search..." [status]="'primary'">
-        <button [status]="'success'" nbButton  (click)="search(query)">Search</button>
+        <form [formGroup]="registerForm" (ngSubmit)='search()'>
+            <div class="row">
+            <div class="col-md-11 less-padding">
+        <input class="form-control" formControlName="query" fullWidth  type="text" nbInput id="search" placeholder="Input your search..." [status]="'primary'">          
+            </div>
+            <div class="col-md-1 less-padding">
+        <button [status]="'success'" nbButton>Search</button>
+            </div>    
+            </div>
+        </form>           
     </div>
 </div>
-
-{{results}}
+<div class="row" style="margin-top: 2px;" *ngIf= 'touched'>
+      <div class="col-md-8">
+        <nb-card>
+          <nb-card-body style="padding: 0px">
+            <ng2-smart-table [settings]="settings" [source]="source" (edit)=pass($event)>
+            </ng2-smart-table>
+          </nb-card-body>
+        </nb-card>
+      </div>
+        <div class="col-md-4">
+        <nb-card>
+          <nb-card-body align='center' style="min-height: 250px">
+            <video controls (click)="toggleVideo($event)" #videoPlayer class="responsive" muted loop controls
+              preload="none" style="width: 100%;height: 100%">
+              <source [src]="videoFile" type="video/mp4" />
+              Browser not supported
+            </video>
+          </nb-card-body>
+        </nb-card>
+      </div>
+</div>

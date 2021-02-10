@@ -13,6 +13,7 @@ const client = new elasticsearch.Client({
   apiVersion: '7.x' // use the same version of your Elasticsearch instance
 })
 const { Op } = require('sequelize')
+const con = require('../models/dbmysql')
 const path =
   process.env.home + process.env.username + process.env.pathDocker + process.env.resources
 const multer = require('multer')
@@ -49,6 +50,7 @@ exports.ping = async (req, res) => {
 exports.search = async (req, res) => {
   try {
     const body = await client.search({
+      index: '_all',
       q: req.params.query
     })
     const hits = body.hits.hits
@@ -235,7 +237,7 @@ exports.delVid = (req, res) => {
         if (err) return res.status(500).json({ success: false, mess: err })
       })
     }
-    console.log('Debug Data : ', data);
+    console.log('Debug Data : ', data)
 
     Camera.destroy({
       where: { id: data.uuid, id_branch: decoded.id_branch, stored_vid: 'Yes' }
@@ -268,4 +270,126 @@ exports.editVid = (req, res) => {
         res.status(500).send({ success: false, message: err.message })
       })
   })
+}
+
+exports.some = async (req, res) => {
+  const table = 'violence'
+  client.cluster.health({}, async function (_err, resp, status) {
+    console.log('-- Client Health --', resp)
+    try {
+      const r = await deleteIndex(table)
+      res.status(200).json({ success: true, data: r })
+    } catch (err) {
+      res.status(500).json({ success: false, mess: err })
+    }
+  })
+}
+
+async function deleteIndex (table) {
+  client.indices.delete({ index: table }, async function (_err, resp, status) {
+    await createIndex(table)
+  })
+}
+async function createIndex (table) {
+  client.indices.create(
+    {
+      index: table
+    },
+    async function (err, resp, status) {
+      if (err) {
+        console.log(err)
+      } else {
+        await readMysql(table)
+      }
+    }
+  )
+}
+
+async function readMysql (table) {
+  const sql = 'select * from ' + table + ';'
+  con.con().query(sql, async function (err, result) {
+    if (err) throw err
+    console.log(result.length)
+    result.forEach(async o => {
+      const jsonStr = JSON.stringify(o)
+      await saveToES(jsonStr, table)
+    })
+
+    setTimeout(printHourlyData, 10000)
+    setTimeout(printDailyData, 10000)
+    // pringData('day');
+  })
+}
+
+function saveToES (o, table) {
+  client.index(
+    {
+      index: table,
+      type: 'alerts',
+      body: o
+    },
+    function (_err, resp, status) {
+      return resp
+    }
+  )
+}
+
+function printHourlyData () {
+  printData('hour')
+}
+
+function printDailyData () {
+  printData('day')
+}
+
+function printData (interval, table) {
+  client.search(
+    {
+      index: table,
+      type: 'alerts',
+      body: {
+        aggs: {
+          simpleDatehHistogram: {
+            date_histogram: {
+              field: 'time',
+              interval: interval
+            }
+          }
+        }
+      }
+    },
+    function (error, response, status) {
+      if (error) {
+        console.log('search error: ' + error)
+      } else {
+        response.aggregations.simpleDatehHistogram.buckets.forEach(function (hit) {
+          return hit
+        })
+      }
+    }
+  )
+}
+
+exports.loit = async (req, res) => {
+  const interval = 'day'
+  const table = '_all'
+  try {
+    const search = await client.search({
+      index: table,
+      type: 'alerts',
+      body: {
+        aggs: {
+          simpleDatehHistogram: {
+            date_histogram: {
+              field: 'time',
+              interval: interval
+            }
+          }
+        }
+      }
+    })
+    res.status(200).json({ success: true, data: search.aggregations.simpleDatehHistogram.buckets })
+  } catch (err) {
+    res.status(500).json({ success: false, mess: err })
+  }
 }

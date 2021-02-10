@@ -436,7 +436,12 @@ exports.aod = async (req, res) => {
 
 exports.covered = async (req, res) => {
   const data = req.body;
-
+Relation.findOne({
+      where: {
+        algo_id: 20,
+        camera_id: req.params.id
+      }
+    }).then(async rel => {
   await db.con().query(`SELECT * from alerts WHERE alert= 'no mask' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
     if (err) return res.status(500).json({
       success: false,
@@ -486,9 +491,13 @@ exports.covered = async (req, res) => {
     }
     res.status(200).json({
       success: true,
-      data: a
+      data: a,
+      rel: rel
     })
   });
+}).catch( err =>{
+  return res.status(500).json({success: false, mess: err})
+})
 }
 
 exports.social = async (req, res) => {
@@ -575,6 +584,12 @@ exports.pc = async (req, res) => {
   const dain = [];
   const daen = [];
   const daex = [];
+Relation.findOne({
+      where: {
+        algo_id: 12,
+        camera_id: req.params.id
+      }
+    }).then(async rel => {
   await db.con().query(`SELECT * from pcount WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
     if (err) return res.status(500).json({
       success: false,
@@ -669,9 +684,13 @@ exports.pc = async (req, res) => {
     }
     res.status(200).json({
       success: true,
-      data: a
+      data: a,
+      rel: rel
     })
   });
+}).catch(err => {
+  res.status(500).json({success: false, mess: err})
+})
 }
 
 exports.tamper = async (req, res) => {
@@ -1717,6 +1736,12 @@ exports.carmake = async (req, res) => {
 exports.vcount = async (req, res) => {
 
   const data = req.body;
+  Relation.findOne({
+      where: {
+        algo_id: 26,
+        camera_id: req.params.id
+      }
+    }).then(async rel => {
   await db.con().query(`SELECT * from vcount WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`, function (err, result) {
     if (err) return res.status(500).json({
       success: false,
@@ -1746,9 +1771,13 @@ exports.vcount = async (req, res) => {
     }
     res.status(200).json({
       success: true,
-      data: a
+      data: a,
+      rel: rel
     })
   });
+}).catch(err =>{
+  res.status(500).json({success: false, mess: err})
+})
 }
 
 exports.direction = async (req, res) => {
