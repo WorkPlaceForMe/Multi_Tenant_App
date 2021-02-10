@@ -180,7 +180,6 @@ exports.configs = (req, res) => {
 }
 
 exports.configsRoi = (req, res) => {
-  console.log(req.body)
   let token = req.headers['x-access-token']
   const relas = req.body
   const id = req.params.id
@@ -228,6 +227,7 @@ exports.dashboards = (req, res) => {
           for (let i = 0; i < roles.length; i++) {
             authorities.push(roles[i].name)
           }
+
           Algorithm.findAll()
             .then(algos => {
               var algors = []
@@ -313,13 +313,16 @@ exports.dashboards = (req, res) => {
 exports.checkVideo = (req, res) => {
   const id = req.params.id
   const cam_id = req.params.cam
+
   Relation.findOne({
     where: {algo_id: id, camera_id: cam_id}
   })
     .then(rel => {
       let status = false
+
+      let http_out = rel.http_out
       if (rel.atributes[0]['time'] > 0) status = !status
-      res.status(200).send({success: true, video: status})
+      res.status(200).send({success: true, video: status, http_out: http_out})
     })
     .catch(err => {
       res.status(500).send({success: false, message: err.message})
