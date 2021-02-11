@@ -1,4 +1,4 @@
-const elasticsearch = require('elasticsearch')
+const elasticsearch = require('@elastic/elasticsearch')
 require('dotenv').config({
   path: '../../config.env'
 })
@@ -8,9 +8,13 @@ const db = require('../models')
 const Camera = db.camera
 const { v4: uuidv4 } = require('uuid')
 const client = new elasticsearch.Client({
-  host: `https://${process.env.USER_ELAST}:${process.env.PASS_ELAST}@search-graymatics-dev-fc6j24xphhun5xcinuusz2yfjm.ap-southeast-1.es.amazonaws.com`,
+  node: 'https://search-graymatics-dev-fc6j24xphhun5xcinuusz2yfjm.ap-southeast-1.es.amazonaws.com',
   log: 'trace',
-  apiVersion: '7.x' // use the same version of your Elasticsearch instance
+  apiVersion: '7.x', // use the same version of your Elasticsearch instance
+  auth: {
+    username: process.env.USER_ELAST,
+    password: process.env.PASS_ELAST
+  }
 })
 const { Op } = require('sequelize')
 const con = require('../models/dbmysql')
@@ -24,36 +28,38 @@ const s3 = new AWS.S3({
 })
 
 exports.ping = async (req, res) => {
-  client.ping(
-    {
-      // ping usually has a 3000ms timeout
+  try {
+    const body = await client.ping({
       requestTimeout: 30000
-    },
-    function (error) {
-      if (error) {
-        console.trace('elasticsearch cluster is down!')
-        console.error(error)
-        res.status(500).json({
-          success: false,
-          mess: error
-        })
-      } else {
-        console.log('All is well')
-        res.status(200).json({
-          success: true
-        })
-      }
-    }
-  )
+    })
+    res.status(200).json({
+      success: true,
+      data: body
+    })
+  } catch (error) {
+    console.trace('elasticsearch cluster is down!')
+    console.error(error)
+
+    console.trace(error.message)
+    res.status(500).json({
+      success: false,
+      mess: error
+    })
+  }
 }
 
 exports.search = async (req, res) => {
   try {
     const body = await client.search({
-      index: '_all',
-      q: req.params.query
+      index: ['loitering', 'violence'],
+      body: {
+        query: {
+          match_all: {}
+        }
+      }
     })
-    const hits = body.hits.hits
+    console.log(body.meta)
+    const hits = body.body.hits
     res.status(200).json({
       success: true,
       data: hits
