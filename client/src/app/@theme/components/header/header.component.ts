@@ -52,7 +52,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private userService: UserData,
               private layoutService: LayoutService,
               private breakpointService: NbMediaBreakpointsService,
-              public authservice: AuthService,
+              private authservice: AuthService,
               public router: Router,
               ) {
                 this.pic = `${api}/pictures/logo.png`

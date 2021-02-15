@@ -93,6 +93,24 @@ export class ControlComponent implements OnInit, OnDestroy {
 
   }
 
+    signOff(){
+   const us = JSON.parse(localStorage.getItem('now_user'))['username']
+   this.authService.signOut(us).subscribe(
+    res=>{
+      window.localStorage.clear();
+      window.sessionStorage.clear();
+      window.location.reload()
+      // this.router.navigate(['/'])
+    }, err =>{ 
+      console.error(err)
+      window.localStorage.clear();
+      window.sessionStorage.clear();
+      window.location.reload()
+      // this.router.navigate(['/'])
+    }
+)
+  }
+
   @Output() cameraSel = new EventEmitter<string>();
 
   selectRangeType(type){
