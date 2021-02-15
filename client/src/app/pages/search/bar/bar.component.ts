@@ -53,7 +53,8 @@ export class BarComponent implements OnInit {
         this.loading = false;
         this.touched = true;
         this.results = res['data']
-        for(const m of this.results){
+        console.log(this.results)
+        for(const m of this.results['hits']){
           if(m._source.time){
           let d = new Date(m['_source'].time)
           if (d.getSeconds() < 10) {

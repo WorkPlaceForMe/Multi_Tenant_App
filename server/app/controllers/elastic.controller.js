@@ -74,7 +74,6 @@ exports.search = async (req, res) => {
     })
     // console.log(body.body.aggregations.simpleDatehHistogram.buckets)
     const hits = body.body.hits
-    console.log(hits.hits)
     if (hits.hits && hits.hits[0]._source.time) {
       const gt = new Date(Date.parse(hits.hits[0]._source.time) - 1000)
       const lt = new Date(Date.parse(hits.hits[0]._source.time) + 1000)
@@ -96,7 +95,7 @@ exports.search = async (req, res) => {
                 ],
                 must_not: [
                   {
-                    _id: {
+                    ids: {
                       values: [hits.hits[0]._id]
                     }
                   }
@@ -110,16 +109,15 @@ exports.search = async (req, res) => {
           hits2.hits.forEach(element => {
             hits.hits.push(element)
           })
-          // hits.hits.push(hits2.hits)
         }
         return res.status(200).json({
           success: true,
-          first: hits,
+          data: hits,
           second: hits2
         })
       } catch (err) {
         console.trace(err.message)
-        res.status(500).json({
+        return res.status(500).json({
           success: false,
           mess: err
         })
