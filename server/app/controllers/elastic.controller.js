@@ -51,15 +51,80 @@ exports.ping = async (req, res) => {
 exports.search = async (req, res) => {
   try {
     const body = await client.search({
-      index: ['loitering', 'violence'],
+      index: ['_all'],
       body: {
         query: {
-          match_all: {}
+          multi_match: {
+            query: req.params.query,
+            fields: [
+              'time',
+              'clip_path',
+              'confidence',
+              'camera_name',
+              'cam_id',
+              'id_branch',
+              'severity',
+              'dwell',
+              'track_id',
+              'zone'
+            ]
+          }
         }
       }
     })
-    console.log(body.meta)
+    // console.log(body.body.aggregations.simpleDatehHistogram.buckets)
     const hits = body.body.hits
+    console.log(hits.hits)
+    if (hits.hits && hits.hits[0]._source.time) {
+      const gt = new Date(Date.parse(hits.hits[0]._source.time) - 1000)
+      const lt = new Date(Date.parse(hits.hits[0]._source.time) + 1000)
+      try {
+        const secondBody = await client.search({
+          index: ['_all'],
+          body: {
+            query: {
+              bool: {
+                must: [
+                  {
+                    range: {
+                      time: {
+                        gte: gt,
+                        lte: lt
+                      }
+                    }
+                  }
+                ],
+                must_not: [
+                  {
+                    _id: {
+                      values: [hits.hits[0]._id]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        })
+        const hits2 = secondBody.body.hits
+        if (hits2.hits.length !== 0) {
+          hits2.hits.forEach(element => {
+            hits.hits.push(element)
+          })
+          // hits.hits.push(hits2.hits)
+        }
+        return res.status(200).json({
+          success: true,
+          first: hits,
+          second: hits2
+        })
+      } catch (err) {
+        console.trace(err.message)
+        res.status(500).json({
+          success: false,
+          mess: err
+        })
+      }
+    }
     res.status(200).json({
       success: true,
       data: hits
