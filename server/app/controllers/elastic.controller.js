@@ -1,4 +1,4 @@
-const elasticsearch = require('elasticsearch')
+const elasticsearch = require('@elastic/elasticsearch')
 require('dotenv').config({
   path: '../../config.env'
 })
@@ -8,11 +8,16 @@ const db = require('../models')
 const Camera = db.camera
 const { v4: uuidv4 } = require('uuid')
 const client = new elasticsearch.Client({
-  host: `https://${process.env.USER_ELAST}:${process.env.PASS_ELAST}@search-graymatics-dev-fc6j24xphhun5xcinuusz2yfjm.ap-southeast-1.es.amazonaws.com`,
+  node: 'https://search-graymatics-dev-fc6j24xphhun5xcinuusz2yfjm.ap-southeast-1.es.amazonaws.com',
   log: 'trace',
-  apiVersion: '7.x' // use the same version of your Elasticsearch instance
+  apiVersion: '7.x', // use the same version of your Elasticsearch instance
+  auth: {
+    username: process.env.USER_ELAST,
+    password: process.env.PASS_ELAST
+  }
 })
 const { Op } = require('sequelize')
+const con = require('../models/dbmysql')
 const path =
   process.env.home + process.env.username + process.env.pathDocker + process.env.resources
 const multer = require('multer')
@@ -23,35 +28,38 @@ const s3 = new AWS.S3({
 })
 
 exports.ping = async (req, res) => {
-  client.ping(
-    {
-      // ping usually has a 3000ms timeout
+  try {
+    const body = await client.ping({
       requestTimeout: 30000
-    },
-    function (error) {
-      if (error) {
-        console.trace('elasticsearch cluster is down!')
-        console.error(error)
-        res.status(500).json({
-          success: false,
-          mess: error
-        })
-      } else {
-        console.log('All is well')
-        res.status(200).json({
-          success: true
-        })
-      }
-    }
-  )
+    })
+    res.status(200).json({
+      success: true,
+      data: body
+    })
+  } catch (error) {
+    console.trace('elasticsearch cluster is down!')
+    console.error(error)
+
+    console.trace(error.message)
+    res.status(500).json({
+      success: false,
+      mess: error
+    })
+  }
 }
 
 exports.search = async (req, res) => {
   try {
     const body = await client.search({
-      q: req.params.query
+      index: ['loitering', 'violence'],
+      body: {
+        query: {
+          match_all: {}
+        }
+      }
     })
-    const hits = body.hits.hits
+    console.log(body.meta)
+    const hits = body.body.hits
     res.status(200).json({
       success: true,
       data: hits
@@ -235,7 +243,7 @@ exports.delVid = (req, res) => {
         if (err) return res.status(500).json({ success: false, mess: err })
       })
     }
-    console.log('Debug Data : ', data);
+    console.log('Debug Data : ', data)
 
     Camera.destroy({
       where: { id: data.uuid, id_branch: decoded.id_branch, stored_vid: 'Yes' }
@@ -268,4 +276,126 @@ exports.editVid = (req, res) => {
         res.status(500).send({ success: false, message: err.message })
       })
   })
+}
+
+exports.some = async (req, res) => {
+  const table = 'violence'
+  client.cluster.health({}, async function (_err, resp, status) {
+    console.log('-- Client Health --', resp)
+    try {
+      const r = await deleteIndex(table)
+      res.status(200).json({ success: true, data: r })
+    } catch (err) {
+      res.status(500).json({ success: false, mess: err })
+    }
+  })
+}
+
+async function deleteIndex (table) {
+  client.indices.delete({ index: table }, async function (_err, resp, status) {
+    await createIndex(table)
+  })
+}
+async function createIndex (table) {
+  client.indices.create(
+    {
+      index: table
+    },
+    async function (err, resp, status) {
+      if (err) {
+        console.log(err)
+      } else {
+        await readMysql(table)
+      }
+    }
+  )
+}
+
+async function readMysql (table) {
+  const sql = 'select * from ' + table + ';'
+  con.con().query(sql, async function (err, result) {
+    if (err) throw err
+    console.log(result.length)
+    result.forEach(async o => {
+      const jsonStr = JSON.stringify(o)
+      await saveToES(jsonStr, table)
+    })
+
+    setTimeout(printHourlyData, 10000)
+    setTimeout(printDailyData, 10000)
+    // pringData('day');
+  })
+}
+
+function saveToES (o, table) {
+  client.index(
+    {
+      index: table,
+      type: 'alerts',
+      body: o
+    },
+    function (_err, resp, status) {
+      return resp
+    }
+  )
+}
+
+function printHourlyData () {
+  printData('hour')
+}
+
+function printDailyData () {
+  printData('day')
+}
+
+function printData (interval, table) {
+  client.search(
+    {
+      index: table,
+      type: 'alerts',
+      body: {
+        aggs: {
+          simpleDatehHistogram: {
+            date_histogram: {
+              field: 'time',
+              interval: interval
+            }
+          }
+        }
+      }
+    },
+    function (error, response, status) {
+      if (error) {
+        console.log('search error: ' + error)
+      } else {
+        response.aggregations.simpleDatehHistogram.buckets.forEach(function (hit) {
+          return hit
+        })
+      }
+    }
+  )
+}
+
+exports.loit = async (req, res) => {
+  const interval = 'day'
+  const table = '_all'
+  try {
+    const search = await client.search({
+      index: table,
+      type: 'alerts',
+      body: {
+        aggs: {
+          simpleDatehHistogram: {
+            date_histogram: {
+              field: 'time',
+              interval: interval
+            }
+          }
+        }
+      }
+    })
+    res.status(200).json({ success: true, data: search.aggregations.simpleDatehHistogram.buckets })
+  } catch (err) {
+    res.status(500).json({ success: false, mess: err })
+  }
 }

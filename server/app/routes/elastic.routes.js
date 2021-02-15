@@ -16,6 +16,10 @@ module.exports = function (app) {
 
   app.get('/api/elastic/video/list', [authJwt.verifyToken], controller.viewVids)
 
+  app.get('/api/elastic/demo', [], controller.some)
+
+  app.get('/api/elastic/demo2', [], controller.loit)
+
   app.post('/api/elastic/video/delete', [authJwt.verifyToken], controller.delVid)
 
   app.post('/api/elastic/video/s3', [authJwt.verifyToken, multer().single('file')], controller.s3up)
