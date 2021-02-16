@@ -104,7 +104,7 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type,
     };
-    this.face.checkVideo(33, this.camera).subscribe(
+    this.face.checkVideo(26, this.camera).subscribe(
       res => {
         this.video = res['video'];
         this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
