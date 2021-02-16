@@ -94,6 +94,8 @@ import { IllegalParkingComponent } from './online/graphs/illegal-parking/illegal
 import { VehicleCountComponent } from './online/graphs/vehicle-count/vehicle-count.component';
 import { WrongTurnComponent } from './online/graphs/wrong-turn/wrong-turn.component';
 import { SpeedingComponent } from './online/graphs/speeding/speeding.component';
+import { FrComponent } from './online/graphs/fr/fr.component';
+import { ClothComponent } from './online/graphs/cloth/cloth.component';
 
 // import { OverallComponent } from './facial_recognition/overall/overall.component';
 
@@ -199,6 +201,8 @@ import { SpeedingComponent } from './online/graphs/speeding/speeding.component';
     VehicleCountComponent,
     WrongTurnComponent,
     SpeedingComponent,
+    FrComponent,
+    ClothComponent,
   ],
   providers: [
     FacesService,

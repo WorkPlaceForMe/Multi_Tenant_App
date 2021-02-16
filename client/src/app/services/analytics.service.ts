@@ -102,6 +102,14 @@ export class AnalyticsService {
   speeding(id: string, dates){
     return this.http.post(`${this.API_URL}speeding/${id}`, dates);
   }
+  fr(id: string, dates){
+    return this.http.post(`${this.API_URL}fr/${id}`, dates);
+  }
+  cloth(id: string, dates){
+    return this.http.post(`${this.API_URL}cloth/${id}`, dates);
+  }
+
+
 
   constructor(private http: HttpClient) { }
 }
