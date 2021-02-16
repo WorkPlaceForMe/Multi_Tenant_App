@@ -2884,6 +2884,7 @@ exports.cloth = async (req, res) => {
                 ':' +
                 se
               v.picture = `${d}_${v.track_id}.jpg`
+              // v.picturePath = `${process.env.my_ip}:3300/api/pictures/${decoded}`
             }
             const a = {
               total: result.length,
