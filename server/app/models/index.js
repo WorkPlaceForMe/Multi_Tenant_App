@@ -36,7 +36,6 @@ db.user.belongsToMany(db.algorithm, {
   otherKey: 'algoId'
 })
 
-
 db.ALGORITHMS = [
   'Facial Recognition',
   'Person Climbing Barricade',
@@ -70,8 +69,7 @@ db.ALGORITHMS = [
   'Accident Detection',
   'Axle Detection',
   'Carmake',
-  'Parking',
-  'Vehicle Count'
+  'Clothing'
 ]
 
 module.exports = db
