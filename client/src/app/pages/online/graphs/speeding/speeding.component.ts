@@ -68,6 +68,7 @@ export class SpeedingComponent implements OnInit, OnDestroy {
   }
 
   video: boolean = false;
+  rtspIn: any;
 
   ngOnInit(): void {
     // // if(api.length <= 4){
@@ -108,6 +109,7 @@ export class SpeedingComponent implements OnInit, OnDestroy {
     this.face.checkVideo(5, this.camera).subscribe(
       res => {
         this.video = res['video'];
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
         if (this.video === true) {
           this.settings['columns']['picture'] = {
             title: 'VIDEO',
