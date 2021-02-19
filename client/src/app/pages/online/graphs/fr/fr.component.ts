@@ -103,24 +103,24 @@ export class FrComponent implements OnInit , OnDestroy {
       end: this.range.end,
       type: type,
     };
-    this.face.checkVideo(32, this.camera).subscribe(
+    this.face.checkVideo(15, this.camera).subscribe(
       res => {
         this.video = res['video'];
         this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
-        if (this.video === true) {
-          this.settings['columns']['picture'] = {
-            title: 'VIDEO',
-            type: 'custom',
-            filter: false,
-            renderComponent: ButtonViewComponent,
-            onComponentInitFunction: (instance) => {
-              instance.save.subscribe((row: string)  => {
-                this.pass(row);
-              });
-            },
-          };
-          this.settings = Object.assign({}, this.settings);
-        }
+        // if (this.video === true) {
+        //   this.settings['columns']['picture'] = {
+        //     title: 'VIDEO',
+        //     type: 'custom',
+        //     filter: false,
+        //     renderComponent: ButtonViewComponent,
+        //     onComponentInitFunction: (instance) => {
+        //       instance.save.subscribe((row: string)  => {
+        //         this.pass(row);
+        //       });
+        //     },
+        //   };
+        //   this.settings = Object.assign({}, this.settings);
+        // }
       }, err => console.error(err),
     );
     this.serv.fr(this.camera, l).subscribe(
