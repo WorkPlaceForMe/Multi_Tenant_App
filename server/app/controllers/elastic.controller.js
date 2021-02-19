@@ -66,7 +66,14 @@ exports.search = async (req, res) => {
               'severity',
               'dwell',
               'track_id',
-              'zone'
+              'zone',
+              'analytic',
+              'sleeve_length',
+              'top_colour',
+              'bottom_colour',
+              'shoe_colour',
+              'speed',
+              'tag'
             ]
           }
         }
@@ -105,6 +112,7 @@ exports.search = async (req, res) => {
           }
         })
         const hits2 = secondBody.body.hits
+        console.log(hits2)
         if (hits2.hits.length !== 0) {
           hits2.hits.forEach(element => {
             hits.hits.push(element)

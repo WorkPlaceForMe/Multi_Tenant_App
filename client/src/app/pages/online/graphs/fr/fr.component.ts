@@ -195,6 +195,11 @@ export class FrComponent implements OnInit , OnDestroy {
         type: 'string',
         filter: false,
       },
+      emotion: {
+        title: 'EMOTION',
+        type: 'string',
+        filter: false,
+      },
       cam_name: {
         title: 'CAM',
         type: 'string',
