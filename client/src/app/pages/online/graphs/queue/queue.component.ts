@@ -58,10 +58,19 @@ export class QueueComponent implements OnInit, OnDestroy {
     this.videoplayer.nativeElement.play();
 
   }
+    timezone: any;
   video:boolean = false;
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
+    var time = new Date();
+    this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0,3);
+    this.timezone = parseInt(this.timezone);
+    let p = ''
+    if(this.timezone > 0){
+      p = '+'
+    }
+    this.timezone = p + JSON.stringify(this.timezone) + '00';
     let type;
     if(this.now_user.id_branch != '0000'){
       type = 'cam_id';
@@ -96,10 +105,10 @@ export class QueueComponent implements OnInit, OnDestroy {
       this.serv.queue(this.camera,l).subscribe(
         res=>{
           this.queue = res['data']
-          console.log(this.queue)
           for(var m of this.queue.raw){
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['picture'])
             m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['clip_path']
+            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
           }
           this.source = this.queue.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
 

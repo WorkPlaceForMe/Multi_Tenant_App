@@ -85,7 +85,12 @@ exports.loitering = async (req, res) => {
                   mi +
                   ':' +
                   se
-                v['picture'] = `${d}_${v.track_id}.jpg`
+                v.picture = `${d}_${v.track_id}.jpg`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/loitering/${req.params.id}/${v.picture}`
+                if (rel.atributes[0].time > 0) {
+                  v.clip_path = `${d}_${v.track_id}.mp4`
+                  v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/loitering/${req.params.id}/${v.clip_path}`
+                }
                 let l = v.dwell / rel.atributes[1].time - 1
                 if (l >= 2) {
                   l = 2
@@ -107,7 +112,6 @@ exports.loitering = async (req, res) => {
                 }
                 v['severity'] = l
                 v['alert'] = r
-                v['clip_path'] = `${d}_${v.track_id}.mp4`
               })
               avg = Math.round((avg / result.length) * 100) / 100
               let av = result.length / (24 * days)
@@ -282,45 +286,37 @@ exports.loiteringAlerts = async (req, res) => {
 }
 
 exports.intrude = async (req, res) => {
+  let token = req.headers['x-access-token']
   const data = req.body
-  await db
-    .con()
-    .query(
-      `SELECT * from intrude WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-      function (err, result) {
-        if (err)
-          return res.status(500).json({
-            success: false,
-            message: err
-          })
-        let days = Math.round((new Date(data.end) - new Date(data.start)) / (1000 * 60 * 60 * 24))
-        let ress = {}
-        let avg = 0
-        let cache = ''
-        let ressover = {}
-        result.forEach(function (v) {
-          if (cache == '') {
-            cache =
-              v.time.getFullYear() +
-              '-' +
-              (v.time.getMonth() + 1) +
-              '-' +
-              v.time.getDate() +
-              ' ' +
-              v.time.getHours()
-          }
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    await db
+      .con()
+      .query(
+        `SELECT * from intrude WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+        function (err, result) {
+          if (err)
+            return res.status(500).json({
+              success: false,
+              message: err
+            })
+          let days = Math.round((new Date(data.end) - new Date(data.start)) / (1000 * 60 * 60 * 24))
+          let ress = {}
+          let avg = 0
+          let cache = ''
+          let ressover = {}
+          result.forEach(function (v) {
+            if (cache == '') {
+              cache =
+                v.time.getFullYear() +
+                '-' +
+                (v.time.getMonth() + 1) +
+                '-' +
+                v.time.getDate() +
+                ' ' +
+                v.time.getHours()
+            }
 
-          if (
-            cache !=
-            v.time.getFullYear() +
-              '-' +
-              (v.time.getMonth() + 1) +
-              '-' +
-              v.time.getDate() +
-              ' ' +
-              v.time.getHours()
-          ) {
-            while (
+            if (
               cache !=
               v.time.getFullYear() +
                 '-' +
@@ -330,424 +326,7 @@ exports.intrude = async (req, res) => {
                 ' ' +
                 v.time.getHours()
             ) {
-              let t = new Date(cache + ':00:00').getTime()
-              t += 60 * 60 * 1000
-              cache = new Date(t)
-              ressover[
-                cache.getFullYear() +
-                  '-' +
-                  (cache.getMonth() + 1) +
-                  '-' +
-                  cache.getDate() +
-                  ' ' +
-                  cache.getHours()
-              ] = 0
-              cache =
-                cache.getFullYear() +
-                '-' +
-                (cache.getMonth() + 1) +
-                '-' +
-                cache.getDate() +
-                ' ' +
-                cache.getHours()
-            }
-          }
-          if (
-            cache ==
-            v.time.getFullYear() +
-              '-' +
-              (v.time.getMonth() + 1) +
-              '-' +
-              v.time.getDate() +
-              ' ' +
-              v.time.getHours()
-          ) {
-            ressover[
-              v.time.getFullYear() +
-                '-' +
-                (v.time.getMonth() + 1) +
-                '-' +
-                v.time.getDate() +
-                ' ' +
-                v.time.getHours()
-            ] =
-              (ressover[
-                v.time.getFullYear() +
-                  '-' +
-                  (v.time.getMonth() + 1) +
-                  '-' +
-                  v.time.getDate() +
-                  ' ' +
-                  v.time.getHours()
-              ] || 0) + 1
-          }
-          ress[v.zone] = (ress[v.zone] || 0) + 1
-          avg = avg + v.dwell
-          let d = v.time
-          let se = d.getSeconds()
-          let mi = d.getMinutes()
-          let ho = d.getHours()
-          if (se < 10) {
-            se = '0' + se
-          }
-          if (mi < 10) {
-            mi = '0' + mi
-          }
-          if (ho < 10) {
-            ho = '0' + ho
-          }
-          d =
-            d.getFullYear() +
-            '-' +
-            (d.getMonth() + 1) +
-            '-' +
-            d.getDate() +
-            '_' +
-            ho +
-            ':' +
-            mi +
-            ':' +
-            se
-          v['picture'] = `${d}_${v.track_id}_zone${v.zone}.jpg`
-          v['clip_path'] = `${d}_${v.track_id}_zone${v.zone}.mp4`
-        })
-        let lo = []
-        for (var l of Object.keys(ress)) {
-          lo.push({
-            name: l,
-            value: ress[l],
-            perc: JSON.stringify(Math.round((ress[l] / result.length) * 100)) + '%'
-          })
-        }
-        let av = result.length / (24 * days)
-        let a = {
-          total: result.length,
-          avgH: Math.round(av * 100) / 100,
-          raw: result,
-          donut: lo,
-          over: ressover
-        }
-        res.status(200).json({
-          success: true,
-          data: a
-        })
-      }
-    )
-}
-
-exports.violence = async (req, res) => {
-  const data = req.body
-
-  await db
-    .con()
-    .query(
-      `SELECT * from violence WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-      function (err, result) {
-        if (err)
-          return res.status(500).json({
-            success: false,
-            message: err
-          })
-        let ress = {}
-        let cache = ''
-        for (var v of result) {
-          if (cache == '') {
-            cache =
-              v.time.getFullYear() +
-              '-' +
-              (v.time.getMonth() + 1) +
-              '-' +
-              v.time.getDate() +
-              ' ' +
-              v.time.getHours()
-          }
-
-          if (
-            cache !=
-            v.time.getFullYear() +
-              '-' +
-              (v.time.getMonth() + 1) +
-              '-' +
-              v.time.getDate() +
-              ' ' +
-              v.time.getHours()
-          ) {
-            while (
-              cache !=
-              v.time.getFullYear() +
-                '-' +
-                (v.time.getMonth() + 1) +
-                '-' +
-                v.time.getDate() +
-                ' ' +
-                v.time.getHours()
-            ) {
-              let t = new Date(cache + ':00:00').getTime()
-              //Add one hours to date
-              t += 60 * 60 * 1000
-              cache = new Date(t)
-              ress[
-                cache.getFullYear() +
-                  '-' +
-                  (cache.getMonth() + 1) +
-                  '-' +
-                  cache.getDate() +
-                  ' ' +
-                  cache.getHours()
-              ] = 0
-              cache =
-                cache.getFullYear() +
-                '-' +
-                (cache.getMonth() + 1) +
-                '-' +
-                cache.getDate() +
-                ' ' +
-                cache.getHours()
-            }
-          }
-          if (
-            cache ==
-            v.time.getFullYear() +
-              '-' +
-              (v.time.getMonth() + 1) +
-              '-' +
-              v.time.getDate() +
-              ' ' +
-              v.time.getHours()
-          ) {
-            ress[
-              v.time.getFullYear() +
-                '-' +
-                (v.time.getMonth() + 1) +
-                '-' +
-                v.time.getDate() +
-                ' ' +
-                v.time.getHours()
-            ] =
-              (ress[
-                v.time.getFullYear() +
-                  '-' +
-                  (v.time.getMonth() + 1) +
-                  '-' +
-                  v.time.getDate() +
-                  ' ' +
-                  v.time.getHours()
-              ] || 0) + 1
-          }
-          let d = v.time
-          let se = d.getSeconds()
-          let mi = d.getMinutes()
-          let ho = d.getHours()
-          if (se < 10) {
-            se = '0' + se
-          }
-          if (mi < 10) {
-            mi = '0' + mi
-          }
-          if (ho < 10) {
-            ho = '0' + ho
-          }
-          d =
-            d.getFullYear() +
-            '-' +
-            (d.getMonth() + 1) +
-            '-' +
-            d.getDate() +
-            '_' +
-            ho +
-            ':' +
-            mi +
-            ':' +
-            se
-          v['clip_path'] = `${d}.mp4`
-          v['picture'] = `${d}.jpg`
-        }
-        let a = {
-          total: result.length,
-          raw: result,
-          over: ress
-        }
-        res.status(200).json({
-          success: true,
-          data: a
-        })
-      }
-    )
-}
-
-exports.aod = async (req, res) => {
-  const data = req.body
-  await db
-    .con()
-    .query(
-      `SELECT * from aod WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-      function (err, result) {
-        if (err)
-          return res.status(500).json({
-            success: false,
-            message: err
-          })
-        let ress = {}
-        let cache = ''
-        for (var v of result) {
-          if (cache == '') {
-            cache =
-              v.time.getFullYear() +
-              '-' +
-              (v.time.getMonth() + 1) +
-              '-' +
-              v.time.getDate() +
-              ' ' +
-              v.time.getHours()
-          }
-
-          if (
-            cache !=
-            v.time.getFullYear() +
-              '-' +
-              (v.time.getMonth() + 1) +
-              '-' +
-              v.time.getDate() +
-              ' ' +
-              v.time.getHours()
-          ) {
-            while (
-              cache !=
-              v.time.getFullYear() +
-                '-' +
-                (v.time.getMonth() + 1) +
-                '-' +
-                v.time.getDate() +
-                ' ' +
-                v.time.getHours()
-            ) {
-              let t = new Date(cache + ':00:00').getTime()
-              //Add one hours to date
-              t += 60 * 60 * 1000
-              cache = new Date(t)
-              ress[
-                cache.getFullYear() +
-                  '-' +
-                  (cache.getMonth() + 1) +
-                  '-' +
-                  cache.getDate() +
-                  ' ' +
-                  cache.getHours()
-              ] = 0
-              cache =
-                cache.getFullYear() +
-                '-' +
-                (cache.getMonth() + 1) +
-                '-' +
-                cache.getDate() +
-                ' ' +
-                cache.getHours()
-            }
-          }
-          if (
-            cache ==
-            v.time.getFullYear() +
-              '-' +
-              (v.time.getMonth() + 1) +
-              '-' +
-              v.time.getDate() +
-              ' ' +
-              v.time.getHours()
-          ) {
-            ress[
-              v.time.getFullYear() +
-                '-' +
-                (v.time.getMonth() + 1) +
-                '-' +
-                v.time.getDate() +
-                ' ' +
-                v.time.getHours()
-            ] =
-              (ress[
-                v.time.getFullYear() +
-                  '-' +
-                  (v.time.getMonth() + 1) +
-                  '-' +
-                  v.time.getDate() +
-                  ' ' +
-                  v.time.getHours()
-              ] || 0) + 1
-          }
-          let d = v.time
-          let se = d.getSeconds()
-          let mi = d.getMinutes()
-          let ho = d.getHours()
-          if (se < 10) {
-            se = '0' + se
-          }
-          if (mi < 10) {
-            mi = '0' + mi
-          }
-          if (ho < 10) {
-            ho = '0' + ho
-          }
-          d =
-            d.getFullYear() +
-            '-' +
-            (d.getMonth() + 1) +
-            '-' +
-            d.getDate() +
-            '_' +
-            ho +
-            ':' +
-            mi +
-            ':' +
-            se
-          v['picture'] = `${d}_${v.track_id}.jpg`
-          v['clip_path'] = `${d}_${v.track_id}.mp4`
-        }
-        const a = {
-          total: result.length,
-          raw: result,
-          over: ress
-        }
-        res.status(200).json({
-          success: true,
-          data: a
-        })
-      }
-    )
-}
-
-exports.covered = async (req, res) => {
-  const data = req.body
-  Relation.findOne({
-    where: {
-      algo_id: 20,
-      camera_id: req.params.id
-    }
-  })
-    .then(async rel => {
-      await db
-        .con()
-        .query(
-          `SELECT * from alerts WHERE alert= 'no mask' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-          function (err, result) {
-            if (err)
-              return res.status(500).json({
-                success: false,
-                message: err
-              })
-            let ress = {}
-            let cache = ''
-            for (var v of result) {
-              if (cache == '') {
-                cache =
-                  v.time.getFullYear() +
-                  '-' +
-                  (v.time.getMonth() + 1) +
-                  '-' +
-                  v.time.getDate() +
-                  ' ' +
-                  v.time.getHours()
-              }
-
-              if (
+              while (
                 cache !=
                 v.time.getFullYear() +
                   '-' +
@@ -757,41 +336,39 @@ exports.covered = async (req, res) => {
                   ' ' +
                   v.time.getHours()
               ) {
-                while (
-                  cache !=
-                  v.time.getFullYear() +
-                    '-' +
-                    (v.time.getMonth() + 1) +
-                    '-' +
-                    v.time.getDate() +
-                    ' ' +
-                    v.time.getHours()
-                ) {
-                  let t = new Date(cache + ':00:00').getTime()
-                  //Add one hours to date
-                  t += 60 * 60 * 1000
-                  cache = new Date(t)
-                  ress[
-                    cache.getFullYear() +
-                      '-' +
-                      (cache.getMonth() + 1) +
-                      '-' +
-                      cache.getDate() +
-                      ' ' +
-                      cache.getHours()
-                  ] = 0
-                  cache =
-                    cache.getFullYear() +
+                let t = new Date(cache + ':00:00').getTime()
+                t += 60 * 60 * 1000
+                cache = new Date(t)
+                ressover[
+                  cache.getFullYear() +
                     '-' +
                     (cache.getMonth() + 1) +
                     '-' +
                     cache.getDate() +
                     ' ' +
                     cache.getHours()
-                }
+                ] = 0
+                cache =
+                  cache.getFullYear() +
+                  '-' +
+                  (cache.getMonth() + 1) +
+                  '-' +
+                  cache.getDate() +
+                  ' ' +
+                  cache.getHours()
               }
-              if (
-                cache ==
+            }
+            if (
+              cache ==
+              v.time.getFullYear() +
+                '-' +
+                (v.time.getMonth() + 1) +
+                '-' +
+                v.time.getDate() +
+                ' ' +
+                v.time.getHours()
+            ) {
+              ressover[
                 v.time.getFullYear() +
                   '-' +
                   (v.time.getMonth() + 1) +
@@ -799,8 +376,8 @@ exports.covered = async (req, res) => {
                   v.time.getDate() +
                   ' ' +
                   v.time.getHours()
-              ) {
-                ress[
+              ] =
+                (ressover[
                   v.time.getFullYear() +
                     '-' +
                     (v.time.getMonth() + 1) +
@@ -808,105 +385,96 @@ exports.covered = async (req, res) => {
                     v.time.getDate() +
                     ' ' +
                     v.time.getHours()
-                ] =
-                  (ress[
-                    v.time.getFullYear() +
-                      '-' +
-                      (v.time.getMonth() + 1) +
-                      '-' +
-                      v.time.getDate() +
-                      ' ' +
-                      v.time.getHours()
-                  ] || 0) + 1
-              }
-              let d = v.time
-              let se = d.getSeconds()
-              let mi = d.getMinutes()
-              let ho = d.getHours()
-              if (se < 10) {
-                se = '0' + se
-              }
-              if (mi < 10) {
-                mi = '0' + mi
-              }
-              if (ho < 10) {
-                ho = '0' + ho
-              }
-              d =
-                d.getFullYear() +
-                '-' +
-                (d.getMonth() + 1) +
-                '-' +
-                d.getDate() +
-                '_' +
-                ho +
-                ':' +
-                mi +
-                ':' +
-                se
-              v['picture'] = `${d}_${v.trackid}.jpg`
-              v['clip_path'] = `${d}_${v.trackid}.mp4`
+                ] || 0) + 1
             }
-            let a = {
-              total: result.length,
-              raw: result,
-              over: ress
+            ress[v.zone] = (ress[v.zone] || 0) + 1
+            avg = avg + v.dwell
+            let d = v.time
+            let se = d.getSeconds()
+            let mi = d.getMinutes()
+            let ho = d.getHours()
+            if (se < 10) {
+              se = '0' + se
             }
-            res.status(200).json({
-              success: true,
-              data: a,
-              rel: rel
+            if (mi < 10) {
+              mi = '0' + mi
+            }
+            if (ho < 10) {
+              ho = '0' + ho
+            }
+            d =
+              d.getFullYear() +
+              '-' +
+              (d.getMonth() + 1) +
+              '-' +
+              d.getDate() +
+              '_' +
+              ho +
+              ':' +
+              mi +
+              ':' +
+              se
+            v['picture'] = `${d}_${v.track_id}_zone${v.zone}.jpg`
+            v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/intrude/${req.params.id}/${v.picture}`
+            if (rel.atributes[0].time > 0) {
+              v.clip_path = `${d}_${v.track_id}_zone${v.zone}.mp4`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/intrude/${req.params.id}/${v.clip_path}`
+            }
+          })
+          let lo = []
+          for (var l of Object.keys(ress)) {
+            lo.push({
+              name: l,
+              value: ress[l],
+              perc: JSON.stringify(Math.round((ress[l] / result.length) * 100)) + '%'
             })
           }
-        )
-    })
-    .catch(err => {
-      return res.status(500).json({success: false, mess: err})
-    })
+          let av = result.length / (24 * days)
+          let a = {
+            total: result.length,
+            avgH: Math.round(av * 100) / 100,
+            raw: result,
+            donut: lo,
+            over: ressover
+          }
+          res.status(200).json({
+            success: true,
+            data: a
+          })
+        }
+      )
+  })
 }
 
-exports.social = async (req, res) => {
+exports.violence = async (req, res) => {
+  let token = req.headers['x-access-token']
   const data = req.body
-  await db
-    .con()
-    .query(
-      `SELECT * from alerts WHERE alert= 'sociald' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-      function (err, result) {
-        if (err)
-          return res.status(500).json({
-            success: false,
-            message: err
-          })
-        let ress = {
-          0: 0,
-          1: 0,
-          2: 0
-        }
-        let ressover = {}
-        let cache = ''
-        result.forEach(function (v) {
-          if (cache == '') {
-            cache =
-              v.time.getFullYear() +
-              '-' +
-              (v.time.getMonth() + 1) +
-              '-' +
-              v.time.getDate() +
-              ' ' +
-              v.time.getHours()
-          }
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    await db
+      .con()
+      .query(
+        `SELECT * from violence WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+        function (err, result) {
+          if (err)
+            return res.status(500).json({
+              success: false,
+              message: err
+            })
+          let ress = {}
+          let cache = ''
+          for (var v of result) {
+            if (cache == '') {
+              cache =
+                v.time.getFullYear() +
+                '-' +
+                (v.time.getMonth() + 1) +
+                '-' +
+                v.time.getDate() +
+                ' ' +
+                v.time.getHours()
+            }
 
-          if (
-            cache !=
-            v.time.getFullYear() +
-              '-' +
-              (v.time.getMonth() + 1) +
-              '-' +
-              v.time.getDate() +
-              ' ' +
-              v.time.getHours()
-          ) {
-            while (
+            if (
               cache !=
               v.time.getFullYear() +
                 '-' +
@@ -916,49 +484,8 @@ exports.social = async (req, res) => {
                 ' ' +
                 v.time.getHours()
             ) {
-              let t = new Date(cache + ':00:00').getTime()
-              //Add one hours to date
-              t += 60 * 60 * 1000
-              cache = new Date(t)
-              ressover[
-                cache.getFullYear() +
-                  '-' +
-                  (cache.getMonth() + 1) +
-                  '-' +
-                  cache.getDate() +
-                  ' ' +
-                  cache.getHours()
-              ] = 0
-              cache =
-                cache.getFullYear() +
-                '-' +
-                (cache.getMonth() + 1) +
-                '-' +
-                cache.getDate() +
-                ' ' +
-                cache.getHours()
-            }
-          }
-          if (
-            cache ==
-            v.time.getFullYear() +
-              '-' +
-              (v.time.getMonth() + 1) +
-              '-' +
-              v.time.getDate() +
-              ' ' +
-              v.time.getHours()
-          ) {
-            ressover[
-              v.time.getFullYear() +
-                '-' +
-                (v.time.getMonth() + 1) +
-                '-' +
-                v.time.getDate() +
-                ' ' +
-                v.time.getHours()
-            ] =
-              (ressover[
+              while (
+                cache !=
                 v.time.getFullYear() +
                   '-' +
                   (v.time.getMonth() + 1) +
@@ -966,49 +493,560 @@ exports.social = async (req, res) => {
                   v.time.getDate() +
                   ' ' +
                   v.time.getHours()
-              ] || 0) + 1
+              ) {
+                let t = new Date(cache + ':00:00').getTime()
+                //Add one hours to date
+                t += 60 * 60 * 1000
+                cache = new Date(t)
+                ress[
+                  cache.getFullYear() +
+                    '-' +
+                    (cache.getMonth() + 1) +
+                    '-' +
+                    cache.getDate() +
+                    ' ' +
+                    cache.getHours()
+                ] = 0
+                cache =
+                  cache.getFullYear() +
+                  '-' +
+                  (cache.getMonth() + 1) +
+                  '-' +
+                  cache.getDate() +
+                  ' ' +
+                  cache.getHours()
+              }
+            }
+            if (
+              cache ==
+              v.time.getFullYear() +
+                '-' +
+                (v.time.getMonth() + 1) +
+                '-' +
+                v.time.getDate() +
+                ' ' +
+                v.time.getHours()
+            ) {
+              ress[
+                v.time.getFullYear() +
+                  '-' +
+                  (v.time.getMonth() + 1) +
+                  '-' +
+                  v.time.getDate() +
+                  ' ' +
+                  v.time.getHours()
+              ] =
+                (ress[
+                  v.time.getFullYear() +
+                    '-' +
+                    (v.time.getMonth() + 1) +
+                    '-' +
+                    v.time.getDate() +
+                    ' ' +
+                    v.time.getHours()
+                ] || 0) + 1
+            }
+            let d = v.time
+            let se = d.getSeconds()
+            let mi = d.getMinutes()
+            let ho = d.getHours()
+            if (se < 10) {
+              se = '0' + se
+            }
+            if (mi < 10) {
+              mi = '0' + mi
+            }
+            if (ho < 10) {
+              ho = '0' + ho
+            }
+            d =
+              d.getFullYear() +
+              '-' +
+              (d.getMonth() + 1) +
+              '-' +
+              d.getDate() +
+              '_' +
+              ho +
+              ':' +
+              mi +
+              ':' +
+              se
+            v['picture'] = `${d}.jpg`
+            v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/violence/${req.params.id}/${v.picture}`
+            if (rel.atributes[0].time > 0) {
+              v.clip_path = `${d}.mp4`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/violence/${req.params.id}/${v.clip_path}`
+            }
           }
-          ress[v.alert_type] = (ress[v.alert_type] || 0) + 1
-          let d = v.time
-          let se = d.getSeconds()
-          let mi = d.getMinutes()
-          let ho = d.getHours()
-          if (se < 10) {
-            se = '0' + se
+          let a = {
+            total: result.length,
+            raw: result,
+            over: ress
           }
-          if (mi < 10) {
-            mi = '0' + mi
-          }
-          if (ho < 10) {
-            ho = '0' + ho
-          }
-          d =
-            d.getFullYear() +
-            '-' +
-            (d.getMonth() + 1) +
-            '-' +
-            d.getDate() +
-            '_' +
-            ho +
-            ':' +
-            mi +
-            ':' +
-            se
-          v['picture'] = `${d}_${v.trackid}.jpg`
-          v['clip_path'] = `${d}_${v.trackid}.mp4`
-        })
-        let a = {
-          total: result.length,
-          raw: result,
-          types: ress,
-          over: ressover
+          res.status(200).json({
+            success: true,
+            data: a
+          })
         }
-        res.status(200).json({
-          success: true,
-          data: a
-        })
+      )
+  })
+}
+
+exports.aod = async (req, res) => {
+  let token = req.headers['x-access-token']
+  const data = req.body
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    await db
+      .con()
+      .query(
+        `SELECT * from aod WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+        function (err, result) {
+          if (err)
+            return res.status(500).json({
+              success: false,
+              message: err
+            })
+          let ress = {}
+          let cache = ''
+          for (var v of result) {
+            if (cache == '') {
+              cache =
+                v.time.getFullYear() +
+                '-' +
+                (v.time.getMonth() + 1) +
+                '-' +
+                v.time.getDate() +
+                ' ' +
+                v.time.getHours()
+            }
+
+            if (
+              cache !=
+              v.time.getFullYear() +
+                '-' +
+                (v.time.getMonth() + 1) +
+                '-' +
+                v.time.getDate() +
+                ' ' +
+                v.time.getHours()
+            ) {
+              while (
+                cache !=
+                v.time.getFullYear() +
+                  '-' +
+                  (v.time.getMonth() + 1) +
+                  '-' +
+                  v.time.getDate() +
+                  ' ' +
+                  v.time.getHours()
+              ) {
+                let t = new Date(cache + ':00:00').getTime()
+                //Add one hours to date
+                t += 60 * 60 * 1000
+                cache = new Date(t)
+                ress[
+                  cache.getFullYear() +
+                    '-' +
+                    (cache.getMonth() + 1) +
+                    '-' +
+                    cache.getDate() +
+                    ' ' +
+                    cache.getHours()
+                ] = 0
+                cache =
+                  cache.getFullYear() +
+                  '-' +
+                  (cache.getMonth() + 1) +
+                  '-' +
+                  cache.getDate() +
+                  ' ' +
+                  cache.getHours()
+              }
+            }
+            if (
+              cache ==
+              v.time.getFullYear() +
+                '-' +
+                (v.time.getMonth() + 1) +
+                '-' +
+                v.time.getDate() +
+                ' ' +
+                v.time.getHours()
+            ) {
+              ress[
+                v.time.getFullYear() +
+                  '-' +
+                  (v.time.getMonth() + 1) +
+                  '-' +
+                  v.time.getDate() +
+                  ' ' +
+                  v.time.getHours()
+              ] =
+                (ress[
+                  v.time.getFullYear() +
+                    '-' +
+                    (v.time.getMonth() + 1) +
+                    '-' +
+                    v.time.getDate() +
+                    ' ' +
+                    v.time.getHours()
+                ] || 0) + 1
+            }
+            let d = v.time
+            let se = d.getSeconds()
+            let mi = d.getMinutes()
+            let ho = d.getHours()
+            if (se < 10) {
+              se = '0' + se
+            }
+            if (mi < 10) {
+              mi = '0' + mi
+            }
+            if (ho < 10) {
+              ho = '0' + ho
+            }
+            d =
+              d.getFullYear() +
+              '-' +
+              (d.getMonth() + 1) +
+              '-' +
+              d.getDate() +
+              '_' +
+              ho +
+              ':' +
+              mi +
+              ':' +
+              se
+            v['picture'] = `${d}_${v.track_id}.jpg`
+            v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/aod/${req.params.id}/${v.picture}`
+            if (rel.atributes[0].time > 0) {
+              v.clip_path = `${d}_${v.track_id}.mp4`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/aod/${req.params.id}/${v.clip_path}`
+            }
+          }
+          const a = {
+            total: result.length,
+            raw: result,
+            over: ress
+          }
+          res.status(200).json({
+            success: true,
+            data: a
+          })
+        }
+      )
+  })
+}
+
+exports.covered = async (req, res) => {
+  let token = req.headers['x-access-token']
+  const data = req.body
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 20,
+        camera_id: req.params.id
       }
-    )
+    })
+      .then(async rel => {
+        await db
+          .con()
+          .query(
+            `SELECT * from alerts WHERE alert= 'no mask' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+            function (err, result) {
+              if (err)
+                return res.status(500).json({
+                  success: false,
+                  message: err
+                })
+              let ress = {}
+              let cache = ''
+              for (var v of result) {
+                if (cache == '') {
+                  cache =
+                    v.time.getFullYear() +
+                    '-' +
+                    (v.time.getMonth() + 1) +
+                    '-' +
+                    v.time.getDate() +
+                    ' ' +
+                    v.time.getHours()
+                }
+
+                if (
+                  cache !=
+                  v.time.getFullYear() +
+                    '-' +
+                    (v.time.getMonth() + 1) +
+                    '-' +
+                    v.time.getDate() +
+                    ' ' +
+                    v.time.getHours()
+                ) {
+                  while (
+                    cache !=
+                    v.time.getFullYear() +
+                      '-' +
+                      (v.time.getMonth() + 1) +
+                      '-' +
+                      v.time.getDate() +
+                      ' ' +
+                      v.time.getHours()
+                  ) {
+                    let t = new Date(cache + ':00:00').getTime()
+                    //Add one hours to date
+                    t += 60 * 60 * 1000
+                    cache = new Date(t)
+                    ress[
+                      cache.getFullYear() +
+                        '-' +
+                        (cache.getMonth() + 1) +
+                        '-' +
+                        cache.getDate() +
+                        ' ' +
+                        cache.getHours()
+                    ] = 0
+                    cache =
+                      cache.getFullYear() +
+                      '-' +
+                      (cache.getMonth() + 1) +
+                      '-' +
+                      cache.getDate() +
+                      ' ' +
+                      cache.getHours()
+                  }
+                }
+                if (
+                  cache ==
+                  v.time.getFullYear() +
+                    '-' +
+                    (v.time.getMonth() + 1) +
+                    '-' +
+                    v.time.getDate() +
+                    ' ' +
+                    v.time.getHours()
+                ) {
+                  ress[
+                    v.time.getFullYear() +
+                      '-' +
+                      (v.time.getMonth() + 1) +
+                      '-' +
+                      v.time.getDate() +
+                      ' ' +
+                      v.time.getHours()
+                  ] =
+                    (ress[
+                      v.time.getFullYear() +
+                        '-' +
+                        (v.time.getMonth() + 1) +
+                        '-' +
+                        v.time.getDate() +
+                        ' ' +
+                        v.time.getHours()
+                    ] || 0) + 1
+                }
+                let d = v.time
+                let se = d.getSeconds()
+                let mi = d.getMinutes()
+                let ho = d.getHours()
+                if (se < 10) {
+                  se = '0' + se
+                }
+                if (mi < 10) {
+                  mi = '0' + mi
+                }
+                if (ho < 10) {
+                  ho = '0' + ho
+                }
+                d =
+                  d.getFullYear() +
+                  '-' +
+                  (d.getMonth() + 1) +
+                  '-' +
+                  d.getDate() +
+                  '_' +
+                  ho +
+                  ':' +
+                  mi +
+                  ':' +
+                  se
+                v.picture = `${d}_${v.trackid}.jpg`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/covered/${req.params.id}/${v.picture}`
+                if (rel.atributes[0].time > 0) {
+                  v.clip_path = `${d}_${v.trackid}.mp4`
+                  v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/covered/${req.params.id}/${v.clip_path}`
+                }
+              }
+              let a = {
+                total: result.length,
+                raw: result,
+                over: ress
+              }
+              res.status(200).json({
+                success: true,
+                data: a,
+                rel: rel
+              })
+            }
+          )
+      })
+      .catch(err => {
+        return res.status(500).json({success: false, mess: err})
+      })
+  })
+}
+
+exports.social = async (req, res) => {
+  let token = req.headers['x-access-token']
+  const data = req.body
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    await db
+      .con()
+      .query(
+        `SELECT * from alerts WHERE alert= 'sociald' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+        function (err, result) {
+          if (err)
+            return res.status(500).json({
+              success: false,
+              message: err
+            })
+          let ress = {
+            0: 0,
+            1: 0,
+            2: 0
+          }
+          let ressover = {}
+          let cache = ''
+          result.forEach(function (v) {
+            if (cache == '') {
+              cache =
+                v.time.getFullYear() +
+                '-' +
+                (v.time.getMonth() + 1) +
+                '-' +
+                v.time.getDate() +
+                ' ' +
+                v.time.getHours()
+            }
+
+            if (
+              cache !=
+              v.time.getFullYear() +
+                '-' +
+                (v.time.getMonth() + 1) +
+                '-' +
+                v.time.getDate() +
+                ' ' +
+                v.time.getHours()
+            ) {
+              while (
+                cache !=
+                v.time.getFullYear() +
+                  '-' +
+                  (v.time.getMonth() + 1) +
+                  '-' +
+                  v.time.getDate() +
+                  ' ' +
+                  v.time.getHours()
+              ) {
+                let t = new Date(cache + ':00:00').getTime()
+                //Add one hours to date
+                t += 60 * 60 * 1000
+                cache = new Date(t)
+                ressover[
+                  cache.getFullYear() +
+                    '-' +
+                    (cache.getMonth() + 1) +
+                    '-' +
+                    cache.getDate() +
+                    ' ' +
+                    cache.getHours()
+                ] = 0
+                cache =
+                  cache.getFullYear() +
+                  '-' +
+                  (cache.getMonth() + 1) +
+                  '-' +
+                  cache.getDate() +
+                  ' ' +
+                  cache.getHours()
+              }
+            }
+            if (
+              cache ==
+              v.time.getFullYear() +
+                '-' +
+                (v.time.getMonth() + 1) +
+                '-' +
+                v.time.getDate() +
+                ' ' +
+                v.time.getHours()
+            ) {
+              ressover[
+                v.time.getFullYear() +
+                  '-' +
+                  (v.time.getMonth() + 1) +
+                  '-' +
+                  v.time.getDate() +
+                  ' ' +
+                  v.time.getHours()
+              ] =
+                (ressover[
+                  v.time.getFullYear() +
+                    '-' +
+                    (v.time.getMonth() + 1) +
+                    '-' +
+                    v.time.getDate() +
+                    ' ' +
+                    v.time.getHours()
+                ] || 0) + 1
+            }
+            ress[v.alert_type] = (ress[v.alert_type] || 0) + 1
+            let d = v.time
+            let se = d.getSeconds()
+            let mi = d.getMinutes()
+            let ho = d.getHours()
+            if (se < 10) {
+              se = '0' + se
+            }
+            if (mi < 10) {
+              mi = '0' + mi
+            }
+            if (ho < 10) {
+              ho = '0' + ho
+            }
+            d =
+              d.getFullYear() +
+              '-' +
+              (d.getMonth() + 1) +
+              '-' +
+              d.getDate() +
+              '_' +
+              ho +
+              ':' +
+              mi +
+              ':' +
+              se
+            v.picture = `${d}_${v.trackid}.jpg`
+            v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/social/${req.params.id}/${v.picture}`
+            if (rel.atributes[0].time > 0) {
+              v.clip_path = `${d}_${v.trackid}.mp4`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/social/${req.params.id}/${v.clip_path}`
+            }
+          })
+          let a = {
+            total: result.length,
+            raw: result,
+            types: ress,
+            over: ressover
+          }
+          res.status(200).json({
+            success: true,
+            data: a
+          })
+        }
+      )
+  })
 }
 
 exports.pc = async (req, res) => {
@@ -1165,95 +1203,41 @@ exports.pc = async (req, res) => {
 }
 
 exports.tamper = async (req, res) => {
+  let token = req.headers['x-access-token']
   const data = req.body
-
-  await db
-    .con()
-    .query(
-      `SELECT * from alerts WHERE alert= 'tamper' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-      function (err, result) {
-        if (err)
-          return res.status(500).json({
-            success: false,
-            message: err
-          })
-        let ress = {}
-        let cache = ''
-        for (var v of result) {
-          if (cache == '') {
-            cache =
-              v.time.getFullYear() +
-              '-' +
-              (v.time.getMonth() + 1) +
-              '-' +
-              v.time.getDate() +
-              ' ' +
-              v.time.getHours()
-          }
-
-          if (
-            cache !=
-            v.time.getFullYear() +
-              '-' +
-              (v.time.getMonth() + 1) +
-              '-' +
-              v.time.getDate() +
-              ' ' +
-              v.time.getHours()
-          ) {
-            while (
-              cache !=
-              v.time.getFullYear() +
-                '-' +
-                (v.time.getMonth() + 1) +
-                '-' +
-                v.time.getDate() +
-                ' ' +
-                v.time.getHours()
-            ) {
-              let t = new Date(cache + ':00:00').getTime()
-              //Add one hours to date
-              t += 60 * 60 * 1000
-              cache = new Date(t)
-              ress[
-                cache.getFullYear() +
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 27,
+        camera_id: req.params.id
+      }
+    }).then(async rel => {
+      await db
+        .con()
+        .query(
+          `SELECT * from alerts WHERE alert= 'tamper' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          function (err, result) {
+            if (err)
+              return res.status(500).json({
+                success: false,
+                message: err
+              })
+            let ress = {}
+            let cache = ''
+            for (var v of result) {
+              if (cache == '') {
+                cache =
+                  v.time.getFullYear() +
                   '-' +
-                  (cache.getMonth() + 1) +
+                  (v.time.getMonth() + 1) +
                   '-' +
-                  cache.getDate() +
+                  v.time.getDate() +
                   ' ' +
-                  cache.getHours()
-              ] = 0
-              cache =
-                cache.getFullYear() +
-                '-' +
-                (cache.getMonth() + 1) +
-                '-' +
-                cache.getDate() +
-                ' ' +
-                cache.getHours()
-            }
-          }
-          if (
-            cache ==
-            v.time.getFullYear() +
-              '-' +
-              (v.time.getMonth() + 1) +
-              '-' +
-              v.time.getDate() +
-              ' ' +
-              v.time.getHours()
-          ) {
-            ress[
-              v.time.getFullYear() +
-                '-' +
-                (v.time.getMonth() + 1) +
-                '-' +
-                v.time.getDate() +
-                ' ' +
-                v.time.getHours()
-            ] =
-              (ress[
+                  v.time.getHours()
+              }
+
+              if (
+                cache !=
                 v.time.getFullYear() +
                   '-' +
                   (v.time.getMonth() + 1) +
@@ -1261,139 +1245,153 @@ exports.tamper = async (req, res) => {
                   v.time.getDate() +
                   ' ' +
                   v.time.getHours()
-              ] || 0) + 1
+              ) {
+                while (
+                  cache !=
+                  v.time.getFullYear() +
+                    '-' +
+                    (v.time.getMonth() + 1) +
+                    '-' +
+                    v.time.getDate() +
+                    ' ' +
+                    v.time.getHours()
+                ) {
+                  let t = new Date(cache + ':00:00').getTime()
+                  //Add one hours to date
+                  t += 60 * 60 * 1000
+                  cache = new Date(t)
+                  ress[
+                    cache.getFullYear() +
+                      '-' +
+                      (cache.getMonth() + 1) +
+                      '-' +
+                      cache.getDate() +
+                      ' ' +
+                      cache.getHours()
+                  ] = 0
+                  cache =
+                    cache.getFullYear() +
+                    '-' +
+                    (cache.getMonth() + 1) +
+                    '-' +
+                    cache.getDate() +
+                    ' ' +
+                    cache.getHours()
+                }
+              }
+              if (
+                cache ==
+                v.time.getFullYear() +
+                  '-' +
+                  (v.time.getMonth() + 1) +
+                  '-' +
+                  v.time.getDate() +
+                  ' ' +
+                  v.time.getHours()
+              ) {
+                ress[
+                  v.time.getFullYear() +
+                    '-' +
+                    (v.time.getMonth() + 1) +
+                    '-' +
+                    v.time.getDate() +
+                    ' ' +
+                    v.time.getHours()
+                ] =
+                  (ress[
+                    v.time.getFullYear() +
+                      '-' +
+                      (v.time.getMonth() + 1) +
+                      '-' +
+                      v.time.getDate() +
+                      ' ' +
+                      v.time.getHours()
+                  ] || 0) + 1
+              }
+              let d = v.time
+              let se = d.getSeconds()
+              let mi = d.getMinutes()
+              let ho = d.getHours()
+              if (se < 10) {
+                se = '0' + se
+              }
+              if (mi < 10) {
+                mi = '0' + mi
+              }
+              if (ho < 10) {
+                ho = '0' + ho
+              }
+              d =
+                d.getFullYear() +
+                '-' +
+                (d.getMonth() + 1) +
+                '-' +
+                d.getDate() +
+                '_' +
+                ho +
+                ':' +
+                mi +
+                ':' +
+                se
+              v.picture = `${d}_${v.trackid}.jpg`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/tamper/${req.params.id}/${v.picture}`
+              if (rel.atributes[0].time > 0) {
+                v.clip_path = `${d}_${v.trackid}.mp4`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/tamper/${req.params.id}/${v.clip_path}`
+              }
+            }
+            let a = {
+              total: result.length,
+              raw: result,
+              over: ress,
+              rel: rel
+            }
+            res.status(200).json({
+              success: true,
+              data: a
+            })
           }
-          let d = v.time
-          let se = d.getSeconds()
-          let mi = d.getMinutes()
-          let ho = d.getHours()
-          if (se < 10) {
-            se = '0' + se
-          }
-          if (mi < 10) {
-            mi = '0' + mi
-          }
-          if (ho < 10) {
-            ho = '0' + ho
-          }
-          d =
-            d.getFullYear() +
-            '-' +
-            (d.getMonth() + 1) +
-            '-' +
-            d.getDate() +
-            '_' +
-            ho +
-            ':' +
-            mi +
-            ':' +
-            se
-          v['picture'] = `${d}_${v.trackid}.jpg`
-          v['clip_path'] = `${d}_${v.trackid}.mp4`
-        }
-        let a = {
-          total: result.length,
-          raw: result,
-          over: ress
-        }
-        res.status(200).json({
-          success: true,
-          data: a
-        })
-      }
-    )
+        )
+    })
+  })
 }
 
 exports.helm = async (req, res) => {
+  let token = req.headers['x-access-token']
   const data = req.body
-
-  await db
-    .con()
-    .query(
-      `SELECT * from alerts WHERE alert= 'helmet' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-      function (err, result) {
-        if (err)
-          return res.status(500).json({
-            success: false,
-            message: err
-          })
-        let ress = {}
-        let cache = ''
-        for (var v of result) {
-          if (cache == '') {
-            cache =
-              v.time.getFullYear() +
-              '-' +
-              (v.time.getMonth() + 1) +
-              '-' +
-              v.time.getDate() +
-              ' ' +
-              v.time.getHours()
-          }
-
-          if (
-            cache !=
-            v.time.getFullYear() +
-              '-' +
-              (v.time.getMonth() + 1) +
-              '-' +
-              v.time.getDate() +
-              ' ' +
-              v.time.getHours()
-          ) {
-            while (
-              cache !=
-              v.time.getFullYear() +
-                '-' +
-                (v.time.getMonth() + 1) +
-                '-' +
-                v.time.getDate() +
-                ' ' +
-                v.time.getHours()
-            ) {
-              let t = new Date(cache + ':00:00').getTime()
-              //Add one hours to date
-              t += 60 * 60 * 1000
-              cache = new Date(t)
-              ress[
-                cache.getFullYear() +
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 23,
+        camera_id: req.params.id
+      }
+    }).then(async rel => {
+      await db
+        .con()
+        .query(
+          `SELECT * from alerts WHERE alert= 'helmet' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          function (err, result) {
+            if (err)
+              return res.status(500).json({
+                success: false,
+                message: err
+              })
+            let ress = {}
+            let cache = ''
+            for (var v of result) {
+              if (cache == '') {
+                cache =
+                  v.time.getFullYear() +
                   '-' +
-                  (cache.getMonth() + 1) +
+                  (v.time.getMonth() + 1) +
                   '-' +
-                  cache.getDate() +
+                  v.time.getDate() +
                   ' ' +
-                  cache.getHours()
-              ] = 0
-              cache =
-                cache.getFullYear() +
-                '-' +
-                (cache.getMonth() + 1) +
-                '-' +
-                cache.getDate() +
-                ' ' +
-                cache.getHours()
-            }
-          }
-          if (
-            cache ==
-            v.time.getFullYear() +
-              '-' +
-              (v.time.getMonth() + 1) +
-              '-' +
-              v.time.getDate() +
-              ' ' +
-              v.time.getHours()
-          ) {
-            ress[
-              v.time.getFullYear() +
-                '-' +
-                (v.time.getMonth() + 1) +
-                '-' +
-                v.time.getDate() +
-                ' ' +
-                v.time.getHours()
-            ] =
-              (ress[
+                  v.time.getHours()
+              }
+
+              if (
+                cache !=
                 v.time.getFullYear() +
                   '-' +
                   (v.time.getMonth() + 1) +
@@ -1401,47 +1399,115 @@ exports.helm = async (req, res) => {
                   v.time.getDate() +
                   ' ' +
                   v.time.getHours()
-              ] || 0) + 1
+              ) {
+                while (
+                  cache !=
+                  v.time.getFullYear() +
+                    '-' +
+                    (v.time.getMonth() + 1) +
+                    '-' +
+                    v.time.getDate() +
+                    ' ' +
+                    v.time.getHours()
+                ) {
+                  let t = new Date(cache + ':00:00').getTime()
+                  //Add one hours to date
+                  t += 60 * 60 * 1000
+                  cache = new Date(t)
+                  ress[
+                    cache.getFullYear() +
+                      '-' +
+                      (cache.getMonth() + 1) +
+                      '-' +
+                      cache.getDate() +
+                      ' ' +
+                      cache.getHours()
+                  ] = 0
+                  cache =
+                    cache.getFullYear() +
+                    '-' +
+                    (cache.getMonth() + 1) +
+                    '-' +
+                    cache.getDate() +
+                    ' ' +
+                    cache.getHours()
+                }
+              }
+              if (
+                cache ==
+                v.time.getFullYear() +
+                  '-' +
+                  (v.time.getMonth() + 1) +
+                  '-' +
+                  v.time.getDate() +
+                  ' ' +
+                  v.time.getHours()
+              ) {
+                ress[
+                  v.time.getFullYear() +
+                    '-' +
+                    (v.time.getMonth() + 1) +
+                    '-' +
+                    v.time.getDate() +
+                    ' ' +
+                    v.time.getHours()
+                ] =
+                  (ress[
+                    v.time.getFullYear() +
+                      '-' +
+                      (v.time.getMonth() + 1) +
+                      '-' +
+                      v.time.getDate() +
+                      ' ' +
+                      v.time.getHours()
+                  ] || 0) + 1
+              }
+              let d = v.time
+              let se = d.getSeconds()
+              let mi = d.getMinutes()
+              let ho = d.getHours()
+              if (se < 10) {
+                se = '0' + se
+              }
+              if (mi < 10) {
+                mi = '0' + mi
+              }
+              if (ho < 10) {
+                ho = '0' + ho
+              }
+              d =
+                d.getFullYear() +
+                '-' +
+                (d.getMonth() + 1) +
+                '-' +
+                d.getDate() +
+                '_' +
+                ho +
+                ':' +
+                mi +
+                ':' +
+                se
+              v.picture = `${d}_${v.trackid}.jpg`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/helm/${req.params.id}/${v.picture}`
+              if (rel.atributes[0].time > 0) {
+                v.clip_path = `${d}_${v.trackid}.mp4`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/helm/${req.params.id}/${v.clip_path}`
+              }
+            }
+            let a = {
+              total: result.length,
+              raw: result,
+              over: ress,
+              rel: rel
+            }
+            res.status(200).json({
+              success: true,
+              data: a
+            })
           }
-          let d = v.time
-          let se = d.getSeconds()
-          let mi = d.getMinutes()
-          let ho = d.getHours()
-          if (se < 10) {
-            se = '0' + se
-          }
-          if (mi < 10) {
-            mi = '0' + mi
-          }
-          if (ho < 10) {
-            ho = '0' + ho
-          }
-          d =
-            d.getFullYear() +
-            '-' +
-            (d.getMonth() + 1) +
-            '-' +
-            d.getDate() +
-            '_' +
-            ho +
-            ':' +
-            mi +
-            ':' +
-            se
-          v['picture'] = `${d}_${v.trackid}.jpg`
-          v['clip_path'] = `${d}_${v.trackid}.mp4`
-        }
-        let a = {
-          total: result.length,
-          raw: result,
-          over: ress
-        }
-        res.status(200).json({
-          success: true,
-          data: a
-        })
-      }
-    )
+        )
+    })
+  })
 }
 
 function display(seconds) {
@@ -1453,92 +1519,107 @@ function display(seconds) {
 }
 
 exports.queue = async (req, res) => {
+  let token = req.headers['x-access-token']
   const data = req.body
-  await db
-    .con()
-    .query(
-      `SELECT * from queue_mgt WHERE ${data.type} = '${req.params.id}' and start_time >= '${data.start}' and  start_time <= '${data.end}' order by start_time asc;`,
-      function (err, result) {
-        if (err)
-          return res.status(500).json({
-            success: false,
-            message: err
-          })
-        let countIn = 0
-        let avg = 0
-        let min = 0
-        let max = 0
-        let minQ, maxQ
-        let times = []
-        for (var v of result) {
-          if (v.queuing == 1) {
-            countIn++
-          } else {
-            v['wait'] = (v.end_time - v.start_time) / 1000
-            v['wait'] = display(v['wait'])
-            times.push({
-              time: (v.end_time - v.start_time) / 60000,
-              queue: v.qid
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 22,
+        camera_id: req.params.id
+      }
+    }).then(async rel => {
+      await db
+        .con()
+        .query(
+          `SELECT * from queue_mgt WHERE ${data.type} = '${req.params.id}' and start_time >= '${data.start}' and  start_time <= '${data.end}' order by start_time asc;`,
+          function (err, result) {
+            if (err)
+              return res.status(500).json({
+                success: false,
+                message: err
+              })
+            let countIn = 0
+            let avg = 0
+            let min = 0
+            let max = 0
+            let minQ, maxQ
+            let times = []
+            for (var v of result) {
+              if (v.queuing == 1) {
+                countIn++
+              } else {
+                v['wait'] = (v.end_time - v.start_time) / 1000
+                v['wait'] = display(v['wait'])
+                times.push({
+                  time: (v.end_time - v.start_time) / 60000,
+                  queue: v.qid
+                })
+              }
+              let d = v.start_time
+              let se = d.getSeconds()
+              let mi = d.getMinutes()
+              let ho = d.getHours()
+              if (se < 10) {
+                se = '0' + se
+              }
+              if (mi < 10) {
+                mi = '0' + mi
+              }
+              if (ho < 10) {
+                ho = '0' + ho
+              }
+              d =
+                d.getFullYear() +
+                '-' +
+                (d.getMonth() + 1) +
+                '-' +
+                d.getDate() +
+                '_' +
+                ho +
+                ':' +
+                mi +
+                ':' +
+                se
+              v['picture'] = `${d}_${v.track_id}.jpg`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/queue/${req.params.id}/${v.picture}`
+              if (rel.atributes[0].time > 0) {
+                v.clip_path = `${d}_${v.track_id}.mp4`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/queue/${req.params.id}/${v.clip_path}`
+              }
+            }
+            for (var e of times) {
+              avg = avg + e.time
+              if (min == 0) {
+                min = e.time
+                minQ = e.queue
+              } else if (e.time < min) {
+                min = e.time
+                minQ = e.queue
+              }
+              if (max == 0) {
+                max = e.time
+                maxQ = e.queue
+              } else if (e.time > max) {
+                max = e.time
+                maxQ = e.queue
+              }
+            }
+            let a = {
+              raw: result,
+              count: countIn,
+              avg: Math.round((avg / times.length) * 100) / 100,
+              min: minQ,
+              max: maxQ,
+              rel: rel
+            }
+            res.status(200).json({
+              success: true,
+              data: a
             })
           }
-          let d = v.start_time
-          let se = d.getSeconds()
-          let mi = d.getMinutes()
-          let ho = d.getHours()
-          if (se < 10) {
-            se = '0' + se
-          }
-          if (mi < 10) {
-            mi = '0' + mi
-          }
-          if (ho < 10) {
-            ho = '0' + ho
-          }
-          d =
-            d.getFullYear() +
-            '-' +
-            (d.getMonth() + 1) +
-            '-' +
-            d.getDate() +
-            '_' +
-            ho +
-            ':' +
-            mi +
-            ':' +
-            se
-          v['picture'] = `${d}_${v.track_id}.jpg`
-          v['clip_path'] = `${d}_${v.track_id}.mp4`
-        }
-        for (var e of times) {
-          avg = avg + e.time
-          if (min == 0) {
-            min = e.time
-            minQ = e.queue
-          } else if (e.time < min) {
-            min = e.time
-            minQ = e.queue
-          }
-          if (max == 0) {
-            max = e.time
-            maxQ = e.queue
-          } else if (e.time > max) {
-            max = e.time
-            maxQ = e.queue
-          }
-        }
-        let a = {
-          raw: result,
-          count: countIn,
-          avg: Math.round((avg / times.length) * 100) / 100,
-          min: minQ,
-          max: maxQ
-        }
-        res.status(200).json({
-          success: true,
-          data: a
-        })
-      }
-    )
+        )
+    })
+  })
 }
 
 exports.queueLite = async (req, res) => {
@@ -2204,159 +2285,207 @@ exports.vault = async (req, res) => {
 }
 
 exports.parking = async (req, res) => {
+  let token = req.headers['x-access-token']
   const data = req.body
-  await db
-    .con()
-    .query(
-      `SELECT * from parking WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc`,
-      function (err, result) {
-        if (err)
-          return res.status(500).json({
-            success: false,
-            message: err
-          })
-        for (var v of result) {
-          let d = v.time
-          let se = d.getSeconds()
-          let mi = d.getMinutes()
-          let ho = d.getHours()
-          if (se < 10) {
-            se = '0' + se
-          }
-          if (mi < 10) {
-            mi = '0' + mi
-          }
-          if (ho < 10) {
-            ho = '0' + ho
-          }
-          d =
-            d.getFullYear() +
-            '-' +
-            (d.getMonth() + 1) +
-            '-' +
-            d.getDate() +
-            '_' +
-            ho +
-            ':' +
-            mi +
-            ':' +
-            se
-          v['picture'] = `${d}_${v.track_id}.jpg`
-        }
-        const a = {
-          total: result.length,
-          raw: result
-        }
-        res.status(200).json({
-          success: true,
-          data: a
-        })
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 4,
+        camera_id: req.params.id
       }
-    )
+    }).then(async rel => {
+      await db
+        .con()
+        .query(
+          `SELECT * from parking WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc`,
+          function (err, result) {
+            if (err)
+              return res.status(500).json({
+                success: false,
+                message: err
+              })
+            for (var v of result) {
+              let d = v.time
+              let se = d.getSeconds()
+              let mi = d.getMinutes()
+              let ho = d.getHours()
+              if (se < 10) {
+                se = '0' + se
+              }
+              if (mi < 10) {
+                mi = '0' + mi
+              }
+              if (ho < 10) {
+                ho = '0' + ho
+              }
+              d =
+                d.getFullYear() +
+                '-' +
+                (d.getMonth() + 1) +
+                '-' +
+                d.getDate() +
+                '_' +
+                ho +
+                ':' +
+                mi +
+                ':' +
+                se
+              v.picture = `${d}_${v.track_id}.jpg`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/parking/${req.params.id}/${v.picture}`
+              if (rel.atributes[0].time > 0) {
+                v.clip_path = `${d}_${v.track_id}.mp4`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/parking/${req.params.id}/${v.clip_path}`
+              }
+            }
+            const a = {
+              total: result.length,
+              raw: result,
+              rel: rel
+            }
+            res.status(200).json({
+              success: true,
+              data: a
+            })
+          }
+        )
+    })
+  })
 }
 
 exports.anpr = async (req, res) => {
+  let token = req.headers['x-access-token']
   const data = req.body
-  await db
-    .con()
-    .query(
-      `SELECT * from plate WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-      function (err, result) {
-        if (err)
-          return res.status(500).json({
-            success: false,
-            message: err
-          })
-        for (var v of result) {
-          let d = v.time
-          let se = d.getSeconds()
-          let mi = d.getMinutes()
-          let ho = d.getHours()
-          if (se < 10) {
-            se = '0' + se
-          }
-          if (mi < 10) {
-            mi = '0' + mi
-          }
-          if (ho < 10) {
-            ho = '0' + ho
-          }
-          d =
-            d.getFullYear() +
-            '-' +
-            (d.getMonth() + 1) +
-            '-' +
-            d.getDate() +
-            '_' +
-            ho +
-            ':' +
-            mi +
-            ':' +
-            se
-          v['picture'] = `${d}_${v.track_id}.jpg`
-        }
-        const a = {
-          total: result.length,
-          raw: result
-        }
-        res.status(200).json({
-          success: true,
-          data: a
-        })
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 13,
+        camera_id: req.params.id
       }
-    )
+    }).then(async rel => {
+      await db
+        .con()
+        .query(
+          `SELECT * from plate WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          function (err, result) {
+            if (err)
+              return res.status(500).json({
+                success: false,
+                message: err
+              })
+            for (var v of result) {
+              let d = v.time
+              let se = d.getSeconds()
+              let mi = d.getMinutes()
+              let ho = d.getHours()
+              if (se < 10) {
+                se = '0' + se
+              }
+              if (mi < 10) {
+                mi = '0' + mi
+              }
+              if (ho < 10) {
+                ho = '0' + ho
+              }
+              d =
+                d.getFullYear() +
+                '-' +
+                (d.getMonth() + 1) +
+                '-' +
+                d.getDate() +
+                '_' +
+                ho +
+                ':' +
+                mi +
+                ':' +
+                se
+              v.picture = `${d}_${v.track_id}.jpg`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/anpr/${req.params.id}/${v.picture}`
+              if (rel.atributes[0].time > 0) {
+                v.clip_path = `${d}_${v.track_id}.mp4`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/anpr/${req.params.id}/${v.clip_path}`
+              }
+            }
+            const a = {
+              total: result.length,
+              raw: result,
+              rel: rel
+            }
+            res.status(200).json({
+              success: true,
+              data: a
+            })
+          }
+        )
+    })
+  })
 }
 
 exports.barrier = async (req, res) => {
+  let token = req.headers['x-access-token']
   const data = req.body
-  await db
-    .con()
-    .query(
-      `SELECT * from barrier WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-      function (err, result) {
-        if (err)
-          return res.status(500).json({
-            success: false,
-            message: err
-          })
-        for (var v of result) {
-          let d = v.time
-          let se = d.getSeconds()
-          let mi = d.getMinutes()
-          let ho = d.getHours()
-          if (se < 10) {
-            se = '0' + se
-          }
-          if (mi < 10) {
-            mi = '0' + mi
-          }
-          if (ho < 10) {
-            ho = '0' + ho
-          }
-          d =
-            d.getFullYear() +
-            '-' +
-            (d.getMonth() + 1) +
-            '-' +
-            d.getDate() +
-            '_' +
-            ho +
-            ':' +
-            mi +
-            ':' +
-            se
-          v['picture'] = `${d}_${v.track_id}.jpg`
-        }
-        const a = {
-          total: result.length,
-          raw: result
-        }
-        res.status(200).json({
-          success: true,
-          data: a
-        })
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 25,
+        camera_id: req.params.id
       }
-    )
+    }).then(async rel => {
+      await db
+        .con()
+        .query(
+          `SELECT * from barrier WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          function (err, result) {
+            if (err)
+              return res.status(500).json({
+                success: false,
+                message: err
+              })
+            for (var v of result) {
+              let d = v.time
+              let se = d.getSeconds()
+              let mi = d.getMinutes()
+              let ho = d.getHours()
+              if (se < 10) {
+                se = '0' + se
+              }
+              if (mi < 10) {
+                mi = '0' + mi
+              }
+              if (ho < 10) {
+                ho = '0' + ho
+              }
+              d =
+                d.getFullYear() +
+                '-' +
+                (d.getMonth() + 1) +
+                '-' +
+                d.getDate() +
+                '_' +
+                ho +
+                ':' +
+                mi +
+                ':' +
+                se
+              v.picture = `${d}_${v.track_id}.jpg`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/anpr/${req.params.id}/${v.picture}`
+              if (rel.atributes[0].time > 0) {
+                v.clip_path = `${d}_${v.track_id}.mp4`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/anpr/${req.params.id}/${v.clip_path}`
+              }
+            }
+            const a = {
+              total: result.length,
+              raw: result,
+              rel: rel
+            }
+            res.status(200).json({
+              success: true,
+              data: a
+            })
+          }
+        )
+    })
+  })
 }
 
 exports.vc = async (req, res) => {
@@ -2501,226 +2630,508 @@ exports.vc = async (req, res) => {
 }
 
 exports.accident = async (req, res) => {
+  let token = req.headers['x-access-token']
   const data = req.body
-  await db
-    .con()
-    .query(
-      `SELECT * from accident WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-      function (err, result) {
-        if (err)
-          return res.status(500).json({
-            success: false,
-            message: err
-          })
-        for (var v of result) {
-          let d = v.time
-          let se = d.getSeconds()
-          let mi = d.getMinutes()
-          let ho = d.getHours()
-          if (se < 10) {
-            se = '0' + se
-          }
-          if (mi < 10) {
-            mi = '0' + mi
-          }
-          if (ho < 10) {
-            ho = '0' + ho
-          }
-          d =
-            d.getFullYear() +
-            '-' +
-            (d.getMonth() + 1) +
-            '-' +
-            d.getDate() +
-            '_' +
-            ho +
-            ':' +
-            mi +
-            ':' +
-            se
-          v['picture'] = `${d}_${v.track_id}.jpg`
-        }
-        const a = {
-          total: result.length,
-          raw: result
-        }
-        res.status(200).json({
-          success: true,
-          data: a
-        })
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 28,
+        camera_id: req.params.id
       }
-    )
-}
-
-exports.animal = async (req, res) => {
-  const data = req.body
-  await db
-    .con()
-    .query(
-      `SELECT * from animal WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-      function (err, result) {
-        if (err)
-          return res.status(500).json({
-            success: false,
-            message: err
-          })
-        for (var v of result) {
-          let d = v.time
-          let se = d.getSeconds()
-          let mi = d.getMinutes()
-          let ho = d.getHours()
-          if (se < 10) {
-            se = '0' + se
-          }
-          if (mi < 10) {
-            mi = '0' + mi
-          }
-          if (ho < 10) {
-            ho = '0' + ho
-          }
-          d =
-            d.getFullYear() +
-            '-' +
-            (d.getMonth() + 1) +
-            '-' +
-            d.getDate() +
-            '_' +
-            ho +
-            ':' +
-            mi +
-            ':' +
-            se
-          v['picture'] = `${d}_${v.track_id}.jpg`
-        }
-        const a = {
-          total: result.length,
-          raw: result
-        }
-        res.status(200).json({
-          success: true,
-          data: a
-        })
-      }
-    )
-}
-
-exports.axle = async (req, res) => {
-  const data = req.body
-  await db
-    .con()
-    .query(
-      `SELECT * from axle WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-      function (err, result) {
-        if (err)
-          return res.status(500).json({
-            success: false,
-            message: err
-          })
-        for (var v of result) {
-          let d = v.time
-          let se = d.getSeconds()
-          let mi = d.getMinutes()
-          let ho = d.getHours()
-          if (se < 10) {
-            se = '0' + se
-          }
-          if (mi < 10) {
-            mi = '0' + mi
-          }
-          if (ho < 10) {
-            ho = '0' + ho
-          }
-          d =
-            d.getFullYear() +
-            '-' +
-            (d.getMonth() + 1) +
-            '-' +
-            d.getDate() +
-            '_' +
-            ho +
-            ':' +
-            mi +
-            ':' +
-            se
-          v['picture'] = `${d}_${v.track_id}.jpg`
-        }
-        const a = {
-          total: result.length,
-          raw: result
-        }
-        res.status(200).json({
-          success: true,
-          data: a
-        })
-      }
-    )
-}
-
-exports.carmake = async (req, res) => {
-  const data = req.body
-  await db
-    .con()
-    .query(
-      `SELECT * from carmake WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-      function (err, result) {
-        if (err)
-          return res.status(500).json({
-            success: false,
-            message: err
-          })
-        for (var v of result) {
-          let d = v.time
-          let se = d.getSeconds()
-          let mi = d.getMinutes()
-          let ho = d.getHours()
-          if (se < 10) {
-            se = '0' + se
-          }
-          if (mi < 10) {
-            mi = '0' + mi
-          }
-          if (ho < 10) {
-            ho = '0' + ho
-          }
-          d =
-            d.getFullYear() +
-            '-' +
-            (d.getMonth() + 1) +
-            '-' +
-            d.getDate() +
-            '_' +
-            ho +
-            ':' +
-            mi +
-            ':' +
-            se
-          v['picture'] = `${d}_${v.track_id}.jpg`
-        }
-        const a = {
-          total: result.length,
-          raw: result
-        }
-        res.status(200).json({
-          success: true,
-          data: a
-        })
-      }
-    )
-}
-
-exports.vcount = async (req, res) => {
-  const data = req.body
-  Relation.findOne({
-    where: {
-      algo_id: 26,
-      camera_id: req.params.id
-    }
-  })
-    .then(async rel => {
+    }).then(async rel => {
       await db
         .con()
         .query(
-          `SELECT * from vcount WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          `SELECT * from accident WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          function (err, result) {
+            if (err)
+              return res.status(500).json({
+                success: false,
+                message: err
+              })
+            for (var v of result) {
+              let d = v.time
+              let se = d.getSeconds()
+              let mi = d.getMinutes()
+              let ho = d.getHours()
+              if (se < 10) {
+                se = '0' + se
+              }
+              if (mi < 10) {
+                mi = '0' + mi
+              }
+              if (ho < 10) {
+                ho = '0' + ho
+              }
+              d =
+                d.getFullYear() +
+                '-' +
+                (d.getMonth() + 1) +
+                '-' +
+                d.getDate() +
+                '_' +
+                ho +
+                ':' +
+                mi +
+                ':' +
+                se
+              v.picture = `${d}_${v.track_id}.jpg`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/accident/${req.params.id}/${v.picture}`
+              if (rel.atributes[0].time > 0) {
+                v.clip_path = `${d}_${v.track_id}.mp4`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/accident/${req.params.id}/${v.clip_path}`
+              }
+            }
+            const a = {
+              total: result.length,
+              raw: result,
+              rel: rel
+            }
+            res.status(200).json({
+              success: true,
+              data: a
+            })
+          }
+        )
+    })
+  })
+}
+
+exports.animal = async (req, res) => {
+  let token = req.headers['x-access-token']
+  const data = req.body
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 29,
+        camera_id: req.params.id
+      }
+    }).then(async rel => {
+      await db
+        .con()
+        .query(
+          `SELECT * from animal WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          function (err, result) {
+            if (err)
+              return res.status(500).json({
+                success: false,
+                message: err
+              })
+            for (var v of result) {
+              let d = v.time
+              let se = d.getSeconds()
+              let mi = d.getMinutes()
+              let ho = d.getHours()
+              if (se < 10) {
+                se = '0' + se
+              }
+              if (mi < 10) {
+                mi = '0' + mi
+              }
+              if (ho < 10) {
+                ho = '0' + ho
+              }
+              d =
+                d.getFullYear() +
+                '-' +
+                (d.getMonth() + 1) +
+                '-' +
+                d.getDate() +
+                '_' +
+                ho +
+                ':' +
+                mi +
+                ':' +
+                se
+              v.picture = `${d}_${v.track_id}.jpg`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/accident/${req.params.id}/${v.picture}`
+              if (rel.atributes[0].time > 0) {
+                v.clip_path = `${d}_${v.track_id}.mp4`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/accident/${req.params.id}/${v.clip_path}`
+              }
+            }
+            const a = {
+              total: result.length,
+              raw: result,
+              rel: rel
+            }
+            res.status(200).json({
+              success: true,
+              data: a
+            })
+          }
+        )
+    })
+  })
+}
+
+exports.axle = async (req, res) => {
+  let token = req.headers['x-access-token']
+  const data = req.body
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 30,
+        camera_id: req.params.id
+      }
+    }).then(async rel => {
+      await db
+        .con()
+        .query(
+          `SELECT * from axle WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          function (err, result) {
+            if (err)
+              return res.status(500).json({
+                success: false,
+                message: err
+              })
+            for (var v of result) {
+              let d = v.time
+              let se = d.getSeconds()
+              let mi = d.getMinutes()
+              let ho = d.getHours()
+              if (se < 10) {
+                se = '0' + se
+              }
+              if (mi < 10) {
+                mi = '0' + mi
+              }
+              if (ho < 10) {
+                ho = '0' + ho
+              }
+              d =
+                d.getFullYear() +
+                '-' +
+                (d.getMonth() + 1) +
+                '-' +
+                d.getDate() +
+                '_' +
+                ho +
+                ':' +
+                mi +
+                ':' +
+                se
+              v.picture = `${d}_${v.track_id}.jpg`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/axle/${req.params.id}/${v.picture}`
+              if (rel.atributes[0].time > 0) {
+                v.clip_path = `${d}_${v.track_id}.mp4`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/axle/${req.params.id}/${v.clip_path}`
+              }
+            }
+            const a = {
+              total: result.length,
+              raw: result,
+              rel: rel
+            }
+            res.status(200).json({
+              success: true,
+              data: a
+            })
+          }
+        )
+    })
+  })
+}
+
+exports.carmake = async (req, res) => {
+  let token = req.headers['x-access-token']
+  const data = req.body
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 31,
+        camera_id: req.params.id
+      }
+    }).then(async rel => {
+      await db
+        .con()
+        .query(
+          `SELECT * from carmake WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          function (err, result) {
+            if (err)
+              return res.status(500).json({
+                success: false,
+                message: err
+              })
+            for (var v of result) {
+              let d = v.time
+              let se = d.getSeconds()
+              let mi = d.getMinutes()
+              let ho = d.getHours()
+              if (se < 10) {
+                se = '0' + se
+              }
+              if (mi < 10) {
+                mi = '0' + mi
+              }
+              if (ho < 10) {
+                ho = '0' + ho
+              }
+              d =
+                d.getFullYear() +
+                '-' +
+                (d.getMonth() + 1) +
+                '-' +
+                d.getDate() +
+                '_' +
+                ho +
+                ':' +
+                mi +
+                ':' +
+                se
+              v.picture = `${d}_${v.track_id}.jpg`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/carmake/${req.params.id}/${v.picture}`
+              if (rel.atributes[0].time > 0) {
+                v.clip_path = `${d}_${v.track_id}.mp4`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/carmake/${req.params.id}/${v.clip_path}`
+              }
+            }
+            const a = {
+              total: result.length,
+              raw: result
+            }
+            res.status(200).json({
+              success: true,
+              data: a
+            })
+          }
+        )
+    })
+  })
+}
+
+exports.vcount = async (req, res) => {
+  let token = req.headers['x-access-token']
+  const data = req.body
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 26,
+        camera_id: req.params.id
+      }
+    })
+      .then(async rel => {
+        await db
+          .con()
+          .query(
+            `SELECT * from vcount WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+            function (err, result) {
+              if (err)
+                return res.status(500).json({
+                  success: false,
+                  message: err
+                })
+              for (var v of result) {
+                let d = v.time
+                let se = d.getSeconds()
+                let mi = d.getMinutes()
+                let ho = d.getHours()
+                if (se < 10) {
+                  se = '0' + se
+                }
+                if (mi < 10) {
+                  mi = '0' + mi
+                }
+                if (ho < 10) {
+                  ho = '0' + ho
+                }
+                d =
+                  d.getFullYear() +
+                  '-' +
+                  (d.getMonth() + 1) +
+                  '-' +
+                  d.getDate() +
+                  '_' +
+                  ho +
+                  ':' +
+                  mi +
+                  ':' +
+                  se
+                v.picture = `${d}_${v.track_id}.jpg`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/vcount/${req.params.id}/${v.picture}`
+                if (rel.atributes[0].time > 0) {
+                  v.clip_path = `${d}_${v.track_id}.mp4`
+                  v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/vcount/${req.params.id}/${v.clip_path}`
+                }
+              }
+              const a = {
+                total: result.length,
+                raw: result
+              }
+              res.status(200).json({
+                success: true,
+                data: a,
+                rel: rel
+              })
+            }
+          )
+      })
+      .catch(err => {
+        res.status(500).json({success: false, mess: err})
+      })
+  })
+}
+
+exports.fr = async (req, res) => {
+  let token = req.headers['x-access-token']
+  const data = req.body
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 0,
+        camera_id: req.params.id
+      }
+    })
+      .then(async rel => {
+        await db
+          .con()
+          .query(
+            `SELECT * from faces WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+            function (err, result) {
+              if (err) {
+                return res.status(500).json({
+                  success: false,
+                  message: err
+                })
+              }
+              for (const v of result) {
+                let d = v.time
+                let se = d.getSeconds()
+                let mi = d.getMinutes()
+                let ho = d.getHours()
+                if (se < 10) {
+                  se = '0' + se
+                }
+                if (mi < 10) {
+                  mi = '0' + mi
+                }
+                if (ho < 10) {
+                  ho = '0' + ho
+                }
+                d =
+                  d.getFullYear() +
+                  '-' +
+                  (d.getMonth() + 1) +
+                  '-' +
+                  d.getDate() +
+                  '_' +
+                  ho +
+                  ':' +
+                  mi +
+                  ':' +
+                  se
+                v.picture = `${d}.jpg`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/demographic/${req.params.id}/${v.picture}`
+                if (rel.atributes[0].time > 0) {
+                  v.clip_path = `${d}.mp4`
+                  v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/demographic/${req.params.id}/${v.clip_path}`
+                }
+              }
+              const a = {
+                total: result.length,
+                raw: result
+              }
+              res.status(200).json({
+                success: true,
+                data: a,
+                rel: rel
+              })
+            }
+          )
+      })
+      .catch(err => {
+        res.status(500).json({success: false, mess: err})
+      })
+  })
+}
+
+exports.cloth = async (req, res) => {
+  let token = req.headers['x-access-token']
+  const data = req.body
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 32,
+        camera_id: req.params.id
+      }
+    })
+      .then(async rel => {
+        await db
+          .con()
+          .query(
+            `SELECT * from clothing WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+            function (err, result) {
+              if (err) {
+                return res.status(500).json({
+                  success: false,
+                  message: err
+                })
+              }
+              for (const v of result) {
+                let d = v.time
+                let se = d.getSeconds()
+                let mi = d.getMinutes()
+                let ho = d.getHours()
+                if (se < 10) {
+                  se = '0' + se
+                }
+                if (mi < 10) {
+                  mi = '0' + mi
+                }
+                if (ho < 10) {
+                  ho = '0' + ho
+                }
+                d =
+                  d.getFullYear() +
+                  '-' +
+                  (d.getMonth() + 1) +
+                  '-' +
+                  d.getDate() +
+                  '_' +
+                  ho +
+                  ':' +
+                  mi +
+                  ':' +
+                  se
+                v.picture = `${d}_${v.track_id}.jpg`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/cloth/${req.params.id}/${v.picture}`
+                if (rel.atributes[0].time > 0) {
+                  v.clip_path = `${d}_${v.track_id}.mp4`
+                  v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/cloth/${req.params.id}/${v.clip_path}`
+                }
+              }
+              const a = {
+                total: result.length,
+                raw: result
+              }
+              res.status(200).json({
+                success: true,
+                data: a,
+                rel: rel
+              })
+            }
+          )
+      })
+      .catch(err => {
+        res.status(500).json({success: false, mess: err})
+      })
+  })
+}
+
+exports.direction = async (req, res) => {
+  let token = req.headers['x-access-token']
+  const data = req.body
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 8,
+        camera_id: req.params.id
+      }
+    }).then(async rel => {
+      await db
+        .con()
+        .query(
+          `SELECT * from direction WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
           function (err, result) {
             if (err)
               return res.status(500).json({
@@ -2754,110 +3165,48 @@ exports.vcount = async (req, res) => {
                 ':' +
                 se
               v['picture'] = `${d}_${v.track_id}.jpg`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/direction/${req.params.id}/${v.picture}`
+              if (rel.atributes[0].time > 0) {
+                v.clip_path = `${d}_${v.track_id}.mp4`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/direction/${req.params.id}/${v.clip_path}`
+              }
             }
             const a = {
               total: result.length,
-              raw: result
+              raw: result,
+              rel: rel
             }
             res.status(200).json({
               success: true,
-              data: a,
-              rel: rel
+              data: a
             })
           }
         )
     })
-    .catch(err => {
-      res.status(500).json({success: false, mess: err})
-    })
+  })
 }
 
-exports.fr = async (req, res) => {
+exports.speeding = async (req, res) => {
+  let token = req.headers['x-access-token']
   const data = req.body
-  Relation.findOne({
-    where: {
-      algo_id: 0,
-      camera_id: req.params.id
-    }
-  })
-    .then(async rel => {
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 5,
+        camera_id: req.params.id
+      }
+    }).then(async rel => {
       await db
         .con()
         .query(
-          `SELECT * from faces WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          `SELECT * from speed WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
           function (err, result) {
-            if (err) {
+            if (err)
               return res.status(500).json({
                 success: false,
                 message: err
               })
-            }
-            for (const v of result) {
-              let d = v.time
-              let se = d.getSeconds()
-              let mi = d.getMinutes()
-              let ho = d.getHours()
-              if (se < 10) {
-                se = '0' + se
-              }
-              if (mi < 10) {
-                mi = '0' + mi
-              }
-              if (ho < 10) {
-                ho = '0' + ho
-              }
-              d =
-                d.getFullYear() +
-                '-' +
-                (d.getMonth() + 1) +
-                '-' +
-                d.getDate() +
-                '_' +
-                ho +
-                ':' +
-                mi +
-                ':' +
-                se
-              v.picture = `${d}.jpg`
-            }
-            const a = {
-              total: result.length,
-              raw: result
-            }
-            res.status(200).json({
-              success: true,
-              data: a,
-              rel: rel
-            })
-          }
-        )
-    })
-    .catch(err => {
-      res.status(500).json({success: false, mess: err})
-    })
-}
-
-exports.cloth = async (req, res) => {
-  const data = req.body
-  Relation.findOne({
-    where: {
-      algo_id: 32,
-      camera_id: req.params.id
-    }
-  })
-    .then(async rel => {
-      await db
-        .con()
-        .query(
-          `SELECT * from clothing WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-          function (err, result) {
-            if (err) {
-              return res.status(500).json({
-                success: false,
-                message: err
-              })
-            }
-            for (const v of result) {
+            for (var v of result) {
               let d = v.time
               let se = d.getSeconds()
               let mi = d.getMinutes()
@@ -2884,125 +3233,23 @@ exports.cloth = async (req, res) => {
                 ':' +
                 se
               v.picture = `${d}_${v.track_id}.jpg`
-              // v.picturePath = `${process.env.my_ip}:3300/api/pictures/${decoded}`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/speed/${req.params.id}/${v.picture}`
+              if (rel.atributes[0].time > 0) {
+                v.clip_path = `${d}_${v.track_id}.mp4`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/speed/${req.params.id}/${v.clip_path}`
+              }
             }
             const a = {
               total: result.length,
-              raw: result
+              raw: result,
+              rel: rel
             }
             res.status(200).json({
               success: true,
-              data: a,
-              rel: rel
+              data: a
             })
           }
         )
     })
-    .catch(err => {
-      res.status(500).json({success: false, mess: err})
-    })
-}
-
-exports.direction = async (req, res) => {
-  const data = req.body
-  await db
-    .con()
-    .query(
-      `SELECT * from direction WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-      function (err, result) {
-        if (err)
-          return res.status(500).json({
-            success: false,
-            message: err
-          })
-        for (var v of result) {
-          let d = v.time
-          let se = d.getSeconds()
-          let mi = d.getMinutes()
-          let ho = d.getHours()
-          if (se < 10) {
-            se = '0' + se
-          }
-          if (mi < 10) {
-            mi = '0' + mi
-          }
-          if (ho < 10) {
-            ho = '0' + ho
-          }
-          d =
-            d.getFullYear() +
-            '-' +
-            (d.getMonth() + 1) +
-            '-' +
-            d.getDate() +
-            '_' +
-            ho +
-            ':' +
-            mi +
-            ':' +
-            se
-          v['picture'] = `${d}_${v.track_id}.jpg`
-        }
-        const a = {
-          total: result.length,
-          raw: result
-        }
-        res.status(200).json({
-          success: true,
-          data: a
-        })
-      }
-    )
-}
-
-exports.speeding = async (req, res) => {
-  const data = req.body
-  await db
-    .con()
-    .query(
-      `SELECT * from speed WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-      function (err, result) {
-        if (err)
-          return res.status(500).json({
-            success: false,
-            message: err
-          })
-        for (var v of result) {
-          let d = v.time
-          let se = d.getSeconds()
-          let mi = d.getMinutes()
-          let ho = d.getHours()
-          if (se < 10) {
-            se = '0' + se
-          }
-          if (mi < 10) {
-            mi = '0' + mi
-          }
-          if (ho < 10) {
-            ho = '0' + ho
-          }
-          d =
-            d.getFullYear() +
-            '-' +
-            (d.getMonth() + 1) +
-            '-' +
-            d.getDate() +
-            '_' +
-            ho +
-            ':' +
-            mi +
-            ':' +
-            se
-          v['picture'] = `${d}_${v.track_id}.jpg`
-        }
-        const a = {
-          total: result.length,
-          raw: result
-        }
-        res.status(200).json({
-          success: true,
-          data: a
-        })
-      }
-    )
+  })
 }

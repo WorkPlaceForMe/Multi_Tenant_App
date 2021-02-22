@@ -68,7 +68,7 @@ export class VehicleComponent implements OnInit {
     var time = new Date();
     this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0,3);
     let aaa = this.timezone;
-    this.timezone = parseInt(this.timezone) * 2;
+    this.timezone = parseInt(this.timezone);
     let p = ''
     if(this.timezone > 0){
       p = '+'

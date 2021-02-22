@@ -88,7 +88,6 @@ export class SpeedingComponent implements OnInit, OnDestroy {
     this.now_user = JSON.parse(localStorage.getItem('now_user'));
     const time = new Date();
     this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0, 3);
-    //this.timezone = parseInt(this.timezone) * 2;
     this.timezone = parseInt(this.timezone);
     let p = '';
     if (this.timezone > 0) {
