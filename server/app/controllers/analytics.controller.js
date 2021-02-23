@@ -2978,7 +2978,7 @@ exports.fr = async (req, res) => {
   jwt.verify(token, process.env.secret, async (err, decoded) => {
     Relation.findOne({
       where: {
-        algo_id: 0,
+        algo_id: 15,
         camera_id: req.params.id
       }
     })
