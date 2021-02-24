@@ -91,7 +91,7 @@ export class TamperComponent implements OnInit, OnDestroy {
         res=>{
           this.tamper = res['data']
           for(var m of this.tamper.raw){
-            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
+            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss')
             switch(m['alert_type']){
               case '0':{
                 m['alert_type'] = 'Low';
@@ -112,7 +112,7 @@ export class TamperComponent implements OnInit, OnDestroy {
           let labels = []
           for(var o of Object.keys(this.tamper.over)){
             o = o + ':00:00'
-            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm', this.timezone))
+            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm'))
           }
 
           this.themeSubscription = this.theme.getJsTheme().subscribe(config => {

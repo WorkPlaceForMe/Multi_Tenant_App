@@ -128,7 +128,7 @@ export class CarmakeComponent implements OnInit, OnDestroy {
         this.carmake = res['data'];
         for (const m of this.carmake.raw) {
           m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/carmake/' + m['cam_id'] + '/' + m['picture']);
-          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone);
+          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss');
         }
         this.source = this.carmake.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
 

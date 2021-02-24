@@ -111,7 +111,7 @@ export class ViolComponent implements OnInit, OnDestroy {
           for(var m of this.violence.raw){
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/violence/' + m['cam_id'] + '/' +m['picture'])
             m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/violence/' + m['cam_id'] + '/' +m['clip_path']
-            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
+            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss')
             switch(m['severity']){
               case '0':{
                 m['severity'] = 'Low';
@@ -131,7 +131,7 @@ export class ViolComponent implements OnInit, OnDestroy {
           let labels = []
           for(var o of Object.keys(this.violence.over)){
             o = o + ':00:00'
-            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm', this.timezone))
+            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm'))
           }
 
           this.themeSubscription = this.theme.getJsTheme().subscribe(config => {

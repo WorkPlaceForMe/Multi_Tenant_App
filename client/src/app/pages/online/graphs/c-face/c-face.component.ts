@@ -117,7 +117,7 @@ export class CFaceComponent implements OnInit, OnDestroy {
           for(var m of this.covered.raw){
             m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/covered/' + m['cam_id'] + '/' + m['clip_path']
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/covered/' + m['cam_id'] + '/' + m['picture'])
-            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
+            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss')
             switch(m['alert_type']){
               case '0':{
                 m['alert_type'] = 'Low';
@@ -138,7 +138,7 @@ export class CFaceComponent implements OnInit, OnDestroy {
           let labels = []
           for(var o of Object.keys(this.covered.over)){
             o = o + ':00:00'
-            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm', this.timezone))
+            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm'))
           }
 
           this.themeSubscription = this.theme.getJsTheme().subscribe(config => {

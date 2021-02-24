@@ -92,15 +92,15 @@ export class VaultComponent implements OnInit, OnDestroy {
           this.vault = res['data']
           for(var m of this.vault.org){
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/vault/' + m['cam_id'] + '/' + m['picture'])
-            m['time_in'] = this.datepipe.transform(m['time_in'], 'yyyy-M-dd HH:mm:ss', this.timezone)
-            m['time_out'] = this.datepipe.transform(m['time_out'], 'yyyy-M-dd HH:mm:ss', this.timezone)
+            m['time_in'] = this.datepipe.transform(m['time_in'], 'yyyy-M-dd HH:mm:ss')
+            m['time_out'] = this.datepipe.transform(m['time_out'], 'yyyy-M-dd HH:mm:ss')
           }
           this.source = this.vault.org.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
 
           let labels = []
           for(var o of Object.keys(this.vault.over)){
             o = o + ':00:00'
-            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm', this.timezone))
+            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm'))
           }
 
           this.themeSubscription = this.theme.getJsTheme().subscribe(config => {

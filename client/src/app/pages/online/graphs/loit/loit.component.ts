@@ -114,7 +114,7 @@ export class LoitComponent implements OnInit, OnDestroy {
         for(const m of this.loitering.raw){
           m['clip_path']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/loitering/' + m['cam_id'] + '/' + m['clip_path'];
           m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/loitering/' + m['cam_id'] + '/' + m['picture']);
-          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone);
+          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss');
         }
         this.source = this.loitering.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
         if (Object.keys(this.loitering.histogram).length !== 0){
@@ -124,7 +124,7 @@ export class LoitComponent implements OnInit, OnDestroy {
           }
           const times = [];
           for (const q of this.loitering.labelsD){
-            times.push(this.datepipe.transform(q, 'yyyy-M-dd HH:mm', this.timezone));
+            times.push(this.datepipe.transform(q, 'yyyy-M-dd HH:mm'));
           }
 
           this.themeSubscription = this.theme.getJsTheme().subscribe(config => {

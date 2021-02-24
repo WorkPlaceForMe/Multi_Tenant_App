@@ -114,14 +114,14 @@ export class AodComponent implements OnInit, OnDestroy {
           for(var m of this.aod.raw){
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/aod/' + m['cam_id'] + '/' + m['picture'])
             m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/aod/' + m['cam_id'] + '/' + m['clip_path']
-            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
+            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss')
           }
           this.source = this.aod.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
 
           let labels = []
           for(var o of Object.keys(this.aod.over)){
             o = o + ':00:00'
-            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm', this.timezone))
+            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm'))
           }
 
           this.themeSubscription = this.theme.getJsTheme().subscribe(config => {

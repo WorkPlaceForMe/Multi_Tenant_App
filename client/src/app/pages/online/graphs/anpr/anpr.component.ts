@@ -130,7 +130,7 @@ export class AnprComponent implements OnInit, OnDestroy {
         this.anpr = res['data'];
         for (const m of this.anpr.raw) {
           m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/anpr/' + m['cam_id'] + '/' + m['picture']);
-          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone);
+          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss');
         }
         this.source = this.anpr.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
 

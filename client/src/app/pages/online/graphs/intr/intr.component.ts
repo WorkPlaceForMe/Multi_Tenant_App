@@ -116,7 +116,7 @@ export class IntrComponent implements OnInit, OnDestroy {
           for (const m of this.intrude.raw){
             m['clip_path']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/intrusion/' + m['cam_id'] + '/' + m['clip_path'];
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/intrusion/' + m['cam_id'] + '/' + m['picture']);
-            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone);
+            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss');
           }
           this.source = this.intrude.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
           if (this.intrude.donut.length !== 0){
@@ -125,7 +125,7 @@ export class IntrComponent implements OnInit, OnDestroy {
           const labels = [];
           for (let o of Object.keys(this.intrude.over)){
             o = o + ':00:00';
-            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm', this.timezone));
+            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm'));
           }
 
             this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
