@@ -47,46 +47,78 @@ exports.ping = async (req, res) => {
     })
   }
 }
+function encode (data) {
+  const buf = Buffer.from(data)
+  const base64 = buf.toString('base64')
+  return base64
+}
+
+async function getImage (name) {
+  const data = s3
+    .getObject({
+      Bucket: process.env.BUCKET_S3,
+      Key: name
+    })
+    .promise()
+  return data
+}
 
 exports.search = async (req, res) => {
-  try {
-    const body = await client.search({
-      index: ['_all'],
-      body: {
-        query: {
-          multi_match: {
-            query: req.params.query,
-            fields: [
-              'time',
-              'clip_path',
-              'confidence',
-              'camera_name',
-              'cam_id',
-              'id_branch',
-              'severity',
-              'dwell',
-              'track_id',
-              'zone',
-              'analytic',
-              'sleeve_length',
-              'top_colour',
-              'bottom_colour',
-              'shoe_colour',
-              'speed',
-              'tag'
-            ]
-          }
+  const data = req.body
+  console.log(data)
+  const params = {
+    index: ['gmtc_searcher'],
+    body: {
+      query: {
+        bool: {
+          must: [
+            {
+              match: {
+                description: data.query
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+  if (data.filters.range) {
+    params.body.query.bool.must.push({
+      range: {
+        time: {
+          gte: data.filters.range.start,
+          lte: data.filters.range.end
         }
       }
     })
-    // console.log(body.body.aggregations.simpleDatehHistogram.buckets)
+  }
+  if (data.filters.algo) {
+    params.body.query.bool.must.push({
+      match: {
+        algo: data.filters.algo
+      }
+    })
+  }
+  try {
+    const body = await client.search(params)
     const hits = body.body.hits
-    if (hits.hits && hits.hits[0]._source.time) {
+    // console.log(hits.hits)
+    if (hits.hits.length > 0) {
+      const arr = []
+      await hits.hits.forEach(async element => {
+        const img = await getImage(element._source.filename)
+        const base64 = await encode(img.Body)
+        arr.push({
+          name: element._source.filename,
+          base64: 'data:image/jpeg;base64,' + base64
+        })
+      })
+      console.log(arr)
       const gt = new Date(Date.parse(hits.hits[0]._source.time) - 1000)
       const lt = new Date(Date.parse(hits.hits[0]._source.time) + 1000)
       try {
         const secondBody = await client.search({
-          index: ['_all'],
+          index: ['gmtc_searcher'],
           body: {
             query: {
               bool: {
@@ -112,16 +144,22 @@ exports.search = async (req, res) => {
           }
         })
         const hits2 = secondBody.body.hits
-        console.log(hits2)
         if (hits2.hits.length !== 0) {
-          hits2.hits.forEach(element => {
+          hits2.hits.forEach(async element => {
             hits.hits.push(element)
+            const img = await getImage(element._source.filename)
+            const base64 = await encode(img.Body)
+            arr.push({
+              name: element._source.filename,
+              base64: 'data:image/jpeg;base64,' + base64
+            })
           })
         }
         return res.status(200).json({
           success: true,
           data: hits,
-          second: hits2
+          second: hits2,
+          pics: arr
         })
       } catch (err) {
         console.trace(err.message)
@@ -137,6 +175,7 @@ exports.search = async (req, res) => {
     })
   } catch (error) {
     console.trace(error.message)
+    console.log(error)
     res.status(500).json({
       success: false,
       mess: error

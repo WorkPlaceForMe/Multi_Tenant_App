@@ -1,25 +1,39 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { LocalDataSource, ViewCell } from 'ng2-smart-table';
 import { FacesService } from '../../../services/faces.service';
 import { api } from '../../../models/API';
 import { Account } from '../../../models/Account';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NbWindowRef, NbWindowService } from '@nebular/theme';
+import { SetngsComponent, WindowResultService } from '../setngs/setngs.component';
 
 @Component({
   selector: 'ngx-bar',
   templateUrl: './bar.component.html',
   styleUrls: ['./bar.component.scss']
 })
-export class BarComponent implements OnInit {
+export class BarComponent implements OnInit, OnDestroy {
 
   constructor(
     private face: FacesService,
     public datepipe: DatePipe,
     private formBuilder: FormBuilder,
-        ) { }
+    private windowService: NbWindowService,
+        ) { 
+        }
+
+        ngOnDestroy(){
+        }
+
+searchSet: any;
+
+  selectedNavItem(item: any) {
+    this.searchSet = item;
+  }
 
   ngOnInit(): void {
+    // console.log(this.windowRef)
     this.registerForm = this.formBuilder.group({
     query: ['', [Validators.required]],
     });
@@ -43,12 +57,23 @@ export class BarComponent implements OnInit {
   stuff: Array<any> = [];
   now_user: Account;
   video: boolean = false;
+  filters: any = {};
+
+  check(){
+    console.log(this.filters)
+  }
 
   search(){
     let inp = this.registerForm.controls['query'].value
     this.loading = true;
     this.stuff = []
-    this.face.searchElast(inp).subscribe(
+    let sending = {
+      query: inp
+    }
+    if(this.filters !== {}){
+      sending['filters'] = this.filters
+    }
+    this.face.searchElast(sending).subscribe(
       res =>{
         this.loading = false;
         this.touched = true;
@@ -73,10 +98,13 @@ export class BarComponent implements OnInit {
             var ho = JSON.stringify(d.getHours())
           }
           let a = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
-          m['_source']['clip_path']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['_source']['id_branch'] + '/violence/' + m['_source']['cam_id'] + '/' + a + '.mp4';
-          m['_source']['pic']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['_source']['id_branch'] + '/violence/' + m['_source']['cam_id'] + '/' + a + '.mp4#t=0.5';
-          m['_source']['time'] = this.datepipe.transform(m['_source']['time'], 'yyyy-M-dd HH:mm:ss', this.timezone);
+          // m['_source']['clip_path']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['_source']['id_branch'] + '/violence/' + m['_source']['cam_id'] + '/' + a + '.mp4';
+          // m['_source']['pic']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['_source']['id_branch'] + '/violence/' + m['_source']['cam_id'] + '/' + a + '.mp4#t=0.5';
+          m['_source']['time'] = this.datepipe.transform(m['_source']['time'], 'yyyy-M-dd HH:mm:ss');
           this.stuff.push(m._source)
+          if(m._source['base64']){
+            console.log(m)
+          }
           }
         }
         this.source = this.stuff.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
@@ -87,6 +115,10 @@ export class BarComponent implements OnInit {
         console.error(err)
       }
     )
+  }
+
+  openWindowForm() {
+    this.windowService.open(SetngsComponent, { title: `Filter Settings`, context: { onChange: changes => {this.filters = changes}}});
   }
 
   @ViewChild('videoPlayer', { static: false }) videoplayer: ElementRef;
@@ -141,7 +173,7 @@ export class BarComponent implements OnInit {
         type: 'string',
         filter: false,
       },
-      camera_name: {
+      cam_name: {
         title: 'Camera',
         type: 'string',
         filter: false,

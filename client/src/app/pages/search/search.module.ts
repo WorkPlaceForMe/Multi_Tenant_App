@@ -15,15 +15,36 @@ import { NbCardModule, NbIconModule, NbInputModule, NbTreeGridModule, NbAccordio
   NbDatepickerModule,
   NbFormFieldModule,
   NbSelectModule, NbSpinnerModule,
-  NbContextMenuModule } from '@nebular/theme';
+  NbContextMenuModule, NbPopoverModule, NbLayoutModule, NbMenuModule, NbWindowModule,
+  NbDialogModule,
+  NbTooltipModule,} from '@nebular/theme';
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { ListComponent } from './list/list.component';
 import { authInterceptorProviders } from '../../_helpers/auth.interceptor';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { SetngsComponent, WindowResultService } from './setngs/setngs.component';
 
 @NgModule({
-  declarations: [SearchComponent, UploadComponent, BarComponent, ListComponent],
+  declarations: [SearchComponent, UploadComponent, BarComponent, ListComponent, SetngsComponent],
   imports: [
+    NbDialogModule.forChild(),
+    NbTooltipModule,
+    NbWindowModule.forChild(),
+    NbMenuModule,
+    NbTreeGridModule,
+    NbRouteTabsetModule,
+    NbTabsetModule,
+    NbStepperModule,
+    NbSelectModule,
+    NbUserModule,
+    NbContextMenuModule,
+    NbLayoutModule,
+    NbActionsModule,
+    NbListModule,
+    NbRadioModule,
+    NbDatepickerModule,
+    NbIconModule,
+    NbPopoverModule,
     ReactiveFormsModule,
     Ng2SmartTableModule,
     NgxSpinnerModule,
@@ -41,7 +62,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     SearchRoutingModule
   ],
     providers: [
-    authInterceptorProviders
+    authInterceptorProviders,
+    WindowResultService
   ],
 })
 export class SearchModule { }

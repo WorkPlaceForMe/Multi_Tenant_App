@@ -6,10 +6,11 @@
         <input class="form-control" formControlName="query" fullWidth  type="text" nbInput id="search" placeholder="Input your search..." [status]="'primary'">          
             </div>
             <div class="col-md-1 less-padding">
-        <button [status]="'success'" nbButton>Search</button>
+              <button [status]="'success'" nbButton>Search</button>
             </div>    
             </div>
-        </form>           
+        </form>  
+      <button (click)='openWindowForm()' [status]="'info'" nbButton>Filters</button>
     </div>
 </div>
 <div class="row" style="margin-top: 2px;" *ngIf= 'touched'>

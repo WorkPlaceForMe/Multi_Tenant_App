@@ -1,0 +1,45 @@
+<button style = "width: 130px"  #popover (click) = "showRangeSelector(showIt);!showIt" [nbPopover]="rangeSelector" nbPopoverTrigger="noop" nbPopoverPlacement="bottom" size="small" nbButton>{{currentSelection}} <nb-icon icon="calendar"></nb-icon></button>
+                    <nb-select [(ngModel)]='algorithm' size="small">
+                        <nb-option value="" disabled>Choose an algorithm:</nb-option>
+                        <nb-option *ngFor='let alg of algos' [value]=alg.id>{{alg.name}}</nb-option>
+                    </nb-select>
+<button (click)='apply()' [status]="'success'" nbButton class="btn-block">Apply</button>
+
+    <ng-template #rangeSelector>
+        <nb-list>
+            <nb-list-item >
+                <div class = "row">
+                    <div style = "width: 100px" class = "col-md-auto" (click) = "selectRangeType('Date')">  
+                        <nb-radio  name = "range" [checked] = "currentSelection=='Date'" >Date</nb-radio>
+                    </div>  
+                    <div class = "col">
+                        <input nbInput placeholder="Pick Date"  [disabled] = "currentSelection != 'Date'" [value]="range.start" [nbDatepicker]="dateTimePicker" fullWidth fieldSize="small">
+                        <nb-datepicker (dateChange) = "setDate()" [(date)] = "selectedDate" #dateTimePicker></nb-datepicker>
+                    </div>
+                </div>
+            </nb-list-item>
+            <nb-list-item >
+                <div class = "row" >
+                    <div style = "width: 100px" class = "col-md-auto" (click) = "selectRangeType('Month')">
+                        <nb-radio  name = "range" [checked] = "currentSelection=='Month'" (onClick) = "selectRangeType('Month')">Month</nb-radio>
+                    </div>  
+                    <div class = "col" >
+                        <nb-select (selectedChange) = "setMonth()" placeholder="Select Showcase" [disabled] = "currentSelection != 'Month'" [(ngModel)]="selectedMonth" fullWidth size="small">
+                            <nb-option  *ngFor='let month of lastMonths' [value]="month">{{calMonths[month.getMonth()] + " '" +  month.getFullYear()}} </nb-option>
+                        </nb-select>
+                    </div>
+                </div>
+            </nb-list-item>
+            <nb-list-item >
+                <div class = "row">
+                    <div style = "width: 100px" class = "col-md-auto" (click) = "selectRangeType('Custom')">
+                        <nb-radio  name = "range" [checked] = "currentSelection=='Custom'" (onClick) = "selectRangeType('Custom')">Custom</nb-radio>
+                    </div>  
+                    <div class = "col">
+                            <input  nbInput placeholder="Today - Pick a new Range" [nbDatepicker]="rangepicker" [disabled] = "currentSelection != 'Custom'" fullWidth fieldSize="small">
+                            <nb-rangepicker  #rangepicker [max]="max" [(range)]="range" style='margin-left: 2px;' (rangeChange)="changeRange($event)"></nb-rangepicker> 
+                    </div>
+                </div>
+            </nb-list-item>
+        </nb-list>
+    </ng-template>

@@ -10,7 +10,7 @@ module.exports = function (app) {
 
   app.get('/api/elastic/ping', [], controller.ping)
 
-  app.get('/api/elastic/search/:query', [], controller.search)
+  app.post('/api/elastic/search/', [], controller.search)
 
   app.post('/api/elastic/video', [authJwt.verifyToken], controller.upload)
 

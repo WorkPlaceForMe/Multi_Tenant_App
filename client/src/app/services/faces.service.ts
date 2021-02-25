@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { User } from '../models/User';
 import { Image } from '../models/Image';
 import { Camera } from '../models/Camera';
@@ -189,8 +189,15 @@ return this.http.post(`${this.API_URI}/images`, image);
   saveElast(query:string){
     return this.http.get(`${this.API_URI}/elastic/save/${query}`);
   }
-  searchElast(query:string){
-    return this.http.get(`${this.API_URI}/elastic/search/${query}`);
+  searchElast(params:any){
+    // let params;
+    // if(dates){
+    //   params = new HttpParams().set('query',query).set('dates',dates)
+    // }else {
+    //   params = new HttpParams().append('query',query)
+    // }
+    // console.log(params)
+    return this.http.post(`${this.API_URI}/elastic/search/`, params);
   }
   viewVids(){
     return this.http.get(`${this.API_URI}/elastic/video/list`);
