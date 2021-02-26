@@ -6,8 +6,9 @@
         <input class="form-control" formControlName="query" fullWidth  type="text" nbInput id="search" placeholder="Input your search..." [status]="'primary'">          
             </div>
             <div class="col-md-1 less-padding">
-              <button [status]="'success'" nbButton>Search</button>
-            </div>    
+              <button [status]="'success'" nbButton *ngIf='!loading'>Search</button>
+              <button [status]="'success'" disabled nbButton *ngIf="loading" [nbSpinner]="true" nbSpinnerSize="medium" nbSpinnerStatus="primary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+            </div>
             </div>
         </form>  
       <button (click)='openWindowForm()' [status]="'info'" nbButton>Filters</button>

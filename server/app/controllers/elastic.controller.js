@@ -53,7 +53,7 @@ function encode (data) {
   return base64
 }
 
-async function getImage (name) {
+function getImage (name) {
   const data = s3
     .getObject({
       Bucket: process.env.BUCKET_S3,
@@ -102,18 +102,12 @@ exports.search = async (req, res) => {
   try {
     const body = await client.search(params)
     const hits = body.body.hits
-    // console.log(hits.hits)
     if (hits.hits.length > 0) {
-      const arr = []
-      await hits.hits.forEach(async element => {
-        const img = await getImage(element._source.filename)
-        const base64 = await encode(img.Body)
-        arr.push({
-          name: element._source.filename,
-          base64: 'data:image/jpeg;base64,' + base64
-        })
-      })
-      console.log(arr)
+      for (const elem of hits.hits) {
+        const img = await getImage(elem._source.filename)
+        const base64 = encode(img.Body)
+        elem._source.base64 = 'data:image/jpeg;base64,' + base64
+      }
       const gt = new Date(Date.parse(hits.hits[0]._source.time) - 1000)
       const lt = new Date(Date.parse(hits.hits[0]._source.time) + 1000)
       try {
@@ -145,21 +139,17 @@ exports.search = async (req, res) => {
         })
         const hits2 = secondBody.body.hits
         if (hits2.hits.length !== 0) {
-          hits2.hits.forEach(async element => {
-            hits.hits.push(element)
-            const img = await getImage(element._source.filename)
-            const base64 = await encode(img.Body)
-            arr.push({
-              name: element._source.filename,
-              base64: 'data:image/jpeg;base64,' + base64
-            })
-          })
+          for (const elem of hits2.hits) {
+            const img = await getImage(elem._source.filename)
+            const base64 = encode(img.Body)
+            elem._source.base64 = 'data:image/jpeg;base64,' + base64
+            hits.hits.push(elem)
+          }
         }
         return res.status(200).json({
           success: true,
           data: hits,
-          second: hits2,
-          pics: arr
+          second: hits2
         })
       } catch (err) {
         console.trace(err.message)

@@ -67,6 +67,7 @@ searchSet: any;
     let inp = this.registerForm.controls['query'].value
     this.loading = true;
     this.stuff = []
+    this.results = [];
     let sending = {
       query: inp
     }
@@ -78,33 +79,29 @@ searchSet: any;
         this.loading = false;
         this.touched = true;
         this.results = res['data']
-        console.log(res)
         for(const m of this.results['hits']){
           if(m._source.time){
-          let d = new Date(m['_source'].time)
-          if (d.getSeconds() < 10) {
-            var se: string = '0' + d.getSeconds();
-          } else{
-            var se = JSON.stringify(d.getSeconds())
-          }
-          if (d.getMinutes() < 10) {
-            var mi: string = '0' + mi;
-          }else {
-            var mi = JSON.stringify(d.getMinutes())
-          }
-          if (d.getHours() < 10) {
-            var ho: string = '0' + ho;
-          }else {
-            var ho = JSON.stringify(d.getHours())
-          }
-          let a = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
+          // let d = new Date(m['_source'].time)
+          // if (d.getSeconds() < 10) {
+          //   var se: string = '0' + d.getSeconds();
+          // } else{
+          //   var se = JSON.stringify(d.getSeconds())
+          // }
+          // if (d.getMinutes() < 10) {
+          //   var mi: string = '0' + mi;
+          // }else {
+          //   var mi = JSON.stringify(d.getMinutes())
+          // }
+          // if (d.getHours() < 10) {
+          //   var ho: string = '0' + ho;
+          // }else {
+          //   var ho = JSON.stringify(d.getHours())
+          // }
+          // let a = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
           // m['_source']['clip_path']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['_source']['id_branch'] + '/violence/' + m['_source']['cam_id'] + '/' + a + '.mp4';
           // m['_source']['pic']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['_source']['id_branch'] + '/violence/' + m['_source']['cam_id'] + '/' + a + '.mp4#t=0.5';
           m['_source']['time'] = this.datepipe.transform(m['_source']['time'], 'yyyy-M-dd HH:mm:ss');
           this.stuff.push(m._source)
-          if(m._source['base64']){
-            console.log(m)
-          }
           }
         }
         this.source = this.stuff.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
@@ -157,8 +154,8 @@ searchSet: any;
       },
     noDataMessage: 'No data found',
     columns: {
-      picture: {
-        title: 'Video',
+      base64: {
+        title: 'Picture',
         type: 'custom',
         filter: false,
         renderComponent: ButtonViewComponent,
@@ -188,7 +185,7 @@ searchSet: any;
   template: `
     <div >
       <div style = "width:60px; height: 60px">
-        <img [src]="rowData.pic" width='60' height='60'>
+        <img [src]="rowData.base64" width='60' height='60'>
       </div>
     </div>
   `,
