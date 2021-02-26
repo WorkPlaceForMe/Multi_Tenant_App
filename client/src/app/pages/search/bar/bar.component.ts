@@ -108,6 +108,7 @@ searchSet: any;
         // this.source = this.stuff
       },
       err =>{
+        this.loading = false;
         this.touched = true;
         console.error(err)
       }
