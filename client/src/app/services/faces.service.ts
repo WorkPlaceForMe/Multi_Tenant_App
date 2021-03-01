@@ -199,6 +199,9 @@ return this.http.post(`${this.API_URI}/images`, image);
     // console.log(params)
     return this.http.post(`${this.API_URI}/elastic/search/`, params);
   }
+  getImagesElast(){
+    return this.http.get(`${this.API_URI}/elastic/images/`);
+  }
   viewVids(){
     return this.http.get(`${this.API_URI}/elastic/video/list`);
   }

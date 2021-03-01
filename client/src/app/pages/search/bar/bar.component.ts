@@ -66,8 +66,9 @@ searchSet: any;
   search(){
     let inp = this.registerForm.controls['query'].value
     this.loading = true;
-    this.stuff = []
-    this.results = [];
+    this.touched = false;
+    this.stuff = [];
+    this.source.data = [];
     let sending = {
       query: inp
     }
@@ -101,11 +102,20 @@ searchSet: any;
           // m['_source']['clip_path']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['_source']['id_branch'] + '/violence/' + m['_source']['cam_id'] + '/' + a + '.mp4';
           // m['_source']['pic']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['_source']['id_branch'] + '/violence/' + m['_source']['cam_id'] + '/' + a + '.mp4#t=0.5';
           m['_source']['time'] = this.datepipe.transform(m['_source']['time'], 'yyyy-M-dd HH:mm:ss');
+          m['_source']['base64'] = '/assets/images/loading.jpg'
           this.stuff.push(m._source)
           }
         }
-        this.source = this.stuff.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
-        // this.source = this.stuff
+        this.source.load(this.stuff.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time)))
+        this.face.getImagesElast().subscribe(res=>{
+            let imgs = res['data'].hits.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
+            for(let i = 0; i < this.source.data.length; i ++){
+              this.source.data[i].base64 = imgs[i]._source.base64
+            }
+            this.source.load(this.source.data)
+          }, err => {
+            console.error(err)
+          })
       },
       err =>{
         this.loading = false;
@@ -136,13 +146,14 @@ searchSet: any;
 
     settings = {
     mode: 'external',
-    actions: {
-      position: 'right',
-      add: false,
-      edit: true,
-      columnTitle: 'ACTIONS',
-      delete: false,
-    },
+    // actions: {
+    //   position: 'right',
+    //   add: false,
+    //   edit: true,
+    //   columnTitle: 'ACTIONS',
+    //   delete: false,
+    // },
+    actions: false,
     edit: {
       editButtonContent: '<i class="fas fa-play"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
@@ -166,6 +177,11 @@ searchSet: any;
           });
         },
       },
+      description: {
+        title: 'Desc',
+        type: 'string',
+        filter: false,
+      },
       time: {
         title: 'Time',
         type: 'string',
@@ -184,11 +200,9 @@ searchSet: any;
   selector: 'button-view',
   styles: ['.play-btn { position: absolute; left: 50%; top: 50%; margin-top: -17px; margin-left: -20px; color: #f7f9fc47}'],
   template: `
-    <div >
-      <div style = "width:60px; height: 60px">
+      <div class='card border-info' style = "width:62px; height: 62px">
         <img [src]="rowData.base64" width='60' height='60'>
       </div>
-    </div>
   `,
 })
 export class ButtonViewComponent implements ViewCell, OnInit {

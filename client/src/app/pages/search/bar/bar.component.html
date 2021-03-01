@@ -15,7 +15,7 @@
     </div>
 </div>
 <div class="row" style="margin-top: 2px;" *ngIf= 'touched'>
-      <div class="col-md-8">
+      <div class="col-md-12">
         <nb-card>
           <nb-card-body style="padding: 0px">
             <ng2-smart-table [settings]="settings" [source]="source" (edit)=pass($event)>
@@ -23,7 +23,7 @@
           </nb-card-body>
         </nb-card>
       </div>
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
         <nb-card>
           <nb-card-body align='center' style="min-height: 250px">
             <video controls (click)="toggleVideo($event)" #videoPlayer class="responsive" muted loop controls
@@ -33,5 +33,5 @@
             </video>
           </nb-card-body>
         </nb-card>
-      </div>
+      </div> -->
 </div>

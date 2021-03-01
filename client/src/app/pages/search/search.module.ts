@@ -17,7 +17,7 @@ import { NbCardModule, NbIconModule, NbInputModule, NbTreeGridModule, NbAccordio
   NbSelectModule, NbSpinnerModule,
   NbContextMenuModule, NbPopoverModule, NbLayoutModule, NbMenuModule, NbWindowModule,
   NbDialogModule,
-  NbTooltipModule,} from '@nebular/theme';
+  NbTooltipModule,  } from '@nebular/theme';
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { ListComponent } from './list/list.component';
 import { authInterceptorProviders } from '../../_helpers/auth.interceptor';

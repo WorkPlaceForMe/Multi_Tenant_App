@@ -63,6 +63,8 @@ function getImage (name) {
   return data
 }
 
+let search = []
+
 exports.search = async (req, res) => {
   const data = req.body
   console.log(data)
@@ -103,11 +105,6 @@ exports.search = async (req, res) => {
     const body = await client.search(params)
     const hits = body.body.hits
     if (hits.hits.length > 0) {
-      for (const elem of hits.hits) {
-        const img = await getImage(elem._source.filename)
-        const base64 = encode(img.Body)
-        elem._source.base64 = 'data:image/jpeg;base64,' + base64
-      }
       const gt = new Date(Date.parse(hits.hits[0]._source.time) - 1000)
       const lt = new Date(Date.parse(hits.hits[0]._source.time) + 1000)
       try {
@@ -140,12 +137,10 @@ exports.search = async (req, res) => {
         const hits2 = secondBody.body.hits
         if (hits2.hits.length !== 0) {
           for (const elem of hits2.hits) {
-            const img = await getImage(elem._source.filename)
-            const base64 = encode(img.Body)
-            elem._source.base64 = 'data:image/jpeg;base64,' + base64
             hits.hits.push(elem)
           }
         }
+        search = hits
         return res.status(200).json({
           success: true,
           data: hits,
@@ -171,6 +166,26 @@ exports.search = async (req, res) => {
       mess: error
     })
   }
+}
+
+exports.imagesElast = async (req, res) => {
+  for (const elem of search.hits) {
+    let img
+    try {
+      img = await getImage(elem._source.filename)
+    } catch (err) {
+      img = false
+    }
+    let show
+    if (img !== false) {
+      const base64 = encode(img.Body)
+      show = 'data:image/jpeg;base64,' + base64
+    } else {
+      show = '/assets/images/noImg.png'
+    }
+    elem._source.base64 = show
+  }
+  res.status(200).json({ success: true, data: search })
 }
 
 const stor = multer.diskStorage({
