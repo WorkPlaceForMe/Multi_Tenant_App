@@ -105,6 +105,10 @@ exports.search = async (req, res) => {
     const body = await client.search(params)
     const hits = body.body.hits
     if (hits.hits.length > 0) {
+      for (const elem of hits.hits) {
+        elem._source.url =
+          'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
+      }
       const gt = new Date(Date.parse(hits.hits[0]._source.time) - 1000)
       const lt = new Date(Date.parse(hits.hits[0]._source.time) + 1000)
       try {
@@ -137,6 +141,8 @@ exports.search = async (req, res) => {
         const hits2 = secondBody.body.hits
         if (hits2.hits.length !== 0) {
           for (const elem of hits2.hits) {
+            elem._source.url =
+              'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
             hits.hits.push(elem)
           }
         }

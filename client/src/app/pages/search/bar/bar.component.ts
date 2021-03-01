@@ -40,7 +40,7 @@ searchSet: any;
     this.now_user = JSON.parse(localStorage.getItem('now_user'));
     const time = new Date();
     this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0,3);
-    this.timezone = parseInt(this.timezone) * 2;
+    this.timezone = parseInt(this.timezone);
     let p = '';
     if(this.timezone > 0){
       p = '+';
@@ -82,40 +82,30 @@ searchSet: any;
         this.results = res['data']
         for(const m of this.results['hits']){
           if(m._source.time){
-          // let d = new Date(m['_source'].time)
-          // if (d.getSeconds() < 10) {
-          //   var se: string = '0' + d.getSeconds();
-          // } else{
-          //   var se = JSON.stringify(d.getSeconds())
-          // }
-          // if (d.getMinutes() < 10) {
-          //   var mi: string = '0' + mi;
-          // }else {
-          //   var mi = JSON.stringify(d.getMinutes())
-          // }
-          // if (d.getHours() < 10) {
-          //   var ho: string = '0' + ho;
-          // }else {
-          //   var ho = JSON.stringify(d.getHours())
-          // }
-          // let a = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate() + "_" + ho + ":" + mi + ":" + se;
-          // m['_source']['clip_path']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['_source']['id_branch'] + '/violence/' + m['_source']['cam_id'] + '/' + a + '.mp4';
-          // m['_source']['pic']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['_source']['id_branch'] + '/violence/' + m['_source']['cam_id'] + '/' + a + '.mp4#t=0.5';
-          m['_source']['time'] = this.datepipe.transform(m['_source']['time'], 'yyyy-M-dd HH:mm:ss');
+          let dd = (new Date(m['_source']['time'])).getUTCDate().toString();
+          let mm = ((new Date(m['_source']['time'])).getMonth()).toString();
+          let yy = (new Date(m['_source']['time'])).getFullYear().toString();
+          let hh = (new Date(m['_source']['time'])).getUTCHours().toString();
+          let mi = (new Date(m['_source']['time'])).getUTCMinutes().toString();
+          let ss = (new Date(m['_source']['time'])).getUTCSeconds().toString();
+          const time = new Date(Number(yy), Number(mm), Number(dd), Number(hh), Number(mi), Number(ss));
+          m['_source']['time'] = this.datepipe.transform(time, 'yyyy-M-dd HH:mm:ss');
           m['_source']['base64'] = '/assets/images/loading.jpg'
           this.stuff.push(m._source)
           }
         }
         this.source.load(this.stuff.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time)))
-        this.face.getImagesElast().subscribe(res=>{
-            let imgs = res['data'].hits.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
-            for(let i = 0; i < this.source.data.length; i ++){
-              this.source.data[i].base64 = imgs[i]._source.base64
-            }
-            this.source.load(this.source.data)
-          }, err => {
-            console.error(err)
-          })
+        // console.log(this.source)
+        // this.face.getImagesElast().subscribe(res=>{
+        //     let imgs = res['data'].hits.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
+        //     for(let i = 0; i < this.source.data.length; i ++){
+        //       this.source.data[i].time = this.datepipe.transform(this.source.data[i].time, 'yyyy-M-dd HH:mm:ss');
+        //       this.source.data[i].base64 = imgs[i]._source.base64
+        //     }
+        //     this.source.load(this.source.data)
+        //   }, err => {
+        //     console.error(err)
+        //   })
       },
       err =>{
         this.loading = false;
@@ -166,7 +156,7 @@ searchSet: any;
       },
     noDataMessage: 'No data found',
     columns: {
-      base64: {
+      url: {
         title: 'Picture',
         type: 'custom',
         filter: false,
@@ -200,8 +190,8 @@ searchSet: any;
   selector: 'button-view',
   styles: ['.play-btn { position: absolute; left: 50%; top: 50%; margin-top: -17px; margin-left: -20px; color: #f7f9fc47}'],
   template: `
-      <div class='card border-info' style = "width:62px; height: 62px">
-        <img [src]="rowData.base64" width='60' height='60'>
+      <div class='card border-info' style = "width:63px; height: 62px">
+        <img [src]="rowData.url" width='60' height='60'>
       </div>
   `,
 })

@@ -69,6 +69,10 @@ export const MENU_ITEMSBRANCH: NbMenuItem[] = [
         title: 'Add Video',
         link: 'search/upload',
       },
+      {
+        title: 'Forensic Search',
+        link: 'search/bar',
+      }
     ],
   },
 ];
@@ -141,6 +145,10 @@ export const MENU_ITEMSCLIENT: NbMenuItem[] = [
         title: 'Add Video',
         link: 'search/upload',
       },
+      {
+        title: 'Forensic Search',
+        link: 'search/bar',
+      }
     ],
   },
 ];

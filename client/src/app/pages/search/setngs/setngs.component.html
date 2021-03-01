@@ -36,14 +36,13 @@
                         <nb-radio  name = "range" [checked] = "currentSelection=='Custom'" (onClick) = "selectRangeType('Custom')">Custom</nb-radio>
                     </div>  
                     <div class = "col">
-                                <input nbInput placeholder="Pick Date" [nbDatepicker]="dateTimePicker" [disabled] = "currentSelection != 'Custom'" fullWidth fieldSize="small">
+                                <!-- <input nbInput placeholder="Pick Date" [nbDatepicker]="dateTimePicker" [disabled] = "currentSelection != 'Custom'" fullWidth fieldSize="small">
                                 <nb-date-timepicker
                                 singleColumn
                                 [step]="10"
-                                #dateTimePicker></nb-date-timepicker>
-                            <!-- <input  nbInput placeholder="Today - Pick a new Range" [nbDatepicker]="rangepicker" [disabled] = "currentSelection != 'Custom'" fullWidth fieldSize="small">
-                            <nb-date-timepicker withSeconds #rangepicker style='margin-left: 2px;'></nb-date-timepicker> -->
-                            <!-- <nb-rangepicker  #rangepicker [max]="max" [(range)]="range" style='margin-left: 2px;' (rangeChange)="changeRange($event)"></nb-rangepicker>  -->
+                                #dateTimePicker></nb-date-timepicker> -->
+                            <input  nbInput placeholder="Today - Pick a new Range" [nbDatepicker]="rangepicker" [disabled] = "currentSelection != 'Custom'" fullWidth fieldSize="small">
+                            <nb-rangepicker  #rangepicker [max]="max" [(range)]="range" style='margin-left: 2px;' (rangeChange)="changeRange($event)"></nb-rangepicker> 
                     </div>
                 </div>
             </nb-list-item>
