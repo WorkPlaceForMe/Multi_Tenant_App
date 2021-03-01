@@ -187,6 +187,11 @@ export class SpeedingComponent implements OnInit, OnDestroy {
         type: 'string',
         filter: false,
       },
+      type: {
+        title: 'VEHICLE TYPE',
+        type: 'string',
+        filter: false,
+      },
       camera_name: {
         title: 'CAM',
         type: 'string',
