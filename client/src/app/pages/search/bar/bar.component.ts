@@ -168,7 +168,7 @@ searchSet: any;
         },
       },
       description: {
-        title: 'Desc',
+        title: 'Description',
         type: 'string',
         filter: false,
       },

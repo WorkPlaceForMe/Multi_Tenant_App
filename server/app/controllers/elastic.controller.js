@@ -63,7 +63,7 @@ function getImage (name) {
   return data
 }
 
-let search = []
+const search = []
 
 exports.search = async (req, res) => {
   const data = req.body
@@ -81,6 +81,15 @@ exports.search = async (req, res) => {
             }
           ]
         }
+      }
+    }
+  }
+  if (data.filters.and) {
+    const words = data.query.split(' ')
+    params.body.query.bool.must[0] = {
+      terms: {
+        description: words,
+        boost: 1.0
       }
     }
   }
@@ -141,12 +150,13 @@ exports.search = async (req, res) => {
         const hits2 = secondBody.body.hits
         if (hits2.hits.length !== 0) {
           for (const elem of hits2.hits) {
+            console.log(elem)
             elem._source.url =
               'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
             hits.hits.push(elem)
           }
         }
-        search = hits
+        // search = hits
         return res.status(200).json({
           success: true,
           data: hits,

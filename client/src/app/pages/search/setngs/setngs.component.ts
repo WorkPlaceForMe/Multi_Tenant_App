@@ -31,6 +31,7 @@ export class SetngsComponent implements OnInit {
   algorithm: string = '';
   showIt: boolean = true;
   addRange: boolean = false;
+  and:boolean = false;
 
   currentSelection: string  = 'Date';
   getNavChangeEmitter() {
@@ -129,6 +130,9 @@ getAlgos(){
     }
     if(this.addRange){
       filters['range'] = this.range
+    }
+    if(this.and){
+      filters['and'] = this.and
     }
     this.onChange(filters)
     this.windowRef.close();
