@@ -116,7 +116,7 @@ searchSet: any;
   }
 
   openWindowForm() {
-    this.windowService.open(SetngsComponent, { title: `Filter Settings`, context: { onChange: changes => {this.filters = changes}}});
+    this.windowService.open(SetngsComponent, { title: `Filter Settings`, context: { onChange: changes => {this.filters = changes}, filters: this.filters}});
   }
 
   @ViewChild('videoPlayer', { static: false }) videoplayer: ElementRef;

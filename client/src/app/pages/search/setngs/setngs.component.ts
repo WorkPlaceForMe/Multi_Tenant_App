@@ -17,6 +17,7 @@ export class SetngsComponent implements OnInit {
   }
   @ViewChild(NbPopoverDirective) rangeSelector: NbPopoverDirective;
   @Input() onChange: Function;
+  @Input() filters: Object;
   @Output() settings: EventEmitter<any> = new EventEmitter();
 
   calMonths: string[] = ['Jan', 'Feb', 'March', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -149,7 +150,16 @@ getAlgos(){
       start: new Date(this.max),
       end: new Date(this.fin),
     };
-
+    if(this.filters['algo']){
+    this.algorithm = this.filters['algo']
+    }
+    if(this.filters['range']){
+    this.range = this.filters['range']
+    }
+    if(this.filters['and']){
+    this.and = this.filters['and']
+    }
+    console.log(this.filters)
     this.initMonths();
     this.selectedDate =  this.dateService.addDay(this.dateService.today(), 0);
   }
