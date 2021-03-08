@@ -16,7 +16,7 @@ const client = new elasticsearch.Client({
     password: process.env.PASS_ELAST
   }
 })
-const { Op } = require('sequelize')
+
 const con = require('../models/dbmysql')
 const path =
   process.env.home + process.env.username + process.env.pathDocker + process.env.resources
@@ -47,27 +47,110 @@ exports.ping = async (req, res) => {
     })
   }
 }
-function encode (data) {
-  const buf = Buffer.from(data)
-  const base64 = buf.toString('base64')
-  return base64
+
+const test = ['male', 'car', 'bicycle']
+async function recursive (
+  arr,
+  time,
+  n = 0,
+  output = [],
+  del = [],
+  params = {
+    index: ['gmtc_searcher'],
+    body: {
+      query: {
+        bool: {
+          must: [
+            {
+              match: {
+                description: ''
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+) {
+  if (arr.length === n) {
+    return output
+  }
+  if (n === 0) {
+    try {
+      params.body.query.bool.must[0].match.description = arr[n]
+      const body = await client.search(params)
+      const hits = body.body.hits
+      if (hits.hits.length > 0) {
+        output.push(hits.hits)
+        return recursive(arr, time, n + 1, output)
+      } else {
+        return output
+      }
+    } catch (err) {}
+  }
+
+  if (n > 0) {
+    console.log('++++++++++++++++')
+    params.body.query.bool.must[0].match.description = arr[n]
+    for (let i = 0; i < output[n - 1].length; i++) {
+      try {
+        const gt = new Date(Date.parse(output[n - 1][i]._source.time) - time * 1000)
+        const lt = new Date(Date.parse(output[n - 1][i]._source.time) + time * 1000)
+        if (!params.body.query.bool.must[1]) {
+          params.body.query.bool.must.push({
+            range: {
+              time: {
+                gte: gt,
+                lte: lt
+              }
+            }
+          })
+        } else {
+          params.body.query.bool.must[1] = {
+            range: {
+              time: {
+                gte: gt,
+                lte: lt
+              }
+            }
+          }
+        }
+        // console.log(JSON.stringify(params, null, 4))
+        const body = await client.search(params)
+        const hits = body.body.hits
+        // console.log(output[n - 1][i])
+        if (hits.hits.length === 0) {
+          // console.log('===============')
+          if (output[n - 1][i].of) {
+            output[0].splice(output[n - 1][i].of, 1)
+            output[1].splice(i, 1)
+            // del.push([0, output[n - 1][i].of])
+            // del.push([1, i])
+          } else {
+            // del.push([0, i])
+            output[n - 1].splice(i, 1)
+            // console.log(output)
+          }
+          continue
+        } else {
+          for (const hit of hits.hits) {
+            hit.of = i
+            if (!output[n]) {
+              output[n] = []
+            }
+            output[n].push(hit)
+          }
+        }
+      } catch (err) {}
+    }
+    return recursive(arr, time, n + 1, output, del)
+  }
 }
 
-function getImage (name) {
-  const data = s3
-    .getObject({
-      Bucket: process.env.BUCKET_S3,
-      Key: name
-    })
-    .promise()
-  return data
-}
-
-const search = []
+// recursive(test)
 
 exports.search = async (req, res) => {
   const data = req.body
-  console.log(data)
   const params = {
     index: ['gmtc_searcher'],
     body: {
@@ -83,6 +166,25 @@ exports.search = async (req, res) => {
         }
       }
     }
+  }
+  if (data.filters.bounded) {
+    const words = data.query.split(' ')
+    for (let i = 0; i < words.length; i++) {
+      if (words[i] === 'and') {
+        words.splice(i, 1)
+      }
+    }
+    const recRes = await recursive(words, data.filters.bounded.time)
+    let organizedRes = []
+    for (let i = 0; i < recRes.length; i++) {
+      organizedRes = organizedRes.concat(recRes[i])
+    }
+    for (const elem of organizedRes) {
+      elem._source.url =
+        'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
+    }
+
+    return res.status(200).json({ success: true, data: { hits: organizedRes } })
   }
   if (data.filters.and) {
     const words = data.query.split(' ')
@@ -181,26 +283,6 @@ exports.search = async (req, res) => {
       mess: error
     })
   }
-}
-
-exports.imagesElast = async (req, res) => {
-  for (const elem of search.hits) {
-    let img
-    try {
-      img = await getImage(elem._source.filename)
-    } catch (err) {
-      img = false
-    }
-    let show
-    if (img !== false) {
-      const base64 = encode(img.Body)
-      show = 'data:image/jpeg;base64,' + base64
-    } else {
-      show = '/assets/images/noImg.png'
-    }
-    elem._source.base64 = show
-  }
-  res.status(200).json({ success: true, data: search })
 }
 
 const stor = multer.diskStorage({

@@ -12,8 +12,6 @@ module.exports = function (app) {
 
   app.post('/api/elastic/search/', [authJwt.verifyToken], controller.search)
 
-  app.get('/api/elastic/images/', [authJwt.verifyToken], controller.imagesElast)
-
   app.post('/api/elastic/video', [authJwt.verifyToken], controller.upload)
 
   app.get('/api/elastic/video/list', [authJwt.verifyToken], controller.viewVids)

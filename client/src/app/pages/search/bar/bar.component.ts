@@ -80,6 +80,7 @@ searchSet: any;
         this.loading = false;
         this.touched = true;
         this.results = res['data']
+        console.log(this.results['hits'])
         for(const m of this.results['hits']){
           if(m._source.time){
           let dd = (new Date(m['_source']['time'])).getUTCDate().toString();

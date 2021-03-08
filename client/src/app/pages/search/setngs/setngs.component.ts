@@ -33,6 +33,10 @@ export class SetngsComponent implements OnInit {
   showIt: boolean = true;
   addRange: boolean = false;
   and:boolean = false;
+  bounded:Object = {
+    active: false,
+    time: 1
+  };
 
   currentSelection: string  = 'Date';
   getNavChangeEmitter() {
@@ -135,6 +139,9 @@ getAlgos(){
     if(this.and){
       filters['and'] = this.and
     }
+    if(this.bounded['active']){
+      filters['bounded'] = this.bounded
+    }
     this.onChange(filters)
     this.windowRef.close();
   }
@@ -158,6 +165,9 @@ getAlgos(){
     }
     if(this.filters['and']){
     this.and = this.filters['and']
+    }
+    if(this.filters['bounded']){
+    this.bounded = this.filters['bounded']
     }
     console.log(this.filters)
     this.initMonths();
