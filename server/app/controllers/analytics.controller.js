@@ -872,6 +872,7 @@ exports.covered = async (req, res) => {
                   se
                 v.picture = `${d}_${v.trackid}.jpg`
                 v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/covered/${req.params.id}/${v.picture}`
+                console.log(rel)
                 if (rel.atributes[0].time > 0) {
                   v.clip_path = `${d}_${v.trackid}.mp4`
                   v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/covered/${req.params.id}/${v.clip_path}`

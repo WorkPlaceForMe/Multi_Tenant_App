@@ -150,7 +150,6 @@ exports.search = async (req, res) => {
         const hits2 = secondBody.body.hits
         if (hits2.hits.length !== 0) {
           for (const elem of hits2.hits) {
-            console.log(elem)
             elem._source.url =
               'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
             hits.hits.push(elem)
