@@ -2487,4 +2487,6 @@ module.exports = function (app) {
    */
 
   app.post('/api/analytics/cloth/:id', [authJwt.verifyToken], controller.cloth)
+
+  app.post('/api/analytics/pcOnView/:id', [authJwt.verifyToken], controller.pcOnView)
 }

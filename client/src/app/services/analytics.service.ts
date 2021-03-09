@@ -108,8 +108,9 @@ export class AnalyticsService {
   cloth(id: string, dates){
     return this.http.post(`${this.API_URL}cloth/${id}`, dates);
   }
-
-
+  pcOnView(id: string, dates){
+    return this.http.post(`${this.API_URL}pcOnView/${id}`, dates);
+  }
 
   constructor(private http: HttpClient) { }
 }
