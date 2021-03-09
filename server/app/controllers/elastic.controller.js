@@ -48,6 +48,123 @@ exports.ping = async (req, res) => {
   }
 }
 
+async function searchAndAdd (
+  arr,
+  time,
+  n = 0,
+  output = [],
+  del = [],
+  params = {
+    index: ['gmtc_searcher'],
+    body: {
+      query: {
+        bool: {
+          must: [
+            {
+              match: {
+                description: ''
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+) {
+  try {
+    params.body.query.bool.must[0].match.description = arr[n]
+    const body = await client.search(params)
+    const hits = body.body.hits
+    if (hits.hits.length > 0) {
+      n++
+      params.body.query.bool.must[0].match.description = arr[n]
+      for (const hit of hits.hits) {
+        try {
+          const gt = new Date(Date.parse(hit._source.time) - time * 1000)
+          const lt = new Date(Date.parse(hit._source.time) + time * 1000)
+          if (!params.body.query.bool.must[1]) {
+            params.body.query.bool.must.push({
+              range: {
+                time: {
+                  gte: gt,
+                  lte: lt
+                }
+              }
+            })
+          } else {
+            params.body.query.bool.must[1] = {
+              range: {
+                time: {
+                  gte: gt,
+                  lte: lt
+                }
+              }
+            }
+          }
+          // console.log(JSON.stringify(params, null, 4))
+          const body = await client.search(params)
+          const hits = body.body.hits
+          if (hits.hits.length === 0) {
+            hit.del = true
+            continue
+          } else if (n + 1 < arr.length && hits.hits.length > 0) {
+            n++
+            params.body.query.bool.must[0].match.description = arr[n]
+            for (const hit1 of hits.hits) {
+              try {
+                const gt = new Date(Date.parse(hit1._source.time) - time * 1000)
+                const lt = new Date(Date.parse(hit1._source.time) + time * 1000)
+                if (!params.body.query.bool.must[1]) {
+                  params.body.query.bool.must.push({
+                    range: {
+                      time: {
+                        gte: gt,
+                        lte: lt
+                      }
+                    }
+                  })
+                } else {
+                  params.body.query.bool.must[1] = {
+                    range: {
+                      time: {
+                        gte: gt,
+                        lte: lt
+                      }
+                    }
+                  }
+                }
+                // console.log(JSON.stringify(params, null, 4))
+                const body = await client.search(params)
+                const hits = body.body.hits
+                // console.log(output[n - 1][i])
+                if (hits.hits.length === 0) {
+                  hit.del = true
+                  hit1.del = true
+                  continue
+                } else {
+                  output.push(hit)
+                  output.push(hit1)
+                  for (const ele of hits.hits) {
+                    output.push(ele)
+                  }
+                }
+              } catch (err) {}
+            }
+          } else if (n + 1 === arr.length && hits.hits.length > 0) {
+            output.push(hit)
+            for (const ele of hits.hits) {
+              output.push(ele)
+            }
+          }
+        } catch (err) {}
+      }
+      return output
+    } else {
+      return output
+    }
+  } catch (err) {}
+}
+
 const test = ['male', 'car', 'bicycle']
 async function recursive (
   arr,
@@ -147,7 +264,7 @@ async function recursive (
   }
 }
 
-// recursive(test)
+// searchAndAdd(test)
 
 exports.search = async (req, res) => {
   const data = req.body
@@ -174,17 +291,13 @@ exports.search = async (req, res) => {
         words.splice(i, 1)
       }
     }
-    const recRes = await recursive(words, data.filters.bounded.time)
-    let organizedRes = []
-    for (let i = 0; i < recRes.length; i++) {
-      organizedRes = organizedRes.concat(recRes[i])
-    }
-    for (const elem of organizedRes) {
+    const recRes = await searchAndAdd(words, data.filters.bounded.time)
+    for (const elem of recRes) {
       elem._source.url =
         'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
     }
 
-    return res.status(200).json({ success: true, data: { hits: organizedRes } })
+    return res.status(200).json({ success: true, data: { hits: recRes } })
   }
   if (data.filters.and) {
     const words = data.query.split(' ')
