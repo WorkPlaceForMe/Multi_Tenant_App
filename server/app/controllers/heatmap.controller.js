@@ -5,7 +5,7 @@ const db = require('../models/dbmysql')
 exports.getAllHm = (req, res) => {
   const token = req.headers['x-access-token']
 
-  jwt.verify(token, process.env.secret, (err, decoded) => {
+  jwt.verify(token, process.env.secret, (_err, _decoded) => {
     db.con().query(
       "SELECT DATE_FORMAT(timestamp,'%d/%m/%y %H:%i') as date, x_coordinate, y_coordinate FROM heatmap where cam_id = ?;",
       [req.params.id],
@@ -19,7 +19,7 @@ exports.getAllHm = (req, res) => {
 
 exports.getHm = (req, res) => {
   const token = req.headers['x-access-token']
-  jwt.verify(token, process.env.secret, (err, decoded) => {
+  jwt.verify(token, process.env.secret, (_err, _decoded) => {
     db.con().query(
       "SELECT DATE_FORMAT(timestamp,'%d/%m/%y %H:%i') as date, x_coordinate, y_coordinate, dwell FROM heatmap where timestamp >= ? and  timestamp <= ? and cam_id = ? order by date asc;",
       [req.params.st, req.params.end, req.params.id],
