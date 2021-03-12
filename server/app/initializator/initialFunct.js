@@ -41,6 +41,10 @@ exports.initial = function () {
     name: 'D&C of human, animal and vehicle'
   })
   algo.create({
+    id: 4,
+    name: 'Parking Violation'
+  })
+  algo.create({
     id: 5,
     name: 'Speeding Vehicle'
   })
