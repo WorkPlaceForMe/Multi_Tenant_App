@@ -38,7 +38,7 @@ export class SetngsComponent implements OnInit {
     time: 1
   };
 
-  currentSelection: string  = 'Date';
+  currentSelection: string  = 'Month'; 
   getNavChangeEmitter() {
     return this.settings;
   }
@@ -83,6 +83,7 @@ getAlgos(){
   }
 
   setDate(){
+    console.log(this.selectedDate)
     if (this.selectedDate){
       const start = this.selectedDate;
       // Add one data and minus 1 sec to set time to end of the day
@@ -169,7 +170,6 @@ getAlgos(){
     if(this.filters['bounded']){
     this.bounded = this.filters['bounded']
     }
-    console.log(this.filters)
     this.initMonths();
     this.selectedDate =  this.dateService.addDay(this.dateService.today(), 0);
   }
