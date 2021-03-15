@@ -293,12 +293,12 @@ exports.intrude = async (req, res) => {
     if (decoded.id_branch != 0000) {
       wh = {
         id_branch: decoded.id_branch,
-        algo_id: 2
+        algo_id: 17
       }
     } else {
       wh = {
         id_account: decoded.id_account,
-        algo_id: 2
+        algo_id: 17
       }
     }
     Relation.findOne({
@@ -2814,7 +2814,7 @@ exports.accident = async (req, res) => {
   jwt.verify(token, process.env.secret, async (err, decoded) => {
     Relation.findOne({
       where: {
-        algo_id: 28,
+        algo_id: 29,
         camera_id: req.params.id
       }
     }).then(async rel => {
@@ -2882,7 +2882,7 @@ exports.animal = async (req, res) => {
   jwt.verify(token, process.env.secret, async (err, decoded) => {
     Relation.findOne({
       where: {
-        algo_id: 29,
+        algo_id: 28,
         camera_id: req.params.id
       }
     }).then(async rel => {
