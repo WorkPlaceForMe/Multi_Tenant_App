@@ -104,7 +104,7 @@ export class IllegalParkingComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type,
     };
-    this.face.checkVideo(32, this.camera).subscribe(
+    this.face.checkVideo(4, this.camera).subscribe(
       res => {
         this.video = res['video'];
         if (this.video === true) {
