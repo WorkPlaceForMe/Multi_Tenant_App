@@ -254,15 +254,14 @@ exports.dashboards = (req, res) => {
                   for (var c of algors) {
                     for (var d of rels) {
                       if (c['id'] == parseInt(d)) {
-                        /* if (c['name'] == 'Heatmap') {
+                        if (c['name'] == 'Heatmap') {
                           continue
-                        } */
+                        }
                         if (
                           parseInt(d) == 12 ||
                           parseInt(d) == 22 ||
                           parseInt(d) == 2 ||
-                          parseInt(d) == 24 ||
-                          parseInt(d) == 14
+                          parseInt(d) == 24
                         ) {
                           analyticsPrem.push({
                             algo_id: parseInt(d),
