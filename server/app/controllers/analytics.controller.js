@@ -3500,7 +3500,7 @@ exports.pcOnView = async (req, res) => {
                       cache.getDate() +
                       ' ' +
                       cache.getHours()
-                  ] = 0
+                  ] = v.count//0
                   cache =
                     cache.getFullYear() +
                     '-' +
@@ -3529,8 +3529,8 @@ exports.pcOnView = async (req, res) => {
                     v.time.getDate() +
                     ' ' +
                     v.time.getHours()
-                ] =
-                  (ress[
+                ] = v.count
+                  /* (ress[
                     v.time.getFullYear() +
                       '-' +
                       (v.time.getMonth() + 1) +
@@ -3538,7 +3538,7 @@ exports.pcOnView = async (req, res) => {
                       v.time.getDate() +
                       ' ' +
                       v.time.getHours()
-                  ] || 0) + 1
+                  ] || 0) + 1 */
               }
               let d = v.time
               let se = d.getSeconds()

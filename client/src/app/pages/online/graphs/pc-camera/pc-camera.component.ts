@@ -119,9 +119,9 @@ export class PcCameraComponent implements OnInit, OnDestroy {
           }
           this.source = this.pc.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
 
-          let labels = []
-          for(var o of Object.keys(this.pc.over)){
-            o = o + ':00:00'
+          let labels = [];
+          for (let o of Object.keys(this.pc.over)){
+            o = o + ':00:00';
             labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm'))
           }
 
@@ -139,7 +139,7 @@ export class PcCameraComponent implements OnInit, OnDestroy {
                 borderColor: colors.primary,
               }],
             };
-      
+
             this.optionsL = {
               responsive: true,
               maintainAspectRatio: false,
