@@ -20,7 +20,7 @@ app.use(compression())
 
 if (process.env.NODE_ENV === 'production') {
   const corsOptions = {
-    origin: `http://${process.env.my_ip}:4200`
+    origin: [`http://${process.env.my_ip}:4200`, `${process.env.app_url}`]
   }
   app.use(cors(corsOptions))
   console.log('Running on Production')
@@ -122,7 +122,7 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(swaggerDocs, {
     explorer: true,
-    customCss: `img[alt='Swagger UI'] { content:url(${process.env.app_url}/api/pictures/graymaticsLogo.png);}`,
+    customCss: `img[alt='Swagger UI'] { content:url(${process.env.app_url}/api/pictures/logoQuantela.png);}`,
     customSiteTitle: 'Graymatics API Manual',
     customfavIcon: `${process.env.app_url}/api/pictures/favicon1.ico`,
     swaggerOptions: {
