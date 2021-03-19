@@ -51,7 +51,6 @@ export class AlgorithmsComponent implements OnInit {
     this.facesService.getAlgos()
       .subscribe(
         res => {
-          console.log(res)
           for (let i = 0; i < this.algos.length; i++) {
             for (let t = 0; t < res['data'].length; t++) {
               this.algos[i]['available'] = 0;
