@@ -3081,7 +3081,32 @@ exports.carmake = async (req, res) => {
 
 exports.vcount = async (req, res) => {
   let token = req.headers['x-access-token']
-  const data = req.body
+  const data = req.body;
+  let totalCarsEn = 0;
+  let totalCarsEx = 0;
+  let totalBusesEn = 0;
+  let totalBusesEx = 0;
+  let totalTrucksEn = 0;
+  let totalTrucksEx = 0;
+  let totalRickshawsEn = 0;
+  let totalRickshawsEx = 0;
+  let totalMotorbikesEn = 0;
+  let totalMotorbikesEx = 0;
+  let carsEn = [];
+  let carsEx = [];
+  let busesEn = [];
+  let busesEx = [];
+  let trucksEn = [];
+  let trucksEx = [];
+  let rickshawsEn = [];
+  let rickshawsEx = [];
+  let motorbikesEn = [];
+  let motorbikesEx = [];
+  let carsLabel = [];
+  let busesLabel = [];
+  let trucksLabel = [];
+  let rickshawsLabel = [];
+  let motorbikesLabel = [];
   jwt.verify(token, process.env.secret, async (err, decoded) => {
     Relation.findOne({
       where: {
@@ -3100,7 +3125,52 @@ exports.vcount = async (req, res) => {
                   success: false,
                   message: err
                 })
-              for (var v of result) {
+
+              let carsData = result.filter(itm => itm.type === 'car');
+              carsData.forEach(c => {
+                carsEn.push(c.count1);
+                carsEx.push(c.count2);
+                carsLabel.push(c.time);
+                totalCarsEn = totalCarsEn + c.count1;
+                totalCarsEx = totalCarsEx + c.count2;
+              });
+
+              let busesData = result.filter(itm => itm.type === 'bus');
+              busesData.forEach(b => {
+                busesEn.push(b.count1);
+                busesEx.push(b.count2);
+                busesLabel.push(b.time);
+                totalBusesEn = totalBusesEn + b.count1;
+                totalBusesEx = totalBusesEx + b.count2;
+              });
+
+              let trucksData = result.filter(itm => itm.type === 'truck');
+              trucksData.forEach(t => {
+                trucksEn.push(t.count1);
+                trucksEx.push(t.count2);
+                trucksLabel.push(t.time);
+                totalTrucksEn = totalTrucksEn + t.count1;
+                totalTrucksEx = totalTrucksEx + t.count2;
+              });
+
+              let rickshawsData = result.filter(itm => itm.type === 'rickshaw');
+              rickshawsData.forEach(r => {
+                rickshawsEn.push(r.count1);
+                rickshawsEx.push(r.count2);
+                rickshawsLabel.push(r.time);
+                totalRickshawsEn = totalRickshawsEn + r.count1;
+                totalRickshawsEx = totalRickshawsEx + r.count2;
+              });
+
+              let motorbikesData = result.filter(itm => itm.type === 'motorbike');
+              motorbikesData.forEach(m => {
+                motorbikesEn.push(m.count1);
+                motorbikesEx.push(m.count2);
+                motorbikesLabel.push(m.time);
+                totalMotorbikesEn = totalMotorbikesEn + m.count1;
+                totalMotorbikesEx =totalMotorbikesEx + m.count2;
+              });
+              /* for (var v of result) {
                 let d = v.time
                 let se = d.getSeconds()
                 let mi = d.getMinutes()
@@ -3132,10 +3202,35 @@ exports.vcount = async (req, res) => {
                   v.clip_path = `${d}_${v.track_id}.mp4`
                   v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/vcount/${req.params.id}/${v.clip_path}`
                 }
-              }
+              } */
               const a = {
                 total: result.length,
-                raw: result
+                raw: result,
+                carsEn,
+                carsEx,
+                totalCarsEn,
+                totalCarsEx,
+                carsLabel,
+                busesEn,
+                busesEx,
+                totalBusesEn,
+                totalBusesEx,
+                busesLabel,
+                motorbikesEn,
+                motorbikesEx,
+                totalMotorbikesEn,
+                totalMotorbikesEx,
+                motorbikesLabel,
+                trucksEn,
+                trucksEx,
+                totalTrucksEn,
+                totalTrucksEx,
+                trucksLabel,
+                rickshawsEn,
+                rickshawsEx,
+                totalRickshawsEn,
+                totalRickshawsEx,
+                rickshawsLabel
               }
               res.status(200).json({
                 success: true,

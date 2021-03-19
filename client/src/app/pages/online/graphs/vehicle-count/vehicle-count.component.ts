@@ -34,12 +34,16 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
     private face: FacesService,
     public datepipe: DatePipe,
     private route: Router,
+    private theme: NbThemeService,
   ) { }
   single: any;
   colorScheme: any;
   source: any = new LocalDataSource();
-  dataL: any;
-  optionsL: any;
+  carsData: any;
+  trucksData: any;
+  busesData: any;
+  rickshawsData: any;
+  motorbikesData: any;
   rtspIn: any;
 
   ngOnDestroy() {
@@ -132,6 +136,201 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss');
         }
         this.source = this.vcount.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+
+        const carsTimes = [];
+        for (const c of this.vcount.carsLabel){
+          carsTimes.push(this.datepipe.transform(c, 'yyyy-M-dd HH:mm'));
+        }
+
+        const busesTimes = [];
+        for (const b of this.vcount.busesLabel){
+          busesTimes.push(this.datepipe.transform(b, 'yyyy-M-dd HH:mm'));
+        }
+
+        const trucksTimes = [];
+        for (const t of this.vcount.trucksLabel){
+          trucksTimes.push(this.datepipe.transform(t, 'yyyy-M-dd HH:mm'));
+        }
+
+        const rickshawsTimes = [];
+        for (const r of this.vcount.rickshawsLabel){
+          rickshawsTimes.push(this.datepipe.transform(r, 'yyyy-M-dd HH:mm'));
+        }
+
+        const motorbikesTimes = [];
+        for (const m of this.vcount.motorbikesLabel){
+          motorbikesTimes.push(this.datepipe.transform(m, 'yyyy-M-dd HH:mm'));
+        }
+
+        this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
+
+          const colors: any = config.variables;
+          const chartjs: any = config.variables.chartjs;
+
+          this.options = {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+
+              position: 'bottom',
+              labels: {
+                fontColor: chartjs.textColor,
+              },
+            },
+            hover: {
+              mode: 'index',
+            },
+            scales: {
+              xAxes: [
+                {
+                  display: false,
+                  scaleLabel: {
+                    display: false,
+                    labelString: 'Month',
+                  },
+                  gridLines: {
+                    display: true,
+                    color: chartjs.axisLineColor,
+                  },
+                  ticks: {
+                    fontColor: chartjs.textColor,
+                  },
+                },
+              ],
+              yAxes: [
+                {
+                  display: true,
+                  scaleLabel: {
+                    display: true,
+                    // labelString: 'Value',
+                  },
+                  gridLines: {
+                    display: true,
+                    color: chartjs.axisLineColor,
+                  },
+                  ticks: {
+                    fontColor: chartjs.textColor,
+                  },
+                },
+              ],
+            },
+          };
+          this.carsData = {
+            labels: carsTimes,
+            datasets: [{
+              label: 'Cars Count Entering',
+              data: this.vcount.carsEn,
+              borderColor: colors.success,
+              backgroundColor: colors.success,
+              fill: false,
+              // borderDash: [2, 2],
+              pointRadius: 2,
+              pointHoverRadius: 5,
+            },
+            {
+              label: 'Cars Count Exiting',
+              data: this.vcount.carsEx,
+              borderColor: colors.danger,
+              backgroundColor: colors.danger,
+              fill: false,
+              // borderDash: [2, 2],
+              pointRadius: 2,
+              pointHoverRadius: 5,
+            }],
+          };
+          this.busesData = {
+            labels: busesTimes,
+            datasets: [{
+              label: 'Buses Count Entering',
+              data: this.vcount.busesEn,
+              borderColor: colors.success,
+              backgroundColor: colors.success,
+              fill: false,
+              // borderDash: [2, 2],
+              pointRadius: 2,
+              pointHoverRadius: 5,
+            },
+            {
+              label: 'Buses Count Exiting',
+              data: this.vcount.busesEx,
+              borderColor: colors.danger,
+              backgroundColor: colors.danger,
+              fill: false,
+              // borderDash: [2, 2],
+              pointRadius: 2,
+              pointHoverRadius: 5,
+            }],
+          };
+          this.trucksData = {
+            labels: trucksTimes,
+            datasets: [{
+              label: 'Trucks Count Entering',
+              data: this.vcount.trucksEn,
+              borderColor: colors.success,
+              backgroundColor: colors.success,
+              fill: false,
+              // borderDash: [2, 2],
+              pointRadius: 2,
+              pointHoverRadius: 5,
+            },
+            {
+              label: 'Trucks Count Exiting',
+              data: this.vcount.trucksEx,
+              borderColor: colors.danger,
+              backgroundColor: colors.danger,
+              fill: false,
+              // borderDash: [2, 2],
+              pointRadius: 2,
+              pointHoverRadius: 5,
+            }],
+          };
+          this.rickshawsData = {
+            labels: rickshawsTimes,
+            datasets: [{
+              label: 'Rickshaws Count Entering',
+              data: this.vcount.rickshawsEn,
+              borderColor: colors.success,
+              backgroundColor: colors.success,
+              fill: false,
+              // borderDash: [2, 2],
+              pointRadius: 2,
+              pointHoverRadius: 5,
+            },
+            {
+              label: 'Rickshaws Count Exiting',
+              data: this.vcount.rickshawsEx,
+              borderColor: colors.danger,
+              backgroundColor: colors.danger,
+              fill: false,
+              // borderDash: [2, 2],
+              pointRadius: 2,
+              pointHoverRadius: 5,
+            }],
+          };
+          this.motorbikesData = {
+            labels: motorbikesTimes,
+            datasets: [{
+              label: 'Motorbikes Count Entering',
+              data: this.vcount.motorbikesEn,
+              borderColor: colors.success,
+              backgroundColor: colors.success,
+              fill: false,
+              // borderDash: [2, 2],
+              pointRadius: 2,
+              pointHoverRadius: 5,
+            },
+            {
+              label: 'Motorbikes Count Exiting',
+              data: this.vcount.motorbikesEx,
+              borderColor: colors.danger,
+              backgroundColor: colors.danger,
+              fill: false,
+              // borderDash: [2, 2],
+              pointRadius: 2,
+              pointHoverRadius: 5,
+            }],
+          };
+        });
       },
       err => {
         console.error(err);
