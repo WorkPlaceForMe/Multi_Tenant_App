@@ -229,13 +229,23 @@ export class PcCameraComponent implements OnInit, OnDestroy {
         type: 'string',
         filter: false
       },
-      cam_name: {
+      camera_name: {
         title: 'CAM',
         type: 'string',
         filter: false
       },
-      alert_type: {
-        title: 'SEVERITY',
+      count1: {
+        title: 'VEHICLE IN',
+        type: 'string',
+        filter: false
+      },
+      count2: {
+        title: 'VEHICLE OUT',
+        type: 'string',
+        filter: false
+      },
+      vehicle_type: {
+        title: 'VEHICLE',
         type: 'string',
         filter: false
       }
