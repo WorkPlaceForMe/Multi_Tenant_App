@@ -1,7 +1,131 @@
 <div class="container no-padding">
   <div class='col-md-12 no-padding' style="margin-top: 15px;">
     <div class="row">
-      <div class="col-md-8 less-padding">
+      <div class="col-md-2 less-padding">
+        <nb-card>
+          <nb-card-body class="top-badges">
+            <p class="badge-txt">Total Motorbikes Entries</p>
+            <p class="badge-reading">{{vcount.totalMotorbikesEn == undefined ? 'None' : vcount.totalMotorbikesEn}}</p>
+            <br>
+            <p class="badge-txt">Total Motorbikes Exits</p>
+            <p class="badge-reading">{{vcount.totalMotorbikesEx == undefined ? 'None' : vcount.totalMotorbikesEx}}</p>
+          </nb-card-body>
+        </nb-card>
+      </div>
+      <div class="col-md-10 less-padding">
+        <nb-card>
+          <nb-card-body class="top-badges">
+            <p>Motorbikes Entering and Exiting</p>
+            <chart type="line" [data]="motorbikesData" [options]="options"></chart>
+            <!-- <small *ngIf='vcount != null'>Entering:
+              Min:&nbsp;<strong>{{vcount.min.en}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.en}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.en}}</strong></small><br>
+            <small *ngIf='vcount != null'>Exiting:
+              Min:&nbsp;<strong>{{vcount.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.ex}}</strong></small> -->
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 less-padding">
+        <nb-card>
+          <nb-card-body class="top-badges">
+            <p class="badge-txt">Total Cars Entries</p>
+            <p class="badge-reading">{{vcount.totalCarsEn == undefined ? 'None' : vcount.totalCarsEn}}</p>
+            <br>
+            <p class="badge-txt">Total Car Exits</p>
+            <p class="badge-reading">{{vcount.totalCarsEx == undefined ? 'None' : vcount.totalCarsEx}}</p>
+          </nb-card-body>
+        </nb-card>
+      </div>
+      <div class="col-md-10 less-padding">
+        <nb-card>
+          <nb-card-body class="top-badges">
+            <p>Cars Entering and Exiting</p>
+            <chart type="line" [data]="carsData" [options]="options"></chart>
+            <!-- <small *ngIf='vcount != null'>Entering:
+              Min:&nbsp;<strong>{{vcount.min.en}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.en}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.en}}</strong></small><br>
+            <small *ngIf='vcount != null'>Exiting:
+              Min:&nbsp;<strong>{{vcount.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.ex}}</strong></small> -->
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 less-padding">
+        <nb-card>
+          <nb-card-body class="top-badges">
+            <p class="badge-txt">Total Buses Entries</p>
+            <p class="badge-reading">{{vcount.totalBusesEn == undefined ? 'None' : vcount.totalBusesEn}}</p>
+            <br>
+            <p class="badge-txt">Total Buses Exits</p>
+            <p class="badge-reading">{{vcount.totalBusesEx == undefined ? 'None' : vcount.totalBusesEx}}</p>
+          </nb-card-body>
+        </nb-card>
+      </div>
+      <div class="col-md-10 less-padding">
+        <nb-card>
+          <nb-card-body class="top-badges">
+            <p>Buses Entering and Exiting</p>
+            <chart type="line" [data]="busesData" [options]="options"></chart>
+            <!-- <small *ngIf='vcount != null'>Entering:
+              Min:&nbsp;<strong>{{vcount.min.en}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.en}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.en}}</strong></small><br>
+            <small *ngIf='vcount != null'>Exiting:
+              Min:&nbsp;<strong>{{vcount.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.ex}}</strong></small> -->
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 less-padding">
+        <nb-card>
+          <nb-card-body class="top-badges">
+            <p class="badge-txt">Total Rickshaws Entries</p>
+            <p class="badge-reading">{{vcount.totalRickshawsEn == undefined ? 'None' : vcount.totalRickshawsEn}}</p>
+            <br>
+            <p class="badge-txt">Total Rickshaws Exits</p>
+            <p class="badge-reading">{{vcount.totalRickshawsEx == undefined ? 'None' : vcount.totalRickshawsEx}}</p>
+          </nb-card-body>
+        </nb-card>
+      </div>
+      <div class="col-md-10 less-padding">
+        <nb-card>
+          <nb-card-body class="top-badges">
+            <p>Rickshaws Entering and Exiting</p>
+            <chart type="line" [data]="rickshawsData" [options]="options"></chart>
+            <!-- <small *ngIf='vcount != null'>Entering:
+              Min:&nbsp;<strong>{{vcount.min.en}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.en}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.en}}</strong></small><br>
+            <small *ngIf='vcount != null'>Exiting:
+              Min:&nbsp;<strong>{{vcount.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.ex}}</strong></small> -->
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2 less-padding">
+        <nb-card>
+          <nb-card-body class="top-badges">
+            <p class="badge-txt">Total Trucks Entries</p>
+            <p class="badge-reading">{{vcount.totalTrucksEn == undefined ? 'None' : vcount.totalTrucksEn}}</p>
+            <br>
+            <p class="badge-txt">Total Trucks Exits</p>
+            <p class="badge-reading">{{vcount.totalTrucksEx == undefined ? 'None' : vcount.totalTrucksEx}}</p>
+          </nb-card-body>
+        </nb-card>
+      </div>
+      <div class="col-md-10 less-padding">
+        <nb-card>
+          <nb-card-body class="top-badges">
+            <p>Trucks Entering and Exiting</p>
+            <chart type="line" [data]="trucksData" [options]="options"></chart>
+            <!-- <small *ngIf='vcount != null'>Entering:
+              Min:&nbsp;<strong>{{vcount.min.en}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.en}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.en}}</strong></small><br>
+            <small *ngIf='vcount != null'>Exiting:
+              Min:&nbsp;<strong>{{vcount.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.ex}}</strong></small> -->
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+<!--       <div class="col-md-8 less-padding">
         <nb-card>
           <nb-card-body style="padding: 0px">
             <ng2-smart-table [settings]="settings" [source]="source" (edit)='got($event)'>
@@ -19,8 +143,8 @@
             </video>
           </nb-card-body>
         </nb-card>
-      </div>
-    </div>
+      </div> -->
+      
   </div>
   <div class='col-md-12 no-padding' style="margin-top: 15px;">
     <div class="row">
