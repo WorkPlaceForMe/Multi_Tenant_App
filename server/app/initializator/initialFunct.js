@@ -158,7 +158,7 @@ exports.initial = function () {
   })
   algo.create({
     id: 33,
-    name: 'People Count at Screen'
+    name: 'Vehicle Count at Screen'
   })
 }
 // INSERT INTO `multi_tenant`.`algorithms` (`id`, `name`, `createdAt`, `updatedAt`) VALUES ('27', 'Camera Tampering', '2020-10-05 07:31:29', '2020-10-05 07:31:29');
