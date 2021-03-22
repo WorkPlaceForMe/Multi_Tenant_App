@@ -103,7 +103,7 @@ export class FrComponent implements OnInit , OnDestroy {
       end: this.range.end,
       type: type,
     };
-    this.face.checkVideo(15, this.camera).subscribe(
+    this.face.checkVideo(0, this.camera).subscribe(
       res => {
         this.video = res['video'];
         this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
