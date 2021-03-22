@@ -17,7 +17,13 @@ import { NbCardModule, NbIconModule, NbInputModule, NbTreeGridModule, NbAccordio
   NbSelectModule, NbSpinnerModule,
   NbContextMenuModule, NbPopoverModule, NbLayoutModule, NbMenuModule, NbWindowModule,
   NbDialogModule,
-  NbTooltipModule,  } from '@nebular/theme';
+  NbTooltipModule,
+  NbCalendarKitModule,
+  NbAlertModule,
+  NbCalendarModule,
+  NbCalendarRangeModule,
+  NbChatModule,
+  NbProgressBarModule,  } from '@nebular/theme';
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { ListComponent } from './list/list.component';
 import { authInterceptorProviders } from '../../_helpers/auth.interceptor';
@@ -27,6 +33,12 @@ import { SetngsComponent, WindowResultService } from './setngs/setngs.component'
 @NgModule({
   declarations: [SearchComponent, UploadComponent, BarComponent, ListComponent, SetngsComponent],
   imports: [
+      NbAlertModule,
+  NbCalendarModule,
+  NbCalendarRangeModule,
+  NbChatModule,
+    NbCalendarKitModule,
+    NbProgressBarModule,
     NbDialogModule.forChild(),
     NbTooltipModule,
     NbWindowModule.forChild(),

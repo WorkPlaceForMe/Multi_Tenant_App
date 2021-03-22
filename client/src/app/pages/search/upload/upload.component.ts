@@ -22,11 +22,14 @@ export class UploadComponent implements OnInit {
     private facesService: FacesService,
     private SpinnerService: NgxSpinnerService,
   ) { }
+  messageBar: string = 'Processing';
   fileName: string;
   up: boolean = false;
   load: boolean = false;
   name: string;
   s3:boolean = false;
+  progress:number = 0;
+  finished: boolean = false;
 
   @ViewChild('fileInput', { static: false }) fileInputVariable: any;
   public uploader: FileUploader = new FileUploader({
@@ -52,16 +55,19 @@ export class UploadComponent implements OnInit {
     };
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
       this.up = false;
-      this.load = false;
+      // this.load = false;
       this.fileInputVariable.nativeElement.value = '';
       this.fileName = null;
       this.name = null;
       this.addRoI(JSON.parse(response));
     };
     this.uploader.onProgressItem = (progress: any) => {
-      console.log(progress['progress']);
+      this.progress = progress['progress']
+      // this.progress = this.messageBar
+      console.log(this.progress);
       if (progress['progress'] === 100) {
         //this.SpinnerService.hide();
+        this.finished = true;
         console.log('uploaded');
       }
     };

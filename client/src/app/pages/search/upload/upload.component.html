@@ -17,7 +17,11 @@
     <div class='row'>
         <div class='col-md-12'>
             <button [status]="'success'" nbButton class="btn-block" (click)='uploa()' *ngIf='!load' [disabled]='fileName == null'>Upload</button>
-            <button [status]="'success'" nbButton class="btn-block" *ngIf='load' disabled [nbSpinner]="true" nbSpinnerSize="giant" nbSpinnerStatus="primary" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+            <div *ngIf='load'>
+            <nb-progress-bar size="giant" [value]="progress" [status]="'warning'" [displayValue]="true" *ngIf='!finished'></nb-progress-bar>
+            <nb-progress-bar size="giant" [value]="progress" [status]="'success'" *ngIf='finished'>{{messageBar}}</nb-progress-bar>
+            </div>
+            <!-- <button [status]="'success'" nbButton class="btn-block" *ngIf='load' disabled [nbSpinner]="true" nbSpinnerSize="large" nbSpinnerStatus="primary" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button> -->
         </div>
     </div>
 

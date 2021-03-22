@@ -125,7 +125,8 @@ export class ControlComponent implements OnInit, OnDestroy {
     }
   }
 
-  setDate(){
+  setDate(event){
+    this.selectedDate = event
     if (this.selectedDate){
       const start = this.selectedDate;
       // Add one data and minus 1 sec to set time to end of the day

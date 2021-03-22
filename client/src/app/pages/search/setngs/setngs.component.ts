@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Injectable, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Injectable, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NbCalendarRange, NbDateService, NbPopoverDirective, NbWindowRef } from '@nebular/theme';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { FacesService } from '../../../services/faces.service';
@@ -6,6 +6,7 @@ import { FacesService } from '../../../services/faces.service';
 @Component({
   selector: 'ngx-setngs',
   templateUrl: './setngs.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./setngs.component.scss']
 })
 export class SetngsComponent implements OnInit {
@@ -14,8 +15,17 @@ export class SetngsComponent implements OnInit {
     protected dateService: NbDateService<Date>,
     private accountserv: FacesService
     ){
+    this.max = this.dateService.addDay(this.dateService.today(), 0);
+    const a = this.dateService.addDay(this.dateService.today(), 0);
+    this.fin = new Date(a.setHours(a.getHours() + 23));
+    this.fin = new Date(this.fin.setMinutes(this.fin.getMinutes() + 59));
+    this.fin = new Date(this.fin.setSeconds(this.fin.getSeconds() + 59));
+    this.selectedDate =  this.dateService.addDay(this.dateService.today(), 0);
+    console.log(this.selectedDate)
+    console.log(this.fin)
   }
   @ViewChild(NbPopoverDirective) rangeSelector: NbPopoverDirective;
+  @ViewChild('dateTimePicker', { static: false }) dateTime: ElementRef;
   @Input() onChange: Function;
   @Input() filters: Object;
   @Output() settings: EventEmitter<any> = new EventEmitter();
@@ -38,10 +48,14 @@ export class SetngsComponent implements OnInit {
     time: 1
   };
 
-  currentSelection: string  = 'Month'; 
+  currentSelection: string  = 'Date'; 
   getNavChangeEmitter() {
     return this.settings;
   }
+
+show(){
+  console.log(this.dateTime)
+}
 
 getAlgos(){
   this.accountserv.getAlgos().subscribe(
@@ -82,8 +96,8 @@ getAlgos(){
 
   }
 
-  setDate(){
-    console.log(this.selectedDate)
+  setDate(event){
+    this.selectedDate = event
     if (this.selectedDate){
       const start = this.selectedDate;
       // Add one data and minus 1 sec to set time to end of the day
@@ -149,11 +163,6 @@ getAlgos(){
 
   ngOnInit() {
     this.getAlgos()
-    this.max = this.dateService.addDay(this.dateService.today(), 0);
-    const a = this.dateService.addDay(this.dateService.today(), 0);
-    this.fin = new Date(a.setHours(a.getHours() + 23));
-    this.fin = new Date(this.fin.setMinutes(this.fin.getMinutes() + 59));
-    this.fin = new Date(this.fin.setSeconds(this.fin.getSeconds() + 59));
     this.range = {
       start: new Date(this.max),
       end: new Date(this.fin),
@@ -171,7 +180,6 @@ getAlgos(){
     this.bounded = this.filters['bounded']
     }
     this.initMonths();
-    this.selectedDate =  this.dateService.addDay(this.dateService.today(), 0);
   }
 }
 

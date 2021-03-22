@@ -103,7 +103,7 @@
                     </div>  
                     <div class = "col">
                         <input nbInput placeholder="Pick Date"  [disabled] = "currentSelection != 'Date'" [value]="range.start" [nbDatepicker]="dateTimePicker" fullWidth fieldSize="small">
-                        <nb-datepicker (dateChange) = "setDate()" [(date)] = "selectedDate" #dateTimePicker></nb-datepicker>
+                        <nb-datepicker (dateChange) = "setDate($event)" [max]="fin" [(date)] = "selectedDate" #dateTimePicker></nb-datepicker>
                     </div>
                 </div>
             </nb-list-item>

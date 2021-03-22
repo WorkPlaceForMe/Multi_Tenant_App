@@ -1,4 +1,4 @@
-<button style = "width: 130px"  #popover (click) = "showRangeSelector(showIt);!showIt" [nbPopover]="rangeSelector" nbPopoverTrigger="noop" nbPopoverPlacement="bottom" size="small" nbButton>{{currentSelection}} <nb-icon icon="calendar"></nb-icon></button>
+<div class="p-2"><button style = "width: 130px"  #popover (click) = "showRangeSelector(showIt);!showIt" [nbPopover]="rangeSelector" nbPopoverTrigger="noop" nbPopoverPlacement="bottom" size="small" nbButton>{{currentSelection}} <nb-icon icon="calendar"></nb-icon></button>
                     <!-- <nb-select [(ngModel)]='algorithm' size="small">
                         <nb-option value="" disabled>Choose an algorithm:</nb-option>
                         <nb-option *ngFor='let alg of algos' [value]=alg.id>{{alg.name}}</nb-option>
@@ -6,25 +6,26 @@
                     <div class="dropdown-divider"></div>
                 <input type="checkbox" class="custom-control-input-label" [(ngModel)]='and'> Each word search
                 <div class="dropdown-divider"></div>
-                <div class="p-2">
+                
                 <input type="checkbox" class="custom-control-input-label" [(ngModel)]='bounded["active"]'> Bounded Query
                 <input type="number" class="custom-control-input-label" [(ngModel)]='bounded["time"]' style="width: 80px;" min=1 max=10 [disabled]='!bounded["active"]'> Seconds of difference
                 </div>
 <button (click)='apply()' [status]="'success'" nbButton class="btn-block">Apply</button>
-
+<!-- <button (click)='show()'>aaaaa</button> -->
     <ng-template #rangeSelector>
         <nb-list>
-            <!-- <nb-list-item >
+            <nb-list-item >
                 <div class = "row">
                     <div style = "width: 100px" class = "col-md-auto" (click) = "selectRangeType('Date')">  
                         <nb-radio  name = "range" [checked] = "currentSelection=='Date'" >Date</nb-radio>
                     </div>  
                     <div class = "col">
                         <input nbInput placeholder="Pick Date"  [disabled] = "currentSelection != 'Date'" [value]="range.start" [nbDatepicker]="dateTimePicker" fullWidth fieldSize="small">
-                        <nb-datepicker (dateChange) = "setDate()" [(date)] = "selectedDate" #dateTimePicker></nb-datepicker>
+                                <!-- <nb-date-timepicker (dateChange) = "setDate($event)" [max]="fin" [datepickerAdapter]='' [(date)] = "selectedDate" #dateTimePicker singleColumn [step]="10"></nb-date-timepicker> -->
+                        <nb-datepicker (dateChange) = "setDate($event)" [max]="fin" [(date)] = "selectedDate" #dateTimePicker></nb-datepicker>
                     </div>
                 </div>
-            </nb-list-item> -->
+            </nb-list-item>
             <nb-list-item >
                 <div class = "row" >
                     <div style = "width: 100px" class = "col-md-auto" (click) = "selectRangeType('Month')">
