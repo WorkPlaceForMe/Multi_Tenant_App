@@ -48,9 +48,12 @@ height=int(cap.get(4))
 width=int(cap.get(3))
 print("image saved")
 cursor.execute('update cameras set pic_height = \"{}\" where id=\"{}\"'.format(height,args.cameraid))
+print(docker)
 if docker == True:
+    print("==========")
     cursor.execute('update cameras set heatmap_pic = "/api/pictures/{}/{}/heatmap_pics/{}_heatmap.png" where id=\"{}\"'.format(args.id_account,args.id_branch,args.cameraid,args.cameraid))
 else:
+    print("++++++++++")
     cursor.execute('update cameras set heatmap_pic = "{}/api/pictures/{}/{}/heatmap_pics/{}_heatmap.png" where id=\"{}\"'.format(ip,args.id_account,args.id_branch,args.cameraid,args.cameraid))
 # cursor.execute('update cameras set heatmap_pic = "/pictures/{}/{}/heatmap_pics/{}_heatmap.png" where id=\"{}\"'.format(ip,args.id_account,args.id_branch,args.cameraid,args.cameraid)) # for prod
 cursor.execute('update cameras set pic_width = \"{}\" where id=\"{}\"'.format(width,args.cameraid))
