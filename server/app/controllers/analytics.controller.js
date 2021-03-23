@@ -3598,7 +3598,7 @@ exports.pcOnView = async (req, res) => {
                       cache.getDate() +
                       ' ' +
                       cache.getHours()
-                  ] = 0
+                  ] = v.count
                   cache =
                     cache.getFullYear() +
                     '-' +
