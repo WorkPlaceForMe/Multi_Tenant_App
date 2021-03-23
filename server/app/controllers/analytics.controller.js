@@ -3544,7 +3544,7 @@ exports.pcOnView = async (req, res) => {
       await db
         .con()
         .query(
-          `SELECT * from vcount WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          `SELECT * from pcount_screen WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
           function (err, result) {
             if (err) {
               return res.status(500).json({
@@ -3598,7 +3598,7 @@ exports.pcOnView = async (req, res) => {
                       cache.getDate() +
                       ' ' +
                       cache.getHours()
-                  ] = 0
+                  ] = v.count
                   cache =
                     cache.getFullYear() +
                     '-' +
