@@ -17,7 +17,7 @@ PATHD = os.environ.get('pathDocker')
 RES = os.environ.get('resources')
 pathIm = ('{}{}{}{}{}/{}/').format(HOME,USER,PATHD,RES,args.id_account,args.id_branch)
 
-ip = os.environ.get("app_url")
+ip = os.environ.get("my_ip")
 
 MYSQL_HOST = os.environ.get('HOST')
 MYSQL_USER = os.environ.get('USERM')
