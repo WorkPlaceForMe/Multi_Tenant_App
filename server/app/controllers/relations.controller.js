@@ -319,10 +319,13 @@ exports.checkVideo = (req, res) => {
   })
     .then(rel => {
       let status = false
-
-      let http_out = rel.http_out
-      if (rel.atributes[0]['time'] > 0) status = !status
-      res.status(200).send({success: true, video: status, http_out: http_out})
+      if(rel.http_out === undefined || rel.http_out === null || rel.http_out === '') {
+        return res.status(200).send({success: true, video: status, http_out: ''});
+      } else {
+        let http_out = rel.http_out;
+        if (rel.atributes[0]['time'] > 0) status = !status
+        res.status(200).send({success: true, video: status, http_out: http_out});
+      }
     })
     .catch(err => {
       res.status(500).send({success: false, message: err.message})
