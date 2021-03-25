@@ -21,6 +21,10 @@ export class SetngsComponent implements OnInit {
     this.fin = new Date(this.fin.setMinutes(this.fin.getMinutes() + 59));
     this.fin = new Date(this.fin.setSeconds(this.fin.getSeconds() + 59));
     this.selectedDate =  this.dateService.addDay(this.dateService.today(), 0);
+    this.range = {
+      start: this.max,
+      end: this.fin,
+    };
     console.log(this.selectedDate)
     console.log(this.fin)
   }
@@ -47,6 +51,7 @@ export class SetngsComponent implements OnInit {
     active: false,
     time: 1
   };
+  dateTouched: boolean = false;
 
   currentSelection: string  = 'Date'; 
   getNavChangeEmitter() {
@@ -54,7 +59,7 @@ export class SetngsComponent implements OnInit {
   }
 
 show(){
-  console.log(this.dateTime)
+  console.log(this.range)
 }
 
 getAlgos(){
@@ -99,6 +104,7 @@ getAlgos(){
   setDate(event){
     this.selectedDate = event
     if (this.selectedDate){
+      this.dateTouched = true;
       const start = this.selectedDate;
       // Add one data and minus 1 sec to set time to end of the day
       let end = this.dateService.addDay(start, 1);
@@ -113,6 +119,7 @@ getAlgos(){
 
   setMonth(){
     if (this.selectedMonth){
+      this.dateTouched = true;
       const start = this.selectedMonth;
       // Add one month and minus 1 second to go to the end of the month
       let end = this.dateService.addMonth(start, 1);
@@ -129,6 +136,7 @@ getAlgos(){
 
     changeRange(event){
     if (event.end !== undefined){
+      this.dateTouched = true;
       this.showRange = false;
       event.end = new Date(event.end.setHours(event.end.getHours() + 23));
       event.end = new Date(event.end.setMinutes(event.end.getMinutes() + 59));
@@ -149,6 +157,7 @@ getAlgos(){
       filters['algo'] = this.algorithm
     }
     if(this.addRange){
+      filters['rangeType'] = this.currentSelection
       filters['range'] = this.range
     }
     if(this.and){
@@ -163,15 +172,16 @@ getAlgos(){
 
   ngOnInit() {
     this.getAlgos()
-    this.range = {
-      start: new Date(this.max),
-      end: new Date(this.fin),
-    };
+    if(this.filters['rangeType']){
+      this.dateTouched = true;
+      this.currentSelection = this.filters['rangeType']
+    }
     if(this.filters['algo']){
     this.algorithm = this.filters['algo']
     }
     if(this.filters['range']){
     this.range = this.filters['range']
+    console.log(this.range)
     }
     if(this.filters['and']){
     this.and = this.filters['and']
