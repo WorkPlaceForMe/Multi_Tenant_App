@@ -181,7 +181,7 @@ getAlgos(){
     }
     if(this.filters['range']){
     this.range = this.filters['range']
-    console.log(this.range)
+    this.addRange = true
     }
     if(this.filters['and']){
     this.and = this.filters['and']
