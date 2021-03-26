@@ -70,7 +70,8 @@ searchSet: any;
     this.stuff = [];
     this.source.data = [];
     let sending = {
-      query: inp
+      query: inp,
+      id: this.now_user.id_branch
     }
     if(this.filters !== {}){
       sending['filters'] = this.filters
@@ -80,6 +81,7 @@ searchSet: any;
         this.loading = false;
         this.touched = true;
         this.results = res['data']
+        console.log(res)
         for(const m of this.results['hits']){
           if(m._source.time){
           let dd = (new Date(m['_source']['time'])).getUTCDate().toString();

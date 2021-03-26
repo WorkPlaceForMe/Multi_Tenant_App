@@ -268,8 +268,9 @@ async function recursive (
 
 exports.search = async (req, res) => {
   const data = req.body
+  const index = `gmtc_searcher_${data.id}`
   const params = {
-    index: ['gmtc_searcher'],
+    index: [index],
     body: {
       query: {
         bool: {
@@ -337,7 +338,7 @@ exports.search = async (req, res) => {
       const lt = new Date(Date.parse(hits.hits[0]._source.time) + 1000)
       try {
         const secondBody = await client.search({
-          index: ['gmtc_searcher'],
+          index: [index],
           body: {
             query: {
               bool: {
