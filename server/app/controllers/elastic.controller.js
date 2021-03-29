@@ -268,7 +268,7 @@ async function recursive (
 
 exports.search = async (req, res) => {
   const data = req.body
-  const index = `gmtc_searcher_${data.id}`
+  const index = 'gmtc_searcher'
   const params = {
     index: [index],
     body: {
