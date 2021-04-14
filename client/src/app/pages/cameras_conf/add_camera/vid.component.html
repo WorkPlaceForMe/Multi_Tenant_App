@@ -37,6 +37,7 @@
               <small> This Rtsp link has been used in this branch.</small>
           </div>
             </div> 
+          </div>
           <h6>Longitude:</h6>
           <div class="form-group">
             <input type="text" name="rtsp" [(ngModel)]="camera.atributes.longitude" placeholder="Link" class="form-control form-control" fullWidth nbInput [status]='primary' required>
@@ -45,7 +46,6 @@
           <div class="form-group">
             <input type="text" name="rtsp" [(ngModel)]="camera.atributes.latitude" placeholder="Link" class="form-control form-control" fullWidth nbInput [status]='primary' required>
             </div> 
-          </div>
         <button class='btn-block' nbButton [status]="'success'" (click)="edit ? updateCamera() : saveCamera()" *ngIf="is_saving == false">Save</button>
         <button class='btn-block' nbButton [status]="'success'" [nbSpinner]="true" nbSpinnerSize="giant" nbSpinnerStatus="primary" [disabled]="is_saving" *ngIf="is_saving == true">&nbsp;</button>
       </form>
