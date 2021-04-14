@@ -51,11 +51,13 @@ exports.ping = async (req, res) => {
 async function searchAndAdd (
   arr,
   time,
+  index,
+  range,
   n = 0,
   output = [],
   del = [],
   params = {
-    index: ['gmtc_searcher'],
+    index: [index],
     body: {
       query: {
         bool: {
@@ -72,6 +74,16 @@ async function searchAndAdd (
   }
 ) {
   try {
+    if (range !== undefined) {
+      params.body.query.bool.must.push({
+        range: {
+          time: {
+            gte: range.start,
+            lte: range.end
+          }
+        }
+      })
+    }
     params.body.query.bool.must[0].match.description = arr[n]
     const body = await client.search(params)
     const hits = body.body.hits
@@ -162,109 +174,12 @@ async function searchAndAdd (
     } else {
       return output
     }
-  } catch (err) {}
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 const test = ['male', 'car', 'bicycle']
-async function recursive (
-  arr,
-  time,
-  n = 0,
-  output = [],
-  del = [],
-  params = {
-    index: ['gmtc_searcher'],
-    body: {
-      query: {
-        bool: {
-          must: [
-            {
-              match: {
-                description: ''
-              }
-            }
-          ]
-        }
-      }
-    }
-  }
-) {
-  if (arr.length === n) {
-    return output
-  }
-  if (n === 0) {
-    try {
-      params.body.query.bool.must[0].match.description = arr[n]
-      const body = await client.search(params)
-      const hits = body.body.hits
-      if (hits.hits.length > 0) {
-        output.push(hits.hits)
-        return recursive(arr, time, n + 1, output)
-      } else {
-        return output
-      }
-    } catch (err) {}
-  }
-
-  if (n > 0) {
-    console.log('++++++++++++++++')
-    params.body.query.bool.must[0].match.description = arr[n]
-    for (let i = 0; i < output[n - 1].length; i++) {
-      try {
-        const gt = new Date(Date.parse(output[n - 1][i]._source.time) - time * 1000)
-        const lt = new Date(Date.parse(output[n - 1][i]._source.time) + time * 1000)
-        if (!params.body.query.bool.must[1]) {
-          params.body.query.bool.must.push({
-            range: {
-              time: {
-                gte: gt,
-                lte: lt
-              }
-            }
-          })
-        } else {
-          params.body.query.bool.must[1] = {
-            range: {
-              time: {
-                gte: gt,
-                lte: lt
-              }
-            }
-          }
-        }
-        // console.log(JSON.stringify(params, null, 4))
-        const body = await client.search(params)
-        const hits = body.body.hits
-        // console.log(output[n - 1][i])
-        if (hits.hits.length === 0) {
-          // console.log('===============')
-          if (output[n - 1][i].of) {
-            output[0].splice(output[n - 1][i].of, 1)
-            output[1].splice(i, 1)
-            // del.push([0, output[n - 1][i].of])
-            // del.push([1, i])
-          } else {
-            // del.push([0, i])
-            output[n - 1].splice(i, 1)
-            // console.log(output)
-          }
-          continue
-        } else {
-          for (const hit of hits.hits) {
-            hit.of = i
-            if (!output[n]) {
-              output[n] = []
-            }
-            output[n].push(hit)
-          }
-        }
-      } catch (err) {}
-    }
-    return recursive(arr, time, n + 1, output, del)
-  }
-}
-
-// searchAndAdd(test)
 
 exports.search = async (req, res) => {
   const data = req.body
@@ -292,7 +207,7 @@ exports.search = async (req, res) => {
         words.splice(i, 1)
       }
     }
-    const recRes = await searchAndAdd(words, data.filters.bounded.time)
+    const recRes = await searchAndAdd(words, data.filters.bounded.time, index, data.filters.range)
     for (const elem of recRes) {
       elem._source.url =
         'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
