@@ -7,6 +7,8 @@
   </nb-card-header>
   <nb-card-body>
       <h6 align='center' style='word-wrap: break-word;'>{{camera.rtsp_in == '' ? 'Link' : camera.rtsp_in}}</h6>
+      <h6 align='center' style='word-wrap: break-word;'>Lon: {{camera.atributes.longitude == '' ? 'Longitude' : camera.atributes.longitude}}</h6>
+      <h6 align='center' style='word-wrap: break-word;'>Lat: {{camera.atributes.latitude == '' ? 'Latitude' : camera.atributes.latitude}}</h6>
       <button [routerLink]="['/pages/camerasList']" class='btn-block' nbButton [status]="'primary'"><i class="fas fa-arrow-circle-left"></i> Back</button>
   </nb-card-body>
 </nb-card>
@@ -34,6 +36,14 @@
             <div *ngIf="submitted && values.rtsp == 'warning'" class="text-warning">
               <small> This Rtsp link has been used in this branch.</small>
           </div>
+            </div> 
+          <h6>Longitude:</h6>
+          <div class="form-group">
+            <input type="text" name="rtsp" [(ngModel)]="camera.atributes.longitude" placeholder="Link" class="form-control form-control" fullWidth nbInput [status]='primary' required>
+            </div> 
+          <h6>Latitude:</h6>
+          <div class="form-group">
+            <input type="text" name="rtsp" [(ngModel)]="camera.atributes.latitude" placeholder="Link" class="form-control form-control" fullWidth nbInput [status]='primary' required>
             </div> 
           </div>
         <button class='btn-block' nbButton [status]="'success'" (click)="edit ? updateCamera() : saveCamera()" *ngIf="is_saving == false">Save</button>
