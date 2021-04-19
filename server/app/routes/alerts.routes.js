@@ -50,14 +50,20 @@ module.exports = function(app) {
    *          - "intrusion"
    *          - "people count"
    *          - "demographics"
+   *          - "no mask"
+   *          - "clothing"
+   *          - "social distancing"
    *          - "parking"
    *          - "speeding"
+   *          - "helmet"
    *          - "vehicle count"
    *          - "anpr"
    *          - "aod"
+   *          - "camera tampering"
    *          - "queue mgmt"
    *          - "animals"
    *          - "accident"
+   *          - "wrong direction"
    *          - "axle"
    *          - "carmake"     
    *          default: "loitering"
@@ -76,12 +82,12 @@ module.exports = function(app) {
    *                start:
    *                  description: "Date for initial range. Format: 2021-01-01T03:00:00.000Z."
    *                  type: string
-   *                  example: 2020-10-01T03:00:00.000Z
+   *                  example: 2021-01-01T03:00:00.000Z
    *                  required: true
    *                end:
-   *                  description: "Date for end range. Format: 2021-12-01T03:00:00.000Z."
+   *                  description: "Date for end range. Format: 2021-12-31T02:59:59.000Z."
    *                  type: string
-   *                  example: 2020-11-01T02:59:59.000Z
+   *                  example: 2021-12-31T02:59:59.000Z
    *                  required: true
    *    responses:
    *      '200':

@@ -7,20 +7,26 @@ const db = require('../models/dbmysql');
 const Relation = db1.relation;
 
 let tbs = {
-    'loitering': 'loitering',
-    'intrusion': 'intrude',
-    'people count': 'pcount',
-    'demographics': 'faces',
-    'parking': 'parking',
-    'speeding': 'speed',
-    'vehicle count': 'vcount',
-    'anpr': 'plate',
-    'aod': 'aod',
-    'queue mgmt': 'queue_mgt',
-    'animals': 'animal',
-    'accident': 'accident',
-    'axle': 'axle',
-    'carmake': 'carmake',
+    'loitering': 'loitering WHERE',
+    'intrusion': 'intrude WHERE',
+    'people count': 'pcount WHERE',
+    'demographics': 'faces WHERE',
+    'no mask': `alerts WHERE alert= 'no mask' and`,
+    'social distancing': `alerts WHERE alert= 'sociald' and`,
+    'helmet': `alerts WHERE alert= 'helmet' and`,
+    'clothing': 'clothing WHERE',
+    'parking': 'parking WHERE',
+    'speeding': 'speed WHERE',
+    'vehicle count': 'vcount WHERE',
+    'anpr': 'plate WHERE',
+    'aod': 'aod WHERE',
+    'camera tampering': `alerts WHERE alert= 'tamper' and`,
+    'queue mgmt': 'queue_mgt WHERE',
+    'animals': 'animal WHERE',
+    'accident': 'accident WHERE',
+    'axle': 'axle WHERE',
+    'wrong direction': 'direction WHERE',
+    'carmake': 'carmake WHERE',
 };
 
 let dom = {
@@ -28,28 +34,22 @@ let dom = {
     'intrusion': 'People related',
     'people count': 'People related',
     'demographics': 'People related',
+    'social distancing': 'People related',
+    'no mask': 'People related',
+    'helmet': 'People related',
+    'clothing': 'People related',
     'aod': 'People related',
+    'queue mgmt': 'People related',
     'parking': 'Traffic Management related',
     'speeding': 'Traffic Management related',
     'vehicle count': 'Traffic Management related',
     'anpr': 'Traffic Management related',
-    'queue mgmt': 'People related',
     'animals': 'Traffic Management related',
     'accident': 'Traffic Management related',
     'axle': 'Traffic Management related',
+    'camera tampering': 'Traffic Management related',
+    'wrong direction': 'Traffic Management related',
     'carmake': 'Traffic Management related',
-    /* facial_recognition: 'People related',
-    person_climbing_barricade: 'People related',
-    heatmap: 'People related',
-    violence: 'People related',
-    no_mask: 'People related',
-    social_distancing: 'People related',
-    vault: 'People related',
-    helmet: 'Traffic Management related',
-    wrong_way_or_illegal_turn_detection: 'Traffic Management related',
-    barrier_not_closed: 'Traffic Management related',
-    camera_tempering: 'Traffic Management related',
-    garbage_bin_cleanned_or_not: 'Security realated' */
 }
 
 let algo_id = {
@@ -57,28 +57,22 @@ let algo_id = {
     'intrusion': 17,
     'people count': 12,
     'demographics': 15,
+    'no mask': 20,
+    'social distancing': 21,
+    'helmet': 23,
+    'clothing': 32,
     'parking': 32,
     'speeding': 5,
     'vehicle count': 26,
     'anpr': 13,
     'aod': 16,
+    'wrong direction': 8,
     'queue mgmt': 22,
+    'camera tampering': 27,
     'animals': 28,
     'accident': 29,
     'axle': 30,
     'carmake': 31
-    /* facial_recognition: 0,
-    person_climbing_barricade: 1,
-    heatmap: 14,
-    violence: 19,
-    no_mask: 20,
-    social_distancing: 21,
-    vault: 24,
-    helmet: 6,
-    wrong_way_or_illegal_turn_detection: 8,
-    barrier_not_closed: 25,
-    camera_tempering: 27,
-    garbage_bin_cleanned_or_not: 11 */
 }
 
 exports.getAlerts = (req, res) => {
@@ -107,20 +101,22 @@ exports.getAlerts = (req, res) => {
                 algo_id: algo_id[alertType]
                 }
             }
+            console.log(`SELECT * from ${table} ${type} = '${id}' and time >= '${start}' and  time <= '${end}' order by time asc;`);
             Relation.findOne({
                 where: wh
               })
                 .then(async rel => {
                     await db
                     .con()
-                    .query(`SELECT * from ${table} WHERE ${type} = '${id}' and time >= '${start}' and  time <= '${end}' order by time asc;`,
+                    .query(`SELECT * from ${table} ${type} = '${id}' and time >= '${start}' and  time <= '${end}' order by time asc;`,
                     function (err, result) {
                         if (err) {
-                        return res.status(500).json({
-                            success: false,
-                            message: err
-                        });
+                            return res.status(500).json({
+                                success: false,
+                                message: err
+                            });
                         }
+                        console.log('Total result fetched : ', result.length);
                         result.forEach(element => {
                             let picture;
                             let addProp = [];
@@ -163,22 +159,21 @@ exports.getAlerts = (req, res) => {
                             }
 
                             if(element.track_id == undefined || element.track_id == null) {
-                                picture = `${d}.jpg`
-                                resp.pic_path =  `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/${table}/${id}/${picture}`
+                                delete resp.track_id;
                             } else {
                                 resp.track_id =  element.track_id;
                                 picture = `${d}_${resp.track_id}.jpg`
                                 resp.pic_path =  `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/${table}/${id}/${picture}`
                             }
-
-                            if (rel.atributes[0].time > 0) {
-                                if(element.track_id == undefined || element.track_id == null) {
-                                    resp.clip_path = `${d}.mp4`;
-                                    resp.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/demographic/${req.params.id}/${resp.clip_path}`;
-                                } else {
-                                    resp.track_id =  element.track_id;
-                                    resp.clip_path = `${d}_${resp.track_id}.mp4`;
-                                    resp.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/loitering/${req.params.id}/${resp.clip_path}`;
+                            if(rel != null) {
+                                if (rel.atributes[0].time > 0) {
+                                    if(element.track_id == undefined || element.track_id == null) {
+                                        delete resp.track_id;
+                                    } else {
+                                        resp.track_id =  element.track_id;
+                                        resp.clip_path = `${d}_${resp.track_id}.mp4`;
+                                        resp.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/loitering/${req.params.id}/${resp.clip_path}`;
+                                    }
                                 }
                             }
 
@@ -197,7 +192,6 @@ exports.getAlerts = (req, res) => {
                             resp["additional_properties"] = addProp;
                             td.push(resp);
                         });
-                        console.log('result : ', result);
                         res.json({
                             success: true,
                             total: result.length,
