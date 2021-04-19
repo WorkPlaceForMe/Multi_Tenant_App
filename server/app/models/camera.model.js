@@ -36,6 +36,9 @@ module.exports = (sequelize, Sequelize) => {
     },
     stored_vid: {
       type: Sequelize.STRING
+    },
+    atributes: {
+      type: Sequelize.JSON
     }
   })
 

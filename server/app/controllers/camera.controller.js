@@ -16,7 +16,7 @@ const my_ip = process.env.my_ip
 exports.addCamera = (req, res) => {
   const token = req.headers['x-access-token']
 
-  jwt.verify(token, process.env.secret, (err, decoded) => {
+  jwt.verify(token, process.env.secret, (_err, decoded) => {
     const uuid = uuidv4()
     // Save User to Database
     Camera.create({
@@ -25,9 +25,13 @@ exports.addCamera = (req, res) => {
       rtsp_in: req.body.rtsp_in,
       id_account: decoded.id_account,
       id_branch: decoded.id_branch,
-      stored_vid: 'No'
+      stored_vid: 'No',
+      atributes: {
+        longitude: req.body.atributes.longitude,
+        latitude: req.body.atributes.latitude
+      }
     })
-      .then(camera => {
+      .then(_camera => {
         res
           .status(200)
           .send({ success: true, message: 'Camera was registered successfully!', id: uuid })
@@ -41,7 +45,7 @@ exports.addCamera = (req, res) => {
 exports.viewCams = (req, res) => {
   const token = req.headers['x-access-token']
 
-  jwt.verify(token, process.env.secret, async (err, decoded) => {
+  jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Camera.findAll({
       where: { id_branch: decoded.id_branch },
       attributes: ['name', 'id', 'createdAt', 'updatedAt']
@@ -58,7 +62,7 @@ exports.viewCams = (req, res) => {
 exports.viewLiveCams = (req, res) => {
   const token = req.headers['x-access-token']
 
-  jwt.verify(token, process.env.secret, async (err, decoded) => {
+  jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Camera.findAll({
       where: { id_branch: decoded.id_branch, stored_vid: 'No' },
       attributes: ['name', 'id', 'createdAt', 'updatedAt']
@@ -75,7 +79,7 @@ exports.viewLiveCams = (req, res) => {
 exports.viewCam = (req, res) => {
   const token = req.headers['x-access-token']
 
-  jwt.verify(token, process.env.secret, async (err, decoded) => {
+  jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Camera.findOne({
       where: { id: req.params.id, id_branch: decoded.id_branch }
     })
@@ -91,7 +95,7 @@ exports.viewCam = (req, res) => {
 exports.delCam = (req, res) => {
   const token = req.headers['x-access-token']
 
-  jwt.verify(token, process.env.secret, async (err, decoded) => {
+  jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Relations.destroy({
       where: { camera_id: req.params.id }
     })
@@ -102,7 +106,7 @@ exports.delCam = (req, res) => {
     Camera.destroy({
       where: { id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'No' }
     })
-      .then(cam => {
+      .then(_cam => {
         res.status(200).send({ success: true, camera: req.params.uuid })
       })
       .catch(err => {
@@ -115,11 +119,11 @@ exports.editCam = (req, res) => {
   const updt = req.body
   const token = req.headers['x-access-token']
 
-  jwt.verify(token, process.env.secret, async (err, decoded) => {
+  jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Camera.update(updt, {
       where: { id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'No' }
     })
-      .then(cam => {
+      .then(_cam => {
         res.status(200).send({ success: true, data: updt })
       })
       .catch(err => {
@@ -133,7 +137,7 @@ exports.addAtr = (req, res) => {
 
   const token = req.headers['x-access-token']
 
-  jwt.verify(token, process.env.secret, async (err, decoded) => {
+  jwt.verify(token, process.env.secret, async (_err, decoded) => {
     cp.exec(
       `python ./scripts/heatmap.py --cameraid ${camID}  --id_account ${decoded.id_account} --id_branch ${decoded.id_branch}`,
       function (err, data) {
@@ -175,7 +179,7 @@ function getStream (camera, port, id, tries) {
 
     let sent = false
 
-    stream.on('camdata', data => {
+    stream.on('camdata', _data => {
       if (sent) return
 
       streams.push({ str: stream, id: id, port: port })
@@ -194,7 +198,7 @@ exports.cam = (req, res) => {
   const data = req.body
   const token = req.headers['x-access-token']
 
-  jwt.verify(token, process.env.secret, async (err, decoded) => {
+  jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Camera.findOne({
       where: { id: data.id, id_branch: decoded.id_branch, stored_vid: 'No' }
     })
