@@ -6,12 +6,21 @@ const Relation = db.relation
 const Algorithm = db.algorithm
 const User = db.user
 
-exports.getRels = (req, res) => {
+exports.getRels = async (req, res) => {
+  let data = []
   Relation.findAll({
     where: {camera_id: req.params.id}
   })
-    .then(rels => {
-      res.status(200).send({success: true, data: rels})
+    .then(async rels => {
+      for (const rel of rels) {
+        await Algorithm.findOne({
+          where: {id: rel.dataValues.algo_id}
+        }).then(alg => {
+          rel.dataValues['algo_name'] = alg.dataValues.name
+          data.push(rel)
+        })
+      }
+      res.status(200).send({success: true, data: data})
     })
     .catch(err => {
       res.status(500).send({success: false, message: err.message})
@@ -319,16 +328,15 @@ exports.checkVideo = (req, res) => {
   })
     .then(rel => {
       let status = false
-      if(rel.http_out === undefined || rel.http_out === null || rel.http_out === '') {
-        return res.status(200).send({success: true, video: status, http_out: ''});
+      if (rel.http_out === undefined || rel.http_out === null || rel.http_out === '') {
+        return res.status(200).send({success: true, video: status, http_out: ''})
       } else {
-        let http_out = rel.http_out;
+        let http_out = rel.http_out
         if (rel.atributes[0]['time'] > 0) status = !status
-        res.status(200).send({success: true, video: status, http_out: http_out});
+        res.status(200).send({success: true, video: status, http_out: http_out})
       }
     })
     .catch(err => {
       res.status(500).send({success: false, message: err.message})
     })
 }
-
