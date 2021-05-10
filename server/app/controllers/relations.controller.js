@@ -8,6 +8,7 @@ const User = db.user
 
 exports.getRels = async (req, res) => {
   let data = []
+  console.log('============')
   Relation.findAll({
     where: {camera_id: req.params.id}
   })
