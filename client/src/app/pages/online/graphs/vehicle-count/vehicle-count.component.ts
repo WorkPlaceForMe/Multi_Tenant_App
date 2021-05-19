@@ -45,6 +45,7 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
   rickshawsData: any;
   motorbikesData: any;
   rtspIn: any;
+  dataVehicles: any;
 
   ngOnDestroy() {
     if (this.player !== undefined) {
@@ -131,6 +132,7 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
     this.serv.vcount(this.camera, l).subscribe(
       res => {
         this.vcount = res['data'];
+        console.log(this.vcount)
         for (const m of this.vcount.raw) {
           m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/vcount/' + m['cam_id'] + '/' + m['picture']);
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss');
@@ -138,29 +140,34 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
         this.source = this.vcount.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
 
         const carsTimes = [];
-        for (const c of this.vcount.carsLabel){
-          carsTimes.push(this.datepipe.transform(c, 'yyyy-M-dd HH:mm'));
+        const labels = [];
+        for (const t of this.vcount.labels){
+          labels.push(this.datepipe.transform(t, 'yyyy-M-dd HH:mm'));
         }
 
-        const busesTimes = [];
-        for (const b of this.vcount.busesLabel){
-          busesTimes.push(this.datepipe.transform(b, 'yyyy-M-dd HH:mm'));
-        }
+        // for (const c of this.vcount.carsLabel){
+        //   carsTimes.push(this.datepipe.transform(c, 'yyyy-M-dd HH:mm'));
+        // }
 
-        const trucksTimes = [];
-        for (const t of this.vcount.trucksLabel){
-          trucksTimes.push(this.datepipe.transform(t, 'yyyy-M-dd HH:mm'));
-        }
+        // const busesTimes = [];
+        // for (const b of this.vcount.busesLabel){
+        //   busesTimes.push(this.datepipe.transform(b, 'yyyy-M-dd HH:mm'));
+        // }
 
-        const rickshawsTimes = [];
-        for (const r of this.vcount.rickshawsLabel){
-          rickshawsTimes.push(this.datepipe.transform(r, 'yyyy-M-dd HH:mm'));
-        }
+        // const trucksTimes = [];
+        // for (const t of this.vcount.trucksLabel){
+        //   trucksTimes.push(this.datepipe.transform(t, 'yyyy-M-dd HH:mm'));
+        // }
 
-        const motorbikesTimes = [];
-        for (const m of this.vcount.motorbikesLabel){
-          motorbikesTimes.push(this.datepipe.transform(m, 'yyyy-M-dd HH:mm'));
-        }
+        // const rickshawsTimes = [];
+        // for (const r of this.vcount.rickshawsLabel){
+        //   rickshawsTimes.push(this.datepipe.transform(r, 'yyyy-M-dd HH:mm'));
+        // }
+
+        // const motorbikesTimes = [];
+        // for (const m of this.vcount.motorbikesLabel){
+        //   motorbikesTimes.push(this.datepipe.transform(m, 'yyyy-M-dd HH:mm'));
+        // }
 
         this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
 
@@ -215,11 +222,11 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
               ],
             },
           };
-          this.carsData = {
-            labels: carsTimes,
+          this.dataVehicles = {
+            labels: labels,
             datasets: [{
-              label: 'Cars Count Entering',
-              data: this.vcount.carsEn,
+              label: 'Cars',
+              data: this.vcount.carsLabel,
               borderColor: colors.success,
               backgroundColor: colors.success,
               fill: false,
@@ -228,108 +235,151 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
               pointHoverRadius: 5,
             },
             {
-              label: 'Cars Count Exiting',
-              data: this.vcount.carsEx,
+              label: 'Buses',
+              data: this.vcount.busesLabel,
               borderColor: colors.danger,
               backgroundColor: colors.danger,
-              fill: false,
-              // borderDash: [2, 2],
-              pointRadius: 2,
-              pointHoverRadius: 5,
-            }],
-          };
-          this.busesData = {
-            labels: busesTimes,
-            datasets: [{
-              label: 'Buses Count Entering',
-              data: this.vcount.busesEn,
-              borderColor: colors.success,
-              backgroundColor: colors.success,
               fill: false,
               // borderDash: [2, 2],
               pointRadius: 2,
               pointHoverRadius: 5,
             },
             {
-              label: 'Buses Count Exiting',
-              data: this.vcount.busesEx,
-              borderColor: colors.danger,
-              backgroundColor: colors.danger,
-              fill: false,
-              // borderDash: [2, 2],
-              pointRadius: 2,
-              pointHoverRadius: 5,
-            }],
-          };
-          this.trucksData = {
-            labels: trucksTimes,
-            datasets: [{
-              label: 'Trucks Count Entering',
-              data: this.vcount.trucksEn,
-              borderColor: colors.success,
-              backgroundColor: colors.success,
+              label: 'Motorbikes',
+              data: this.vcount.motorbikesLabel,
+              borderColor: colors.warning,
+              backgroundColor: colors.warning,
               fill: false,
               // borderDash: [2, 2],
               pointRadius: 2,
               pointHoverRadius: 5,
             },
             {
-              label: 'Trucks Count Exiting',
-              data: this.vcount.trucksEx,
-              borderColor: colors.danger,
-              backgroundColor: colors.danger,
+              label: 'Trucks',
+              data: this.vcount.trucksLabel,
+              borderColor: colors.info,
+              backgroundColor: colors.info,
               fill: false,
               // borderDash: [2, 2],
               pointRadius: 2,
               pointHoverRadius: 5,
             }],
           };
-          this.rickshawsData = {
-            labels: rickshawsTimes,
-            datasets: [{
-              label: 'Rickshaws Count Entering',
-              data: this.vcount.rickshawsEn,
-              borderColor: colors.success,
-              backgroundColor: colors.success,
-              fill: false,
-              // borderDash: [2, 2],
-              pointRadius: 2,
-              pointHoverRadius: 5,
-            },
-            {
-              label: 'Rickshaws Count Exiting',
-              data: this.vcount.rickshawsEx,
-              borderColor: colors.danger,
-              backgroundColor: colors.danger,
-              fill: false,
-              // borderDash: [2, 2],
-              pointRadius: 2,
-              pointHoverRadius: 5,
-            }],
-          };
-          this.motorbikesData = {
-            labels: motorbikesTimes,
-            datasets: [{
-              label: 'Motorbikes Count Entering',
-              data: this.vcount.motorbikesEn,
-              borderColor: colors.success,
-              backgroundColor: colors.success,
-              fill: false,
-              // borderDash: [2, 2],
-              pointRadius: 2,
-              pointHoverRadius: 5,
-            },
-            {
-              label: 'Motorbikes Count Exiting',
-              data: this.vcount.motorbikesEx,
-              borderColor: colors.danger,
-              backgroundColor: colors.danger,
-              fill: false,
-              // borderDash: [2, 2],
-              pointRadius: 2,
-              pointHoverRadius: 5,
-            }],
-          };
+          // this.carsData = {
+          //   labels: carsTimes,
+          //   datasets: [{
+          //     label: 'Cars Count Entering',
+          //     data: this.vcount.carsEn,
+          //     borderColor: colors.success,
+          //     backgroundColor: colors.success,
+          //     fill: false,
+          //     // borderDash: [2, 2],
+          //     pointRadius: 2,
+          //     pointHoverRadius: 5,
+          //   },
+          //   {
+          //     label: 'Cars Count Exiting',
+          //     data: this.vcount.carsEx,
+          //     borderColor: colors.danger,
+          //     backgroundColor: colors.danger,
+          //     fill: false,
+          //     // borderDash: [2, 2],
+          //     pointRadius: 2,
+          //     pointHoverRadius: 5,
+          //   }],
+          // };
+          // this.busesData = {
+          //   labels: busesTimes,
+          //   datasets: [{
+          //     label: 'Buses Count Entering',
+          //     data: this.vcount.busesEn,
+          //     borderColor: colors.success,
+          //     backgroundColor: colors.success,
+          //     fill: false,
+          //     // borderDash: [2, 2],
+          //     pointRadius: 2,
+          //     pointHoverRadius: 5,
+          //   },
+          //   {
+          //     label: 'Buses Count Exiting',
+          //     data: this.vcount.busesEx,
+          //     borderColor: colors.danger,
+          //     backgroundColor: colors.danger,
+          //     fill: false,
+          //     // borderDash: [2, 2],
+          //     pointRadius: 2,
+          //     pointHoverRadius: 5,
+          //   }],
+          // };
+          // this.trucksData = {
+          //   labels: trucksTimes,
+          //   datasets: [{
+          //     label: 'Trucks Count Entering',
+          //     data: this.vcount.trucksEn,
+          //     borderColor: colors.success,
+          //     backgroundColor: colors.success,
+          //     fill: false,
+          //     // borderDash: [2, 2],
+          //     pointRadius: 2,
+          //     pointHoverRadius: 5,
+          //   },
+          //   {
+          //     label: 'Trucks Count Exiting',
+          //     data: this.vcount.trucksEx,
+          //     borderColor: colors.danger,
+          //     backgroundColor: colors.danger,
+          //     fill: false,
+          //     // borderDash: [2, 2],
+          //     pointRadius: 2,
+          //     pointHoverRadius: 5,
+          //   }],
+          // };
+          // this.rickshawsData = {
+          //   labels: rickshawsTimes,
+          //   datasets: [{
+          //     label: 'Rickshaws Count Entering',
+          //     data: this.vcount.rickshawsEn,
+          //     borderColor: colors.success,
+          //     backgroundColor: colors.success,
+          //     fill: false,
+          //     // borderDash: [2, 2],
+          //     pointRadius: 2,
+          //     pointHoverRadius: 5,
+          //   },
+          //   {
+          //     label: 'Rickshaws Count Exiting',
+          //     data: this.vcount.rickshawsEx,
+          //     borderColor: colors.danger,
+          //     backgroundColor: colors.danger,
+          //     fill: false,
+          //     // borderDash: [2, 2],
+          //     pointRadius: 2,
+          //     pointHoverRadius: 5,
+          //   }],
+          // };
+          // this.motorbikesData = {
+          //   labels: motorbikesTimes,
+          //   datasets: [{
+          //     label: 'Motorbikes Count Entering',
+          //     data: this.vcount.motorbikesEn,
+          //     borderColor: colors.success,
+          //     backgroundColor: colors.success,
+          //     fill: false,
+          //     // borderDash: [2, 2],
+          //     pointRadius: 2,
+          //     pointHoverRadius: 5,
+          //   },
+          //   {
+          //     label: 'Motorbikes Count Exiting',
+          //     data: this.vcount.motorbikesEx,
+          //     borderColor: colors.danger,
+          //     backgroundColor: colors.danger,
+          //     fill: false,
+          //     // borderDash: [2, 2],
+          //     pointRadius: 2,
+          //     pointHoverRadius: 5,
+          //   }],
+          // };
         });
       },
       err => {

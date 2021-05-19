@@ -3118,6 +3118,9 @@ exports.vcount = async (req, res) => {
   let trucksLabel = []
   let rickshawsLabel = []
   let motorbikesLabel = []
+
+  let labels = []
+
   jwt.verify(token, process.env.secret, async (err, decoded) => {
     Relation.findOne({
       where: {
@@ -3136,51 +3139,61 @@ exports.vcount = async (req, res) => {
                   success: false,
                   message: err
                 })
+              for (const val of result) {
+                labels.push(val.time)
+                carsLabel.push(val.car_numbers)
+                busesLabel.push(val.bus_numbers)
+                trucksLabel.push(val.truck_numbers)
+                motorbikesLabel.push(val.motorbike_numbers)
+                totalBusesEn = val.bus_numbers
+                totalCarsEn = val.car_numbers
+                totalMotorbikesEn = val.motorbike_numbers
+                totalTrucksEn = val.truck_numbers
+              }
+              // let carsData = result.filter(itm => itm.type === 'car')
+              // carsData.forEach(c => {
+              //   carsEn.push(c.count1)
+              //   carsEx.push(c.count2)
+              //   carsLabel.push(c.time)
+              //   totalCarsEn = totalCarsEn + c.count1
+              //   totalCarsEx = totalCarsEx + c.count2
+              // })
 
-              let carsData = result.filter(itm => itm.type === 'car')
-              carsData.forEach(c => {
-                carsEn.push(c.count1)
-                carsEx.push(c.count2)
-                carsLabel.push(c.time)
-                totalCarsEn = totalCarsEn + c.count1
-                totalCarsEx = totalCarsEx + c.count2
-              })
+              // let busesData = result.filter(itm => itm.type === 'bus')
+              // busesData.forEach(b => {
+              //   busesEn.push(b.count1)
+              //   busesEx.push(b.count2)
+              //   busesLabel.push(b.time)
+              //   totalBusesEn = totalBusesEn + b.count1
+              //   totalBusesEx = totalBusesEx + b.count2
+              // })
 
-              let busesData = result.filter(itm => itm.type === 'bus')
-              busesData.forEach(b => {
-                busesEn.push(b.count1)
-                busesEx.push(b.count2)
-                busesLabel.push(b.time)
-                totalBusesEn = totalBusesEn + b.count1
-                totalBusesEx = totalBusesEx + b.count2
-              })
+              // let trucksData = result.filter(itm => itm.type === 'truck')
+              // trucksData.forEach(t => {
+              //   trucksEn.push(t.count1)
+              //   trucksEx.push(t.count2)
+              //   trucksLabel.push(t.time)
+              //   totalTrucksEn = totalTrucksEn + t.count1
+              //   totalTrucksEx = totalTrucksEx + t.count2
+              // })
 
-              let trucksData = result.filter(itm => itm.type === 'truck')
-              trucksData.forEach(t => {
-                trucksEn.push(t.count1)
-                trucksEx.push(t.count2)
-                trucksLabel.push(t.time)
-                totalTrucksEn = totalTrucksEn + t.count1
-                totalTrucksEx = totalTrucksEx + t.count2
-              })
+              // let rickshawsData = result.filter(itm => itm.type === 'rickshaw')
+              // rickshawsData.forEach(r => {
+              //   rickshawsEn.push(r.count1)
+              //   rickshawsEx.push(r.count2)
+              //   rickshawsLabel.push(r.time)
+              //   totalRickshawsEn = totalRickshawsEn + r.count1
+              //   totalRickshawsEx = totalRickshawsEx + r.count2
+              // })
 
-              let rickshawsData = result.filter(itm => itm.type === 'rickshaw')
-              rickshawsData.forEach(r => {
-                rickshawsEn.push(r.count1)
-                rickshawsEx.push(r.count2)
-                rickshawsLabel.push(r.time)
-                totalRickshawsEn = totalRickshawsEn + r.count1
-                totalRickshawsEx = totalRickshawsEx + r.count2
-              })
-
-              let motorbikesData = result.filter(itm => itm.type === 'motorbike')
-              motorbikesData.forEach(m => {
-                motorbikesEn.push(m.count1)
-                motorbikesEx.push(m.count2)
-                motorbikesLabel.push(m.time)
-                totalMotorbikesEn = totalMotorbikesEn + m.count1
-                totalMotorbikesEx = totalMotorbikesEx + m.count2
-              })
+              // let motorbikesData = result.filter(itm => itm.type === 'motorbike')
+              // motorbikesData.forEach(m => {
+              //   motorbikesEn.push(m.count1)
+              //   motorbikesEx.push(m.count2)
+              //   motorbikesLabel.push(m.time)
+              //   totalMotorbikesEn = totalMotorbikesEn + m.count1
+              //   totalMotorbikesEx = totalMotorbikesEx + m.count2
+              // })
               /* for (var v of result) {
                 let d = v.time
                 let se = d.getSeconds()
@@ -3217,6 +3230,7 @@ exports.vcount = async (req, res) => {
               const a = {
                 total: result.length,
                 raw: result,
+                labels,
                 carsEn,
                 carsEx,
                 totalCarsEn,

@@ -1,6 +1,42 @@
 <div class="container no-padding">
   <div class='col-md-12 no-padding' style="margin-top: 15px;">
-    <div class="row">
+        <div class="row">
+      <div class="col-md-4 less-padding">
+        <nb-card>
+          <nb-card-body class="top-badges">
+            <div class='row'>
+              <div class="col-md-6">
+            <p class="badge-txt">Last Motorbikes amount</p>
+            <p class="badge-reading">{{vcount.totalMotorbikesEn == undefined ? 'None' : vcount.totalMotorbikesEn}}</p>
+            <br>
+            <p class="badge-txt">Last Cars amount</p>
+            <p class="badge-reading">{{vcount.totalCarsEn == undefined ? 'None' : vcount.totalCarsEn}}</p>                
+              </div>
+              <div class="col-md-6">
+            <p class="badge-txt">Last Trucks amount</p>
+            <p class="badge-reading">{{vcount.totalTrucksEn == undefined ? 'None' : vcount.totalTrucksEn}}</p>
+            <br>
+            <p class="badge-txt">Last Buses amount</p>
+            <p class="badge-reading">{{vcount.totalBusesEn == undefined ? 'None' : vcount.totalBusesEn}}</p>  
+              </div>            
+            </div>
+          </nb-card-body>
+        </nb-card>
+      </div>
+      <div class="col-md-8 less-padding">
+        <nb-card>
+          <nb-card-body class="top-badges">
+            <p>Vehicles</p>
+            <chart type="line" [data]="dataVehicles" [options]="options"></chart>
+            <!-- <small *ngIf='vcount != null'>Entering:
+              Min:&nbsp;<strong>{{vcount.min.en}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.en}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.en}}</strong></small><br>
+            <small *ngIf='vcount != null'>Exiting:
+              Min:&nbsp;<strong>{{vcount.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.ex}}</strong></small> -->
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+    <!-- <div class="row">
       <div class="col-md-2 less-padding">
         <nb-card>
           <nb-card-body class="top-badges">
@@ -17,10 +53,10 @@
           <nb-card-body class="top-badges">
             <p>Motorbikes Entering and Exiting</p>
             <chart type="line" [data]="motorbikesData" [options]="options"></chart>
-            <!-- <small *ngIf='vcount != null'>Entering:
+            <small *ngIf='vcount != null'>Entering:
               Min:&nbsp;<strong>{{vcount.min.en}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.en}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.en}}</strong></small><br>
             <small *ngIf='vcount != null'>Exiting:
-              Min:&nbsp;<strong>{{vcount.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.ex}}</strong></small> -->
+              Min:&nbsp;<strong>{{vcount.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.ex}}</strong></small>
           </nb-card-body>
         </nb-card>
       </div>
@@ -42,10 +78,10 @@
           <nb-card-body class="top-badges">
             <p>Cars Entering and Exiting</p>
             <chart type="line" [data]="carsData" [options]="options"></chart>
-            <!-- <small *ngIf='vcount != null'>Entering:
+            <small *ngIf='vcount != null'>Entering:
               Min:&nbsp;<strong>{{vcount.min.en}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.en}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.en}}</strong></small><br>
             <small *ngIf='vcount != null'>Exiting:
-              Min:&nbsp;<strong>{{vcount.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.ex}}</strong></small> -->
+              Min:&nbsp;<strong>{{vcount.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.ex}}</strong></small>
           </nb-card-body>
         </nb-card>
       </div>
@@ -67,10 +103,10 @@
           <nb-card-body class="top-badges">
             <p>Buses Entering and Exiting</p>
             <chart type="line" [data]="busesData" [options]="options"></chart>
-            <!-- <small *ngIf='vcount != null'>Entering:
+            <small *ngIf='vcount != null'>Entering:
               Min:&nbsp;<strong>{{vcount.min.en}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.en}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.en}}</strong></small><br>
             <small *ngIf='vcount != null'>Exiting:
-              Min:&nbsp;<strong>{{vcount.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.ex}}</strong></small> -->
+              Min:&nbsp;<strong>{{vcount.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.ex}}</strong></small>
           </nb-card-body>
         </nb-card>
       </div>
@@ -92,10 +128,10 @@
           <nb-card-body class="top-badges">
             <p>Rickshaws Entering and Exiting</p>
             <chart type="line" [data]="rickshawsData" [options]="options"></chart>
-            <!-- <small *ngIf='vcount != null'>Entering:
+            <small *ngIf='vcount != null'>Entering:
               Min:&nbsp;<strong>{{vcount.min.en}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.en}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.en}}</strong></small><br>
             <small *ngIf='vcount != null'>Exiting:
-              Min:&nbsp;<strong>{{vcount.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.ex}}</strong></small> -->
+              Min:&nbsp;<strong>{{vcount.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.ex}}</strong></small>
           </nb-card-body>
         </nb-card>
       </div>
@@ -117,14 +153,14 @@
           <nb-card-body class="top-badges">
             <p>Trucks Entering and Exiting</p>
             <chart type="line" [data]="trucksData" [options]="options"></chart>
-            <!-- <small *ngIf='vcount != null'>Entering:
+            <small *ngIf='vcount != null'>Entering:
               Min:&nbsp;<strong>{{vcount.min.en}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.en}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.en}}</strong></small><br>
             <small *ngIf='vcount != null'>Exiting:
-              Min:&nbsp;<strong>{{vcount.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.ex}}</strong></small> -->
+              Min:&nbsp;<strong>{{vcount.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.ex}}</strong></small>
           </nb-card-body>
         </nb-card>
       </div>
-    </div>
+    </div> -->
 <!--       <div class="col-md-8 less-padding">
         <nb-card>
           <nb-card-body style="padding: 0px">
