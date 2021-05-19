@@ -25,6 +25,7 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
   now_user: Account;
   themeSubscription: any;
   options: any = {};
+  optionsBPre: any = {};
 
   @ViewChild('streaming', { static: false }) streamingcanvas: ElementRef;
 
@@ -173,6 +174,42 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
 
           const colors: any = config.variables;
           const chartjs: any = config.variables.chartjs;
+
+              this.optionsBPre = {
+              maintainAspectRatio: false,
+              responsive: true,
+              legend: {
+                labels: {
+                  fontColor: chartjs.textColor,
+                },
+              },
+              scales: {
+                xAxes: [
+                  {
+                    stacked: true,
+                    gridLines: {
+                      display: false,
+                      color: chartjs.axisLineColor,
+                    },
+                    ticks: {
+                      fontColor: chartjs.textColor,
+                    },
+                  },
+                ],
+                yAxes: [
+                  {
+                    stacked: true,
+                    gridLines: {
+                      display: true,
+                      color: chartjs.axisLineColor,
+                    },
+                    ticks: {
+                      fontColor: chartjs.textColor,
+                    },
+                  },
+                ],
+              },
+            };
 
           this.options = {
             responsive: true,
