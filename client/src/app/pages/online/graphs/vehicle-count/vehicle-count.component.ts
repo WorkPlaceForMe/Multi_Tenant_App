@@ -176,7 +176,7 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
           const chartjs: any = config.variables.chartjs;
 
               this.optionsBPre = {
-              maintainAspectRatio: false,
+              maintainAspectRatio: true,
               responsive: true,
               legend: {
                 labels: {
