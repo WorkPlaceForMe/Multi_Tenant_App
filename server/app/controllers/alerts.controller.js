@@ -170,6 +170,7 @@ exports.getAlerts = (req, res) => {
   let alertType = req.query.alert_type
   let table = tbs[alertType]
   let td = []
+  console.log(table)
 
   try {
     jwt.verify(token, process.env.secret, async (err, decoded) => {
