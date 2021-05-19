@@ -1,29 +1,33 @@
 <div class="container no-padding">
   <div class='col-md-12 no-padding' style="margin-top: 15px;">
         <div class="row">
-      <div class="col-md-4 less-padding">
+          <div class="col-md-12">
         <nb-card>
           <nb-card-body class="top-badges">
-            <div class='row'>
-              <div class="col-md-6">
-            <p class="badge-txt">Last Motorbikes amount</p>
+            <div class="row">
+            <div class='col-md-3'>
+              <p class="badge-txt">Last Motorbikes amount</p>
             <p class="badge-reading">{{vcount.totalMotorbikesEn == undefined ? 'None' : vcount.totalMotorbikesEn}}</p>
-            <br>
+            </div>
+            <div class='col-md-3'>
             <p class="badge-txt">Last Cars amount</p>
-            <p class="badge-reading">{{vcount.totalCarsEn == undefined ? 'None' : vcount.totalCarsEn}}</p>                
-              </div>
-              <div class="col-md-6">
+            <p class="badge-reading">{{vcount.totalCarsEn == undefined ? 'None' : vcount.totalCarsEn}}</p>
+            </div>                
+            <div class='col-md-3'>
             <p class="badge-txt">Last Trucks amount</p>
             <p class="badge-reading">{{vcount.totalTrucksEn == undefined ? 'None' : vcount.totalTrucksEn}}</p>
-            <br>
+            </div>
+            <div class='col-md-3'>
             <p class="badge-txt">Last Buses amount</p>
-            <p class="badge-reading">{{vcount.totalBusesEn == undefined ? 'None' : vcount.totalBusesEn}}</p>  
-              </div>            
+            <p class="badge-reading">{{vcount.totalBusesEn == undefined ? 'None' : vcount.totalBusesEn}}</p>
+            </div>        
             </div>
           </nb-card-body>
         </nb-card>
+        </div>
       </div>
-      <div class="col-md-8 less-padding">
+      <div class="row">
+        <div class='col-md-12'>
         <nb-card>
           <nb-card-body class="top-badges">
             <p>Vehicles</p>
@@ -34,8 +38,9 @@
               Min:&nbsp;<strong>{{vcount.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{vcount.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{vcount.avg.ex}}</strong></small> -->
           </nb-card-body>
         </nb-card>
+        </div>
       </div>
-    </div>
+
     <!-- <div class="row">
       <div class="col-md-2 less-padding">
         <nb-card>
