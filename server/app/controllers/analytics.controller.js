@@ -941,7 +941,7 @@ exports.covered = async (req, res) => {
         await db
           .con()
           .query(
-            `SELECT * from alerts WHERE alert= 'no mask' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+            `SELECT * from mask WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
             function (err, result) {
               if (err)
                 return res.status(500).json({
@@ -1093,7 +1093,7 @@ exports.social = async (req, res) => {
     await db
       .con()
       .query(
-        `SELECT * from alerts WHERE alert= 'sociald' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+        `SELECT * from sociald where ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
         function (err, result) {
           if (err)
             return res.status(500).json({
@@ -1559,7 +1559,7 @@ exports.helm = async (req, res) => {
       await db
         .con()
         .query(
-          `SELECT * from alerts WHERE alert= 'helmet' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          `SELECT * from helmet where ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
           function (err, result) {
             if (err)
               return res.status(500).json({
@@ -2090,7 +2090,7 @@ exports.threats = async (req, res) => {
         await db
           .con()
           .query(
-            `SELECT HOUR(time) as hour, COUNT(*) as count FROM alerts where alert = 'helmet' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`,
+            `SELECT HOUR(time) as hour, COUNT(*) as count FROM helmet where ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`,
             async function (err, result1) {
               if (err)
                 return res.status(500).json({
@@ -2100,7 +2100,7 @@ exports.threats = async (req, res) => {
               await db
                 .con()
                 .query(
-                  `SELECT HOUR(time) as hour, COUNT(*) as count FROM alerts where alert = 'no mask' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`,
+                  `SELECT HOUR(time) as hour, COUNT(*) as count FROM mask where ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`,
                   async function (err, result2) {
                     if (err)
                       return res.status(500).json({
@@ -2120,7 +2120,7 @@ exports.threats = async (req, res) => {
                           await db
                             .con()
                             .query(
-                              `SELECT HOUR(time) as hour, COUNT(*) as count FROM alerts where alert = 'sociald' and ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`,
+                              `SELECT HOUR(time) as hour, COUNT(*) as count FROM sociald where ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' GROUP BY HOUR(time);`,
                               async function (err, result4) {
                                 if (err)
                                   return res.status(500).json({
