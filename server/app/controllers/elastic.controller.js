@@ -8,7 +8,7 @@ const db = require('../models')
 const Camera = db.camera
 const { v4: uuidv4 } = require('uuid')
 const client = new elasticsearch.Client({
-  node: 'https://search-graymatics-dev-fc6j24xphhun5xcinuusz2yfjm.ap-southeast-1.es.amazonaws.com',
+  node: process.env.HOST_ELAST,
   log: 'trace',
   apiVersion: '7.x', // use the same version of your Elasticsearch instance
   auth: {
