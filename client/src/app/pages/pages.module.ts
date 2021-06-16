@@ -97,6 +97,7 @@ import { SpeedingComponent } from './online/graphs/speeding/speeding.component';
 import { FrComponent } from './online/graphs/fr/fr.component';
 import { ClothComponent } from './online/graphs/cloth/cloth.component';
 import { PcCameraComponent } from './online/graphs/pc-camera/pc-camera.component';
+import { BrandCarComponent } from './online/graphs/brand-car/brand-car.component';
 
 // import { OverallComponent } from './facial_recognition/overall/overall.component';
 
@@ -205,6 +206,7 @@ import { PcCameraComponent } from './online/graphs/pc-camera/pc-camera.component
     FrComponent,
     ClothComponent,
     PcCameraComponent,
+    BrandCarComponent,
   ],
   providers: [
     FacesService,

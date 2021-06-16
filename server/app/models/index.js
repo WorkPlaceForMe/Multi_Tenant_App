@@ -70,7 +70,8 @@ db.ALGORITHMS = [
   'Axle Detection',
   'Carmake',
   'Clothing',
-  'Vehicle Count at Screen'
+  'Vehicle Count at Screen',
+  'Car Brand'
 ]
 
 module.exports = db

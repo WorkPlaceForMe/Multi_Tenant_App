@@ -111,6 +111,9 @@ export class AnalyticsService {
   pcOnView(id: string, dates){
     return this.http.post(`${this.API_URL}pcOnView/${id}`, dates);
   }
+  brand(id: string, dates){
+    return this.http.post(`${this.API_URL}brand/${id}`, dates);
+  }
 
   constructor(private http: HttpClient) { }
 }
