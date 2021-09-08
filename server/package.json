@@ -2,9 +2,10 @@
   "name": "serv",
   "version": "2.1.1",
   "description": "Node server",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www"
   },
   "author": "Alex Kaiser",
   "license": "ISC",

@@ -6,6 +6,184 @@ const Relation = db.relation
 const Algorithm = db.algorithm
 const User = db.user
 
+const tables = {
+  'Facial Recognition': {
+    id: 0,
+    table: 'faces',
+    alert: true
+  },
+  'Person Climbing Barricade': {
+    id: 1,
+    table: 'climbing',
+    alert: true
+  },
+  'Loitering Detection': {
+    id: 2,
+    table: 'loitering',
+    alert: true
+  },
+  'D&C of human, animal and vehicle': {
+    id: 3,
+    table: '',
+    alert: true
+  },
+  'Parking Violation': {
+    id: 4,
+    table: 'parking',
+    alert: true
+  },
+  'Speeding Vehicle': {
+    id: 5,
+    table: 'speed',
+    alert: true
+  },
+  'Helmet detection on two-wheeler': {
+    id: 6,
+    table: '',
+    alert: true
+  },
+  'Banned vehicle detection': {
+    id: 7,
+    table: '',
+    alert: true
+  },
+  'Wrong way or illegal turn detection': {
+    id: 8,
+    table: 'direction',
+    alert: true
+  },
+  'Graffiti & Vandalism detection': {
+    id: 9,
+    table: 'graffiti',
+    alert: true
+  },
+  'Debris & Garbage detection': {
+    id: 10,
+    table: '',
+    alert: true
+  },
+  'Garbage bin, cleanned or not': {
+    id: 11,
+    table: '',
+    alert: true
+  },
+  'People Count': {
+    id: 12,
+    table: 'pc',
+    alert: false
+  },
+  ANPR: {
+    id: 13,
+    table: 'plate',
+    alert: true
+  },
+  Heatmap: {
+    id: 14,
+    table: 'heatmap',
+    alert: false
+  },
+  Demographics: {
+    id: 15,
+    table: 'faces',
+    alert: true
+  },
+  'Abandoned Object': {
+    id: 16,
+    table: 'aod',
+    alert: true
+  },
+  'Intrusion Alert': {
+    id: 17,
+    table: 'intrude',
+    alert: true
+  },
+  'Attendance Management': {
+    id: 18,
+    table: '',
+    alert: true
+  },
+  Violence: {
+    id: 19,
+    table: 'violence',
+    alert: true
+  },
+  'No Mask': {
+    id: 20,
+    table: 'mask',
+    alert: true
+  },
+  'Social Distancing': {
+    id: 21,
+    table: 'sociald',
+    alert: true
+  },
+  'Queue Management': {
+    id: 22,
+    table: 'queue_mgt',
+    alert: false
+  },
+  'Helmet Detection': {
+    id: 23,
+    table: 'helm',
+    alert: true
+  },
+  'Vault Open': {
+    id: 24,
+    table: 'vault',
+    alert: true
+  },
+  'Barrier Not Closed': {
+    id: 25,
+    table: 'barrier',
+    alert: true
+  },
+  'Vehicle Counting': {
+    id: 26,
+    table: 'vcount',
+    alert: false
+  },
+  'Camera Tampering': {
+    id: 27,
+    table: 'tamper',
+    alert: true
+  },
+  'Animal Detection': {
+    id: 29,
+    table: 'animal',
+    alert: true
+  },
+  'Accident Detection': {
+    id: 28,
+    table: 'accident',
+    alert: true
+  },
+  'Axle Count': {
+    id: 30,
+    table: 'axle',
+    alert: true
+  },
+  'Car make Classification': {
+    id: 31,
+    table: 'carmake',
+    alert: true
+  },
+  Clothing: {
+    id: 32,
+    table: 'clothing',
+    alert: true
+  },
+  'Vehicle Count at Screen': {
+    id: 33,
+    table: 'vcount_screen',
+    alert: false
+  },
+  'Car Brand': {
+    id: 34,
+    table: 'carbrand',
+    alert: true
+  }
+}
+
 exports.getRels = async (req, res) => {
   let data = []
   Relation.findAll({
@@ -17,6 +195,8 @@ exports.getRels = async (req, res) => {
           where: {id: rel.dataValues.algo_id}
         }).then(alg => {
           rel.dataValues['algo_name'] = alg.dataValues.name
+          rel.dataValues['table'] = tables[alg.dataValues.name].table
+          rel.dataValues['alert'] = tables[alg.dataValues.name].alert
           data.push(rel)
         })
       }

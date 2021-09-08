@@ -28,7 +28,6 @@ export class ListComponent implements OnInit {
           this.face.getAllRelations().subscribe(
             res => {
               this.relations = res['data'];
-              console.log(this.relations)
               this.face.getAlgos().subscribe(
                 res => {
                   this.algos = res['data'];

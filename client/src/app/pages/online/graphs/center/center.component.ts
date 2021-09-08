@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FacesService } from '../../../../services/faces.service';
 import { Account } from '../../../../models/Account';
 import { AccountService } from '../../../../services/account.service';
+import { api } from '../../../../models/API'
 
 @Component({
   selector: 'ngx-center',
@@ -38,6 +39,7 @@ export class CenterComponent implements OnInit {
     status: "'primary"
   }
 
+pic:string = `${api}/pictures/graymaticsLogo.png`
 
   aaa(event){
     this.camera = event

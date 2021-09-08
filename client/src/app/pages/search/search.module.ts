@@ -29,9 +29,10 @@ import { ListComponent } from './list/list.component';
 import { authInterceptorProviders } from '../../_helpers/auth.interceptor';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { SetngsComponent, WindowResultService } from './setngs/setngs.component';
+import { CheckComponent } from './check/check.component';
 
 @NgModule({
-  declarations: [SearchComponent, UploadComponent, BarComponent, ListComponent, SetngsComponent],
+  declarations: [SearchComponent, UploadComponent, BarComponent, ListComponent, SetngsComponent, CheckComponent],
   imports: [
       NbAlertModule,
   NbCalendarModule,

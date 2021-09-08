@@ -34,7 +34,7 @@ constructor(
         //     }
         // )
         } else {
-          return this.router.navigate(['/pages/graphs'])
+          return this.router.navigate(['/pages/accounts'])
         }
       }
       this.facesService.mess().subscribe(

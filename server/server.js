@@ -23,7 +23,9 @@ if (process.env.NODE_ENV === 'production') {
     origin: [`http://${process.env.my_ip}:4200`, `${process.env.app_url}`]
   }
   app.use(cors(corsOptions))
-  console.log('Running on Production')
+  console.log(`Running on Production for http://${process.env.my_ip}:4200`)
+} else {
+  console.log(`Running Dev version on port ${process.env.PORT}`)
 }
 
 // parse requests of content-type - application/json
@@ -82,7 +84,9 @@ if (process.env.INSTALL === 'true') {
           connection.query(
             'CREATE TABLE IF NOT EXISTS ' +
               process.env.DB +
-              '.tickets (`id` varchar(45) NOT NULL,`type` varchar(45) NOT NULL,`createdAt`datetime NOT NULL, `updatedAt` datetime NOT NULL, `assigned` varchar(45) DEFAULT NULL, `id_account` varchar(45) NOT NULL, `id_branch` varchar(45) NOT NULL, `level` int(10) NOT NULL,`reviewed` varchar(45) DEFAULT NULL, `assignedBy` varchar(45) DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `id_UNIQUE` (`id`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;'
+              '.tickets (`id` varchar(45) NOT NULL,`type` varchar(45) NOT NULL,`createdAt`datetime NOT NULL, `updatedAt` datetime NOT NULL, `assigned` varchar(45) DEFAULT NULL, `id_account` varchar(45) NOT NULL, `id_branch` varchar(45) NOT NULL, `level` int(10) NOT NULL,`reviewed` varchar(45) DEFAULT NULL, `assignedBy` varchar(45) DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `id_UNIQUE` (`id`)) ENGINE=InnoDB DEFAULT CHARSET=latin1; CREATE TABLE ' +
+              process.env.DB +
+              '.`alerts` (`id` VARCHAR(45) NOT NULL,`time` DATETIME NULL,`alert` VARCHAR(45) NULL,`cam_name` VARCHAR(45) NULL,`cam_id` VARCHAR(45) NULL,`trackid` INT NULL,`alert_type` INT NULL,`id_account` VARCHAR(45) NULL,`id_branch` VARCHAR(45) NULL, PRIMARY KEY (`id`));'
           )
         })
       })
@@ -122,7 +126,7 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(swaggerDocs, {
     explorer: true,
-    customCss: `img[alt='Swagger UI'] { content:url(${process.env.app_url}/api/pictures/logoQuantela.png);}`,
+    customCss: `img[alt='Swagger UI'] { content:url(${process.env.app_url}/api/pictures/graymaticsLogo.png);}`,
     customSiteTitle: 'Graymatics API Manual',
     customfavIcon: `${process.env.app_url}/api/pictures/favicon1.ico`,
     swaggerOptions: {

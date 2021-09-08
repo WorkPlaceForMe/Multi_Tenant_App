@@ -142,7 +142,7 @@ exports.initial = function () {
   })
   algo.create({
     id: 29,
-    name: 'Accidents Detection'
+    name: 'Accident Detection'
   })
   algo.create({
     id: 30,

@@ -25,8 +25,6 @@ export class SetngsComponent implements OnInit {
       start: this.max,
       end: this.fin,
     };
-    console.log(this.selectedDate)
-    console.log(this.fin)
   }
   @ViewChild(NbPopoverDirective) rangeSelector: NbPopoverDirective;
   @ViewChild('dateTimePicker', { static: false }) dateTime: ElementRef;
@@ -52,10 +50,24 @@ export class SetngsComponent implements OnInit {
     time: 1
   };
   dateTouched: boolean = false;
+  option:string;
 
   currentSelection: string  = 'Date'; 
   getNavChangeEmitter() {
     return this.settings;
+  }
+
+  adapt(thing){
+    if(thing === 'and'){
+      this.and = true;
+      this.bounded = {
+        active: false,
+        time: 1
+      }
+    }else if(thing === 'bounded'){
+      this.and = false;
+      this.bounded['active'] = true;
+    }
   }
 
 show(){
@@ -185,9 +197,11 @@ getAlgos(){
     }
     if(this.filters['and']){
     this.and = this.filters['and']
+    this.option = 'and'
     }
     if(this.filters['bounded']){
     this.bounded = this.filters['bounded']
+    this.option = 'bounded'
     }
     this.initMonths();
   }

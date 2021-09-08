@@ -11,9 +11,9 @@ let tbs = {
   'Intrusion Alert': 'intrude WHERE',
   'People Count': 'pcount WHERE',
   Demographics: 'faces WHERE',
-  'No Mask': `alerts WHERE alert= 'no mask' and`,
-  'Social Distancing': `alerts WHERE alert= 'sociald' and`,
-  'Helmet Detection': `alerts WHERE alert= 'helmet' and`,
+  'No Mask': `mask WHERE`,
+  'Social Distancing': `sociald WHERE`,
+  'Helmet Detection': `helmet WHERE`,
   Clothing: 'clothing WHERE',
   'Parking Violation': 'parking WHERE',
   'Speeding Vehicle': 'speed WHERE',
@@ -170,7 +170,6 @@ exports.getAlerts = (req, res) => {
   let alertType = req.query.alert_type
   let table = tbs[alertType]
   let td = []
-  console.log(table)
 
   try {
     jwt.verify(token, process.env.secret, async (err, decoded) => {
@@ -188,7 +187,7 @@ exports.getAlerts = (req, res) => {
         }
       }
       console.log(
-        `SELECT * from ${table} ${type} = '${id}' and time >= '${start}' and  time <= '${end}' order by time asc;`
+        `SELECT * from ${table} ${type} = '${id}' and alert = '1' and time >= '${start}' and  time <= '${end}' order by time asc;`
       )
       Relation.findOne({
         where: wh

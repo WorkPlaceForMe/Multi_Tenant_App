@@ -7,6 +7,7 @@ import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NbWindowRef, NbWindowService } from '@nebular/theme';
 import { SetngsComponent, WindowResultService } from '../setngs/setngs.component';
+import { CheckComponent } from '../check/check.component';
 
 @Component({
   selector: 'ngx-bar',
@@ -60,7 +61,15 @@ searchSet: any;
   filters: any = {};
 
   check(){
-    console.log(this.filters)
+    console.log(this.source)
+  }
+
+  videoStitch(){
+    for(const log of this.source.data){
+      if(log.added == true){
+        console.log(log)
+      }
+    }
   }
 
   search(){
@@ -81,7 +90,6 @@ searchSet: any;
         this.loading = false;
         this.touched = true;
         this.results = res['data']
-        console.log(res)
         for(const m of this.results['hits']){
           if(m._source.time){
           let dd = (new Date(m['_source']['time'])).getUTCDate().toString();
@@ -158,6 +166,16 @@ searchSet: any;
       },
     noDataMessage: 'No data found',
     columns: {
+      add:{
+        title: 'Summary',
+        type: 'custom',
+        filter: false,
+        renderComponent: CheckComponent,
+        onComponentInitFunction:(instance) => {
+          instance.save.subscribe((row: string)  => {
+          });
+        }
+      },
       url: {
         title: 'Picture',
         type: 'custom',

@@ -3277,7 +3277,7 @@ exports.fr = async (req, res) => {
   jwt.verify(token, process.env.secret, async (err, decoded) => {
     Relation.findOne({
       where: {
-        algo_id: 15,
+        algo_id: 0,
         camera_id: req.params.id
       }
     })
@@ -3774,4 +3774,19 @@ exports.brand = async (req, res) => {
         )
     })
   })
+}
+
+exports.faceData = async (req, res) => {
+  const data = req.body
+  try {
+    const resp = await db
+      .con()
+      .query(
+        `INSERT INTO faces VALUES ('${data[0]}','${data[1]}','${data[2]}','${data[3]}','${data[4]}','${data[5]}','${data[6]}','${data[7]}','${data[8]}');`
+      )
+    console.log(resp)
+    res.status(200).json({success: true})
+  } catch (err) {
+    console.error(err)
+  }
 }

@@ -134,7 +134,7 @@ export class ROIComponent implements OnInit {
   perimeter = [];
   relations: any = [];
   algos: any = [
-    {activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false}
+    {activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false}
   ];
   colour: string = '';
   fill: string ='';

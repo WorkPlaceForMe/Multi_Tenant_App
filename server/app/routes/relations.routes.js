@@ -13,7 +13,7 @@ module.exports = function (app) {
     next()
   })
 
-    /**
+  /**
    * @swagger
    * /api/relations/cam/{id}:
    *   get:
@@ -47,23 +47,7 @@ module.exports = function (app) {
    *                 example: true
    *               data:
    *                 type: object
-   *                 properties:
-   *                   name:
-   *                     description: "Algorithm ID"
-   *                     type: string
-   *                     example: 10
-   *                   id:
-   *                     description: "Id of the camera"
-   *                     type: string
-   *                     example: 2da2b89d-57a5-4f87-8e54-1809793c3945
-   *                   createdAt:
-   *                     description: "Date when this camera was created."
-   *                     type: date
-   *                     example: 2021-02-02T16:17:56.000Z
-   *                   updatedAt:
-   *                     description: "Date when this camera has been updated."
-   *                     type: date
-   *                     example: 2021-02-02T16:17:56.000Z
+   *                 example : {"id": 47,"camera_id": "fa9e5b11-0998-472d-aad0-67c5bf0e6d27","algo_id": 8,"roi_id": [{"x": 0.6454635045371354,"y": -0.8092867290389464}, {"x": 388.99824657955025,"y": 0.8682630898595983 },{"x": 382.2880473039561, "y": 239.91911228290223},{"x": -1.0320863143614094,"y": 231.5313631884095}],"atributes": [{"conf": 95,"save": false,"time": 0 }],"id_account": "2783e08d-4853-40d8-8319-409d811e2b6e","id_branch": "2783e08d-4853-40d8-8319-409d811e2b6e","stream": null,"http_out": null,"createdAt": "2021-01-26T15:10:53.000Z","updatedAt": "2021-05-17T17:49:57.000Z","algo_name": "Wrong way or illegal turn detection","table": "direction","alert": true}
    *      '500':
    *        description: "Server error"
    *        content:
@@ -88,7 +72,7 @@ module.exports = function (app) {
 
   app.get(
     '/api/relations/dashboards',
-    [authJwt.verifyToken, authJwt.isClientOrBranch],
+    [authJwt.verifyToken, authJwt.isClientOrBranchOrAdmin],
     controller.dashboards
   )
 

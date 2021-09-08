@@ -86,7 +86,7 @@ export class LogInComponent implements OnInit {
       }
     );
 
-    this.authService.login(this.registerForm.value)
+    // this.authService.login(this.registerForm.value)
   }
 
   reloadPage() {

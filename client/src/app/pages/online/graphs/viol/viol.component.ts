@@ -6,11 +6,8 @@ import { LocalDataSource, ViewCell } from 'ng2-smart-table';
 import { api } from '../../../../models/API';
 import { AnalyticsService } from '../../../../services/analytics.service';
 import { FacesService } from '../../../../services/faces.service';
-import JSMpeg from '@cycjimmy/jsmpeg-player';
-import { VideoComponent } from '../video/video.component';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
-import { emit } from 'process';
 
 @Component({
   selector: 'ngx-viol',
@@ -64,6 +61,7 @@ export class ViolComponent implements OnInit, OnDestroy {
   videoFile:string = "";
 
   video:boolean= false;
+  rtspIn: any;
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
@@ -89,6 +87,7 @@ export class ViolComponent implements OnInit, OnDestroy {
     this.face.checkVideo(19,this.camera).subscribe(
       res=>{
         this.video = res['video']
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
         if(this.video === true){
           this.settings['columns']['picture'] = {
             title: 'VIDEO',

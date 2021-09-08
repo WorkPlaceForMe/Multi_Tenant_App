@@ -103,7 +103,7 @@ export class FrComponent implements OnInit , OnDestroy {
       end: this.range.end,
       type: type,
     };
-    this.face.checkVideo(15, this.camera).subscribe(
+    this.face.checkVideo(0, this.camera).subscribe(
       res => {
         this.video = res['video'];
         this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
@@ -164,7 +164,7 @@ export class FrComponent implements OnInit , OnDestroy {
     },
     noDataMessage: 'No data found',
     columns: {
-      /* picture: {
+      picture: {
         title: 'PHOTO',
         type: 'custom',
         filter: false,
@@ -174,7 +174,7 @@ export class FrComponent implements OnInit , OnDestroy {
             alert(`${row.name} saved!`);
           });
         },
-      }, */
+      }, 
       time: {
         title: 'TIME',
         type: 'string',
