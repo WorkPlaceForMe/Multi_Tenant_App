@@ -94,6 +94,17 @@ export class FaceListComponent implements OnInit {
           type: 'string',
           filter: false
         },
+        schedule: {
+          title: 'Schedule',
+          type: 'custom',
+          filter: false,
+          renderComponent: ButtonViewSComponent,
+          onComponentInitFunction(instance) {
+            instance.save.subscribe(row => {
+              alert(`${row.name} saved!`)
+            });
+          }
+        },
         images: {
           title: 'Images',
           type: 'custom',
@@ -254,6 +265,35 @@ export class ButtonViewComponent implements ViewCell, OnInit {
   onClick() {
     this.router.navigateByUrl('/pages/user/images/' + this.rowData.uuid)
   }
+  
+}
+
+
+@Component({
+  selector: 'button-view',
+  template: `
+    <button class='btn btn-primary btn-block' (click)='onClick()'><i class="fas fa-images"></i></button>
+  `,
+})
+export class ButtonViewSComponent implements ViewCell, OnInit {
+  renderValue: string;
+
+  constructor(private router: Router){
+  }
+
+  @Input() value: string | number;
+  @Input() rowData: any;
+
+  @Output() save: EventEmitter<any> = new EventEmitter();
+
+  ngOnInit() {
+    this.renderValue = this.value.toString().toUpperCase();
+  }
+
+  onClick() {
+    this.router.navigateByUrl('/pages/user/schedule/' + this.rowData.uuid)
+  }
+  
 }
 
 @Component({

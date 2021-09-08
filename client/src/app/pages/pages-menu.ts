@@ -23,11 +23,11 @@ export const MENU_ITEMSBRANCH: NbMenuItem[] = [
     icon: 'people-outline',
     link: 'accounts'
   },
-  // {
-  //   title: 'FR Users',
-  //   icon: 'browser-outline',
-  //   link: 'management'
-  // },
+  {
+    title: 'FR Users',
+    icon: 'browser-outline',
+    link: 'management'
+  },
   // {
   //   title: 'Dashboard',
   //   icon: 'clipboard-outline',

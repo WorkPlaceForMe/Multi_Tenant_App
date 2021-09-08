@@ -1,8 +1,6 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-
 import { PagesComponent } from './pages.component';
-
 import { FaceFormComponent } from './facial_recognition/face-form/face-form.component';
 import { ImagesFormComponent } from './facial_recognition/images-form/images-form.component';
 import { ScheduleComponent } from './facial_recognition/schedule/schedule.component';
