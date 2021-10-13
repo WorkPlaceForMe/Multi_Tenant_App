@@ -194,7 +194,7 @@ export class IntrComponent implements OnInit, OnDestroy {
             };
 
               this.options = {
-                backgroundColor: echarts.bg,
+                // backgroundColor: echarts.bg,
                 color: [colors.warningLight, colors.infoLight, colors.dangerLight, colors.successLight, colors.primaryLight],
                 tooltip: {
                   trigger: 'item',
@@ -205,7 +205,7 @@ export class IntrComponent implements OnInit, OnDestroy {
                   left: 'left',
                   data: Object.keys(this.intrude.donut),
                   textStyle: {
-                    color: echarts.textColor,
+                    // color: echarts.textColor,
                   },
                 },
                 series: [
@@ -219,20 +219,20 @@ export class IntrComponent implements OnInit, OnDestroy {
                       emphasis: {
                         shadowBlur: 10,
                         shadowOffsetX: 0,
-                        shadowColor: echarts.itemHoverShadowColor,
+                        // shadowColor: echarts.itemHoverShadowColor,
                       },
                     },
                     label: {
                       normal: {
                         textStyle: {
-                          color: echarts.textColor,
+                          // color: echarts.textColor,
                         },
                       },
                     },
                     labelLine: {
                       normal: {
                         lineStyle: {
-                          color: echarts.axisLineColor,
+                          // color: echarts.axisLineColor,
                         },
                       },
                     },
