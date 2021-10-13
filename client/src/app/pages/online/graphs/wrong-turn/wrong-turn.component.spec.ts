@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { WrongTurnComponent } from './wrong-turn.component';
 
@@ -6,7 +6,7 @@ describe('WrongTurnComponent', () => {
   let component: WrongTurnComponent;
   let fixture: ComponentFixture<WrongTurnComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ WrongTurnComponent ]
     })
