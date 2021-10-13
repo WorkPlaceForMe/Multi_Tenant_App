@@ -165,7 +165,7 @@ export class ClothComponent implements OnInit, OnDestroy {
     },
     noDataMessage: 'No data found',
     columns: {
-      /* picture: {
+      picture: {
         title: 'PHOTO',
         type: 'custom',
         filter: false,
@@ -175,7 +175,7 @@ export class ClothComponent implements OnInit, OnDestroy {
             alert(`${row.name} saved!`);
           });
         },
-      }, */
+      }, 
       time: {
         title: 'TIME',
         type: 'string',
