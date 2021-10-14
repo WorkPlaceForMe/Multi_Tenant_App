@@ -23,7 +23,7 @@
           
                 <div class="form-group">
                     <!-- <input type="password"class="form-control"  placeholder="Password" formControlName="password" [ngClass]="{ 'is-invalid': submitted && error.err }" /> -->
-                    <input type="password" class="form-control" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" nbInput fullWidth id="password" autofocus placeholder="Password" [status]='values.password' />
+                    <input type="password" class="form-control" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" nbInput fullWidth id="password" autofocus placeholder="Password" [status]='values.password' autocomplete="on" />
                     <!-- <div *ngIf="submitted && errorMessage != ''" class="invalid-feedback">
                       <div>{{errorMessage}}</div>
                     </div> -->
@@ -44,6 +44,18 @@
     
     </form>
 
+    <div class="dropdown-divider"></div>
+    <p style='color: #6b8094'>Or Log In using:</p>
+
+    <div id="customBtn" class="customGPlusSignIn" (click)="loginWithGoogle()">
+      <span class="icon" [ngStyle]='iconGoogle()'></span>
+      <span class="buttonText">Google</span>
+    </div>
+<br>
+    <button (click)="loginWithMs()" style="margin-top: 5px; padding: 0; background-color: 'transparent'; border: 0; -webkit-appearance: 'none'">
+      <span class="icon" [ngStyle]='iconMs()'></span>
+    </button>
+
       </div>
     </nb-card-body>
     </nb-card>
@@ -51,3 +63,4 @@
     </div>
     </div>
     </div>
+

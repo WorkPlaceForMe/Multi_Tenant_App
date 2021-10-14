@@ -36,6 +36,18 @@ export class AuthService {
     }, httpOptions);
   }
 
+  loginGoogle(data): Observable<any> {
+    return this.http.post(AUTH_API + 'signinGoogle', {
+      data: data
+    }, httpOptions);
+  }
+
+  loginMs(data): Observable<any> {
+    return this.http.post(AUTH_API + 'signinMs', {
+      data: data
+    }, httpOptions);
+  }
+
   register(user,type): Observable<any> {
     return this.http.post(AUTH_API + 'signup/' + type, {
       username: user.username,

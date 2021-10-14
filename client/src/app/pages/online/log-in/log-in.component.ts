@@ -3,6 +3,9 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NbComponentStatus, NbGlobalPhysicalPosition, NbGlobalPosition, NbToastrService } from '@nebular/theme';
 import { AuthService } from '../../../services/auth.service';
+import { GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
+import { api } from '../../../models/API'
+import { MsalService } from '@azure/msal-angular';
 
 @Component({
   selector: 'ngx-log-in',
@@ -32,7 +35,10 @@ export class LogInComponent implements OnInit {
     public authService: AuthService,
     private formBuilder: FormBuilder,
     public router: Router,
-    private toastrService: NbToastrService) { }
+    private toastrService: NbToastrService,
+    private socialAuthService: SocialAuthService,
+    private msService: MsalService
+    ) { }
 
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
@@ -43,6 +49,89 @@ export class LogInComponent implements OnInit {
 
   get f() { return this.registerForm.controls; }
 
+  iconGoogle(){
+    let icon = {
+    'background': "url('" + api + "/pictures/g-normal.png') transparent 5px 50% no-repeat",
+    'display': 'inline-block',
+    'vertical-align': 'middle',
+    'width': '42px',
+    'height': '42px'
+    }
+    return icon;
+  }
+
+  loginWithGoogle(): void {
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
+      .then((data) => {
+        this.authService.loginGoogle(data).subscribe(
+          data => {
+            this.authService.saveToken(data.user.accessToken);
+            this.authService.saveUser(data.user);
+            this.router.navigate(['/pages'])
+            this.isLoggedIn = true;
+            this.roles = this.authService.getUser().roles;
+            window.location.reload()
+          },
+          err => {
+            if(err.error.type == 'disable'){
+              this.showToast(err.error.message)
+            }
+            if(err.error.type == 'logged'){
+              this.showToast(err.error.message)
+            }
+            if(err.error.type == 'user'){
+              this.showToast(err.error.message)
+            }
+          }
+        )
+      });
+  }
+
+  loginWithMs() {
+    this.msService.loginPopup()
+      .subscribe({
+        next: (result) => {
+          console.log(result);
+          this.authService.loginMs(result).subscribe(
+          data => {
+            this.authService.saveToken(data.user.accessToken);
+            this.authService.saveUser(data.user);
+            this.router.navigate(['/pages'])
+            this.isLoggedIn = true;
+            this.roles = this.authService.getUser().roles;
+            window.location.reload()
+          },
+          err => {
+            if(err.error.type == 'disable'){
+              this.showToast(err.error.message)
+            }
+            if(err.error.type == 'logged'){
+              this.showToast(err.error.message)
+            }
+            if(err.error.type == 'user'){
+              this.showToast(err.error.message)
+            }
+          }
+        )
+
+        },
+        error: (error) => {
+          console.log(error)
+        }
+      });
+  }
+  loginDisplay: boolean = false
+
+  iconMs(){
+    let icon = {
+    'background': "url('" + api + "/pictures/ms-white.png') 45% 50% no-repeat",
+    'display': 'inline-block',
+    'vertical-align': 'middle',    
+    'width': '215px',
+    'height': '41px'
+    }
+    return icon;
+  }
 
   onSubmit(){
     this.submitted = true;

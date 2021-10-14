@@ -23,6 +23,7 @@ import {
 } from '@nebular/theme';
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
 import { VgCoreModule } from '@videogular/ngx-videogular/core';
+import { GoogleLoginProvider } from 'angularx-social-login';
 
 @NgModule({
   declarations: [AppComponent],
