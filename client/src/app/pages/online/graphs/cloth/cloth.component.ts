@@ -182,27 +182,7 @@ export class ClothComponent implements OnInit, OnDestroy {
         filter: false,
       },
       sleeve_length: {
-        title: 'SLEEVE LENGTH',
-        type: 'string',
-        filter: false,
-      },
-      top_colour: {
-        title: 'TOP COLOUR',
-        type: 'string',
-        filter: false,
-      },
-      bottom_length: {
-        title: 'BOTTOM LENGTH',
-        type: 'string',
-        filter: false,
-      },
-      bottom_colour: {
-        title: 'BOTTOM COLOUR',
-        type: 'string',
-        filter: false,
-      },
-      shoe_colour: {
-        title: 'SHOE COLOUR',
+        title: 'CLOTHING',
         type: 'string',
         filter: false,
       },

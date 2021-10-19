@@ -3,13 +3,6 @@
   "version": "5.0.0",
   "license": "MIT",
   "author": "Alex Kaiser",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/akveo/ngx-admin.git"
-  },
-  "bugs": {
-    "url": "https://github.com/akveo/ngx-admin/issues"
-  },
   "scripts": {
     "ng": "ng",
     "conventional-changelog": "conventional-changelog",
@@ -78,7 +71,6 @@
     "ngx-echarts": "^4.2.2",
     "ngx-spinner": "^10.0.1",
     "ngx-videogular": "^10.1.0-0",
-    "node-sass": "^4.14.1",
     "normalize.css": "6.0.0",
     "pace-js": "1.0.2",
     "roboto-fontface": "0.8.0",
@@ -113,6 +105,7 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
     "npm-run-all": "4.0.2",
+    "postcss": "^8.3.9",
     "protractor": "~7.0.0",
     "rimraf": "2.6.1",
     "stylelint": "^13.7.2",

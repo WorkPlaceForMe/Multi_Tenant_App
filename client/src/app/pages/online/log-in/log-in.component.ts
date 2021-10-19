@@ -82,6 +82,8 @@ export class LogInComponent implements OnInit {
             if(err.error.type == 'user'){
               this.showToast(err.error.message)
             }
+            window.localStorage.clear();
+            window.sessionStorage.clear();
           }
         )
       });
@@ -91,7 +93,6 @@ export class LogInComponent implements OnInit {
     this.msService.loginPopup()
       .subscribe({
         next: (result) => {
-          console.log(result);
           this.authService.loginMs(result).subscribe(
           data => {
             this.authService.saveToken(data.user.accessToken);
@@ -111,6 +112,8 @@ export class LogInComponent implements OnInit {
             if(err.error.type == 'user'){
               this.showToast(err.error.message)
             }
+            window.localStorage.clear();
+            window.sessionStorage.clear();            
           }
         )
 

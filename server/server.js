@@ -28,12 +28,25 @@ if (process.env.NODE_ENV === 'production') {
   console.log(`Running Dev version on port ${process.env.PORT}`)
 }
 
+function customHeaders (req, res, next) {
+  app.disable('X-Powered-By')
+  res.setHeader('X-Powered-By', 'Graymatics-server')
+
+  res.setHeader('Content-Security-Policy', "default-src 'self'")
+
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN')
+
+  next()
+}
+
+app.use(customHeaders)
+
 // parse requests of content-type - application/json
 app.use(bodyParser.json({ limit: '10mb', extended: true }))
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
 app.all(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Origin', `http://${process.env.my_ip}:4200`)
   res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE')
   res.header(
     'Access-Control-Allow-Headers',
@@ -77,7 +90,6 @@ if (process.env.INSTALL === 'true') {
     })
     .then(connection => {
       connection.query('CREATE DATABASE IF NOT EXISTS ' + process.env.DB + ';').then(() => {
-        // Safe to use sequelize now
         db.sequelize.sync({ force: true }).then(() => {
           console.log('Drop and Resync Db')
           init.initial()

@@ -10,5 +10,3 @@ if(environment.production === false){
 }
 
 export var api: string = url;
-// http://'+ ip +':3300/api
-// /api
