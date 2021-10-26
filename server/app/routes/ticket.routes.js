@@ -6,6 +6,7 @@ module.exports = function (app) {
     res.header('Access-Control-Allow-Headers', 'x-access-token, Origin, Content-Type, Accept')
     next()
   })
+  
   app.get('/api/ticket/all/', [authJwt.verifyToken, authJwt.isClientOrBranch], controller.getAll)
 
   app.get(
