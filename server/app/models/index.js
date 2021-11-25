@@ -5,7 +5,6 @@ const sequelize = new Sequelize(process.env.DB, process.env.USERM, process.env.P
   dialect: process.env.DIALECT,
   operatorsAliases: 0,
   logging: false
-
   // pool: {
   //   max: config.pool.max,
   //   min: config.pool.min,

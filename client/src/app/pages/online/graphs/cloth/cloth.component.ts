@@ -165,7 +165,7 @@ export class ClothComponent implements OnInit, OnDestroy {
     },
     noDataMessage: 'No data found',
     columns: {
-      /* picture: {
+      picture: {
         title: 'PHOTO',
         type: 'custom',
         filter: false,
@@ -175,34 +175,14 @@ export class ClothComponent implements OnInit, OnDestroy {
             alert(`${row.name} saved!`);
           });
         },
-      }, */
+      }, 
       time: {
         title: 'TIME',
         type: 'string',
         filter: false,
       },
       sleeve_length: {
-        title: 'SLEEVE LENGTH',
-        type: 'string',
-        filter: false,
-      },
-      top_colour: {
-        title: 'TOP COLOUR',
-        type: 'string',
-        filter: false,
-      },
-      bottom_length: {
-        title: 'BOTTOM LENGTH',
-        type: 'string',
-        filter: false,
-      },
-      bottom_colour: {
-        title: 'BOTTOM COLOUR',
-        type: 'string',
-        filter: false,
-      },
-      shoe_colour: {
-        title: 'SHOE COLOUR',
+        title: 'CLOTHING',
         type: 'string',
         filter: false,
       },

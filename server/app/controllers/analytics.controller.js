@@ -1269,7 +1269,7 @@ exports.pc = async (req, res) => {
       await db
         .con()
         .query(
-          `SELECT * from pcount WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          `SELECT * from crowd_count WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
           function (err, result) {
             if (err)
               return res.status(500).json({
@@ -1296,11 +1296,11 @@ exports.pc = async (req, res) => {
                   v.time.getHours()
               ] = v.count1
               label.push(v.time)
-              dain.push(v['count2'] - v['count1'])
+              dain.push(v['number_of_ppl'])
               daen.push(v['count2'])
               daex.push(v['count1'])
               v['picture'] = 'name.jpg'
-              v['inside'] = v['count2'] - v['count1']
+              v['inside'] = v['number_of_ppl']
               avgi = avgi + v['inside']
               if (mini == 0) {
                 mini = v['inside']
@@ -1339,7 +1339,7 @@ exports.pc = async (req, res) => {
             avgen = Math.round((avgen / result.length) * 100) / 100
             avgex = Math.round((avgex / result.length) * 100) / 100
             if (result.length != 0) {
-              ins = result[result.length - 1]['count2'] - result[result.length - 1]['count1']
+              ins = result[result.length - 1]['number_of_ppl']
               totalEn = result[result.length - 1]['count2']
               totalEx = result[result.length - 1]['count1']
             }

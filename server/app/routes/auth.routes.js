@@ -43,6 +43,10 @@ module.exports = function (app) {
     controller.signupUser
   )
 
+  app.post('/api/auth/signinGoogle', controller.googleLogin)
+
+  app.post('/api/auth/signinMs', controller.msLogin)
+
   /**
    * @swagger
    * /api/auth/signin:

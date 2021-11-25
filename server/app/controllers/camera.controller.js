@@ -6,9 +6,7 @@ const jwt = require('jsonwebtoken')
 const { v4: uuidv4 } = require('uuid')
 const cp = require('child_process')
 const fs = require('fs')
-const { rejects } = require('assert')
-const { resolve } = require('path')
-Stream = require('node-rtsp-stream')
+
 const path =
   process.env.home + process.env.username + process.env.pathDocker + process.env.resources
 const my_ip = process.env.my_ip

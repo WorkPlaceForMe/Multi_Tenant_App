@@ -100,12 +100,11 @@ export class PcComponent implements OnInit, OnDestroy {
           m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + this.now_user['id_branch']+'/pc/' + this.camera+ '/' + m['picture'])
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss')
         }
-        if(Object.keys(this.pc.histogramEn).length != 0){
           let labels = []
-          for(var o of Object.keys(this.pc.histogramEn)){
-            o = o + ':00:00'
-            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm'))
-          }
+          // for(var o of Object.keys(this.pc.histogramEn)){
+          //   o = o + ':00:00'
+          //   labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm'))
+          // }
           let times = []
           for(var q of this.pc.label){
             times.push(this.datepipe.transform(q, 'yyyy-M-dd HH:mm'))
@@ -311,7 +310,7 @@ export class PcComponent implements OnInit, OnDestroy {
             };
 
           });
-        }
+
       },
       err => console.error(err)
     )

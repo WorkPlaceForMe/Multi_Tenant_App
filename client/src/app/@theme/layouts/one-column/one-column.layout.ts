@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { ThreeColumnsLayoutComponent } from '..';
 import { AuthService } from "../../../services/auth.service";
 
 @Component({
@@ -10,7 +11,7 @@ import { AuthService } from "../../../services/auth.service";
         <ngx-header *ngIf = "showHeader"></ngx-header>
       </nb-layout-header>
 
-      <nb-sidebar #sidebar [state]="state" class="menu-sidebar" tag="menu-sidebar" responsive *ngIf='authService.isLoggedIn == true'>
+      <nb-sidebar #sidebar [state]="state" class="menu-sidebar" tag="menu-sidebar" responsive *ngIf='authService.isLoggedIn == true' [ngStyle]='display()'>
         <ng-content select="nb-menu"></ng-content>
       </nb-sidebar>
 
@@ -23,5 +24,19 @@ import { AuthService } from "../../../services/auth.service";
 export class OneColumnLayoutComponent {
   @Input() showHeader: true;
   @Input() state: true;
+  @Input() show:boolean;
 constructor(public authService: AuthService){}
+
+display(){
+  let show;
+  if(this.show == true){
+    show = '';
+  }else{
+    show = 'none'
+  }
+  let nc ={
+    'display': show,
+  }
+  return nc;
+}
 }

@@ -98,8 +98,9 @@ import { FrComponent } from './online/graphs/fr/fr.component';
 import { ClothComponent } from './online/graphs/cloth/cloth.component';
 import { PcCameraComponent } from './online/graphs/pc-camera/pc-camera.component';
 import { BrandCarComponent } from './online/graphs/brand-car/brand-car.component';
-
-// import { OverallComponent } from './facial_recognition/overall/overall.component';
+import { GoogleLoginProvider, SocialLoginModule } from 'angularx-social-login';
+import { MsalModule } from '@azure/msal-angular';
+import { PublicClientApplication } from '@azure/msal-browser';
 
 @NgModule({
   imports: [
@@ -142,7 +143,18 @@ import { BrandCarComponent } from './online/graphs/brand-car/brand-car.component
     DragDropModule,
     PortalModule,
     ScrollingModule,
-    NbPopoverModule
+    NbPopoverModule, 
+    SocialLoginModule,
+    MsalModule.forRoot( new PublicClientApplication({
+      auth: {
+        clientId: 'e1486010-fe9f-499f-92c3-c813ea490cb8', // This is your client ID
+        authority: 'https://login.microsoftonline.com'+ '/' + 'common', 
+        redirectUri: 'http://localhost:4200'// This is your redirect URI
+      },
+      cache: {
+        cacheLocation: 'localStorage',
+      }
+    }), null, null)
   ],
   declarations: [
     PagesComponent,
@@ -214,7 +226,19 @@ import { BrandCarComponent } from './online/graphs/brand-car/brand-car.component
     ColorsService,
     StrService,
     AnnotationsService,
-    authInterceptorProviders
+    authInterceptorProviders,
+    {
+    provide: 'SocialAuthServiceConfig',
+    useValue: {
+      autoLogin: true, //keeps the user signed in
+      providers: [
+        {
+          id: GoogleLoginProvider.PROVIDER_ID,
+          provider: new GoogleLoginProvider('177947832755-0kqanmd36fjt3v3lbr7nqs1aghevs56e.apps.googleusercontent.com') // your client id
+        }
+      ]
+    }
+  },
   ],
 })
 export class PagesModule {
