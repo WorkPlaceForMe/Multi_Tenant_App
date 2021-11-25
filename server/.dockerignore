@@ -1,2 +1,12 @@
 node_modules/**
 npm-debug.log
+dist
+resources/**
+!resources/favicon1.ico
+!resources/favicon1.png
+!resources/graymaticsLogo.png
+!resources/swagger.json
+config.env
+configDocker.env
+Dockerfile
+stuff.txt
