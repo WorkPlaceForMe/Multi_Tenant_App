@@ -52,10 +52,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private userService: UserData,
               private layoutService: LayoutService,
               private breakpointService: NbMediaBreakpointsService,
-              public authservice: AuthService,
+              private authservice: AuthService,
               public router: Router,
               ) {
-                this.pic = `${api}/pictures/logo.png`
+                this.pic = `${api}/pictures/graymaticsLogo.png`
   }
 
   signOff(){
@@ -65,13 +65,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
       window.localStorage.clear();
       window.sessionStorage.clear();
       window.location.reload()
-      this.router.navigate(['/'])
+      // this.router.navigate(['/'])
     }, err =>{ 
       console.error(err)
       window.localStorage.clear();
       window.sessionStorage.clear();
       window.location.reload()
-      this.router.navigate(['/'])
+      // this.router.navigate(['/'])
     }
 )
   }

@@ -16,7 +16,11 @@ export class VidComponent implements OnInit {
   camera: Camera = {
     id: '',
     name: '',
-    rtsp_in: ''
+    rtsp_in: '',
+    atributes : {
+      longitude: "",
+      latitude: ""
+    }
   };
   values: any = {
     rtsp: 'primary',

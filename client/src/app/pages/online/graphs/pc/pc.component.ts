@@ -39,6 +39,7 @@ export class PcComponent implements OnInit, OnDestroy {
   dataH: any;
   optionsH: any;
   player: any;
+  rtspIn: any;
 
   @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef; 
 
@@ -70,7 +71,7 @@ export class PcComponent implements OnInit, OnDestroy {
     var time = new Date();
     this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0,3);
     let aaa = this.timezone;
-    this.timezone = parseInt(this.timezone) * 2;
+    this.timezone = parseInt(this.timezone);
     let p = ''
     if(this.timezone > 0){
       p = '+'
@@ -86,23 +87,27 @@ export class PcComponent implements OnInit, OnDestroy {
       start: this.range.start,
       end: this.range.end,
       type: type
-    }
+    };
+    this.face.checkVideo(12, this.camera).subscribe(
+      res => {
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
+      }, err => console.error(err),
+    );
     this.serv.pc(this.camera,l).subscribe(
       res=>{
         this.pc = res['data']
         for(var m of this.pc.raw){
           m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + this.now_user['id_branch']+'/pc/' + this.camera+ '/' + m['picture'])
-          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
+          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss')
         }
-        if(Object.keys(this.pc.histogramEn).length != 0){
           let labels = []
-          for(var o of Object.keys(this.pc.histogramEn)){
-            o = o + ':00:00'
-            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm', this.timezone))
-          }
+          // for(var o of Object.keys(this.pc.histogramEn)){
+          //   o = o + ':00:00'
+          //   labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm'))
+          // }
           let times = []
           for(var q of this.pc.label){
-            times.push(this.datepipe.transform(q, 'yyyy-M-dd HH:mm', this.timezone))
+            times.push(this.datepipe.transform(q, 'yyyy-M-dd HH:mm'))
           }
 
           this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
@@ -305,7 +310,7 @@ export class PcComponent implements OnInit, OnDestroy {
             };
 
           });
-        }
+
       },
       err => console.error(err)
     )

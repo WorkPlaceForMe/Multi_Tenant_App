@@ -1,97 +1,2570 @@
-const controller = require("../controllers/analytics.controller");
-const { authJwt } = require("../middleware");
+const controller = require('../controllers/analytics.controller')
+const { authJwt } = require('../middleware')
 
+module.exports = function (app) {
+  app.use(function (req, res, next) {
+    res.header('Access-Control-Allow-Headers', 'x-access-token, Origin, Content-Type, Accept')
+    next()
+  })
+  /**
+   * @swagger
+   *tags:
+   *  name: Analytics
+   *  description: API to manage the analytics returns.
+   */
+  /**
+   * @swagger
+   *tags:
+   *  name: Overview Dashboard
+   *  description: API to manage the overview dashboard results.
+   */
 
-module.exports = function(app) {
-   app.use(function(req, res, next) {
-     res.header(
-       "Access-Control-Allow-Headers",
-       "x-access-token, Origin, Content-Type, Accept"
-     );
-     next();
-   });
+  /**
+   * @swagger
+   * /api/analytics/loitering/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Loitering analytic's results"
+   *    operationId: loitering
+   *    description: "Use to obtain results from Loitering algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   avgH:
+   *                     description: "Avarage in hours"
+   *                     type: number
+   *                     example: 32.1
+   *                   avgS:
+   *                     description: "Avarage in seconds"
+   *                     type: string
+   *                     example: 12.1
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *                   dwell:
+   *                     description: "Array with the values of dwell"
+   *                     type: array
+   *                     example: []
+   *                   labelsD:
+   *                     description: "Labels for the detection times in array format"
+   *                     type: array
+   *                     example: []
+   *                   histogram:
+   *                     description: "Counts for the histogram"
+   *                     type: object
+   *                     example: {}
+   *                   min:
+   *                     description: "Minimun value for the time variation"
+   *                     type: number
+   *                     example: 10
+   *                   max:
+   *                     description: "Maximun value for the time variation"
+   *                     type: number
+   *                     example: 12
+   *                   avg:
+   *                     description: "Avarage value for the time variation"
+   *                     type: number
+   *                     example: 11.5
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/loitering/:id', [authJwt.verifyToken], controller.loitering)
 
-   app.post(
-    "/api/analytics/loitering/:id",
-    [authJwt.verifyToken],
-    controller.loitering
-  );
+  app.get('/api/analytics/loitering/alerts/:id', [authJwt.verifyToken], controller.loiteringAlerts)
 
-  app.post(
-    "/api/analytics/intrude/:id",
-    [authJwt.verifyToken],
-    controller.intrude
-  );
+  /**
+   * @swagger
+   * /api/analytics/intrude/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Intrusion Alert results"
+   *    operationId: intrude
+   *    description: "Use to obtain results from Intrusion Alert algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   avgH:
+   *                     description: "Avarage in hours"
+   *                     type: number
+   *                     example: 32.1
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *                   donut:
+   *                     description: "Array with the values for the pie chart"
+   *                     type: array
+   *                     example: []
+   *                   over:
+   *                     description: "Over time data graph"
+   *                     type: object
+   *                     example: {}
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/intrude/:id', [authJwt.verifyToken], controller.intrude)
 
-  app.post(
-    "/api/analytics/violence/:id",
-    [authJwt.verifyToken],
-    controller.violence
-  );
+  /**
+   * @swagger
+   * /api/analytics/violence/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Violence algorithm's results"
+   *    operationId: violence
+   *    description: "Use to obtain results from Violence algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *                   over:
+   *                     description: "Over time data graph"
+   *                     type: object
+   *                     example: {}
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/violence/:id', [authJwt.verifyToken], controller.violence)
 
-  app.post(
-    "/api/analytics/aod/:id",
-    [authJwt.verifyToken],
-    controller.aod
-  );
+  /**
+   * @swagger
+   * /api/analytics/aod/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Abandoned Object analytic's results"
+   *    operationId: aod
+   *    description: "Use to obtain results from Abandoned Object algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *                   over:
+   *                     description: "Over time data graph"
+   *                     type: object
+   *                     example: {}
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/aod/:id', [authJwt.verifyToken], controller.aod)
+  /**
+   * @swagger
+   * /api/analytics/covered/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "No Mask analytic's results"
+   *    operationId: covered
+   *    description: "Use to obtain results from No Mask algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *                   over:
+   *                     description: "Over time data graph"
+   *                     type: object
+   *                     example: {}
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/covered/:id', [authJwt.verifyToken], controller.covered)
 
-  app.post(
-    "/api/analytics/covered/:id",
-    [authJwt.verifyToken],
-    controller.covered
-  );
+  /**
+   * @swagger
+   * /api/analytics/social/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Social Distance analytic's results"
+   *    operationId: social
+   *    description: "Use to obtain results from Social Distance algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *                   types:
+   *                     description: "Object of the result level count."
+   *                     type: object
+   *                     example: {}
+   *                   over:
+   *                     description: "Over time data graph"
+   *                     type: object
+   *                     example: {}
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/social/:id', [authJwt.verifyToken], controller.social)
 
-  app.post(
-    "/api/analytics/social/:id",
-    [authJwt.verifyToken],
-    controller.social
-  );
+  /**
+   * @swagger
+   * /api/analytics/pc/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "People Count analytic's results"
+   *    operationId: pc
+   *    description: "Use to obtain results from People Count algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   totalEn:
+   *                     description: "Total entrance alerts"
+   *                     type: number
+   *                     example: 156
+   *                   totalEx:
+   *                     description: "Total exit alerts"
+   *                     type: number
+   *                     example: 156
+   *                   in:
+   *                     description: "Total people inside"
+   *                     type: number
+   *                     example: 156
+   *                   avg:
+   *                     description: "Avarage values for people inside, getting out and in."
+   *                     type: object
+   *                     properties:
+   *                       in:
+   *                         type: number
+   *                         example: 1
+   *                       en:
+   *                         type: number
+   *                         example: 11
+   *                       ex:
+   *                         type: number
+   *                         example: 10
+   *                   min:
+   *                     description: "Minimun values for people inside, getting out and in."
+   *                     type: object
+   *                     properties:
+   *                       in:
+   *                         type: number
+   *                         example: 1
+   *                       en:
+   *                         type: number
+   *                         example: 11
+   *                       ex:
+   *                         type: number
+   *                         example: 10
+   *                   max:
+   *                     description: "Maximun values for people inside, getting out and in."
+   *                     type: object
+   *                     properties:
+   *                       in:
+   *                         type: number
+   *                         example: 1
+   *                       en:
+   *                         type: number
+   *                         example: 11
+   *                       ex:
+   *                         type: number
+   *                         example: 10
+   *                   histogramEn:
+   *                     description: "Object of the histogram entrance count."
+   *                     type: object
+   *                     example: {}
+   *                   histogramEx:
+   *                     description: "Object of the histogram exit count."
+   *                     type: object
+   *                     example: {}
+   *                   label:
+   *                     description: "Labels for graphs."
+   *                     type: object
+   *                     example: {}
+   *                   dataIn:
+   *                     description: "Data for graphs, inside people."
+   *                     type: array
+   *                     example: []
+   *                   dataEn:
+   *                     description: "Data for graphs, entry people."
+   *                     type: array
+   *                     example: []
+   *                   dataEx:
+   *                     description: "Data for graphs, exiting people"
+   *                     type: array
+   *                     example: []
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/pc/:id', [authJwt.verifyToken], controller.pc)
 
-  app.post(
-    "/api/analytics/pc/:id",
-    [authJwt.verifyToken],
-    controller.pc
-  );
+  /**
+   * @swagger
+   * /api/analytics/helm/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Helmet Detection analytic's results"
+   *    operationId: helm
+   *    description: "Use to obtain results from Helmet Detection algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *                   over:
+   *                     description: "Over time data graph"
+   *                     type: object
+   *                     example: {}
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/helm/:id', [authJwt.verifyToken], controller.helm)
 
-  app.post(
-    "/api/analytics/helm/:id",
-    [authJwt.verifyToken],
-    controller.helm
-  );
+  /**
+   * @swagger
+   * /api/analytics/queue/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Queue Management analytic's results"
+   *    operationId: queue
+   *    description: "Use to obtain results from Queue Management algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *                   count:
+   *                     description: "Count queueing"
+   *                     type: number
+   *                     example: 12
+   *                   avg:
+   *                     description: "Avarage time of wait."
+   *                     type: number
+   *                     example: 00:01:02
+   *                   min:
+   *                     description: "Minimun time of wait."
+   *                     type: number
+   *                     example: 00:00:30
+   *                   max:
+   *                     description: "Maximun time of wait."
+   *                     type: number
+   *                     example: 00:10:02
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/queue/:id', [authJwt.verifyToken], controller.queue)
 
-  app.post(
-    "/api/analytics/queue/:id",
-    [authJwt.verifyToken],
-    controller.queue
-  );
+  /**
+   * @swagger
+   * /api/analytics/vault/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Open Vault Door analytic's results"
+   *    operationId: vault
+   *    description: "Use to obtain results from Open Vault Door algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total number of alerts."
+   *                     type: number
+   *                     example: 12
+   *                   avg:
+   *                     description: "Avarage alerts per day."
+   *                     type: number
+   *                     example: 00:01:02
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *                   org:
+   *                     description: "Values with the duration of the queue."
+   *                     type: array
+   *                     example: []
+   *                   over:
+   *                     description: "Over time data graph"
+   *                     type: object
+   *                     example: {}
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/vault/:id', [authJwt.verifyToken], controller.vault)
 
-  app.post(
-    "/api/analytics/vault/:id",
-    [authJwt.verifyToken],
-    controller.vault
-  );
+  /**
+   * @swagger
+   * /api/analytics/parking/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Parking Violation analytic's results"
+   *    operationId: parking
+   *    description: "Use to obtain results from Parking Violation algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/parking/:id', [authJwt.verifyToken], controller.parking)
 
-  app.post(
-    "/api/analytics/parking/:id",
-    [authJwt.verifyToken],
-    controller.parking
-  );
+  /**
+   * @swagger
+   * /api/analytics/anpr/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Automatic Number Plate Recognition (ANPR) analytic's results"
+   *    operationId: anpr
+   *    description: "Use to obtain results from Automatic Number Plate Recognition (ANPR) algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/anpr/:id', [authJwt.verifyToken], controller.anpr)
 
-  app.post(
-    "/api/analytics/anpr/:id",
-    [authJwt.verifyToken],
-    controller.anpr
-  );
+  /**
+   * @swagger
+   * /api/analytics/barrier/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Barrier Detection analytic's results"
+   *    operationId: barrier
+   *    description: "Use to obtain results from Barrier Detection algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/barrier/:id', [authJwt.verifyToken], controller.barrier)
 
-  app.post(
-    "/api/analytics/barrier/:id",
-    [authJwt.verifyToken],
-    controller.barrier
-  );
+  /**
+   * @swagger
+   * /api/analytics/vehicle/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Vehicle Count analytic's results"
+   *    operationId: vehicle
+   *    description: "Use to obtain results from Vehicle Count algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   totalEn:
+   *                     description: "Total entrance alerts"
+   *                     type: number
+   *                     example: 156
+   *                   totalEx:
+   *                     description: "Total exit alerts"
+   *                     type: number
+   *                     example: 156
+   *                   in:
+   *                     description: "Total vehicles inside"
+   *                     type: number
+   *                     example: 156
+   *                   avg:
+   *                     description: "Avarage values for vehicles inside, getting out and in."
+   *                     type: object
+   *                     properties:
+   *                       in:
+   *                         type: number
+   *                         example: 1
+   *                       en:
+   *                         type: number
+   *                         example: 11
+   *                       ex:
+   *                         type: number
+   *                         example: 10
+   *                   min:
+   *                     description: "Minimun values for vehicles inside, getting out and in."
+   *                     type: object
+   *                     properties:
+   *                       in:
+   *                         type: number
+   *                         example: 1
+   *                       en:
+   *                         type: number
+   *                         example: 11
+   *                       ex:
+   *                         type: number
+   *                         example: 10
+   *                   max:
+   *                     description: "Maximun values for vehicles inside, getting out and in."
+   *                     type: object
+   *                     properties:
+   *                       in:
+   *                         type: number
+   *                         example: 1
+   *                       en:
+   *                         type: number
+   *                         example: 11
+   *                       ex:
+   *                         type: number
+   *                         example: 10
+   *                   histogramEn:
+   *                     description: "Object of the histogram entrance count."
+   *                     type: object
+   *                     example: {}
+   *                   histogramEx:
+   *                     description: "Object of the histogram exit count."
+   *                     type: object
+   *                     example: {}
+   *                   label:
+   *                     description: "Labels for graphs."
+   *                     type: object
+   *                     example: {}
+   *                   dataIn:
+   *                     description: "Data for graphs, inside vehicles."
+   *                     type: array
+   *                     example: []
+   *                   dataEn:
+   *                     description: "Data for graphs, entry vehicles."
+   *                     type: array
+   *                     example: []
+   *                   dataEx:
+   *                     description: "Data for graphs, exiting vehicles"
+   *                     type: array
+   *                     example: []
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/vehicle/:id', [authJwt.verifyToken], controller.vc)
 
-  app.post(
-    "/api/analytics/vehicle/:id",
-    [authJwt.verifyToken],
-    controller.vc
-  );
+  /**
+   * @swagger
+   * /api/analytics/queueLite/{id}:
+   *   post:
+   *    tags:
+   *       - Overview Dashboard
+   *    summary: "Queue Managemente Lite results"
+   *    operationId: queueLite
+   *    description: "Use to obtain results from Queue Managemente algorithm for an specific camera under a range of time. This is the lite version to load main Dashboard overview."
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   avg:
+   *                     description: "Avarage time in queue."
+   *                     type: number
+   *                     example: 00:01:03
+   *                   count:
+   *                     description: "Quantity of people in queue."
+   *                     type: number
+   *                     example: 12
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/queueLite/:id', [authJwt.verifyToken], controller.queueLite)
+
+  /**
+   * @swagger
+   * /api/analytics/pcLite/{id}:
+   *   post:
+   *    tags:
+   *       - Overview Dashboard
+   *    summary: "People Count lite results"
+   *    operationId: pcLite
+   *    description: "Use to obtain results from People Count algorithm for an specific camera under a range of time. This is the lite version for Overview Dashboard."
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   currentCount:
+   *                     description: "Current count of people."
+   *                     type: number
+   *                     example: 13
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/pcLite/:id', [authJwt.verifyToken], controller.pcLite)
+
+  /**
+   * @swagger
+   * /api/analytics/premises/{id}:
+   *   post:
+   *    tags:
+   *       - Overview Dashboard
+   *    summary: "Premises overview results"
+   *    operationId: premises
+   *    description: "Use to obtain results from Premises for an specific camera under a range of time. This is for the main overview Dashboard."
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   queue:
+   *                     description: "Data for queue graph."
+   *                     type: object
+   *                     example: {}
+   *                   pcount:
+   *                     description: "Data for people count graph."
+   *                     type: object
+   *                     example: {}
+   *                   loit:
+   *                     description: "Data for loitering graph."
+   *                     type: object
+   *                     example: {}
+   *                   vault:
+   *                     description: "Data for vault graph."
+   *                     type: object
+   *                     example: {}
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/premises/:id', [authJwt.verifyToken], controller.premises)
+
+  /**
+   * @swagger
+   * /api/analytics/threats/{id}:
+   *   post:
+   *    tags:
+   *       - Overview Dashboard
+   *    summary: "Threats overview results"
+   *    operationId: threats
+   *    description: "Use to obtain results from Threats for an specific camera under a range of time. This is for the main overview Dashboard."
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   violence:
+   *                     description: "Data for violence graph."
+   *                     type: object
+   *                     example: {}
+   *                   helmet:
+   *                     description: "Data for helmet graph."
+   *                     type: object
+   *                     example: {}
+   *                   covered:
+   *                     description: "Data for no-mask graph."
+   *                     type: object
+   *                     example: {}
+   *                   aod:
+   *                     description: "Data for abandoned object graph."
+   *                     type: object
+   *                     example: {}
+   *                   social:
+   *                     description: "Data for social distancing graph."
+   *                     type: object
+   *                     example: {}
+   *                   intr:
+   *                     description: "Data for intrusion graph."
+   *                     type: object
+   *                     example: {}
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/threats/:id', [authJwt.verifyToken], controller.threats)
+  /**
+   * @swagger
+   * /api/analytics/tamper/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Camera Tamper analytic's results"
+   *    operationId: tamper
+   *    description: "Use to obtain results from Camera Tamper algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *                   over:
+   *                     description: "Over time data graph"
+   *                     type: object
+   *                     example: {}
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/tamper/:id', [authJwt.verifyToken], controller.tamper)
+
+  /**
+   * @swagger
+   * /api/analytics/accident/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Accident Detection analytic's results"
+   *    operationId: accident
+   *    description: "Use to obtain results from Accident Detection algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/accident/:id', [authJwt.verifyToken], controller.accident)
+  /**
+   * @swagger
+   * /api/analytics/animal/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Animals On Road analytic's results"
+   *    operationId: animal
+   *    description: "Use to obtain results from Animals On Road algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/animal/:id', [authJwt.verifyToken], controller.animal)
+  /**
+   * @swagger
+   * /api/analytics/axle/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Axle Detection analytic's results"
+   *    operationId: axle
+   *    description: "Use to obtain results from Axle Detection algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/axle/:id', [authJwt.verifyToken], controller.axle)
+  /**
+   * @swagger
+   * /api/analytics/carmake/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Axle Detection analytic's results"
+   *    operationId: carmake
+   *    description: "Use to obtain results from Carmake Detection algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/carmake/:id', [authJwt.verifyToken], controller.carmake)
+  /**
+   * @swagger
+   * /api/analytics/vcount/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Vehicle Count analytic's results"
+   *    operationId: vcount
+   *    description: "Use to obtain results from Vehicle Count algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/vcount/:id', [authJwt.verifyToken], controller.vcount)
+  /**
+   * @swagger
+   * /api/analytics/direction/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Wrong way or illegal turn detection analytic's results"
+   *    operationId: direction
+   *    description: "Use to obtain results from Wrong way or illegal turn detection algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/direction/:id', [authJwt.verifyToken], controller.direction)
+  /**
+   * @swagger
+   * /api/analytics/speeding/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Speeding Vehicle analytic's results"
+   *    operationId: speeding
+   *    description: "Use to obtain results from Speeding Vehicle algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *                   rel:
+   *                     description: "Raw data from relations containing rtsp link."
+   *                     type: object
+   *                     example: {}
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/speeding/:id', [authJwt.verifyToken], controller.speeding)
+  /**
+   * @swagger
+   * /api/analytics/fr/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Demographics analytic's results"
+   *    operationId: fr
+   *    description: "Use to obtain results from Demographics algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *                   rel:
+   *                     description: "Raw data from relations containing rtsp link."
+   *                     type: object
+   *                     example: {}
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+
+  app.post('/api/analytics/fr/:id', [authJwt.verifyToken], controller.fr)
+
+  /**
+   * @swagger
+   * /api/analytics/cloth/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Clothing analytic's results"
+   *    operationId: clothing
+   *    description: "Use to obtain results from Clothing algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *                   rel:
+   *                     description: "Raw data from relations containing rtsp link."
+   *                     type: object
+   *                     example: {}
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+
+  app.post('/api/analytics/cloth/:id', [authJwt.verifyToken], controller.cloth)
+  /**
+   * @swagger
+   * /api/analytics/brand/{id}:
+   *   post:
+   *    tags:
+   *       - Analytics
+   *    summary: "Car Brand Detection analytic's results"
+   *    operationId: brand
+   *    description: "Use to obtain results from Car Brand Detection algorithm for an specific camera under a range of time"
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *      - in: header
+   *        name: x-access-token
+   *        schema:
+   *          type: string
+   *        required: true
+   *    requestBody:
+   *       content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                type:
+   *                  description: "Type of data to be retrieved. Can be cam_id, id_branch or id_account."
+   *                  type: string
+   *                  example: cam_id
+   *                start:
+   *                  description: "Date for initial range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-10-01T03:00:00.000Z
+   *                end:
+   *                  description: "Date for end range. Format: 2020-10-01T03:00:00.000Z."
+   *                  type: string
+   *                  example: 2020-11-01T02:59:59.000Z
+   *    responses:
+   *      '200':
+   *        description: "A successful response"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: true
+   *               data:
+   *                 type: object
+   *                 properties:
+   *                   total:
+   *                     description: "Total alerts"
+   *                     type: number
+   *                     example: 156
+   *                   raw:
+   *                     description: "Raw data from MySQL."
+   *                     type: array
+   *                     example: []
+   *      '500':
+   *        description: "Server error"
+   *        content:
+   *          application/json:
+   *            schema:
+   *             type: object
+   *             properties:
+   *               success:
+   *                 description: "Result type"
+   *                 type: boolean
+   *                 example: false
+   *               message:
+   *                 description: "Type of failure"
+   *                 type: string
+   *                 example: Error message generated by the server
+   */
+  app.post('/api/analytics/brand/:id', [authJwt.verifyToken], controller.brand)
+
+  app.post('/api/analytics/pcOnView/:id', [authJwt.verifyToken], controller.pcOnView)
 }

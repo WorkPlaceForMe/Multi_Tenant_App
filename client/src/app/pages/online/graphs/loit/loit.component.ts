@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'ngx-loit',
   templateUrl: './loit.component.html',
-  styleUrls: ['./loit.component.scss']
+  styleUrls: ['./loit.component.scss', '../smart-table.scss'],
 })
 export class LoitComponent implements OnInit, OnDestroy {
 
@@ -24,10 +24,10 @@ export class LoitComponent implements OnInit, OnDestroy {
   constructor(
     private serv: AnalyticsService,
     private theme: NbThemeService,
-    public datepipe: DatePipe, 
+    public datepipe: DatePipe,
     public sanitizer: DomSanitizer,
     private face: FacesService,
-    private route: Router
+    private route: Router,
   ) {}
 
   themeSubscription: any;
@@ -37,77 +37,101 @@ export class LoitComponent implements OnInit, OnDestroy {
   dataL: any;
   optionsL: any;
   player: any;
+  rtspIn: any;
 
-  @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef; 
+  @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef;
 
   ngOnDestroy(){
     if(this.player != undefined){
-      this.player.destroy()
+      this.player.destroy();
       this.face.cameraStop({id: this.camera}).subscribe(
         res =>{
         },
-        err=> console.error(err)
-      )
+        err=> console.error(err),
+      );
     }
   }
 
+  @ViewChild('videoPlayer', { static: false }) videoplayer: ElementRef;
+  isPlay: boolean = false;
+  toggleVideo(event: any) {
+    this.videoplayer.nativeElement.play();
+  }
+  videoFile:string = '';
+  pass(vid:string){
+    this.videoplayer.nativeElement.src = vid;
+    this.videoplayer.nativeElement.load();
+    this.videoplayer.nativeElement.play();
+
+  }
+  video:boolean = false;
+
   ngOnInit(): void {
-    this.now_user = JSON.parse(localStorage.getItem('now_user'))
-    if(api.length <= 4){
-      setTimeout(()=>{
-        this.face.camera({id: this.camera}).subscribe(
-          res =>{
-            this.player = new JSMpeg.Player(`ws://localhost:${res['port']}`, {
-              canvas: this.streamingcanvas.nativeElement, autoplay: true, audio: false, loop: true
-            })
-          },
-          err=> console.error(err)
-        )
-      },500)
-    }
-    var time = new Date();
+    this.now_user = JSON.parse(localStorage.getItem('now_user'));
+    const time = new Date();
     this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0,3);
-    let aaa = this.timezone;
-    this.timezone = parseInt(this.timezone) * 2;
-    let p = ''
+    const aaa = this.timezone;
+    this.timezone = parseInt(this.timezone);
+    let p = '';
     if(this.timezone > 0){
-      p = '+'
+      p = '+';
     }
     this.timezone = p + JSON.stringify(this.timezone) + '00';
     let type;
     if(this.now_user.id_branch != '0000'){
       type = 'cam_id';
     }else{
-      type = 'id_account'
+      type = 'id_account';
     }
-    let l = {
+    const l = {
       start: this.range.start,
       end: this.range.end,
-      type: type
-    }
-    this.serv.loitering(this.camera,l).subscribe(
-      res=>{
-        this.loitering = res['data']
-        for(var m of this.loitering.raw){
-          m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/loitering/' + m['cam_id'] + '/' + m['picture'])
-          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
+      type: type,
+    };
+    this.face.checkVideo(2, this.camera).subscribe(
+      res => {
+        this.video = res['video'];
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
+        if (this.video === true) {
+          this.settings['columns']['picture'] = {
+            title: 'VIDEO',
+            type: 'custom',
+            filter: false,
+            renderComponent: ButtonViewComponent,
+            onComponentInitFunction:(instance) => {
+              instance.save.subscribe((row: string)  => {
+                this.pass(row);
+              });
+            },
+          };
+          this.settings = Object.assign({},this.settings);
         }
-        this.source = this.loitering.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
-        if(Object.keys(this.loitering.histogram).length != 0){
-          let labels = []
-          for(var o of Object.keys(this.loitering.histogram)){
-            labels.push(JSON.stringify(parseInt(o) + parseInt(aaa))+'hrs')
+      }, err => console.error(err),
+    );
+    this.serv.loitering(this.camera, l).subscribe(
+      res => {
+        this.loitering = res['data'];
+        for(const m of this.loitering.raw){
+          m['clip_path']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/loitering/' + m['cam_id'] + '/' + m['clip_path'];
+          m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/loitering/' + m['cam_id'] + '/' + m['picture']);
+          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss');
+        }
+        this.source = this.loitering.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+        if (Object.keys(this.loitering.histogram).length !== 0){
+          const labels = [];
+          for (const o of Object.keys(this.loitering.histogram)){
+            labels.push(JSON.stringify(parseInt(o) + parseInt(aaa)) + ' hrs');
           }
-          let times = []
-          for(var q of this.loitering.labelsD){
-            times.push(this.datepipe.transform(q, 'yyyy-M-dd HH:mm', this.timezone))
+          const times = [];
+          for (const q of this.loitering.labelsD){
+            times.push(this.datepipe.transform(q, 'yyyy-M-dd HH:mm'));
           }
 
           this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
 
             const colors: any = config.variables;
             const chartjs: any = config.variables.chartjs;
-        
+
             this.dataH = {
               labels: labels,
               datasets: [{
@@ -115,10 +139,10 @@ export class LoitComponent implements OnInit, OnDestroy {
                   backgroundColor: colors.infoLight,
                   borderWidth: 1,
                   data: Object.values(this.loitering.histogram),
-                }
+                },
               ],
             };
-        
+
             this.optionsH = {
               responsive: true,
               maintainAspectRatio: false,
@@ -152,9 +176,9 @@ export class LoitComponent implements OnInit, OnDestroy {
                   },
                 ],
               },
-              legend:{
-                display:false
-              }
+              legend: {
+                display: false,
+              },
             };
 
             this.dataL = {
@@ -170,7 +194,7 @@ export class LoitComponent implements OnInit, OnDestroy {
                 pointHoverRadius: 5,
               }],
             };
-      
+
             this.optionsL = {
               responsive: true,
               maintainAspectRatio: false,
@@ -222,11 +246,11 @@ export class LoitComponent implements OnInit, OnDestroy {
           });
         }
       },
-      err => console.error(err)
-    )
+      err => console.error(err),
+    );
   }
 
-  source:any = new LocalDataSource();
+  source: any = new LocalDataSource();
 
   settings = {
     mode: 'external',
@@ -245,54 +269,85 @@ export class LoitComponent implements OnInit, OnDestroy {
     },
     pager : {
       display : true,
-      perPage:5
+      perPage: 5,
       },
-    noDataMessage: "No data found",
+    noDataMessage: 'No data found',
     columns: {
       track_id: {
         title: 'ID',
         type: 'string',
-        filter: false
+        filter: false,
       },
       picture: {
-        title: 'PHOTO',
+        title: 'PICTURE',
         type: 'custom',
         filter: false,
-        renderComponent: ButtonViewComponent,
-        onComponentInitFunction(instance) {
-          instance.save.subscribe(row => {
-            alert(`${row.name} saved!`)
+        renderComponent: ButtonViewComponentPic,
+        onComponentInitFunction: (instance) => {
+          instance.save.subscribe((row: string)  => {
+            this.pass(row);
           });
-        }
+        },
       },
       time: {
         title: 'TIME',
         type: 'string',
-        filter: false
+        filter: false,
       },
       dwell: {
         title: 'DWELL TIME',
         type: 'string',
-        filter: false
+        filter: false,
       },
       camera_name: {
         title: 'CAM',
         type: 'string',
-        filter: false
+        filter: false,
       },
       alert: {
         title: 'SEVERITY',
         type: 'string',
-        filter: false
-      }
+        filter: false,
+      },
     },
   };
 
   got(id){
-    this.route.navigate([`/pages/tickets`])
+    this.route.navigate([`/pages/tickets`]);
   }
 }
 
+@Component({
+  selector: 'button-view',
+  styles: ['.play-btn { position: absolute; left: 50%; top: 50%; margin-top: -17px; margin-left: -20px; color: #f7f9fc47}'],
+  template: `
+    <div >
+      <div style = "width:60px; height: 60px">
+        <img [src]="rowData.picture" width='60' height='60'>
+        <button class='btn btn-link play-btn' (click)="openVideo()"><i class="fas fa-play"></i></button>
+      </div>
+    </div>
+  `,
+})
+export class ButtonViewComponent implements ViewCell, OnInit {
+  renderValue: string;
+
+  constructor(){
+  }
+
+  @Input() value: string | number;
+  @Input() rowData: any;
+
+  @Output() save: EventEmitter<any> = new EventEmitter();
+
+  openVideo(){
+    this.save.emit(this.rowData.clip_path);
+  }
+
+  ngOnInit() {
+    this.renderValue = this.value.toString().toUpperCase();
+  }
+}
 
 @Component({
   selector: 'button-view',
@@ -300,7 +355,7 @@ export class LoitComponent implements OnInit, OnDestroy {
     <img [src]="rowData.picture" width='60' height='60'>
   `,
 })
-export class ButtonViewComponent implements ViewCell, OnInit {
+export class ButtonViewComponentPic implements ViewCell, OnInit {
 
   constructor(){
   }

@@ -71,7 +71,7 @@ export class ParkingComponent implements OnInit {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
     var time = new Date();
     this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0,3);
-    this.timezone = parseInt(this.timezone) * 2;
+    this.timezone = parseInt(this.timezone);
     let p = ''
     if(this.timezone > 0){
       p = '+'
@@ -93,7 +93,7 @@ export class ParkingComponent implements OnInit {
           this.parking = res['data']
           for(var m of this.parking.raw){
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/parking/' + m['cam_id'] + '/' + m['picture'])
-            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
+            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss')
           }
           this.source = this.parking.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
 

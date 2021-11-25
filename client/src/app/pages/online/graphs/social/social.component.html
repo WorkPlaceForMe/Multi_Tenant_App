@@ -1,41 +1,41 @@
-<div class="container">
-    <div class='col-md-12' style="margin-top: 5px;">
+<div class="container no-padding">
+    <div class='col-md-12 no-padding' style="margin-top: 15px;">
         <div class="row justify-content-start">
-            <div class="col-md-3">
+            <div class="col-md-3 less-padding">
                 <nb-card>
-                    <nb-card-body>
-                        <p>Total</p>
-                        <strong>{{social.length == 0 ? 'None' : social.total}}</strong>
+                    <nb-card-body class = "top-badges">
+                        <p class = "badge-txt">Total</p>
+                        <p class = "badge-reading">{{social.length == 0 ? 'None' : social.total}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 less-padding">
                 <nb-card>
-                    <nb-card-body>
-                        <p>Severe</p>
-                        <strong>{{social.length == 0 ? 'None' : social.types['2']}}</strong>
+                    <nb-card-body class = "top-badges">
+                        <p class = "badge-txt">Severe</p>
+                        <p class = "badge-reading">{{social.length == 0 ? 'None' : social.types['2']}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 less-padding">
                 <nb-card>
-                    <nb-card-body>
-                        <p>Moderate</p>
-                        <strong>{{social.length == 0 ? 'None' : social.types['1']}}</strong>
+                    <nb-card-body class = "top-badges">
+                        <p class = "badge-txt">Moderate</p>
+                        <p class = "badge-reading">{{social.length == 0 ? 'None' : social.types['1']}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 less-padding">
                 <nb-card>
-                    <nb-card-body>
-                        <p>Mild</p>
-                        <strong>{{social.length == 0 ? 'None' : social.types['0']}}</strong>
+                    <nb-card-body class = "top-badges">
+                        <p class = "badge-txt">Mild</p>
+                        <p class = "badge-reading">{{social.length == 0 ? 'None' : social.types['0']}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 less-padding">
                 <nb-card>
                     <nb-card-body>
                         <p>Over Time</p>
@@ -45,22 +45,45 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-8 less-padding">
                 <nb-card>
-                    <nb-card-body>
+                    <nb-card-body style = "padding: 0px">
                         <ng2-smart-table [settings]="settings" [source]="source" (edit)='got($event)'>
                         </ng2-smart-table>
                     </nb-card-body>
                 </nb-card>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-4 less-padding" *ngIf=video>
                 <nb-card>
-                    <nb-card-body align='center'>
-                        <canvas #streaming id="canvas"  width="640" height="480" style="display: block; width: 90%;"></canvas>
+                    <nb-card-body align='center' style = "min-height: 300px">
+                        <video controls (click)="toggleVideo($event)" #videoPlayer class="responsive" muted loop controls preload="none" style = "width: 100%;height: 100%">
+                            <source [src]="videoFile" type="video/mp4"/>
+                            Browser not supported
+                        </video>
                     </nb-card-body>
                 </nb-card>
             </div>
         </div>
-
+    
     </div>
+        <div class='col-md-12 no-padding' style="margin-top: 15px;">
+        <div class="row">
+          <div class="col-md-8 less-padding">
+            <nb-card>
+                <nb-card-header>
+                  <h4>Live Output Feed</h4>
+                </nb-card-header>
+                <nb-card-body>
+                  <div align='center'>
+                    <!-- <iframe frameBorder="0" height="100%" width="100%" style="width:100%;height:100%;min-height:800px" [src]="rtspIn">
+                    </iframe>
+                    <canvas #streaming id="canvas" width="640" height="480"
+                      style="display: block; width: 640px !important; height: 480px !important;"></canvas> -->
+                      <img [src]='rtspIn' style='width: 100%; height: auto;'>
+                  </div>
+                </nb-card-body>
+              </nb-card>
+          </div>
+        </div>
+      </div>
 </div>

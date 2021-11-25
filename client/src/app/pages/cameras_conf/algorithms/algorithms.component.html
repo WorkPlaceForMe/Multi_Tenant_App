@@ -1,307 +1,409 @@
   <div class='row'>
     <div class='col-md-10'>
-  <nb-card>
-    <nb-card-header>
-        <h1 align='center'>Settings of {{camera.name}}</h1>
-    </nb-card-header>
-  </nb-card>
-</div>
-<div class="col-md-2">
-  <nb-card>
-    <nb-card-body>
-      <label for="noth" class="label">Remaining Analytics:&nbsp;</label>
-        <strong>{{remaining.analytics}}</strong>
-    </nb-card-body>
-  </nb-card>
-</div>
-</div>
-  
+      <nb-card>
+        <nb-card-header>
+          <h1 align='center'>Settings of {{camera.name}}</h1>
+        </nb-card-header>
+      </nb-card>
+    </div>
+    <div class="col-md-2">
+      <nb-card>
+        <nb-card-body>
+          <label for="noth" class="label">Remaining Analytics:&nbsp;</label>
+          <strong>{{remaining.analytics}}</strong>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="accordion-container col-md-6 col-lg-6 col-xxxl-6">
+      <nb-accordion multi>
+        <nb-accordion-item>
+          <nb-accordion-item-header>
+            <strong>A) People related.</strong> &nbsp;<span class="badge badge-info">{{Calgos.length}}</span><span
+              class="badge badge-success">{{actC}}</span>
+          </nb-accordion-item-header>
+          <nb-accordion-item-body>
+            <section class="mat-elevation-z2 mat-header-row alfons">
+              <span class="mat-header-cell">Status</span>
+              <span class="mat-header-cell">Name</span>
+              <span class="mat-header-cell">RoI</span>
+              <span class="mat-header-cell">Confidence</span>
+              <span class="mat-header-cell">Save crops</span>
+            </section>
+            <div *ngFor='let algorithm of Calgos; index as i'>
+              <div class="mat-row mat-cell">
+                <span class="mat-cell">
+                  <div class="custom-control custom-switch"><input type="checkbox" [checked]="algorithm.activated"
+                      (change)="algorithm.activated =!algorithm.activated; onChange(algorithm)"
+                      class="custom-control-input" id={{algorithm.id}}><label class="custom-control-label"
+                      for={{algorithm.id}}></label></div>
+                </span>
+                <span class="mat-cell">{{algorithm.name}}</span>
+                <span class="mat-cell"><button class="btn btn-sm"
+                    [ngClass]="(algorithm.id == 17 || algorithm.id == 12) ? 'btn-info' : 'btn-warning'"
+                    [routerLink]="['/pages/cameras/algorithms/', param, algorithm.id, algorithm.conf + '-' + algorithm.save + '-' + algorithm.time]"
+                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{i == 8 || i == 4 ? 'Click here to define the area' : 'Add an specific area'}}</button></span>
+                <span class="mat-cell"><input type="number" [(ngModel)]='Calgos[i].conf' min="0" max="100" value="95"
+                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>&nbsp;%</span>
+                <span class="mat-cell">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input-label" [(ngModel)]='Calgos[i].save'
+                      [disabled]='algorithm.activated==false || algorithm.activated == undefined'>Save
+                    <input type="number" [(ngModel)]='Calgos[i].time' min="0" max="120"
+                      [disabled]='algorithm.activated==false || algorithm.activated == undefined || Calgos[i].save == false || Calgos[i].save == undefined'>
+                    sec.
+                  </div>
+                </span>
+              </div>
+            </div>
+          </nb-accordion-item-body>
+        </nb-accordion-item>
+
+        <nb-accordion-item>
+          <nb-accordion-item-header>
+            <strong>B) Traffic Management related.</strong> &nbsp;<span
+              class="badge badge-info">{{Balgos.length}}</span><span class="badge badge-success">{{actB}}</span>
+          </nb-accordion-item-header>
+          <nb-accordion-item-body>
+            <section class="mat-elevation-z2 mat-header-row alfons">
+              <span class="mat-header-cell">Status</span>
+              <span class="mat-header-cell">Name</span>
+              <span class="mat-header-cell">RoI</span>
+              <span class="mat-header-cell">Confidence</span>
+              <span class="mat-header-cell">Save crops</span>
+            </section>
+            <div *ngFor='let algorithm of Balgos; index as i'>
+              <div class="mat-row mat-cell">
+                <span class="mat-cell">
+                  <div class="custom-control custom-switch"><input type="checkbox" [checked]="algorithm.activated"
+                      (change)="algorithm.activated =!algorithm.activated; onChange(algorithm)"
+                      class="custom-control-input" id={{algorithm.id}}><label class="custom-control-label"
+                      for={{algorithm.id}}></label></div>
+                </span>
+                <span class="mat-cell">{{algorithm.name}}</span>
+                <span class="mat-cell"><button class="btn btn-sm"
+                    [ngClass]="algorithm.id == 4 || algorithm.id == 8 ? 'btn-info': 'btn-warning'"
+                    [routerLink]="['/pages/cameras/algorithms/', param, algorithm.id, algorithm.conf + '-' + algorithm.save + '-' + algorithm.time]"
+                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{algorithm.id == 4 || algorithm.id == 8 ? 'Click here to define the area' : 'Add an specific area'}}</button></span>
+                <span class="mat-cell"><input type="number" [(ngModel)]='Balgos[i].conf' min="0" max="100" value="95"
+                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>&nbsp;%</span>
+                <span class="mat-cell">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input-label" [(ngModel)]='Balgos[i].save'
+                      [disabled]='algorithm.activated==false || algorithm.activated == undefined'>Save
+                    <input type="number" [(ngModel)]='Balgos[i].time' min="0" max="120"
+                      [disabled]='algorithm.activated==false || algorithm.activated == undefined || Balgos[i].save == false || Balgos[i].save == undefined'>
+                    sec.
+                  </div>
+                </span>
+              </div>
+            </div>
+          </nb-accordion-item-body>
+        </nb-accordion-item>
+        <nb-accordion-item>
+          <nb-accordion-item-header>
+            <strong>C) Security realated.</strong> &nbsp;<span class="badge badge-info">{{Aalgos.length}}</span><span
+              class="badge badge-success">{{actA}}</span>
+          </nb-accordion-item-header>
+          <nb-accordion-item-body>
+            <section class="mat-elevation-z2 mat-header-row alfons">
+              <span class="mat-header-cell">Status</span>
+              <span class="mat-header-cell">Name</span>
+              <span class="mat-header-cell">RoI</span>
+              <span class="mat-header-cell">Confidence</span>
+              <span class="mat-header-cell">Save crops</span>
+            </section>
+            <div *ngFor='let algorithm of Aalgos; index as i'>
+              <div class="mat-row mat-cell">
+                <span class="mat-cell">
+                  <div class="custom-control custom-switch"><input type="checkbox" [checked]="algorithm.activated"
+                      (change)="algorithm.activated =!algorithm.activated; onChange(algorithm)"
+                      class="custom-control-input" id={{algorithm.id}}><label class="custom-control-label"
+                      for={{algorithm.id}}></label></div>
+                </span>
+                <span class="mat-cell">{{algorithm.name}}</span>
+                <span class="mat-cell"><button class="btn btn-sm"
+                    [ngClass]="algorithm.id == 4 || algorithm.id == 8 ? 'btn-info': 'btn-warning'"
+                    [routerLink]="['/pages/cameras/algorithms/', param, algorithm.id, algorithm.conf + '-' + algorithm.save + '-' + algorithm.time]"
+                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{algorithm.id == 4 || algorithm.id == 8 ? 'Click here to define the area' : 'Add an specific area'}}</button></span>
+                <span class="mat-cell"><input type="number" [(ngModel)]='Aalgos[i].conf' min="0" max="100" value="95"
+                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>&nbsp;%</span>
+                <span class="mat-cell">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input-label" [(ngModel)]='Aalgos[i].save'
+                      [disabled]='algorithm.activated==false || algorithm.activated == undefined'>Save
+                    <input type="number" [(ngModel)]='Aalgos[i].time' min="0" max="120"
+                      [disabled]='algorithm.activated==false || algorithm.activated == undefined || Aalgos[i].save == false || Aalgos[i].save == undefined'>
+                    sec.
+                  </div>
+                </span>
+              </div>
+            </div>
+          </nb-accordion-item-body>
+        </nb-accordion-item>
+      </nb-accordion>
+    </div>
+    <div class="col-md-6">
+      <div class="card border-info mb-3">
+        <canvas #polygon id="jPolygon" width='{{width}}' height='{{height}}'
+          style="background-repeat: no-repeat; background-size: 100% 100%;" [style.background-image]="link">
+          Your browser does not support the HTML5 canvas tag.
+        </canvas>
+      </div>
+      <div class='buttons-row'>
+        <button nbButton [status]="'success'" (click)="saveAndBack(camera.stored_vid)">Save and back</button>
+        <!-- <button nbButton [status]="'info'"(click)="saave()">Save</button> -->
+        <button nbButton [status]="'warning'" (click)="back(camera.stored_vid)">Back</button>
+      </div>
+
+
+
+      <!-- <div class="card-columns p-2" style='min-height: 30px;'> -->
+      <div class='col-md-12 p-2'>
         <div class="row">
 
-  <div class="accordion-container col-md-6 col-lg-6 col-xxxl-6">
-    <nb-accordion multi>
-      <nb-accordion-item>
-        <nb-accordion-item-header>
-          <strong>A) People related.</strong> &nbsp;<span class="badge badge-info">{{Calgos.length}}</span><span class="badge badge-success">{{actC}}</span>
-        </nb-accordion-item-header>
-        <nb-accordion-item-body>
-          <section class="mat-elevation-z2 mat-header-row alfons">
-            <span class="mat-header-cell">Status</span>
-            <span class="mat-header-cell">Name</span>
-            <span class="mat-header-cell">RoI</span>
-            <span class="mat-header-cell">Confidence</span>
-            <span class="mat-header-cell">Save crops</span>
-          </section>
-          <div *ngFor='let algorithm of Calgos; index as i'>
-              <div class="mat-row mat-cell">
-            <span class="mat-cell"><div class="custom-control custom-switch"><input type="checkbox"  [checked]="algorithm.activated" (change)="algorithm.activated =!algorithm.activated; onChange(algorithm)" class="custom-control-input" id={{algorithm.id}}><label class="custom-control-label" for={{algorithm.id}}></label></div></span>
-            <span class="mat-cell">{{algorithm.name}}</span>
-            <span class="mat-cell"><button class="btn btn-sm" [ngClass]="(algorithm.id == 17 || algorithm.id == 12) ? 'btn-info' : 'btn-warning'" [routerLink]="['/pages/cameras/algorithms/', param, algorithm.id, algorithm.conf + '-' + algorithm.save + '-' + algorithm.time]" [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{i == 8 || i == 4 ? 'Click here to define the area' : 'Add an specific area'}}</button></span>
-            <span class="mat-cell"><input type="number" [(ngModel)]='Calgos[i].conf' min="0" max="100" value="95" [disabled]='algorithm.activated==false || algorithm.activated == undefined'>&nbsp;%</span>
-            <span class="mat-cell"><div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input-label" [(ngModel)]='Calgos[i].save' [disabled]='algorithm.activated==false || algorithm.activated == undefined'>Save
-                <input type="number" [(ngModel)]='Calgos[i].time' min="0" max="120"  [disabled]='algorithm.activated==false || algorithm.activated == undefined || Calgos[i].save == false || Calgos[i].save == undefined'> sec.
-              </div></span>
-            </div>
-              </div>
-        </nb-accordion-item-body>
-      </nb-accordion-item>
-
-      <nb-accordion-item>
-        <nb-accordion-item-header>
-          <strong>B) Traffic Management related.</strong> &nbsp;<span class="badge badge-info">{{Balgos.length}}</span><span class="badge badge-success">{{actB}}</span>
-        </nb-accordion-item-header>
-        <nb-accordion-item-body>
-          <section class="mat-elevation-z2 mat-header-row alfons">
-            <span class="mat-header-cell">Status</span>
-            <span class="mat-header-cell">Name</span>
-            <span class="mat-header-cell">RoI</span>
-            <span class="mat-header-cell">Confidence</span>
-            <span class="mat-header-cell">Save crops</span>
-          </section>
-          <div *ngFor='let algorithm of Balgos; index as i'>
-              <div class="mat-row mat-cell">
-            <span class="mat-cell"><div class="custom-control custom-switch"><input type="checkbox" [checked]="algorithm.activated" (change)="algorithm.activated =!algorithm.activated; onChange(algorithm)" class="custom-control-input" id={{algorithm.id}}><label class="custom-control-label" for={{algorithm.id}}></label></div></span>
-            <span class="mat-cell">{{algorithm.name}}</span>
-            <span class="mat-cell"><button class="btn btn-sm" [ngClass]="algorithm.id == 4 || algorithm.id == 8 ? 'btn-info': 'btn-warning'" [routerLink]="['/pages/cameras/algorithms/', param, algorithm.id, algorithm.conf + '-' + algorithm.save + '-' + algorithm.time]" [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{algorithm.id == 4 || algorithm.id == 8 ? 'Click here to define the area' : 'Add an specific area'}}</button></span>
-            <span class="mat-cell"><input type="number" [(ngModel)]='Balgos[i].conf' min="0" max="100" value="95" [disabled]='algorithm.activated==false || algorithm.activated == undefined'>&nbsp;%</span>
-            <span class="mat-cell"><div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input-label" [(ngModel)]='Balgos[i].save' [disabled]='algorithm.activated==false || algorithm.activated == undefined'>Save
-                <input type="number" [(ngModel)]='Balgos[i].time' min="0" max="120"  [disabled]='algorithm.activated==false || algorithm.activated == undefined || Balgos[i].save == false || Balgos[i].save == undefined'> sec.
-              </div></span>
-            </div>
+          <div *ngIf="algos[1] != undefined">
+            <nb-card *ngIf="algos[1]['activated']==true" style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
+              <nb-card-header align='center'>
+                Climbing of barricade
+              </nb-card-header>
+              <nb-card-body>
+                <div class="form-group" align='center'>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck1" [(ngModel)]="climb['person']">
+                    <label class="custom-control-label" for="customCheck1">Person</label>
+                  </div>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck2" [(ngModel)]="climb['animal']">
+                    <label class="custom-control-label" for="customCheck2">Animal</label>
+                  </div>
+                </div>
+              </nb-card-body>
+            </nb-card>
           </div>
-        </nb-accordion-item-body>
-      </nb-accordion-item>
-    </nb-accordion>
-  </div>
-          <div class="col-md-6">
-              <div class="card border-info mb-3">
-              <canvas #polygon id="jPolygon" width='{{width}}' height='{{height}}' style="background-repeat: no-repeat; background-size: 100% 100%;" [style.background-image]="link">
-                Your browser does not support the HTML5 canvas tag.
-              </canvas>
-              </div>
-              <div class='buttons-row'>
-                <button nbButton [status]="'success'" (click)="saveAndBack()">Save and back</button>
-                <!-- <button nbButton [status]="'info'"(click)="saave()">Save</button> -->
-                <button nbButton [status]="'warning'" [routerLink]="['/pages/camerasList']">Back</button>
-              </div>
-              
 
-                
-                  <!-- <div class="card-columns p-2" style='min-height: 30px;'> -->
-                    <div class='col-md-12 p-2'>
-                      <div class="row">
-
-                    <div *ngIf="algos[1] != undefined">
-                    <nb-card *ngIf="algos[1]['activated']==true" style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
-                      <nb-card-header align='center'>
-                        Climbing of barricade
-                      </nb-card-header>
-                      <nb-card-body>
-                        <div class="form-group" align='center'>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="customCheck1" [(ngModel)]="climb['person']">
-                            <label class="custom-control-label" for="customCheck1">Person</label>
-                          </div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="customCheck2" [(ngModel)]="climb['animal']">
-                            <label class="custom-control-label" for="customCheck2">Animal</label>
-                          </div>
-                        </div>
-                  </nb-card-body>
-                </nb-card>
+          <div *ngIf="algos[2]['activated']==true && algos[2]!=undefined">
+            <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
+              <nb-card-header align='center'>
+                Loitering Settings
+              </nb-card-header>
+              <nb-card-body>
+                <div class="form-group" align='center'>
+                  Seconds
+                  <input type="number" [(ngModel)]="loiteringTime['time']">
+                  <div class="p-2">
+                    <div class="alert alert-warning col-md-10" *ngIf="showL == true">
+                      Please fill all the input.
                     </div>
-
-                      <div *ngIf="algos[2]['activated']==true && algos[2]!=undefined">
-                        <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
-                          <nb-card-header align='center'>
-                            Loitering Settings
-                          </nb-card-header>
-                          <nb-card-body>
-                            <div class="form-group" align='center'>
-                              Seconds
-                                <input type="number" [(ngModel)]="loiteringTime['time']">
-                                <div class="p-2">
-                                <div class="alert alert-warning col-md-10" *ngIf="showL == true">
-                                    Please fill all the input.
-                                </div>
-                               </div>
-                              </div>
-                      </nb-card-body>
-                      </nb-card>
-                        </div>
-
-                        <div *ngIf="algos[16]['activated']==true && algos[16]!=undefined">
-                          <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
-                            <nb-card-header align='center'>
-                              Abandoned Object Settings
-                            </nb-card-header>
-                            <nb-card-body>
-                              <div class="form-group" align='center'>
-                                Minutes to trigger alert
-                                  <input type="number" [(ngModel)]="aod['time']">
-                                  <div class="p-2">
-                                  <div class="alert alert-warning col-md-10" *ngIf="showL == true">
-                                      Please fill all the input.
-                                  </div>
-                                 </div>
-                                </div>
-                        </nb-card-body>
-                        </nb-card>
-                        </div>
-                        
-                      <div *ngIf="algos[3]['activated']==true && algos[3]!=undefined">
-                        <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
-                          <nb-card-header align='center'>
-                            D&C
-                          </nb-card-header>
-                        
-                          <nb-card-body>
-                                                            
-                            <div class="form-group" > 
-                              <p align='center'><i>Human</i></p>
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="customCheck3" [(ngModel)]="dac['h.age']">
-                                <label class="custom-control-label" for="customCheck3">Age</label>
-                              </div>
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="customCheck4" [(ngModel)]="dac['h.gender']">
-                                <label class="custom-control-label" for="customCheck4">Gender</label>
-                              </div>
-                              <div class="custom-control custom-checkbox">
-                                  <input type="checkbox" class="custom-control-input" id="customCheck5" [(ngModel)]="dac['h.ethnicity']">
-                                  <label class="custom-control-label" for="customCheck5">Ethnicity</label>
-                                </div>
-                              <div class="dropdown-divider"></div>
-                              <p align='center'><i>Vehicle</i></p>
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="customCheck6" [(ngModel)]="dac['v.brand']">
-                                <label class="custom-control-label" for="customCheck6">Brand</label>
-                              </div>
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="customCheck7" [(ngModel)]="dac['v.color']">
-                                <label class="custom-control-label" for="customCheck7">Color</label>
-                              </div>
-                              <div class="custom-control custom-checkbox" >
-                                  <input type="checkbox" class="custom-control-input" id="anpr" [(ngModel)]="dac['v.anpr']" [disabled]="algos[13]['activated'] == false">
-                                  <label class="custom-control-label" for="anpr">Licence plate detector</label>
-                                </div>
-                              </div>
-                      </nb-card-body>
-                    </nb-card>
-                        </div>
-
-
-                            <div *ngIf="algos[5]['activated']==true && algos[5]!=undefined">
-                              <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
-                                <nb-card-header align='center'>
-                                  Speeding settings
-                                </nb-card-header>
-                                <nb-card-body>
-                                  <div class="form-group">
-                                    <div align='center'>
-                                    Max. Velocity<br>
-                                    <input type="number" [(ngModel)]="speed['velocity']" min="0" max="120" value='50'> Km/h
-                                  </div>
-                            <div class="dropdown-divider"></div>
-                            <div align='right'>
-                                From:&nbsp;<input type="time" [(ngModel)]="speed['rangeB']" (click)="checkTimeRangeS(speed['rangeB'],speed['rangeE'])">
-                                <br>to:&nbsp;<input type="time" [(ngModel)]="speed['rangeE']" (click)="checkTimeRangeS(speed['rangeB'],speed['rangeE'])">
-                              </div>
-                              <div class="p-2" align='center'>
-                                  <div class="alert alert-warning col-md-10" *ngIf="showS == true">
-                                      Please fill all the input.
-                                  </div> 
-                                  <div class="dropdown-divider"></div>
-                                  <div class="custom-control custom-checkbox" >
-                                      <input type="checkbox" class="custom-control-input" id="anpr0" [(ngModel)]="speed['anpr']" [disabled]="algos[13]['activated'] == false">
-                                      <label class="custom-control-label" for="anpr0">Licence plate detector</label>
-                                    </div>                               
-                                <button class='btn btn-sm btn-info' (click)='resetTimeS()'>Reset</button>
-                                 </div>
-                                  </div>
-                            </nb-card-body>
-                            </nb-card>
-                            </div>
-
-                            <div *ngIf="algos[7]['activated']==true && algos[7]!=undefined">
-                              <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
-                                <nb-card-header align='center'>
-                                  Unwanted vehicule setting
-                                </nb-card-header>
-                                <nb-card-body>
-                                  <div class="form-group">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck8" [(ngModel)]="unwanted['car']">
-                                        <label class="custom-control-label" for="customCheck8">Car</label>
-                                      </div>
-                                      <div align='right' *ngIf="unwanted['car'] == true">
-                                          From:&nbsp;<input type="time" [(ngModel)]="unwanted['car.rangeB']" (click)="checkTimeRangeU0(unwanted['car.rangeB'],unwanted['car.rangeE'])">
-                                          <br>to:&nbsp;<input type="time" [(ngModel)]="unwanted['car.rangeE']" (click)="checkTimeRangeU0(unwanted['car.rangeB'],unwanted['car.rangeE'])">
-                                          <div class="p-2" align='center'>
-                                              <div class="alert alert-warning col-md-10" *ngIf="showU0 == true">
-                                                  Please fill all the input.
-                                              </div>                                
-                                            <button class='btn btn-sm btn-info' (click)='resetTimeUc()'>Reset</button>
-                                             </div>
-                                          <div class="dropdown-divider"></div>
-                                        </div>
-                                      <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck9" [(ngModel)]="unwanted['truck']">
-                                        <label class="custom-control-label" for="customCheck9">Truck</label>
-                                      </div>
-                                      <div align='right' *ngIf="unwanted['truck'] == true">
-                                          From:&nbsp;<input type="time" [(ngModel)]="unwanted['truck.rangeB']" (click)="checkTimeRangeU1(unwanted['truck.rangeB'],unwanted['truck.rangeE'])">
-                                          <br>to:&nbsp;<input type="time" [(ngModel)]="unwanted['truck.rangeE']" (click)="checkTimeRangeU1(unwanted['truck.rangeB'],unwanted['truck.rangeE'])">
-                                          <div class="p-2" align='center'>
-                                              <div class="alert alert-warning col-md-10" *ngIf="showU1 == true">
-                                                  Please fill all the input.
-                                              </div>                                
-                                            <button class='btn btn-sm btn-info' (click)='resetTimeUt()'>Reset</button>
-                                             </div>
-                                          <div class="dropdown-divider"></div>
-                                        </div>  
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck10" [(ngModel)]="unwanted['two_wheeler']">
-                                            <label class="custom-control-label" for="customCheck10">Two wheeler</label>
-                                          </div>
-                                          <div align='right' *ngIf="unwanted['two_wheeler'] == true">
-                                              From:&nbsp;<input type="time" [(ngModel)]="unwanted['two_wheeler.rangeB']" (click)="checkTimeRangeU2(unwanted['two_wheeler.rangeB'],unwanted['two_wheeler.rangeE'])">
-                                              <br>to:&nbsp;<input type="time" [(ngModel)]="unwanted['two_wheeler.rangeE']" (click)="checkTimeRangeU2(unwanted['two_wheeler.rangeB'],unwanted['two_wheeler.rangeE'])">
-                                              <div class="p-2" align='center'>
-                                                  <div class="alert alert-warning col-md-10" *ngIf="showU2 == true">
-                                                      Please fill all the input.
-                                                  </div>                                
-                                                <button class='btn btn-sm btn-info' (click)='resetTimeUtwo()'>Reset</button>
-                                                 </div>
-                                            </div>
-                                            <div class="dropdown-divider"></div>
-                              <div class="custom-control custom-checkbox">
-                                  <input type="checkbox" class="custom-control-input" id="anpr1" [(ngModel)]="unwanted['anpr']" [disabled]="algos[13]['activated'] == false">
-                                  <label class="custom-control-label" for="anpr1">Licence plate detector</label>
-                                </div>
-                                </div>
-                            </nb-card-body>
-                            </nb-card>
-                              </div>
-
-                              <div *ngIf="algos[12]['activated']==true && algos[12]!=undefined">
-                                <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
-                                  <nb-card-header align='center'>
-                                    Crowd control settings
-                                  </nb-card-header>
-                                  <nb-card-body>
-                                    <div class="form-group">
-                                      <div align='center'>
-                                          Quantity of people<br>
-                                          <input type="number" [(ngModel)]="quantity['crowd']" min="0" max="1000">
-                                        </div>
-                                      </div>
-                              </nb-card-body>
-                              </nb-card>
-                                </div>
-            </div>
-            </div>
+                  </div>
+                </div>
+              </nb-card-body>
+            </nb-card>
           </div>
+
+          <div *ngIf="algos[16]['activated']==true && algos[16]!=undefined">
+            <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
+              <nb-card-header align='center'>
+                Abandoned Object Settings
+              </nb-card-header>
+              <nb-card-body>
+                <div class="form-group" align='center'>
+                  Minutes to trigger alert
+                  <input type="number" [(ngModel)]="aod['time']">
+                  <div class="p-2">
+                    <div class="alert alert-warning col-md-10" *ngIf="showL == true">
+                      Please fill all the input.
+                    </div>
+                  </div>
+                </div>
+              </nb-card-body>
+            </nb-card>
+          </div>
+
+          <div *ngIf="algos[3]['activated']==true && algos[3]!=undefined">
+            <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
+              <nb-card-header align='center'>
+                D&C
+              </nb-card-header>
+
+              <nb-card-body>
+
+                <div class="form-group">
+                  <p align='center'><i>Human</i></p>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck3" [(ngModel)]="dac['h.age']">
+                    <label class="custom-control-label" for="customCheck3">Age</label>
+                  </div>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck4" [(ngModel)]="dac['h.gender']">
+                    <label class="custom-control-label" for="customCheck4">Gender</label>
+                  </div>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck5"
+                      [(ngModel)]="dac['h.ethnicity']">
+                    <label class="custom-control-label" for="customCheck5">Ethnicity</label>
+                  </div>
+                  <div class="dropdown-divider"></div>
+                  <p align='center'><i>Vehicle</i></p>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck6" [(ngModel)]="dac['v.brand']">
+                    <label class="custom-control-label" for="customCheck6">Brand</label>
+                  </div>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck7" [(ngModel)]="dac['v.color']">
+                    <label class="custom-control-label" for="customCheck7">Color</label>
+                  </div>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="anpr" [(ngModel)]="dac['v.anpr']"
+                      [disabled]="algos[13]['activated'] == false">
+                    <label class="custom-control-label" for="anpr">Licence plate detector</label>
+                  </div>
+                </div>
+              </nb-card-body>
+            </nb-card>
+          </div>
+
+
+          <div *ngIf="algos[5]['activated']==true && algos[5]!=undefined">
+            <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
+              <nb-card-header align='center'>
+                Speeding settings
+              </nb-card-header>
+              <nb-card-body>
+                <div class="form-group">
+                  <div align='center'>
+                    Max. Velocity<br>
+                    <input type="number" [(ngModel)]="speed['velocity']" min="0" max="120" value='50'> Km/h
+                  </div>
+                  <div class="dropdown-divider"></div>
+                  <div align='right'>
+                    From:&nbsp;<input type="time" [(ngModel)]="speed['rangeB']"
+                      (click)="checkTimeRangeS(speed['rangeB'],speed['rangeE'])">
+                    <br>to:&nbsp;<input type="time" [(ngModel)]="speed['rangeE']"
+                      (click)="checkTimeRangeS(speed['rangeB'],speed['rangeE'])">
+                  </div>
+                  <div class="p-2" align='center'>
+                    <div class="alert alert-warning col-md-10" *ngIf="showS == true">
+                      Please fill all the input.
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="anpr0" [(ngModel)]="speed['anpr']"
+                        [disabled]="algos[13]['activated'] == false">
+                      <label class="custom-control-label" for="anpr0">Licence plate detector</label>
+                    </div>
+                    <button class='btn btn-sm btn-info' (click)='resetTimeS()'>Reset</button>
+                  </div>
+                </div>
+              </nb-card-body>
+            </nb-card>
+          </div>
+
+          <div *ngIf="algos[7]['activated']==true && algos[7]!=undefined">
+            <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
+              <nb-card-header align='center'>
+                Unwanted vehicule setting
+              </nb-card-header>
+              <nb-card-body>
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck8" [(ngModel)]="unwanted['car']">
+                    <label class="custom-control-label" for="customCheck8">Car</label>
+                  </div>
+                  <div align='right' *ngIf="unwanted['car'] == true">
+                    From:&nbsp;<input type="time" [(ngModel)]="unwanted['car.rangeB']"
+                      (click)="checkTimeRangeU0(unwanted['car.rangeB'],unwanted['car.rangeE'])">
+                    <br>to:&nbsp;<input type="time" [(ngModel)]="unwanted['car.rangeE']"
+                      (click)="checkTimeRangeU0(unwanted['car.rangeB'],unwanted['car.rangeE'])">
+                    <div class="p-2" align='center'>
+                      <div class="alert alert-warning col-md-10" *ngIf="showU0 == true">
+                        Please fill all the input.
+                      </div>
+                      <button class='btn btn-sm btn-info' (click)='resetTimeUc()'>Reset</button>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                  </div>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck9"
+                      [(ngModel)]="unwanted['truck']">
+                    <label class="custom-control-label" for="customCheck9">Truck</label>
+                  </div>
+                  <div align='right' *ngIf="unwanted['truck'] == true">
+                    From:&nbsp;<input type="time" [(ngModel)]="unwanted['truck.rangeB']"
+                      (click)="checkTimeRangeU1(unwanted['truck.rangeB'],unwanted['truck.rangeE'])">
+                    <br>to:&nbsp;<input type="time" [(ngModel)]="unwanted['truck.rangeE']"
+                      (click)="checkTimeRangeU1(unwanted['truck.rangeB'],unwanted['truck.rangeE'])">
+                    <div class="p-2" align='center'>
+                      <div class="alert alert-warning col-md-10" *ngIf="showU1 == true">
+                        Please fill all the input.
+                      </div>
+                      <button class='btn btn-sm btn-info' (click)='resetTimeUt()'>Reset</button>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                  </div>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck10"
+                      [(ngModel)]="unwanted['two_wheeler']">
+                    <label class="custom-control-label" for="customCheck10">Two wheeler</label>
+                  </div>
+                  <div align='right' *ngIf="unwanted['two_wheeler'] == true">
+                    From:&nbsp;<input type="time" [(ngModel)]="unwanted['two_wheeler.rangeB']"
+                      (click)="checkTimeRangeU2(unwanted['two_wheeler.rangeB'],unwanted['two_wheeler.rangeE'])">
+                    <br>to:&nbsp;<input type="time" [(ngModel)]="unwanted['two_wheeler.rangeE']"
+                      (click)="checkTimeRangeU2(unwanted['two_wheeler.rangeB'],unwanted['two_wheeler.rangeE'])">
+                    <div class="p-2" align='center'>
+                      <div class="alert alert-warning col-md-10" *ngIf="showU2 == true">
+                        Please fill all the input.
+                      </div>
+                      <button class='btn btn-sm btn-info' (click)='resetTimeUtwo()'>Reset</button>
+                    </div>
+                  </div>
+                  <div class="dropdown-divider"></div>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="anpr1" [(ngModel)]="unwanted['anpr']"
+                      [disabled]="algos[13]['activated'] == false">
+                    <label class="custom-control-label" for="anpr1">Licence plate detector</label>
+                  </div>
+                </div>
+              </nb-card-body>
+            </nb-card>
+          </div>
+
+          <div *ngIf="algos[12]['activated']==true && algos[12]!=undefined">
+            <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
+              <nb-card-header align='center'>
+                Crowd control settings
+              </nb-card-header>
+              <nb-card-body>
+                <div class="form-group">
+                  <div align='center'>
+                    Quantity of people<br>
+                    <input type="number" [(ngModel)]="quantity['crowd']" min="0" max="1000">
+                  </div>
+                </div>
+              </nb-card-body>
+            </nb-card>
+          </div>
+
+          <div *ngIf="algos[31]['activated']==true && algos[32]!=undefined">
+            <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
+              <nb-card-header align='center'>
+                Parking Violation settings
+              </nb-card-header>
+              <nb-card-body>
+                <div class="form-group">
+                  <div align='center'>
+                    Seconds<br>
+                    <input type="number" [(ngModel)]="parkingTime['time']" min="0" max="1000">
+                  </div>
+                </div>
+              </nb-card-body>
+            </nb-card>
+          </div>
+        </div>
       </div>
+    </div>
+  </div>

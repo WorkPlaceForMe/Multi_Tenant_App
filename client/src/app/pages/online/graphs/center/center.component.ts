@@ -2,16 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { FacesService } from '../../../../services/faces.service';
 import { Account } from '../../../../models/Account';
 import { AccountService } from '../../../../services/account.service';
+import { api } from '../../../../models/API'
 
 @Component({
   selector: 'ngx-center',
   templateUrl: './center.component.html',
-  styleUrls: ['./center.component.scss']
+  styleUrls: ['./center.component.scss'],
+  styles: [ ':host {height: 100% !important}']
 })
 export class CenterComponent implements OnInit {
 
   constructor(
-    private facesService: FacesService,
     private accountserv: AccountService,
     private face: FacesService,
     ) { }
@@ -26,7 +27,19 @@ export class CenterComponent implements OnInit {
     algo_id: -1,
     name: ''
   }
+  overview ={
+    algo_id: -3,
+    name: 'Dashboard',
+    status: "'primary"
+  }
 
+  liveView  = {
+    algo_id: -4,
+    name: 'Live View',
+    status: "'primary"
+  }
+
+pic:string = `${api}/pictures/graymaticsLogo.png`
 
   aaa(event){
     this.camera = event
@@ -89,11 +102,7 @@ export class CenterComponent implements OnInit {
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
-    // if(this.now_user.id_branch == '0000'){
-    //   this.camera = this.now_user.id_account
-    //   this.analytic.algo_id = -2;
-    // }
-    console.log(this.analytic.algo_id)
+    this.analytic = this.overview
     this.face.getDashboard().subscribe(
       res=>{
         this.info = res['data']

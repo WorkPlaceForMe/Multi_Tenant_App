@@ -1,111 +1,107 @@
-const jwt = require("jsonwebtoken");
-require('dotenv').config({ path: '../../config.env'});
-const db = require("../models");
-const User = db.user;
+const jwt = require('jsonwebtoken')
+require('dotenv').config({ path: '../../config.env' })
+const db = require('../models')
+const User = db.user
 
 verifyToken = (req, res, next) => {
-  let token = req.headers["x-access-token"];
+  const token = req.headers['x-access-token']
 
   if (!token) {
     return res.status(403).send({
-      message: "No token provided!"
-    });
+      message: 'No token provided!'
+    })
   }
 
   jwt.verify(token, process.env.secret, (err, decoded) => {
     if (err) {
       return res.status(401).send({
-        message: "Unauthorized!"
-      });
+        message: 'Unauthorized!'
+      })
     }
-    req.userId = decoded.id;
-    next();
-  });
-};
+    req.userId = decoded.id
+    next()
+  })
+}
 
 isAdmin = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
-        if (user.role === "admin") {
-          next();
-          return;
-        }
+    if (user.role === 'admin') {
+      next()
+      return
+    }
 
-      res.status(403).send({
-        message: "Require Admin Role!"
-      });
-      return;
-  });
-};
+    res.status(403).send({
+      message: 'Require Admin Role!'
+    })
+  })
+}
 
 isBranch = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
+    if (user.role === 'branch') {
+      next()
+      return
+    }
 
-        if (user.role === "branch") {
-          next();
-          return;
-        }     
-
-      res.status(403).send({
-        message: "Require Branch Role!"
-
-    });
-  });
-};
+    res.status(403).send({
+      message: 'Require Branch Role!'
+    })
+  })
+}
 
 isClient = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
-        if (user.role === "client") {
-          next();
-          return;
-        }
+    if (user.role === 'client') {
+      next()
+      return
+    }
 
-      res.status(403).send({
-        message: "Require Client Role!"
-      });
-      return;
-  });
-};
+    res.status(403).send({
+      message: 'Require Client Role!'
+    })
+  })
+}
 
 isClientOrBranch = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
-        if (user.role === "client") {
-          next();
-          return;
-        }
+    if (user.role === 'client') {
+      next()
+      return
+    }
 
-        if (user.role === "branch") {
-          next();
-          return;
-        }
+    if (user.role === 'branch') {
+      next()
+      return
+    }
 
-      res.status(403).send({
-        message: "Require Client or Branch account!"
-    });
-  });
-};
+    res.status(403).send({
+      message: 'Require Client or Branch account!'
+    })
+  })
+}
 
 isClientOrBranchOrAdmin = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
-        if (user.role === "client") {
-          next();
-          return;
-        }
+    if (user.role === 'client') {
+      next()
+      return
+    }
 
-        if (user.role === "branch") {
-          next();
-          return;
-        }
+    if (user.role === 'branch') {
+      next()
+      return
+    }
 
-        if (user.role === "admin") {
-          next();
-          return;
-        }
+    if (user.role === 'admin') {
+      next()
+      return
+    }
 
-      res.status(403).send({
-        message: "Require Client or Branch or Admin account!"
-    });
-  });
-};
+    res.status(403).send({
+      message: 'Require Client or Branch or Admin account!'
+    })
+  })
+}
 
 const authJwt = {
   verifyToken: verifyToken,
@@ -114,5 +110,5 @@ const authJwt = {
   isClient: isClient,
   isClientOrBranch: isClientOrBranch,
   isClientOrBranchOrAdmin: isClientOrBranchOrAdmin
-};
-module.exports = authJwt;
+}
+module.exports = authJwt

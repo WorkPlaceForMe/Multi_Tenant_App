@@ -4,13 +4,9 @@ Instructions to run this platform:
 One file need to be added in order to run the platform, this should be required by email:
 - ./server/config.env
 
-The ip of the machine need to be specified.
-
 Certain dependecies are:
--Node (12 or above)
--Angular CLI (9 or above for developing on client)
+-Node (14 or above)
+-Angular CLI (12 or above for developing on client)
 
-Once Installed this three dependencies:
+Once Installed these dependencies:
 -On ./server folder run "npm start"
-
-On a browser, input "localhost:3300".

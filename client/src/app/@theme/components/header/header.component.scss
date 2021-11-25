@@ -19,6 +19,11 @@
     align-content: center;
   }
 
+  .responsive {
+    max-width: 100%;
+    height: auto;
+  }
+
   nb-user {
     cursor: pointer;
   }

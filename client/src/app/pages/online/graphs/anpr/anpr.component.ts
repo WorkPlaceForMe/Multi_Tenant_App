@@ -13,9 +13,9 @@ import { Account } from '../../../../models/Account';
 @Component({
   selector: 'ngx-anpr',
   templateUrl: './anpr.component.html',
-  styleUrls: ['./anpr.component.scss']
+  styleUrls: ['./anpr.component.scss', '../smart-table.scss'],
 })
-export class AnprComponent implements OnInit {
+export class AnprComponent implements OnInit, OnDestroy {
 
 
   @Input() range: NbCalendarRange<Date>;
@@ -27,31 +27,48 @@ export class AnprComponent implements OnInit {
   themeSubscription: any;
   options: any = {};
 
-  @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef; 
+  @ViewChild('streaming', { static: false }) streamingcanvas: ElementRef;
 
   constructor(
     private serv: AnalyticsService,
     public sanitizer: DomSanitizer,
     private face: FacesService,
     public datepipe: DatePipe,
-    private route: Router
+    private route: Router,
   ) { }
   single: any;
   colorScheme: any;
-  source:any = new LocalDataSource();
+  source: any = new LocalDataSource();
   dataL: any;
   optionsL: any;
+  rtspIn: any;
 
-  ngOnDestroy(){
-    if(this.player != undefined){
-      this.player.destroy()
-      this.face.cameraStop({id: this.camera}).subscribe(
-        res =>{
+  ngOnDestroy() {
+    if (this.player !== undefined) {
+      this.player.destroy();
+      this.face.cameraStop({ id: this.camera }).subscribe(
+        res => {
         },
-        err=> console.error(err)
-      )
+        err => console.error(err),
+      );
     }
   }
+
+  @ViewChild('videoPlayer', { static: false }) videoplayer: ElementRef;
+  isPlay: boolean = false;
+  toggleVideo(event: any) {
+    this.videoplayer.nativeElement.play();
+  }
+
+  videoFile: string = '';
+  pass(vid: string) {
+    this.videoplayer.nativeElement.src = vid;
+    this.videoplayer.nativeElement.load();
+    this.videoplayer.nativeElement.play();
+
+  }
+
+  video: boolean = false;
 
   ngOnInit(): void {
     // // if(api.length <= 4){
@@ -68,45 +85,65 @@ export class AnprComponent implements OnInit {
     //     )
     //   },500)
     // }
-    this.now_user = JSON.parse(localStorage.getItem('now_user'))
-    var time = new Date();
-    this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0,3);
-    this.timezone = parseInt(this.timezone) * 2;
-    let p = ''
-    if(this.timezone > 0){
-      p = '+'
+    this.now_user = JSON.parse(localStorage.getItem('now_user'));
+    const time = new Date();
+    this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0, 3);
+    this.timezone = parseInt(this.timezone);
+    let p = '';
+    if (this.timezone > 0) {
+      p = '+';
     }
     this.timezone = p + JSON.stringify(this.timezone) + '00';
     let type;
-    if(this.now_user.id_branch != '0000'){
+    if (this.now_user.id_branch !== '0000') {
       type = 'cam_id';
-    }else{
-      type = 'id_account'
+    } else {
+      type = 'id_account';
     }
-    let l = {
+    const l = {
       start: this.range.start,
       end: this.range.end,
-      type: type
-    }
-      this.serv.anpr(this.camera,l).subscribe(
-        res=>{
-          this.anpr = res['data']
-          for(var m of this.anpr.raw){
-            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/anpr/' + m['cam_id'] + '/' + m['picture'])
-            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
-          }
-          this.source = this.anpr.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
-
-        },
-        err => {
-          console.error(err)
-          this.anpr = undefined;
+      type: type,
+    };
+    this.face.checkVideo(13, this.camera).subscribe(
+      res => {
+        this.video = res['video'];
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
+        if (this.video === true) {
+          this.settings['columns']['picture'] = {
+            title: 'VIDEO',
+            type: 'custom',
+            filter: false,
+            renderComponent: ButtonViewComponent,
+            onComponentInitFunction: (instance) => {
+              instance.save.subscribe((row: string)  => {
+                this.pass(row);
+              });
+            },
+          };
+          this.settings = Object.assign({}, this.settings);
         }
-      )
+      }, err => console.error(err),
+    );
+    this.serv.anpr(this.camera, l).subscribe(
+      res => {
+        this.anpr = res['data'];
+        for (const m of this.anpr.raw) {
+          m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/anpr/' + m['cam_id'] + '/' + m['picture']);
+          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss');
+        }
+        this.source = this.anpr.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+
+      },
+      err => {
+        console.error(err);
+        this.anpr = undefined;
+      },
+    );
 
   }
-  got(id){
-    this.route.navigate([`/pages/tickets`])
+  got(id) {
+    this.route.navigate([`/pages/tickets`]);
   }
   settings = {
     mode: 'external',
@@ -123,11 +160,11 @@ export class AnprComponent implements OnInit {
       cancelButtonContent: '<i class="nb-close"></i>',
       confirmSave: true,
     },
-    pager : {
-      display : true,
-      perPage:5
-      },
-    noDataMessage: "No data found",
+    pager: {
+      display: true,
+      perPage: 5,
+    },
+    noDataMessage: 'No data found',
     columns: {
       picture: {
         title: 'PHOTO',
@@ -136,25 +173,25 @@ export class AnprComponent implements OnInit {
         renderComponent: ButtonViewComponent,
         onComponentInitFunction(instance) {
           instance.save.subscribe(row => {
-            alert(`${row.name} saved!`)
+            alert(`${row.name} saved!`);
           });
-        }
+        },
       },
-      plate_number: {
+      plate: {
         title: 'LICENSE PLATE',
         type: 'string',
-        filter: false
+        filter: false,
       },
       time: {
         title: 'TIME',
         type: 'string',
-        filter: false
+        filter: false,
       },
       cam_name: {
         title: 'CAM',
         type: 'string',
-        filter: false
-      }
+        filter: false,
+      },
     },
   };
 
@@ -168,7 +205,7 @@ export class AnprComponent implements OnInit {
 })
 export class ButtonViewComponent implements ViewCell, OnInit {
 
-  constructor(){
+  constructor() {
   }
 
   @Input() value: string | number;

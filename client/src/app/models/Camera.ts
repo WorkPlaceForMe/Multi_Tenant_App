@@ -8,5 +8,10 @@ export interface Camera{
   pic_width?:string;
   cam_height?:number;
   cam_width?:number;
+  stored_vid?:string;
+  atributes?:{
+    longitude:string;
+    latitude:string;
+  };
   //The ? is for make it optionals
 }

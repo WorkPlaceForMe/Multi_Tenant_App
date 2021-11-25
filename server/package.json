@@ -2,28 +2,55 @@
   "name": "serv",
   "version": "2.1.1",
   "description": "Node server",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www"
   },
   "author": "Alex Kaiser",
   "license": "ISC",
   "dependencies": {
+    "@elastic/elasticsearch": "^7.11.0",
+    "aws-sdk": "^2.829.0",
+    "axios": "^0.21.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
+    "dateformat": "^4.4.1",
     "dotenv": "^8.2.0",
+    "elasticsearch": "^16.7.2",
     "exif": "^0.6.0",
     "express": "^4.17.1",
+    "glob-parent": "^5.1.2",
+    "hosted-git-info": "^2.8.9",
+    "js-yaml": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
     "mariadb": "^2.5.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
     "mysql": "^2.18.1",
     "mysql2": "^2.2.5",
     "node-rtsp-stream": "0.0.9",
+    "nodemailer": "^6.4.17",
+    "path-parse": "^1.0.7",
     "sequelize": "^6.3.5",
-    "uuid": "^8.3.0"
+    "swagger-jsdoc": "^6.0.1",
+    "swagger-ui-express": "^4.1.6",
+    "tinymce": "^5.9.0",
+    "uuid": "^8.3.0",
+    "ws": "^7.4.6"
+  },
+  "devDependencies": {
+    "eslint": "^7.18.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^5.0.0",
+    "prettier": "^2.2.1"
   }
 }

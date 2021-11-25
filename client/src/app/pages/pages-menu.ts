@@ -40,7 +40,6 @@ export const MENU_ITEMSBRANCH: NbMenuItem[] = [
       {
         title: 'Cameras List',
         link: 'camerasList',
-        home: true,
       },
       {
         title: 'Add Camera',
@@ -57,6 +56,24 @@ export const MENU_ITEMSBRANCH: NbMenuItem[] = [
     title: 'Tickets',
     icon: 'done-all-outline',
     link: 'tickets'
+  },
+  {
+    title: 'Stored Videos',
+    icon: 'film-outline',
+    children: [
+      {
+        title: 'Video List',
+        link: 'search/list',
+      },
+      {
+        title: 'Add Video',
+        link: 'search/upload',
+      },
+      {
+        title: 'Forensic Search',
+        link: 'search/bar',
+      }
+    ],
   },
 ];
 export const MENU_ITEMSADMIN: NbMenuItem[] = [
@@ -115,6 +132,24 @@ export const MENU_ITEMSCLIENT: NbMenuItem[] = [
     title: 'Tickets',
     icon: 'done-all-outline',
     link: 'tickets'
+  },
+  {
+    title: 'Stored Videos',
+    icon: 'film-outline',
+    children: [
+      {
+        title: 'Video List',
+        link: 'search/list',
+      },
+      {
+        title: 'Add Video',
+        link: 'search/upload',
+      },
+      {
+        title: 'Forensic Search',
+        link: 'search/bar',
+      }
+    ],
   },
 ];
 

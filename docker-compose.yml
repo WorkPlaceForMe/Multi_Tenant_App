@@ -1,0 +1,45 @@
+version: '3'
+
+networks:
+  dev:
+    external: true
+
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql
+    restart: always
+    network_mode: host
+    environment:
+      MYSQL_ROOT_PASSWORD: MultiTenant@123
+      MYSQL_DATABASE: multi_tenant
+      MYSQL_USER: graymatics
+      MYSQL_PASSWORD: graymatics
+
+  multi-tenant-server:
+    depends_on:
+      - db
+    networks:
+      - dev
+    ports:
+      - 9999:9999
+      - 9998:9998
+      - 9997:9997
+      - 9996:9996
+      - 9995:9995
+    image: graymatics1/multi-tenant-server:0.34.5
+    restart: always
+    volumes:
+      - /home/alex/Office/UI_v5.0.2/server/resources:/usr/src/app/resources
+      - /home/alex/Office/UI_v5.0.2/server/configDocker.env:/usr/src/app/config.env
+
+  multi-tenant-ui:
+    image: graymatics1/multi-tenant-ui:0.35.2
+    restart: always
+    networks:
+      - dev
+    ports:
+      - 80:80
+    volumes:
+      - /home/alex/Office/UI_v5.0.2/nginx.conf:/etc/nginx/conf.d/default.conf

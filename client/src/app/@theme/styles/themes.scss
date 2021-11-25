@@ -61,9 +61,39 @@ $nb-themes: nb-register-theme((
 
   select-min-width: 6rem,
 
+  select-outline-basic-background-color: #FFFFFF,
+  select-outline-basic-hover-background-color: #FFFFFF,
+  select-outline-basic-text-color: #222222,
+  select-small-text-font-weight: normal,
+  select-outline-basic-border-color: #bdbdbd,
+  select-outline-basic-hover-border-color: #222222,
+  select-outline-basic-icon-color: #222222,
+  elect-outline-basic-icon-weight: normal,
+
   slide-out-background: linear-gradient(270deg, #edf1f7 0%, #e4e9f2 100%),
   slide-out-shadow-color: 0 4px 14px 0 #8f9bb3,
   slide-out-shadow-color-rtl: 0 4px 14px 0 #8f9bb3,
+  button-filled-basic-background-color: #FFFFFF,
+  button-filled-basic-hover-background-color: #EEEEEE,
+  button-filled-basic-text-color: #222222, 
+  button-text-font-weight: normal, 
+  button-filled-basic-border-color: #bdbdbd,
+  button-filled-basic-icon-color: #222222,
+  button-filled-basic-icon-weight: normal,
+  button-filled-basic-hover-border-color: #222222,
+
+  input-basic-background-color: #FFFFFF,
+  input-basic-text-color: #222222, 
+  input-text-font-weight: normal, 
+  input-basic-border-color: #bdbdbd,
+  input-basic-icon-color: #222222,
+  input-basic-icon-weight: normal,
+  input-basic-hover-background-color: #FFFFFF,
+
+  //Default font
+  text-subtitle-font-family: Roboto,
+  text-paragraph-font-family: Roboto,
+  text-button-font-family: Roboto,
 ), corporate, corporate);
 
 $nb-themes: nb-register-theme((

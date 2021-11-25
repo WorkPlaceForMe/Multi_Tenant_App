@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { User } from '../models/User';
 import { Image } from '../models/Image';
 import { Camera } from '../models/Camera';
@@ -77,6 +77,9 @@ return this.http.post(`${this.API_URI}/images`, image);
   }
   getCameras(){
     return this.http.get(`${this.API_URI}/camera/viewAll`);
+  }
+  getLiveCameras(){
+    return this.http.get(`${this.API_URI}/camera/viewLiveCams`);
   }
   getCamera(uuid: string){
     return this.http.get(`${this.API_URI}/camera/viewOne/${uuid}`);
@@ -180,5 +183,29 @@ return this.http.post(`${this.API_URI}/images`, image);
   checkRel(id){
     return this.http.post(`${this.API_URI}/camera/checkRel/`,id);
   }
-
+  checkVideo(id:number,cam:string){
+    return this.http.get(`${this.API_URI}/relations/check/${id}/${cam}`);
+  }
+  saveElast(query:string){
+    return this.http.get(`${this.API_URI}/elastic/save/${query}`);
+  }
+  searchElast(params:any){
+    // let params;
+    // if(dates){
+    //   params = new HttpParams().set('query',query).set('dates',dates)
+    // }else {
+    //   params = new HttpParams().append('query',query)
+    // }
+    // console.log(params)
+    return this.http.post(`${this.API_URI}/elastic/search/`, params);
+  }
+  getImagesElast(){
+    return this.http.get(`${this.API_URI}/elastic/images/`);
+  }
+  viewVids(){
+    return this.http.get(`${this.API_URI}/elastic/video/list`);
+  }
+  delVid(data){
+    return this.http.post(`${this.API_URI}/elastic/video/delete/`, data);
+  }
 }

@@ -1,60 +1,76 @@
-<div class="container">
-    <div class='col-md-12' style="margin-top: 5px;">
-        <p>Incidents</p>
-        <div class="row">
-            <div class="col-md-3">
-                <nb-card>
-                    <nb-card-body>
-                        <p>Current Count</p>
-                    <strong>{{pc == undefined ? 'None' : pc.in}}</strong>
-                    </nb-card-body>
-                </nb-card>
-            </div>
-            <div class="col-md-9">
-                <nb-card>
-                    <nb-card-body>
-                        <p>People inside over time</p>
-                        <chart type="line" [data]="dataL" [options]="optionsL"></chart>
-                        <small *ngIf='pc != null'>Min:&nbsp;<strong>{{pc.min.in}}</strong>&nbsp;Max:&nbsp;<strong>{{pc.max.in}}</strong>&nbsp;Avg:&nbsp;<strong>{{pc.avg.in}}</strong></small>
-                    </nb-card-body>
-                </nb-card>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-3">
-                <nb-card>
-                    <nb-card-body>
-                        Total Entries<br>
-                    <strong>{{pc == undefined ? 'None' : pc.totalEn}}</strong>
-                    <br>
-                    <br>
-                    Total Exits<br>
-                    <strong>{{pc == undefined ? 'None' : pc.totalEx}}</strong>
-                    </nb-card-body>
-                </nb-card>
-            </div>
-            <div class="col-md-9">
-                <nb-card>
-                    <nb-card-body>
-                        <p>People Entering and Exiting</p>
-                        <chart type="line" [data]="dataL2" [options]="optionsL2"></chart>
-                        <small *ngIf='pc != null'>Entering: Min:&nbsp;<strong>{{pc.min.en}}</strong>&nbsp;Max:&nbsp;<strong>{{pc.max.en}}</strong>&nbsp;Avg:&nbsp;<strong>{{pc.avg.en}}</strong></small><br>
-                        <small *ngIf='pc != null'>Exiting: Min:&nbsp;<strong>{{pc.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{pc.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{pc.avg.ex}}</strong></small>
-                    </nb-card-body>
-                </nb-card>
-            </div>
-        </div>
-       <div class="row">
-            <div class="col-md-12">
-                <nb-card>
-                    <nb-card-body>
-                            <p>By Hour</p>
-                            <chart id='chart' type="horizontalBar" [data]="dataH" [options]="optionsH"></chart>
-                    </nb-card-body>
-                </nb-card>
-            </div>
-        </div>
-
+<div class="container no-padding">
+  <div class='col-md-12 no-padding' style="margin-top: 15px;">
+    <p>Incidents</p>
+    <div class="row">
+      <div class="col-md-3 less-padding">
+        <nb-card>
+          <nb-card-body class="top-badges">
+            <p class="badge-txt">Current Count</p>
+            <p class="badge-reading">{{pc == undefined ? 'None' : pc.in}}</p>
+          </nb-card-body>
+        </nb-card>
+      </div>
+      <div class="col-md-9 less-padding">
+        <nb-card>
+          <nb-card-body class="top-badges">
+            <p>People inside over time</p>
+            <chart type="line" [data]="dataL" [options]="optionsL"></chart>
+            <small
+              *ngIf='pc != null'>Min:&nbsp;<strong>{{pc.min.in}}</strong>&nbsp;Max:&nbsp;<strong>{{pc.max.in}}</strong>&nbsp;Avg:&nbsp;<strong>{{pc.avg.in}}</strong></small>
+          </nb-card-body>
+        </nb-card>
+      </div>
     </div>
+    <!-- <div class="row">
+      <div class="col-md-3 less-padding">
+        <nb-card>
+          <nb-card-body class="top-badges">
+            <p class="badge-txt">Total Entries</p>
+            <p class="badge-reading">{{pc == undefined ? 'None' : pc.totalEn}}</p>
+            <br>
+            <p class="badge-txt">Total Exits</p>
+            <p class="badge-reading">{{pc == undefined ? 'None' : pc.totalEx}}</p>
+          </nb-card-body>
+        </nb-card>
+      </div>
+      <div class="col-md-9 less-padding">
+        <nb-card>
+          <nb-card-body class="top-badges">
+            <p>People Entering and Exiting</p>
+            <chart type="line" [data]="dataL2" [options]="optionsL2"></chart>
+            <small *ngIf='pc != null'>Entering:
+              Min:&nbsp;<strong>{{pc.min.en}}</strong>&nbsp;Max:&nbsp;<strong>{{pc.max.en}}</strong>&nbsp;Avg:&nbsp;<strong>{{pc.avg.en}}</strong></small><br>
+            <small *ngIf='pc != null'>Exiting:
+              Min:&nbsp;<strong>{{pc.min.ex}}</strong>&nbsp;Max:&nbsp;<strong>{{pc.max.ex}}</strong>&nbsp;Avg:&nbsp;<strong>{{pc.avg.ex}}</strong></small>
+          </nb-card-body>
+        </nb-card>
+      </div>
     </div>
-    
+    <div class="row">
+      <div class="col-md-12 less-padding">
+        <nb-card>
+          <nb-card-body>
+            <p>By Hour</p>
+            <chart id='chart' type="horizontalBar" [data]="dataH" [options]="optionsH"></chart>
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+  </div> -->
+  <div class='col-md-12 no-padding' style="margin-top: 15px;">
+    <div class="row">
+      <div class="col-md-8 less-padding">
+        <nb-card>
+            <nb-card-header>
+              <h4>Live Output Feed</h4>
+            </nb-card-header>
+            <nb-card-body>
+              <div align='center'>
+                  <img [src]='rtspIn' style='width: 100%; height: auto;'>
+              </div>
+            </nb-card-body>
+          </nb-card>
+      </div>
+    </div>
+  </div>
+</div>

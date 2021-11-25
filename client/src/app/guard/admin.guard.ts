@@ -18,22 +18,23 @@ constructor(
     Observable<boolean> | Promise<boolean> | boolean {
       if(this.authService.isAdminClientBranch !== true){
         if(this.authService.isLoggedIn !== true) {
-          this.authService.signOut(JSON.parse(localStorage.getItem('now_user'))['username']).subscribe(
-            res=>{
-              window.localStorage.clear();
-              window.sessionStorage.clear();
-              window.location.reload()
-              this.router.navigate(['/'])
-            }, err =>{ 
-              console.error(err)
-              window.localStorage.clear();
-              window.sessionStorage.clear();
-              window.location.reload()
-              this.router.navigate(['/'])
-            }
-        )
+              return this.router.navigate(['/pages/sign-in'])
+        //   this.authService.signOut(JSON.parse(localStorage.getItem('now_user'))['username']).subscribe(
+        //     res=>{
+        //       window.localStorage.clear();
+        //       window.sessionStorage.clear();
+        //       // window.location.reload()
+        //       this.router.navigate(['/pages'])
+        //     }, err =>{ 
+        //       console.error(err)
+        //       window.localStorage.clear();
+        //       window.sessionStorage.clear();
+        //       // window.location.reload()
+        //       this.router.navigate(['/pages'])
+        //     }
+        // )
         } else {
-          this.router.navigate(['dashboard'])
+          return this.router.navigate(['/pages/accounts'])
         }
       }
       this.facesService.mess().subscribe(
@@ -42,21 +43,25 @@ constructor(
         },
         err => {
           console.log(err)
-          window.alert("Your session has expired, please log in again.");
-          this.authService.signOut(JSON.parse(localStorage.getItem('now_user'))['username']).subscribe(
-            res=>{
-              window.localStorage.clear();
-              window.sessionStorage.clear();
-              window.location.reload()
-              this.router.navigate(['/'])
-            }, err =>{ 
-              console.error(err)
-              window.localStorage.clear();
-              window.sessionStorage.clear();
-              window.location.reload()
-              this.router.navigate(['/'])
-            }
-        )
+            window.localStorage.clear();
+            window.sessionStorage.clear();
+            window.location.reload()
+            this.router.navigate(['/pages'])
+            window.alert("Your session has expired, please log in again.");
+        //   this.authService.signOut(JSON.parse(localStorage.getItem('now_user'))['username']).subscribe(
+        //     res=>{
+        //       window.localStorage.clear();
+        //       window.sessionStorage.clear();
+        //       // window.location.reload()
+        //       this.router.navigate(['/pages'])
+        //     }, err =>{ 
+        //       console.error(err)
+        //       window.localStorage.clear();
+        //       window.sessionStorage.clear();
+        //       // window.location.reload()
+        //       this.router.navigate(['/pages'])
+        //     }
+        // )
         }
       )
       return true;

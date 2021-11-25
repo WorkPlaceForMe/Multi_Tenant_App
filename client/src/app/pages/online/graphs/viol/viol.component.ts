@@ -6,15 +6,13 @@ import { LocalDataSource, ViewCell } from 'ng2-smart-table';
 import { api } from '../../../../models/API';
 import { AnalyticsService } from '../../../../services/analytics.service';
 import { FacesService } from '../../../../services/faces.service';
-import JSMpeg from '@cycjimmy/jsmpeg-player';
-import { VideoComponent } from '../video/video.component';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
 
 @Component({
   selector: 'ngx-viol',
   templateUrl: './viol.component.html',
-  styleUrls: ['./viol.component.scss']
+  styleUrls: ['./viol.component.scss', '../smart-table.scss']
 })
 export class ViolComponent implements OnInit, OnDestroy {
 
@@ -54,23 +52,22 @@ export class ViolComponent implements OnInit, OnDestroy {
     }
   }
 
+  @ViewChild("videoPlayer", { static: false }) videoplayer: ElementRef;
+  isPlay: boolean = false;
+  toggleVideo(event: any) {
+    this.videoplayer.nativeElement.play();
+  }
+
+  videoFile:string = "";
+
+  video:boolean= false;
+  rtspIn: any;
+
   ngOnInit(): void {
-    if(api.length <= 4){
-      setTimeout(()=>{
-        this.face.camera({id: this.camera}).subscribe(
-          res =>{
-            this.player = new JSMpeg.Player(`ws://localhost:${res['port']}`, {
-              canvas: this.streamingcanvas.nativeElement, autoplay: true, audio: false, loop: true
-            })
-          },
-          err=> console.error(err)
-        )
-      },500)
-    }
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
     var time = new Date();
     this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0,3);
-    this.timezone = parseInt(this.timezone) * 2;
+    this.timezone = parseInt(this.timezone);
     let p = ''
     if(this.timezone > 0){
       p = '+'
@@ -87,12 +84,33 @@ export class ViolComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type
     }
+    this.face.checkVideo(19,this.camera).subscribe(
+      res=>{
+        this.video = res['video']
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
+        if(this.video === true){
+          this.settings['columns']['picture'] = {
+            title: 'VIDEO',
+            type: 'custom',
+            filter: false,
+            renderComponent: ButtonViewComponent,
+            onComponentInitFunction:(instance) => {
+              instance.save.subscribe((row: string)  => {
+                this.pass(row)
+              });
+            }
+          }
+          this.settings = Object.assign({},this.settings)
+        }
+      }, err => console.error(err)
+    )
       this.serv.violence(this.camera,l).subscribe(
         res=>{
           this.violence = res['data']
           for(var m of this.violence.raw){
-            m['picture']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/violence/' + m['cam_id'] + '/' +m['clip_path']
-            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', this.timezone)
+            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/violence/' + m['cam_id'] + '/' +m['picture'])
+            m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/violence/' + m['cam_id'] + '/' +m['clip_path']
+            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss')
             switch(m['severity']){
               case '0':{
                 m['severity'] = 'Low';
@@ -112,7 +130,7 @@ export class ViolComponent implements OnInit, OnDestroy {
           let labels = []
           for(var o of Object.keys(this.violence.over)){
             o = o + ':00:00'
-            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm', this.timezone))
+            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm'))
           }
 
           this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
@@ -188,6 +206,12 @@ export class ViolComponent implements OnInit, OnDestroy {
   got(id){
     this.route.navigate([`/pages/tickets`])
   }
+  pass(vid:string){
+    this.videoplayer.nativeElement.src = vid    
+    this.videoplayer.nativeElement.load();
+    this.videoplayer.nativeElement.play();
+
+  }
   settings = {
     mode: 'external',
     actions: {
@@ -210,13 +234,13 @@ export class ViolComponent implements OnInit, OnDestroy {
     noDataMessage: "No data found",
     columns: {
       picture: {
-        title: 'VIDEO',
+        title: 'PICTURE',
         type: 'custom',
         filter: false,
-        renderComponent: ButtonViewComponent,
-        onComponentInitFunction(instance) {
-          instance.save.subscribe(row => {
-            alert(`${row.name} saved!`)
+        renderComponent: ButtonViewComponentPic,
+        onComponentInitFunction:(instance) => {
+          instance.save.subscribe((row: string)  => {
+
           });
         }
       },
@@ -231,7 +255,7 @@ export class ViolComponent implements OnInit, OnDestroy {
         filter: false
       },
       severity: {
-        title: 'Severity',
+        title: 'SEVERITY',
         type: 'string',
         filter: false
       }
@@ -240,18 +264,41 @@ export class ViolComponent implements OnInit, OnDestroy {
 
 }
 
-
-
 @Component({
   selector: 'button-view',
   template: `
-    <button class='btn btn-primary btn-block' (click)="openWindowForm()"><i class="fas fa-play-circle"></i></button>
+    <img [src]="rowData.picture" width='60' height='60'>
+  `,
+})
+export class ButtonViewComponentPic implements ViewCell, OnInit {
+
+  constructor(){
+  }
+
+  @Input() value: string | number;
+  @Input() rowData: any;
+  @Output() save: EventEmitter<any> = new EventEmitter();
+
+  ngOnInit() {
+  }
+}
+
+@Component({
+  selector: 'button-view',
+  styles: ['.play-btn { position: absolute; left: 50%; top: 50%; margin-top: -17px; margin-left: -20px; color: #f7f9fc47}'],
+  template: `
+  <div >
+  <div style = "width:60px; height: 60px">
+    <img [src]="rowData.picture" width='60' height='60'>
+    <button class='btn btn-link play-btn' (click)="openVideo()"><i class="fas fa-play"></i></button>
+  </div>
+</div>
   `,
 })
 export class ButtonViewComponent implements ViewCell, OnInit {
   renderValue: string;
 
-  constructor(private windowService: NbWindowService){
+  constructor(){
   }
 
   @Input() value: string | number;
@@ -259,12 +306,8 @@ export class ButtonViewComponent implements ViewCell, OnInit {
 
   @Output() save: EventEmitter<any> = new EventEmitter();
 
-  openWindowForm() {
-    window.open(this.rowData.picture, "_blank");
-  }
-
-  openWindowForm1() {
-    this.windowService.open(VideoComponent, { title: `Video clip at: ${this.rowData.time}`, context: { path: this.rowData.picture}});
+  openVideo(){
+    this.save.emit(this.rowData.clip_path)
   }
 
   ngOnInit() {

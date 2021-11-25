@@ -14,7 +14,7 @@ import { Account } from '../../../../models/Account';
 @Component({
   selector: 'ngx-vault',
   templateUrl: './vault.component.html',
-  styleUrls: ['./vault.component.scss']
+  styleUrls: ['./vault.component.scss', '../smart-table.scss']
 })
 export class VaultComponent implements OnInit, OnDestroy {
 
@@ -70,7 +70,7 @@ export class VaultComponent implements OnInit, OnDestroy {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
     var time = new Date();
     this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0,3);
-    this.timezone = parseInt(this.timezone) * 2;
+    this.timezone = parseInt(this.timezone);
     let p = ''
     if(this.timezone > 0){
       p = '+'
@@ -92,15 +92,15 @@ export class VaultComponent implements OnInit, OnDestroy {
           this.vault = res['data']
           for(var m of this.vault.org){
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/vault/' + m['cam_id'] + '/' + m['picture'])
-            m['time_in'] = this.datepipe.transform(m['time_in'], 'yyyy-M-dd HH:mm:ss', this.timezone)
-            m['time_out'] = this.datepipe.transform(m['time_out'], 'yyyy-M-dd HH:mm:ss', this.timezone)
+            m['time_in'] = this.datepipe.transform(m['time_in'], 'yyyy-M-dd HH:mm:ss')
+            m['time_out'] = this.datepipe.transform(m['time_out'], 'yyyy-M-dd HH:mm:ss')
           }
           this.source = this.vault.org.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
 
           let labels = []
           for(var o of Object.keys(this.vault.over)){
             o = o + ':00:00'
-            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm', this.timezone))
+            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm'))
           }
 
           this.themeSubscription = this.theme.getJsTheme().subscribe(config => {

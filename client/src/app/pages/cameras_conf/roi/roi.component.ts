@@ -134,7 +134,7 @@ export class ROIComponent implements OnInit {
   perimeter = [];
   relations: any = [];
   algos: any = [
-    {activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false}
+    {activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false},{activated:false}
   ];
   colour: string = '';
   fill: string ='';
@@ -183,6 +183,7 @@ export class ROIComponent implements OnInit {
         this.res_height =this.camera.cam_height;
         this.resRelation = this.res_height / this.res_width;
         this.width = rect.width;
+        console.log(this.width, rect.width)
         this.height = this.width*this.resRelation;
       },
       err =>{console.error(err)})

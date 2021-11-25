@@ -19,11 +19,11 @@ import { Account } from '../../../models/Account';
 })
 export class LivestreamComponent implements OnInit, OnDestroy {
 
-  relations: any =[];
+  relations: Array<any> =[];
   dateMessage: string;
-  cams: any = [];
-  algos: any = [];
-  rois: any = [];
+  cams: Array<any> = [];
+  algos: Array<any> = [];
+  rois: Array<any> = [];
   date:any;
   heatmap: Boolean = false;
   remaining:  any = {
@@ -58,8 +58,8 @@ export class LivestreamComponent implements OnInit, OnDestroy {
     }, 1000);
     this.remain()
 
-      this.facesService.getCameras().subscribe(
-        res => {          
+      this.facesService.getLiveCameras().subscribe(
+        res => {
           this.cams = res['data'];
           this.facesService.getAllRelations().subscribe(
             res => {

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NbMenuModule, NbPopoverModule } from '@nebular/theme';
+import { NbMenuModule, NbPopoverModule, NbWindowModule } from '@nebular/theme';
 
 import { ThemeModule } from '../@theme/theme.module';
 import { PagesComponent } from './pages.component';
@@ -37,7 +37,9 @@ import { NbCardModule, NbIconModule, NbInputModule, NbTreeGridModule, NbAccordio
   NbCheckboxModule,
   NbRadioModule,
   NbDatepickerModule,
-  NbSelectModule, NbSpinnerModule } from '@nebular/theme';
+  NbFormFieldModule,
+  NbSelectModule, NbSpinnerModule,
+  NbContextMenuModule } from '@nebular/theme';
 
 // import { TableComponent } from './facial_recognition/table/table.component';
 import { HeatmapComponent } from './cameras_conf/heatmap/heatmap.component';
@@ -82,8 +84,23 @@ import { ParkingComponent } from './online/graphs/parking/parking.component';
 import { AnprComponent } from './online/graphs/anpr/anpr.component';
 import { BarrierComponent } from './online/graphs/barrier/barrier.component';
 import { VehicleComponent } from './online/graphs/vehicle/vehicle.component';
-
-// import { OverallComponent } from './facial_recognition/overall/overall.component';
+import { DashComponent } from './online/graphs/dash/dash.component';
+import { TamperComponent } from './online/graphs/tamper/tamper.component';
+import { AnimalsOnRoadComponent } from './online/graphs/animals-on-road/animals-on-road.component';
+import { AccidentComponent } from './online/graphs/accident/accident.component';
+import { AxleComponent } from './online/graphs/axle/axle.component';
+import { CarmakeComponent } from './online/graphs/carmake/carmake.component';
+import { IllegalParkingComponent } from './online/graphs/illegal-parking/illegal-parking.component';
+import { VehicleCountComponent } from './online/graphs/vehicle-count/vehicle-count.component';
+import { WrongTurnComponent } from './online/graphs/wrong-turn/wrong-turn.component';
+import { SpeedingComponent } from './online/graphs/speeding/speeding.component';
+import { FrComponent } from './online/graphs/fr/fr.component';
+import { ClothComponent } from './online/graphs/cloth/cloth.component';
+import { PcCameraComponent } from './online/graphs/pc-camera/pc-camera.component';
+import { BrandCarComponent } from './online/graphs/brand-car/brand-car.component';
+import { GoogleLoginProvider, SocialLoginModule } from 'angularx-social-login';
+import { MsalModule } from '@azure/msal-angular';
+import { PublicClientApplication } from '@azure/msal-browser';
 
 @NgModule({
   imports: [
@@ -92,6 +109,7 @@ import { VehicleComponent } from './online/graphs/vehicle/vehicle.component';
     ChartModule,
     Ng2SmartTableModule,
     NbSpinnerModule,
+    NbContextMenuModule,
     NbActionsModule,
     NbCheckboxModule,
     NbRadioModule,
@@ -103,6 +121,7 @@ import { VehicleComponent } from './online/graphs/vehicle/vehicle.component';
     NbListModule,
     NbRouteTabsetModule,
     NbStepperModule,
+    NbFormFieldModule,
     NbTabsetModule, NbUserModule,
     NbCardModule,
     NbTreeGridModule,
@@ -124,7 +143,18 @@ import { VehicleComponent } from './online/graphs/vehicle/vehicle.component';
     DragDropModule,
     PortalModule,
     ScrollingModule,
-    NbPopoverModule
+    NbPopoverModule, 
+    SocialLoginModule,
+    MsalModule.forRoot( new PublicClientApplication({
+      auth: {
+        clientId: 'e1486010-fe9f-499f-92c3-c813ea490cb8', // This is your client ID
+        authority: 'https://login.microsoftonline.com'+ '/' + 'common', 
+        redirectUri: 'http://localhost:4200'// This is your redirect URI
+      },
+      cache: {
+        cacheLocation: 'localStorage',
+      }
+    }), null, null)
   ],
   declarations: [
     PagesComponent,
@@ -174,7 +204,21 @@ import { VehicleComponent } from './online/graphs/vehicle/vehicle.component';
     ParkingComponent,
     AnprComponent,
     BarrierComponent,
-    VehicleComponent
+    VehicleComponent,
+    DashComponent,
+    TamperComponent,
+    AnimalsOnRoadComponent,
+    AccidentComponent,
+    AxleComponent,
+    CarmakeComponent,
+    IllegalParkingComponent,
+    VehicleCountComponent,
+    WrongTurnComponent,
+    SpeedingComponent,
+    FrComponent,
+    ClothComponent,
+    PcCameraComponent,
+    BrandCarComponent,
   ],
   providers: [
     FacesService,
@@ -182,7 +226,19 @@ import { VehicleComponent } from './online/graphs/vehicle/vehicle.component';
     ColorsService,
     StrService,
     AnnotationsService,
-    authInterceptorProviders
+    authInterceptorProviders,
+    {
+    provide: 'SocialAuthServiceConfig',
+    useValue: {
+      autoLogin: true, //keeps the user signed in
+      providers: [
+        {
+          id: GoogleLoginProvider.PROVIDER_ID,
+          provider: new GoogleLoginProvider('177947832755-0kqanmd36fjt3v3lbr7nqs1aghevs56e.apps.googleusercontent.com') // your client id
+        }
+      ]
+    }
+  },
   ],
 })
 export class PagesModule {
