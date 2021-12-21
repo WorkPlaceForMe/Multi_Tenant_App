@@ -101,6 +101,7 @@ import { BrandCarComponent } from './online/graphs/brand-car/brand-car.component
 import { GoogleLoginProvider, SocialLoginModule } from 'angularx-social-login';
 import { MsalModule } from '@azure/msal-angular';
 import { PublicClientApplication } from '@azure/msal-browser';
+import { Heatmap1Component } from './online/graphs/heatmap/heatmap.component';
 
 @NgModule({
   imports: [
@@ -219,6 +220,7 @@ import { PublicClientApplication } from '@azure/msal-browser';
     ClothComponent,
     PcCameraComponent,
     BrandCarComponent,
+    Heatmap1Component
   ],
   providers: [
     FacesService,

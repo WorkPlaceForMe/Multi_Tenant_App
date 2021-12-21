@@ -100,12 +100,16 @@ pic:string = `${api}/pictures/graymaticsLogo.png`
     }
   }
 
+  dispThreats: boolean = false;
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
     this.analytic = this.overview
     this.face.getDashboard().subscribe(
       res=>{
         this.info = res['data']
+        if(this.info['analyticsT'].length != 0){
+          this.dispThreats = true
+        }
         if(this.now_user.id_branch != '0000'){
           this.face.getCameras().subscribe(
             res =>{

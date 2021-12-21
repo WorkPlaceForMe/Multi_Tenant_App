@@ -86,6 +86,7 @@ exports.viewAdminUnder = (req, res) => {
           accounts.splice(i, 1)
         }
       }
+
       res.status(200).send({ success: true, data: accounts })
     })
     .catch(err => {

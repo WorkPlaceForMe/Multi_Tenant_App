@@ -17,7 +17,7 @@
                 <nb-list-item (click) = "analytic=alg;reload(alg)"  [ngClass]="(analytic!=alg)?'algo-menu':'algo-menu-selected'" *ngFor='let alg of info.analyticsP'>
                     {{alg.name}}
                 </nb-list-item>
-                <nb-list-item class = "algo-menu-category">
+                <nb-list-item class = "algo-menu-category" *ngIf='dispThreats'>
                     THREATS
                 </nb-list-item>
                 <nb-list-item (click) = "analytic=alg;reload(alg)" [ngClass]="(analytic!=alg)?'algo-menu':'algo-menu-selected'" *ngFor='let alg of info.analyticsT'>

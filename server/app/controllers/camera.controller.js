@@ -63,7 +63,7 @@ exports.viewLiveCams = (req, res) => {
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Camera.findAll({
       where: { id_branch: decoded.id_branch, stored_vid: 'No' },
-      attributes: ['name', 'id', 'createdAt', 'updatedAt']
+      attributes: ['name', 'id', 'createdAt', 'updatedAt', 'heatmap_pic']
     })
       .then(cameras => {
         res.status(200).send({ success: true, data: cameras })

@@ -124,7 +124,12 @@ const opt = {
     },
     servers: [
       {
-        url: `${process.env.app_url}`
+        url: `${process.env.app_url}`,
+        description: 'Main'
+      },
+      {
+        url: 'localhost:3311',
+        description: 'Other'
       }
     ]
   },

@@ -53,7 +53,7 @@
         <nb-select [(ngModel)]='camera' (ngModelChange)='cam($event)'>
             <nb-option value="" disabled>Choose a location:</nb-option>
             <nb-option *ngFor='let loc of cameras' [value]=loc.id_branch>{{loc.username}}</nb-option>
-            </nb-select>
+        </nb-select>
         </div>
     </div>
     
@@ -63,7 +63,7 @@
         <div class='col-md-12 no-padding' style="margin-top: 5px;" [ngSwitch]='analytic.algo_id'>
             <nb-card *ngSwitchCase='-1' [nbSpinner]="'primary'" nbSpinnerSize="medium" nbSpinnerStatus="primary" fullWdith><nb-card-body>&nbsp;</nb-card-body></nb-card>
             <nb-card *ngSwitchCase='-2'><nb-card-body>&nbsp;</nb-card-body></nb-card>
-            <ngx-dash *ngSwitchCase='-3' [range]='range' [camera]='camera'></ngx-dash>
+            <!-- <ngx-dash *ngSwitchCase='-3' [range]='range' [camera]='camera'></ngx-dash> -->
             <ngx-pc *ngSwitchCase='12' [range]='range' [camera]='camera'></ngx-pc>
             <ngx-loit *ngSwitchCase='2' [range]='range' [camera]='camera'></ngx-loit>
             <ngx-intr *ngSwitchCase='17' [range]='range' [camera]='camera'></ngx-intr>
@@ -92,7 +92,8 @@
             <ngx-fr *ngSwitchCase='15' [range]='range' [camera]='camera'></ngx-fr>
             <ngx-pc-camera *ngSwitchCase='33' [range]='range' [camera]='camera'></ngx-pc-camera>
             <ngx-brand-car *ngSwitchCase='34' [range]='range' [camera]='camera'></ngx-brand-car>
-            <app-live *ngSwitchCase='-4'  [camera]='camera'></app-live>
+            <ngx-heatmap *ngSwitchCase='14' [range]='range' [camera]='camera' [info]='info'></ngx-heatmap>
+            <app-live *ngSwitchCase='-4' [camera]='camera'></app-live>
         </div>
     </div>
     

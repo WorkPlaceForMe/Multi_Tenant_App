@@ -20,6 +20,9 @@ export class ControlComponent implements OnInit, OnDestroy {
   fin: Date;
   range: NbCalendarRange<Date>;
   camera: string = '';
+  // camera = {
+  //   name: ''
+  // }
   location: string = '';
   reTime: number = 0;
   refresh: number = 0;
@@ -93,7 +96,7 @@ export class ControlComponent implements OnInit, OnDestroy {
 
   }
 
-    signOff(){
+  signOff(){
    const us = JSON.parse(localStorage.getItem('now_user'))['username']
    this.authService.signOut(us).subscribe(
     res=>{
@@ -187,7 +190,7 @@ export class ControlComponent implements OnInit, OnDestroy {
       }, this.refresh);
     }
   }
-
+  info: any;
   cam(event){
     this.cameraSel.emit(event);
     setTimeout(() => {
@@ -200,10 +203,15 @@ export class ControlComponent implements OnInit, OnDestroy {
           if (this.range.end === undefined){
             return;
           }
+          for(const cam of this.cameras){
+            if(cam.id == event){
+              this.info = cam
+            }
+          }
           const algo_id = this.analytic.algo_id;
           this.analytic.algo_id = -1;
           setTimeout(() => {
-            this.camera = event;
+            this.camera = event;    
             this.analytic.algo_id = algo_id;
           }, 50);
         }
@@ -230,7 +238,6 @@ export class ControlComponent implements OnInit, OnDestroy {
       start: new Date(this.max),
       end: new Date(this.fin),
     };
-
     this.initMonths();
     this.selectedDate =  this.dateService.addDay(this.dateService.today(), 0);
   }
