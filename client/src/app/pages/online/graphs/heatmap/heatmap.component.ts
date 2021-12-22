@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ChangeDetectionStrategy, HostListener, OnInit, Input  } from '@angular/core';
+import { AfterViewInit, Component, ChangeDetectionStrategy, HostListener, OnInit, Input, ViewChild, ElementRef  } from '@angular/core';
 import { FacesService } from '../../../../services/faces.service';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
@@ -14,10 +14,9 @@ import * as h337 from '../../../../../assets/heatmap.min.js';
 export class Heatmap1Component implements OnInit {
 
   constructor(
-    private activatedRoute: ActivatedRoute, 
     private facesService: FacesService, 
     public datepipe: DatePipe,
-    protected dateService: NbDateService<Date>) {
+    ) {
      }
 
   ngOnInit(): void {
@@ -27,16 +26,16 @@ export class Heatmap1Component implements OnInit {
         this.size.width = this.camInfo.cam_width
         this.size.height = this.camInfo.cam_height
         this.getHms(this.range.start,this.range.end)
-      }
+      },
+      err => console.error(err)
     )
-    this.max = this.dateService.addDay(this.dateService.today(), 0);
   }
   camInfo: Camera;
   @Input() range: NbCalendarRange<Date>;
   @Input() camera;
   @Input() info;
-  max: Date;
   heatmap: any;
+  @ViewChild('pic', { static: false }) pic: ElementRef;
 
   dates: any[];
   size: any={
@@ -54,10 +53,6 @@ export class Heatmap1Component implements OnInit {
     size: 0,
     value: 0
   }
-  public onChange1(event1): void {
-    this.date.dwell = event1;
-  }
-  
   zones: any =[]; 
   Hms: any = [];
   Datas: any = [];
@@ -79,9 +74,9 @@ export class Heatmap1Component implements OnInit {
           if(this.date.value >= 400){
             this.date.value = 400;
           }
-          console.log(this.style())
+          // console.log(this.pic.nativeElement.offsetParent.clientWidth, this.pic.nativeElement.offsetParent.clientHeight)
           for(var i = 0; i < this.date.size; i++){
-            this.Datas[i] = {x: (this.Hms[i].x * this.heatmap_size.width / this.size.width), y: (this.Hms[i].y * this.heatmap_size.height / this.size.height), value: this.date.value};
+            this.Datas[i] = {x: (this.Hms[i].x * this.pic.nativeElement.offsetParent.clientWidth / this.size.width), y: (this.Hms[i].y * this.pic.nativeElement.offsetParent.clientHeight / this.size.height), value: this.date.value};
           }
           this.heatmap = h337.create({
             container: document.getElementById('testNotSameName'),
