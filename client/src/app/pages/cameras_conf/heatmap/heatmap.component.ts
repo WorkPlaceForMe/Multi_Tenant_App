@@ -163,6 +163,15 @@ export class HeatmapComponent implements AfterViewInit, OnInit {
       );
   }
 
+  clearHeatmap(){
+    let data = {
+      max: 100,
+      min:0,
+      data: [],
+    };
+    this.heatmap.setData(data)
+  }
+
   getAll(){
   this.heatmap = h337.create({
       container: document.getElementById('testNotSameName'),
