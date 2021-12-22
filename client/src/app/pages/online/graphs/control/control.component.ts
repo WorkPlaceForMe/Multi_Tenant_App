@@ -223,6 +223,14 @@ export class ControlComponent implements OnInit, OnDestroy {
     this.cam(this.camera);
   }
 
+  paths:Number = -1
+
+  reloadPath(num){
+    this.paths = num
+    this.cam(this.camera);
+  }
+
+
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'));
     // if(this.now_user.id_branch == '0000'){

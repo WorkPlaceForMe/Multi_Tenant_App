@@ -117,6 +117,12 @@ return this.http.post(`${this.API_URI}/images`, image);
   getallhm1(camera_id:string){
     return this.http.get(`${this.API_URI}/heatmap/all/${camera_id}`);
   }
+  getPath(start: string, end:string, camera_id:string){
+    return this.http.get(`${this.API_URI}/path/date/${start}/${end}/${camera_id}`);
+  }
+  getallPath(camera_id:string){
+    return this.http.get(`${this.API_URI}/path/all/${camera_id}`);
+  }
   saveSchedule(day: Day){
    return this.http.post(`${this.API_URI}/schedule/`, day);
  }

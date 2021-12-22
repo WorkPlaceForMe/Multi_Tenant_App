@@ -74,7 +74,8 @@ db.ALGORITHMS = [
   'Carmake',
   'Clothing',
   'Vehicle Count at Screen',
-  'Car Brand'
+  'Car Brand',
+  'People Path'
 ]
 
 module.exports = db

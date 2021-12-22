@@ -181,6 +181,11 @@ const tables = {
     id: 34,
     table: 'carbrand',
     alert: true
+  },
+  'People Path': {
+    id: 34,
+    table: 'heatmap',
+    alert: true
   }
 }
 
@@ -451,7 +456,8 @@ exports.dashboards = (req, res) => {
                           parseInt(d) == 22 ||
                           parseInt(d) == 2 ||
                           parseInt(d) == 24 ||
-                          parseInt(d) == 14
+                          parseInt(d) == 14 ||
+                          parseInt(d) == 35
                         ) {
                           analyticsPrem.push({
                             algo_id: parseInt(d),

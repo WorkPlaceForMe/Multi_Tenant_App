@@ -164,6 +164,10 @@ exports.initial = function () {
     id: 34,
     name: 'Car Brand'
   })
+  algo.create({
+    id: 35,
+    name: 'People Path'
+  })
 }
 // INSERT INTO `multi_tenant`.`algorithms` (`id`, `name`, `createdAt`, `updatedAt`) VALUES ('27', 'Camera Tampering', '2020-10-05 07:31:29', '2020-10-05 07:31:29');
 
