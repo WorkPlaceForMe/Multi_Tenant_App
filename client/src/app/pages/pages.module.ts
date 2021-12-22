@@ -102,6 +102,7 @@ import { GoogleLoginProvider, SocialLoginModule } from 'angularx-social-login';
 import { MsalModule } from '@azure/msal-angular';
 import { PublicClientApplication } from '@azure/msal-browser';
 import { Heatmap1Component } from './online/graphs/heatmap/heatmap.component';
+import { PathComponent } from './online/graphs/path/path.component';
 
 @NgModule({
   imports: [
@@ -220,7 +221,8 @@ import { Heatmap1Component } from './online/graphs/heatmap/heatmap.component';
     ClothComponent,
     PcCameraComponent,
     BrandCarComponent,
-    Heatmap1Component
+    Heatmap1Component,
+    PathComponent
   ],
   providers: [
     FacesService,
