@@ -1742,7 +1742,7 @@ exports.queue = async (req, res) => {
                 v['wait'] = display(v['wait'])
                 times.push({
                   time: (v.end_time - v.start_time) / 60000,
-                  queue: v.qid
+                  queue: v.zone
                 })
               }
               let d = v.start_time
