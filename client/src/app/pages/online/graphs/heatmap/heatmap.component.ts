@@ -88,7 +88,7 @@ export class Heatmap1Component implements OnInit {
             max: this.Datas.length,
             min: 1,
             data: this.Datas
-        });
+          });
         },
         err => console.error(err)
       );

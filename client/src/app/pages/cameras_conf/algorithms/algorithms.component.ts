@@ -128,7 +128,6 @@ export class AlgorithmsComponent implements OnInit {
                   this.re_draw(true);
                 }
               }
-              console.log(this.polygons)
               this.actA = this.getNbOccur(true, this.Aalgos);
               this.actB = this.getNbOccur(true, this.Balgos);
               this.actC = this.getNbOccur(true, this.Calgos);
@@ -443,7 +442,7 @@ export class AlgorithmsComponent implements OnInit {
     const id = this.activatedRoute.snapshot.params.uuid;
     data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime);
     this.facesService.sendAlgs(id, data).subscribe(
-      res => console.log(res),
+      res => {},
       err => console.log(err),
     );
   }
