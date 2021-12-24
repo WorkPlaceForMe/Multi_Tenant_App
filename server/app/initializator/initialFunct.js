@@ -166,6 +166,14 @@ exports.initial = function () {
   })
   algo.create({
     id: 35,
+    name: 'Weapon'
+  })
+  algo.create({
+    id: 36,
+    name: 'Bottle'
+  })
+  algo.create({
+    id: 37,
     name: 'People Path'
   })
 }

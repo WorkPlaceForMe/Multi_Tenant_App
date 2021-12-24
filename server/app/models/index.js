@@ -75,6 +75,8 @@ db.ALGORITHMS = [
   'Clothing',
   'Vehicle Count at Screen',
   'Car Brand',
+  'Weapon',
+  'Bottle',
   'People Path'
 ]
 

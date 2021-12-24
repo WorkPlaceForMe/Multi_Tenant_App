@@ -183,7 +183,17 @@ const tables = {
     alert: true
   },
   'People Path': {
-    id: 34,
+    id: 37,
+    table: 'heatmap',
+    alert: true
+  },
+  Weapon: {
+    id: 35,
+    table: 'heatmap',
+    alert: true
+  },
+  Bottle: {
+    id: 36,
     table: 'heatmap',
     alert: true
   }
