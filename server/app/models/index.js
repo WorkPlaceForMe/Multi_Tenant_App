@@ -77,7 +77,8 @@ db.ALGORITHMS = [
   'Car Brand',
   'Weapon',
   'Bottle',
-  'People Path'
+  'People Path',
+  'Person Collapsing'
 ]
 
 module.exports = db

@@ -196,6 +196,11 @@ const tables = {
     id: 36,
     table: 'heatmap',
     alert: true
+  },
+  'Person Collapsing': {
+    id: 38,
+    table: 'collapsing',
+    alert: true
   }
 }
 
