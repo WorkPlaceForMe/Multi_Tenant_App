@@ -33,7 +33,6 @@
     "mysql": "^2.18.1",
     "mysql2": "^2.2.5",
     "node-rtsp-stream": "0.0.9",
-    "nodemailer": "^6.4.17",
     "path-parse": "^1.0.7",
     "sequelize": "^6.3.5",
     "swagger-jsdoc": "^6.0.1",
