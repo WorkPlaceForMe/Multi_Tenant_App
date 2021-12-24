@@ -103,6 +103,8 @@ import { MsalModule } from '@azure/msal-angular';
 import { PublicClientApplication } from '@azure/msal-browser';
 import { Heatmap1Component } from './online/graphs/heatmap/heatmap.component';
 import { PathComponent } from './online/graphs/path/path.component';
+import { FireComponent } from './online/graphs/fire/fire.component';
+import { CollapseComponent } from './online/graphs/collapse/collapse.component';
 
 @NgModule({
   imports: [
@@ -222,7 +224,9 @@ import { PathComponent } from './online/graphs/path/path.component';
     PcCameraComponent,
     BrandCarComponent,
     Heatmap1Component,
-    PathComponent
+    PathComponent,
+    FireComponent,
+    CollapseComponent
   ],
   providers: [
     FacesService,

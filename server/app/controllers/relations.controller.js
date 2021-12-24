@@ -189,17 +189,22 @@ const tables = {
   },
   Weapon: {
     id: 35,
-    table: 'heatmap',
+    table: 'weapon',
     alert: true
   },
   Bottle: {
     id: 36,
-    table: 'heatmap',
+    table: 'bottle',
     alert: true
   },
   'Person Collapsing': {
     id: 38,
-    table: 'collapsing',
+    table: 'Collapse',
+    alert: true
+  },
+  'Fire Detection': {
+    id: 38,
+    table: 'fire',
     alert: true
   }
 }

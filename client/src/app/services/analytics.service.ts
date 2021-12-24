@@ -114,6 +114,12 @@ export class AnalyticsService {
   brand(id: string, dates){
     return this.http.post(`${this.API_URL}brand/${id}`, dates);
   }
+  fire(id: string, dates){
+    return this.http.post(`${this.API_URL}fire/${id}`, dates);
+  }
+  collapse(id: string, dates){
+    return this.http.post(`${this.API_URL}collapse/${id}`, dates);
+  }
 
   constructor(private http: HttpClient) { }
 }

@@ -180,6 +180,10 @@ exports.initial = function () {
     id: 38,
     name: 'Person Collapsing'
   })
+  algo.create({
+    id: 39,
+    name: 'Fire Detection'
+  })
 }
 // INSERT INTO `multi_tenant`.`algorithms` (`id`, `name`, `createdAt`, `updatedAt`) VALUES ('27', 'Camera Tampering', '2020-10-05 07:31:29', '2020-10-05 07:31:29');
 
