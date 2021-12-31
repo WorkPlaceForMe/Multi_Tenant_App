@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-require('dotenv').config({ path: '../../config.env' })
+require('dotenv').config({path: '../../config.env'})
 const db = require('../models')
 const User = db.user
 
@@ -103,12 +103,31 @@ isClientOrBranchOrAdmin = (req, res, next) => {
   })
 }
 
+isUserOrBranch = (req, res, next) => {
+  User.findByPk(req.userId).then(user => {
+    if (user.role === 'user') {
+      next()
+      return
+    }
+
+    if (user.role === 'branch') {
+      next()
+      return
+    }
+
+    res.status(403).send({
+      message: 'Require User or Branch account!'
+    })
+  })
+}
+
 const authJwt = {
   verifyToken: verifyToken,
   isAdmin: isAdmin,
   isBranch: isBranch,
   isClient: isClient,
   isClientOrBranch: isClientOrBranch,
-  isClientOrBranchOrAdmin: isClientOrBranchOrAdmin
+  isClientOrBranchOrAdmin: isClientOrBranchOrAdmin,
+  isUserOrBranch: isUserOrBranch
 }
 module.exports = authJwt
