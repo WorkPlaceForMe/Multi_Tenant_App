@@ -1,0 +1,95 @@
+<nb-card>
+  <div class="mt-3">
+    <h6 align="center" class="pr-5">HELP DESK</h6>
+    <nb-card-body>
+      <div *ngIf="tickets && tickets.length > 0">
+        <table class="table table-hover" id="myTable">
+          <thead>
+            <tr>
+              <th scope="col">NAME</th>
+              <th scope="col">DATE</th>
+              <th scope="col">ACTION</th>
+            </tr>
+          </thead>
+          <tr *ngFor="let ticket of tickets">
+            <td scope="row">
+              {{ ticket.account.username }}
+            </td>
+            <td scope="row">
+              {{ ticket.createdAt | date: "medium" }}
+            </td>
+            <td scope="row">
+              <button
+                class="btn-block"
+                nbButton
+                [status]="'info'"
+                (click)="openModal(template, ticket.id)"
+              >
+                <i class="fa fa-eye" style="font-size: 16px"></i>
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div align="center" class="pr-5" *ngIf="tickets && tickets.length === 0">
+        <p>No data found!</p>
+      </div>
+    </nb-card-body>
+  </div>
+</nb-card>
+
+<ng-template #template>
+  <div style="width: 35rem">
+    <nb-card>
+      <nb-card-header>
+        <h6>Helpdesk Post Details</h6>
+      </nb-card-header>
+      <nb-card-body>
+        <div class="pb-2">
+          <strong>NAME:&nbsp;</strong>
+          <span>{{ modalData.account.username }}</span>
+        </div>
+        <div class="pb-2">
+          <strong>USER ROLE:&nbsp;</strong>
+          <span>{{ modalData.user_type }}</span>
+        </div>
+        <div class="pb-2">
+          <strong>EMAIL:&nbsp;</strong>
+          <span>{{ modalData.account.email }}</span>
+        </div>
+        <div class="pb-2">
+          <strong>TITLE:&nbsp;</strong>
+          <span>{{ modalData.title }}</span>
+        </div>
+        <div class="pb-2">
+          <strong>MESSAGE:&nbsp;</strong>
+          <span>{{ modalData.message }}</span>
+        </div>
+
+        <div class="pb-2">
+          <strong>DATE:&nbsp;</strong>
+          <span>{{ modalData.createdAt | date: "medium" }}</span>
+        </div>
+
+        <div *ngIf="modalData.http_in">
+          <strong>IMAGE:&nbsp;</strong>
+          <a
+            [href]="modalData.http_in"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Click Here To Open Image</a
+          >
+          <br />
+          <br />
+          <p>
+            <img [src]="modalData.http_in" style="width: 20%; height: 20%" />
+          </p>
+        </div>
+
+        <button class="btn-block mt-4" nbButton (click)="closeModal()">
+          CLOSE
+        </button>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</ng-template>

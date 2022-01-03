@@ -12,7 +12,7 @@
     </div>
   </nb-card-header>
 
-  <div class="mt-3">
+  <div class="mt-3" *ngIf="tickets && tickets.length > 0">
     <h6 align="center">YOUR POSTS</h6>
     <nb-card-body>
       <table class="table table-hover" id="myTable">
@@ -39,7 +39,7 @@
   <div style="width: 35rem">
     <nb-card>
       <nb-card-header>
-        <h6>Post Your Problem Here</h6>
+        <h6>Ask Your Query Here</h6>
       </nb-card-header>
       <nb-card-body>
         <form [formGroup]="helpDeskForm" (ngSubmit)="onSubmit()">
@@ -80,7 +80,7 @@
                 fullWidth
                 id="message"
                 autofocus
-                placeholder="Issue Details"
+                placeholder="Enter your query in detail"
               ></textarea>
               <span
                 *ngIf="
@@ -124,15 +124,30 @@
             </div>
           </div>
 
-          <button
-            class="btn-block"
-            type="submit"
-            nbButton
-            [status]="'info'"
-            [disabled]="!helpDeskForm.valid || wrongFileType"
-          >
-            POST
-          </button>
+          <div class="form-group">
+            <button
+              class="btn-block"
+              type="submit"
+              nbButton
+              [status]="'info'"
+              *ngIf="!loading"
+              [disabled]="!helpDeskForm.valid || wrongFileType"
+            >
+              POST
+            </button>
+            <button
+              class="btn-block"
+              nbButton
+              [status]="'primary'"
+              [nbSpinner]="true"
+              nbSpinnerSize="giant"
+              nbSpinnerStatus="primary"
+              [disabled]="loading"
+              *ngIf="loading"
+            >
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </button>
+          </div>
 
           <button class="btn-block" nbButton (click)="closeModal()">
             CANCEL

@@ -24,6 +24,7 @@ export class GenerateHelpDeskTicketComponent implements OnInit {
   fileName: string;
   dialogRef: NbDialogRef<any>;
   wrongFileType: boolean = false;
+  loading: boolean = false;
   @ViewChild("fileInput", { static: false }) fileInputVariable: any;
 
   constructor(
@@ -45,7 +46,6 @@ export class GenerateHelpDeskTicketComponent implements OnInit {
     this.helpDeskService.getGeneratedIssus().subscribe(
       (res: any) => {
         this.tickets = res.helpDeskIssues;
-        console.log(this.tickets);
       },
       (error) => {
         console.log(error);
@@ -57,11 +57,12 @@ export class GenerateHelpDeskTicketComponent implements OnInit {
     this.dialogRef = this.dialogService.open(template, {
       context: "pass data in template",
       dialogClass: "model-full",
+      closeOnBackdropClick: false,
     });
   }
 
   onSubmit() {
-    console.log("submit");
+    this.loading = true;
     const data = {
       title: this.helpDeskForm.value.title,
       message: this.helpDeskForm.value.message,
@@ -70,14 +71,15 @@ export class GenerateHelpDeskTicketComponent implements OnInit {
 
     this.helpDeskService.addHelpDeskIssue(data).subscribe(
       (res: any) => {
-        console.log(res);
         this.getTickets();
         this.closeModal();
         alert(res.message);
+        this.loading = false;
       },
       (error) => {
         console.log(error);
-        alert(error.error.err_desc);
+        alert(error.error.message);
+        this.loading = false;
       }
     );
   }
@@ -88,7 +90,6 @@ export class GenerateHelpDeskTicketComponent implements OnInit {
     if (this.fileInputVariable.nativeElement.files.length !== 0) {
       this.fileName = this.fileInputVariable.nativeElement.files[0]["name"];
       const fileType = this.fileName.split(".")[1];
-      console.log(fileType);
       if (!fileType || !imageTypes.includes(fileType.toLowerCase())) {
         this.wrongFileType = true;
       }

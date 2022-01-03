@@ -83,4 +83,10 @@ db.ALGORITHMS = [
   'Fire Detection'
 ]
 
+db.helpdesk.belongsTo(db.user, {foreignKey: 'user_id'})
+
+db.user.hasMany(db.helpdesk, {
+  foreignKey: 'user_id'
+})
+
 module.exports = db

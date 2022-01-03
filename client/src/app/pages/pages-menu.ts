@@ -77,7 +77,7 @@ export const MENU_ITEMSBRANCH: NbMenuItem[] = [
   },
   {
     title: "Help",
-    icon: "done-all-outline",
+    icon: "paper-plane-outline",
     link: "helpdesk",
   },
 ];
@@ -156,6 +156,11 @@ export const MENU_ITEMSCLIENT: NbMenuItem[] = [
       },
     ],
   },
+  {
+    title: "Helpdesk",
+    icon: "browser-outline",
+    link: "helpdesk-listing",
+  },
 ];
 
 export const MENU_ITEMSUSER: NbMenuItem[] = [
@@ -198,7 +203,7 @@ export const MENU_ITEMSUSER: NbMenuItem[] = [
   // }
   {
     title: "Help",
-    icon: "done-all-outline",
+    icon: "paper-plane-outline",
     link: "helpdesk",
   },
 ];

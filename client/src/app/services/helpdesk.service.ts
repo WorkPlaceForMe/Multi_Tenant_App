@@ -23,4 +23,8 @@ export class HelpDeskService {
     }
     return this.http.post(`${this.API_URI}/helpdesk/create`, formData);
   }
+
+  getHelpdeskIssusByClient() {
+    return this.http.get(`${this.API_URI}/helpdesk/client`);
+  }
 }

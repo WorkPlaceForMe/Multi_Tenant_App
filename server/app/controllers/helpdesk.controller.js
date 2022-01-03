@@ -12,7 +12,6 @@ const path =
 const storage = multer.diskStorage({
   // multers disk storage settings
   filename: function (req, file, cb) {
-    console.log(file, 'file')
     const format = file.originalname.split('.')[1]
     if (!format || !imageTypes.includes(format.toLowerCase())) {
       req.fileValidationError = 'Provided file is not an image file'
@@ -50,13 +49,13 @@ exports.generateNewIssue = (req, res) => {
         return res.status(400).json({
           success: false,
           error_code: 1,
-          err_desc: req.fileValidationError
+          message: req.fileValidationError
         })
       } else {
         return res.status(500).json({
           success: false,
           error_code: 1,
-          err_desc: err
+          message: err
         })
       }
     } else {
@@ -67,7 +66,7 @@ exports.generateNewIssue = (req, res) => {
           return res.status(400).json({
             success: false,
             error_code: 1,
-            err_desc: 'Title and Message both are required'
+            message: 'Title and Message both are required'
           })
         }
         const userDetails = await User.findByPk(decoded.id)
@@ -75,7 +74,7 @@ exports.generateNewIssue = (req, res) => {
           return res.status(400).json({
             success: false,
             error_code: 1,
-            err_desc: 'User not found'
+            message: 'User not found'
           })
         }
         const data = {
@@ -96,7 +95,7 @@ exports.generateNewIssue = (req, res) => {
           return res.status(400).json({
             success: false,
             error_code: 1,
-            err_desc: 'There have some problem to create new issue'
+            message: 'There have some problem to create new issue'
           })
         }
         res.status(200).send({
@@ -118,14 +117,22 @@ exports.getHelpDeskIssus = async (req, res) => {
   try {
     const token = req.headers['x-access-token']
     const decoded = await jwt.verify(token, process.env.secret)
+
     const helpDeskIssues = await HelpDesk.findAll({
-      where: {client_id: decoded.id}
+      where: {client_id: decoded.id},
+      order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'username', 'email', 'id_account', 'id_branch', 'role', 'createdAt']
+        }
+      ]
     })
     if (!helpDeskIssues) {
       return res.status(400).json({
         success: false,
         error_code: 1,
-        err_desc: 'Not able to get Help Desk Issues'
+        message: 'Not able to get Help Desk Issues'
       })
     }
     res.status(200).send({
@@ -152,7 +159,7 @@ exports.getGeneratedHelpDeskIssus = async (req, res) => {
       return res.status(400).json({
         success: false,
         error_code: 1,
-        err_desc: 'Not able to get Help Desk Issues'
+        message: 'Not able to get Help Desk Issues'
       })
     }
     res.status(200).send({
