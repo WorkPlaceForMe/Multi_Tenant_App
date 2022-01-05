@@ -16,18 +16,50 @@
     <h6 align="center">YOUR POSTS</h6>
     <nb-card-body>
       <table class="table table-hover" id="myTable">
-        <thead align="center">
+        <thead>
           <tr>
             <th scope="col">TITLE</th>
             <th scope="col">DATE</th>
+            <th scope="col">STATUS</th>
+            <th scope="col">ACTION</th>
           </tr>
         </thead>
         <tr *ngFor="let ticket of tickets">
-          <td scope="row" align="center">
+          <td scope="row">
             {{ ticket.title }}
           </td>
-          <td scope="row" align="center">
+          <td scope="row">
             {{ ticket.createdAt | date: "medium" }}
+          </td>
+          <td scope="row">
+            {{ ticket.status }}
+          </td>
+          <td scope="row">
+            <button
+              nbButton
+              [status]="'info'"
+              style="width: 30%"
+              (click)="openTicketViewModal(ticket)"
+            >
+              <i class="fa fa-eye" style="font-size: 16px"></i></button
+            >&nbsp;
+            <button
+              nbButton
+              [status]="'info'"
+              style="width: 30%"
+              (click)="openReplyModal(ticket)"
+            >
+              <i class="fas fa-reply" style="font-size: 16px"></i></button
+            >&nbsp;
+            <button
+              nbButton
+              [status]="'warning'"
+              style="width: 30%"
+              (click)="openModal(reopenTemplate, ticket.id)"
+              [disabled]="ticket.status !== 'RESOLVED'"
+            >
+              <i class="fas fa-envelope-open" style="font-size: 16px"></i>
+            </button>
           </td>
         </tr>
       </table>
@@ -153,6 +185,30 @@
             CANCEL
           </button>
         </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</ng-template>
+
+<ng-template #reopenTemplate>
+  <div style="width: 35rem">
+    <nb-card>
+      <nb-card-header>
+        <h6>Are You Sure To Re-Open The Ticket?</h6>
+      </nb-card-header>
+      <nb-card-body>
+        <button
+          class="btn-block"
+          nbButton
+          [status]="'warning'"
+          (click)="updateStatus()"
+        >
+          YES
+        </button>
+
+        <button class="btn-block mt-4" nbButton (click)="closeModal()">
+          CLOSE
+        </button>
       </nb-card-body>
     </nb-card>
   </div>

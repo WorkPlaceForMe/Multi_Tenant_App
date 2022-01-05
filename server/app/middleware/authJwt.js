@@ -121,6 +121,29 @@ isUserOrBranch = (req, res, next) => {
   })
 }
 
+isClientOrUserOrBranch = (req, res, next) => {
+  User.findByPk(req.userId).then(user => {
+    if (user.role === 'user') {
+      next()
+      return
+    }
+
+    if (user.role === 'branch') {
+      next()
+      return
+    }
+
+    if (user.role === 'client') {
+      next()
+      return
+    }
+
+    res.status(403).send({
+      message: 'Require Client or User or Branch account!'
+    })
+  })
+}
+
 const authJwt = {
   verifyToken: verifyToken,
   isAdmin: isAdmin,
@@ -128,6 +151,7 @@ const authJwt = {
   isClient: isClient,
   isClientOrBranch: isClientOrBranch,
   isClientOrBranchOrAdmin: isClientOrBranchOrAdmin,
-  isUserOrBranch: isUserOrBranch
+  isUserOrBranch: isUserOrBranch,
+  isClientOrUserOrBranch: isClientOrUserOrBranch
 }
 module.exports = authJwt

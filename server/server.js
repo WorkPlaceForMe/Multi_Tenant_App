@@ -177,6 +177,7 @@ require('./app/routes/elastic.routes')(app)
 require('./app/routes/alerts.routes')(app)
 require('./app/routes/path.routes')(app)
 require('./app/routes/helpdesk.routes')(app)
+require('./app/routes/reply.routes')(app)
 
 // resources being served
 app.use('/api/pictures', express.static(picResourceFolderPath))

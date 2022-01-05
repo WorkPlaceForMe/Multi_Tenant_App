@@ -27,4 +27,24 @@ export class HelpDeskService {
   getHelpdeskIssusByClient() {
     return this.http.get(`${this.API_URI}/helpdesk/client`);
   }
+
+  postHelpDeskReply(replyDetails: any) {
+    const formData = new FormData();
+    formData.append("replyMessage", replyDetails.replyMessage);
+    if (replyDetails.image) {
+      formData.append("file", replyDetails.image);
+    }
+    return this.http.post(
+      `${this.API_URI}/helpdeskReply/${replyDetails.id}`,
+      formData
+    );
+  }
+
+  updateStatus(id: string, status: string) {
+    return this.http.put(`${this.API_URI}/helpdeskReply/${id}`, { status });
+  }
+
+  getReplies(id: string) {
+    return this.http.get(`${this.API_URI}/helpdeskReply/${id}`);
+  }
 }

@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
     const token = req.headers['x-access-token']
 
     jwt.verify(token, process.env.secret, (_err, decoded) => {
-      const storagePath = `${path}helpdesk/${decoded.id}`
+      const storagePath = `${path}helpdesk/userAndBranch/${decoded.id}`
 
       if (!fs.existsSync(storagePath)) {
         fs.mkdirSync(storagePath, {
@@ -86,7 +86,7 @@ exports.generateNewIssue = (req, res) => {
           client_id: userDetails.id_account,
           image_path: req.file ? req.file.path : null,
           http_in: req.file
-            ? `${process.env.app_url}/api/pictures/helpdesk/${decoded.id}/${req.file.filename}`
+            ? `${process.env.app_url}/api/pictures/helpdesk/userAndBranch/${decoded.id}/${req.file.filename}`
             : null
         }
 
@@ -153,7 +153,13 @@ exports.getGeneratedHelpDeskIssus = async (req, res) => {
     const decoded = await jwt.verify(token, process.env.secret)
     const helpDeskIssues = await HelpDesk.findAll({
       where: {user_id: decoded.id},
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'username', 'email', 'id_account', 'id_branch', 'role', 'createdAt']
+        }
+      ]
     })
     if (!helpDeskIssues) {
       return res.status(400).json({

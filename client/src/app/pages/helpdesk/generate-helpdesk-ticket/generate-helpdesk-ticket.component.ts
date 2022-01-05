@@ -3,6 +3,8 @@ import { trigger, style, animate, transition } from "@angular/animations";
 import { HelpDeskService } from "../../../services/helpdesk.service";
 import { NbDialogRef, NbDialogService } from "@nebular/theme";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { HelpdeskReplyComponent } from "../helpdesk-reply/helpdesk-reply.component";
+import { HelpdeskDetailsComponent } from "../helpdesk-details/helpdesk-details.component";
 const imageTypes = ["jpg", "png", "jpeg"];
 
 @Component({
@@ -25,6 +27,7 @@ export class GenerateHelpDeskTicketComponent implements OnInit {
   dialogRef: NbDialogRef<any>;
   wrongFileType: boolean = false;
   loading: boolean = false;
+  modalId: string;
   @ViewChild("fileInput", { static: false }) fileInputVariable: any;
 
   constructor(
@@ -53,11 +56,36 @@ export class GenerateHelpDeskTicketComponent implements OnInit {
     );
   }
 
-  openModal(template) {
+  openModal(template: any, id?: string) {
+    this.modalId = id || "";
     this.dialogRef = this.dialogService.open(template, {
-      context: "pass data in template",
       dialogClass: "model-full",
       closeOnBackdropClick: false,
+    });
+  }
+
+  openReplyModal(ticket: any) {
+    this.dialogRef = this.dialogService.open<any>(HelpdeskReplyComponent, {
+      context: { ticket },
+      hasScroll: true,
+      dialogClass: "model-full",
+      closeOnBackdropClick: false,
+    });
+
+    this.dialogRef.onClose.subscribe((resp) => {
+      console.log(resp);
+    });
+  }
+
+  openTicketViewModal(modalData: any) {
+    this.dialogRef = this.dialogService.open<any>(HelpdeskDetailsComponent, {
+      context: { modalData },
+      hasScroll: true,
+      dialogClass: "model-full",
+    });
+
+    this.dialogRef.onClose.subscribe((resp) => {
+      console.log(resp);
     });
   }
 
@@ -96,9 +124,25 @@ export class GenerateHelpDeskTicketComponent implements OnInit {
     }
   }
 
+  updateStatus() {
+    this.helpDeskService.updateStatus(this.modalId, "REOPENED").subscribe(
+      (res: any) => {
+        this.getTickets();
+        this.closeModal();
+        alert(res.message);
+      },
+      (error) => {
+        console.log(error);
+        alert(error.error.message);
+      }
+    );
+  }
+
   closeModal() {
     this.dialogRef.close();
-    this.fileInputVariable.nativeElement.value = "";
+    if (this.fileInputVariable) {
+      this.fileInputVariable.nativeElement.value = "";
+    }
     this.fileName = null;
     this.helpDeskForm.reset();
   }

@@ -119,6 +119,8 @@ import { FireComponent } from "./online/graphs/fire/fire.component";
 import { CollapseComponent } from "./online/graphs/collapse/collapse.component";
 import { GenerateHelpDeskTicketComponent } from "./helpdesk/generate-helpdesk-ticket/generate-helpdesk-ticket.component";
 import { HelpdeskTicketListingComponent } from "./helpdesk/helpdesk-ticket -listing/helpdesk-ticket-listing.component";
+import { HelpdeskReplyComponent } from "./helpdesk/helpdesk-reply/helpdesk-reply.component";
+import { HelpdeskDetailsComponent } from "./helpdesk/helpdesk-details/helpdesk-details.component";
 
 @NgModule({
   imports: [
@@ -248,6 +250,8 @@ import { HelpdeskTicketListingComponent } from "./helpdesk/helpdesk-ticket -list
     CollapseComponent,
     GenerateHelpDeskTicketComponent,
     HelpdeskTicketListingComponent,
+    HelpdeskReplyComponent,
+    HelpdeskDetailsComponent,
   ],
   providers: [
     FacesService,

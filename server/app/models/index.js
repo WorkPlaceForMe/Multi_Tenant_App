@@ -25,6 +25,7 @@ db.algorithm = require('../models/algorithm.model.js')(sequelize, Sequelize)
 db.relation = require('../models/relation.model.js')(sequelize, Sequelize)
 db.schedule = require('../models/schedule.model.js')(sequelize, Sequelize)
 db.helpdesk = require('../models/helpdesk.model.js')(sequelize, Sequelize)
+db.reply = require('../models/reply.model.js')(sequelize, Sequelize)
 
 db.algorithm.belongsToMany(db.user, {
   through: 'account_algorithm',
@@ -88,5 +89,13 @@ db.helpdesk.belongsTo(db.user, {foreignKey: 'user_id'})
 db.user.hasMany(db.helpdesk, {
   foreignKey: 'user_id'
 })
+
+// const syncOption = {
+//   alter: true
+// }
+
+// db.reply.sync(syncOption).then(() => {
+//   console.log('Helpdesk Reply table created')
+// })
 
 module.exports = db
