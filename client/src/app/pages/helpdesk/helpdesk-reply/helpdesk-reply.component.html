@@ -103,30 +103,6 @@
           <span>No replies yet!</span>
         </div>
 
-        <!-- <nb-card
-          *ngFor="let reply of replies"
-          class="mb-3"
-          style="background-color: rgb(154, 202, 140)"
-        >
-          <div class="pl-3 mt-2 mb-2">
-            <strong>Message:&nbsp;</strong>
-            <span>{{ reply.reply_message }}</span>
-            <div *ngIf="reply.http_in">
-              <strong>Image:&nbsp;</strong>
-              <a
-                [href]="reply.http_in"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Click Here To Open Image</a
-              >
-              <br />
-              <br />
-              <p>
-                <img [src]="reply.http_in" style="width: 20%; height: 20%" />
-              </p>
-            </div></div
-        ></nb-card> -->
-
         <div *ngFor="let reply of replies" class="mb-3">
           <nb-card
             *ngIf="reply.currentUser"
@@ -182,7 +158,11 @@
           </nb-card>
         </div>
       </div>
-      <button class="btn-block" nbButton (click)="closeModal()">CLOSE</button>
     </nb-card-body>
+    <nb-card-footer
+      ><button class="btn-block" nbButton (click)="closeModal()">
+        CLOSE
+      </button></nb-card-footer
+    >
   </nb-card>
 </div>
