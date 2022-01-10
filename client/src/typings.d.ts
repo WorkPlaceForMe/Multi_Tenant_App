@@ -12,4 +12,4 @@ interface NodeModule {
 
 declare var tinymce: any;
 
-declare var echarts: typeof import("/home/alex/Office/UI_v5.0.2/client/node_modules/echarts/types/dist/echarts");
+declare var echarts: typeof import("/home/shankha/Projects/Multi_Tenant_App/client/node_modules/echarts/types/dist/echarts");
