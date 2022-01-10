@@ -8,6 +8,8 @@ const db = require('../models')
 const Camera = db.camera
 const {v4: uuidv4} = require('uuid')
 const unzipper = require('unzipper')
+const moment = require('moment')
+const dateTimeFormat = 'YYYY-MM-DD HH:mm:ss'
 const client = new elasticsearch.Client({
   node: process.env.HOST_ELAST,
   log: 'trace',
@@ -182,7 +184,7 @@ async function searchAndAdd(
 
 const test = ['male', 'car', 'bicycle']
 
-exports.search = async (req, res) => {
+exports.search1 = async (req, res) => {
   const data = req.body
   const index = 'gmtc_searcher'
   const params = {
@@ -243,6 +245,7 @@ exports.search = async (req, res) => {
     })
   }
   try {
+    console.dir(params, {depth: null})
     const body = await client.search(params)
     const hits = body.body.hits
     if (hits.hits.length > 0) {
@@ -311,6 +314,387 @@ exports.search = async (req, res) => {
     res.status(500).json({
       success: false,
       mess: error
+    })
+  }
+}
+
+exports.search = async (req, res) => {
+  const data = req.body
+  const index = 'gmtc_incident'
+  const params = {
+    index: [index],
+    body: {
+      query: {
+        bool: {
+          must: [
+            {
+              match: {
+                description: data.query
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+  if (data.filters.bounded) {
+    const words = data.query.split(' ')
+    for (let i = 0; i < words.length; i++) {
+      if (words[i] === 'and') {
+        words.splice(i, 1)
+      }
+    }
+    const recRes = await searchAndAdd(words, data.filters.bounded.time, index, data.filters.range)
+    for (const elem of recRes) {
+      if (elem._source.filename) {
+        elem._source.url =
+          'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
+      }
+    }
+
+    return res.status(200).json({success: true, data: {hits: recRes}})
+  }
+  if (data.filters.and) {
+    const words = data.query.split(' ')
+    params.body.query.bool.must[0] = {
+      terms: {
+        description: words,
+        boost: 1.0
+      }
+    }
+  }
+  if (data.filters.range) {
+    params.body.query.bool.must.push({
+      range: {
+        time: {
+          gte: data.filters.range.start,
+          lte: data.filters.range.end
+        }
+      }
+    })
+  }
+  if (data.filters.algo) {
+    params.body.query.bool.must.push({
+      match: {
+        algo: data.filters.algo
+      }
+    })
+  }
+  try {
+    console.dir(params, {depth: null})
+    const body = await client.search(params)
+    const hits = body.body.hits
+    if (hits.hits.length > 0) {
+      for (const elem of hits.hits) {
+        if (elem._source.filename) {
+          elem._source.url =
+            'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
+        }
+      }
+      const gt = new Date(Date.parse(hits.hits[0]._source.time) - 1000)
+      const lt = new Date(Date.parse(hits.hits[0]._source.time) + 1000)
+      try {
+        const secondBody = await client.search({
+          index: [index],
+          body: {
+            query: {
+              bool: {
+                must: [
+                  {
+                    range: {
+                      time: {
+                        gte: gt,
+                        lte: lt
+                      }
+                    }
+                  }
+                ],
+                must_not: [
+                  {
+                    ids: {
+                      values: [hits.hits[0]._id]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        })
+        const hits2 = secondBody.body.hits
+        if (hits2.hits.length !== 0) {
+          for (const elem of hits2.hits) {
+            elem._source.url =
+              'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
+            hits.hits.push(elem)
+          }
+        }
+        // search = hits
+        return res.status(200).json({
+          success: true,
+          data: hits,
+          second: hits2
+        })
+      } catch (err) {
+        console.trace(err.message)
+        return res.status(500).json({
+          success: false,
+          mess: err
+        })
+      }
+    }
+    res.status(200).json({
+      success: true,
+      data: hits
+    })
+  } catch (error) {
+    console.trace(error.message)
+    console.log(error)
+    res.status(500).json({
+      success: false,
+      mess: error
+    })
+  }
+}
+
+const storage = multer.diskStorage({
+  // multers disk storage settings
+  filename: function (req, file, cb) {
+    const format = file.originalname.split('.')[1]
+    const imageTypes = ['jpg', 'png', 'jpeg']
+    if (!format || !imageTypes.includes(format.toLowerCase())) {
+      req.fileValidationError = 'Provided file is not an image file'
+      cb(new Error(req.fileValidationError))
+    }
+    const newName = Date.now() + '.' + format
+    cb(null, newName)
+  },
+  destination: function (req, file, cb) {
+    const token = req.headers['x-access-token']
+
+    jwt.verify(token, process.env.secret, (_err, decoded) => {
+      const storagePath = `${path}incident/${decoded.id}/`
+
+      if (!fs.existsSync(storagePath)) {
+        fs.mkdirSync(storagePath, {
+          recursive: true
+        })
+      }
+      cb(null, storagePath)
+    })
+  }
+})
+
+const upImage = multer({
+  // multer settings
+  storage: storage
+}).single('file')
+
+exports.addIncident = (req, res) => {
+  const token = req.headers['x-access-token']
+  const incidentIndex = 'gmtc_incident'
+  upImage(req, res, async function (err) {
+    if (err) {
+      if (req.fileValidationError) {
+        return res.status(400).json({
+          success: false,
+          error_code: 1,
+          message: req.fileValidationError
+        })
+      } else {
+        return res.status(500).json({
+          success: false,
+          error_code: 1,
+          message: err
+        })
+      }
+    } else {
+      try {
+        const reqBody = req.body
+        if (!req.file) {
+          return res.status(400).json({
+            success: false,
+            error_code: 1,
+            message: 'Image is required'
+          })
+        }
+
+        if (!reqBody.description || !reqBody.cameraName) {
+          return res.status(400).json({
+            success: false,
+            error_code: 1,
+            message: 'Description & Camera Name both are required'
+          })
+        }
+
+        if (reqBody.time && !moment(reqBody.time, dateTimeFormat, true).isValid()) {
+          return res.status(400).send({
+            success: false,
+            error_code: 1,
+            message: `Invalid date format,pattern must be ${dateTimeFormat}`
+          })
+        }
+
+        const decoded = await jwt.verify(token, process.env.secret)
+
+        const data = {
+          // time: reqBody.time ? new Date(reqBody.time) : new Date(),
+          userId: decoded.id,
+          memo: '',
+          time: reqBody.time ? moment.utc(reqBody.time).format() : moment.utc().format(),
+          description: reqBody.description,
+          cam_name: reqBody.cameraName,
+          url: req.file
+            ? `${process.env.app_url}/api/pictures/incident/${decoded.id}/${req.file.filename}`
+            : null
+        }
+
+        const indexAlreadyExists = await client.indices.exists({
+          index: incidentIndex
+        })
+        if (!indexAlreadyExists) {
+          await client.indices.create({
+            index: incidentIndex
+          })
+          console.log(incidentIndex, 'index created')
+        }
+
+        const incidentCreated = await client.index({
+          index: incidentIndex,
+          type: '_doc',
+          body: data
+        })
+
+        if (!incidentCreated || incidentCreated.statusCode !== 201) {
+          return res.status(400).json({
+            success: false,
+            error_code: 1,
+            message: 'There have some problem to create new incident'
+          })
+        }
+
+        const {body} = await client.get({
+          index: incidentIndex,
+          id: incidentCreated.body._id
+        })
+
+        res.status(200).send({
+          success: true,
+          message: 'Incident added successfully!',
+          createdData: body
+        })
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: error
+        })
+      }
+    }
+  })
+}
+
+exports.addMemo = async (req, res) => {
+  try {
+    const incidentIndex = 'gmtc_incident'
+    const {memo} = req.body
+    if (!memo) {
+      return res.status(400).json({
+        success: false,
+        error_code: 1,
+        message: 'Memo is required'
+      })
+    }
+    if (!req.params.id) {
+      return res.status(400).json({
+        success: false,
+        error_code: 1,
+        message: 'Incident id is required'
+      })
+    }
+
+    client.get(
+      {
+        index: incidentIndex,
+        id: req.params.id
+      },
+      async function (err, incident) {
+        if (err || !incident || incident.statusCode !== 200) {
+          return res.status(400).json({
+            success: false,
+            error_code: 1,
+            message: 'Incident not found'
+          })
+        }
+
+        client.update(
+          {
+            index: incidentIndex,
+            id: req.params.id,
+            body: {
+              doc: {
+                memo
+              }
+            }
+          },
+          async function (error, memoUpdated) {
+            if (error || !memoUpdated || memoUpdated.statusCode !== 200) {
+              return res.status(400).json({
+                success: false,
+                error_code: 1,
+                message: 'Not able to add memo'
+              })
+            }
+
+            res.status(200).send({
+              success: true,
+              message: 'Memo added successfully!'
+            })
+          }
+        )
+      }
+    )
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error
+    })
+  }
+}
+
+exports.incidentDetails = async (req, res) => {
+  try {
+    const incidentIndex = 'gmtc_incident'
+    if (!req.params.id) {
+      return res.status(400).json({
+        success: false,
+        error_code: 1,
+        message: 'Incident id is required'
+      })
+    }
+
+    client.get(
+      {
+        index: incidentIndex,
+        id: req.params.id
+      },
+      async function (err, incident) {
+        if (err || !incident || incident.statusCode !== 200) {
+          return res.status(400).json({
+            success: false,
+            error_code: 1,
+            message: 'Incident not found'
+          })
+        }
+
+        res.status(200).send({
+          success: true,
+          incidentDetails: incident.body
+        })
+      }
+    )
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error
     })
   }
 }

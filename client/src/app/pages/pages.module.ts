@@ -1,5 +1,10 @@
 import { NgModule } from "@angular/core";
-import { NbMenuModule, NbPopoverModule, NbWindowModule } from "@nebular/theme";
+import {
+  NbMenuModule,
+  NbPopoverModule,
+  NbTimepickerModule,
+  NbWindowModule,
+} from "@nebular/theme";
 
 import { ThemeModule } from "../@theme/theme.module";
 import { PagesComponent } from "./pages.component";
@@ -121,6 +126,8 @@ import { GenerateHelpDeskTicketComponent } from "./helpdesk/generate-helpdesk-ti
 import { HelpdeskTicketListingComponent } from "./helpdesk/helpdesk-ticket -listing/helpdesk-ticket-listing.component";
 import { HelpdeskReplyComponent } from "./helpdesk/helpdesk-reply/helpdesk-reply.component";
 import { HelpdeskDetailsComponent } from "./helpdesk/helpdesk-details/helpdesk-details.component";
+import { AddIncidentComponent } from "./search/add-incident/add-incident.component";
+import { MemoComponent } from "./search/memo/memo.component";
 
 @NgModule({
   imports: [
@@ -134,6 +141,7 @@ import { HelpdeskDetailsComponent } from "./helpdesk/helpdesk-details/helpdesk-d
     NbCheckboxModule,
     NbRadioModule,
     NbDatepickerModule,
+    NbTimepickerModule,
     NbSelectModule,
     ngFormsModule,
     NbAccordionModule,
@@ -252,6 +260,8 @@ import { HelpdeskDetailsComponent } from "./helpdesk/helpdesk-details/helpdesk-d
     HelpdeskTicketListingComponent,
     HelpdeskReplyComponent,
     HelpdeskDetailsComponent,
+    AddIncidentComponent,
+    MemoComponent,
   ],
   providers: [
     FacesService,

@@ -1,75 +1,168 @@
 <div class="p-2">
-    <button style = "width: 130px"  #popover (click) = "showRangeSelector(showIt);!showIt" [nbPopover]="rangeSelector" nbPopoverTrigger="noop" nbPopoverPlacement="bottom" size="small" nbButton status='info' *ngIf='dateTouched'>{{currentSelection}} <nb-icon icon="calendar"></nb-icon></button>
-        <button style = "width: 130px"  #popover (click) = "showRangeSelector(showIt);!showIt" [nbPopover]="rangeSelector" nbPopoverTrigger="noop" nbPopoverPlacement="bottom" size="small" nbButton status='info' outline *ngIf='!dateTouched'>{{currentSelection}} <nb-icon icon="calendar"></nb-icon></button>
-                    <!-- <nb-select [(ngModel)]='algorithm' size="small">
+  <button
+    style="width: 130px"
+    #popover
+    (click)="showRangeSelector(showIt); (!showIt)"
+    [nbPopover]="rangeSelector"
+    nbPopoverTrigger="noop"
+    nbPopoverPlacement="bottom"
+    size="small"
+    nbButton
+    status="info"
+    *ngIf="dateTouched"
+  >
+    {{ currentSelection }} <nb-icon icon="calendar"></nb-icon>
+  </button>
+  <button
+    style="width: 130px"
+    #popover
+    (click)="showRangeSelector(showIt); (!showIt)"
+    [nbPopover]="rangeSelector"
+    nbPopoverTrigger="noop"
+    nbPopoverPlacement="bottom"
+    size="small"
+    nbButton
+    status="info"
+    outline
+    *ngIf="!dateTouched"
+  >
+    {{ currentSelection }} <nb-icon icon="calendar"></nb-icon>
+  </button>
+  <!-- <nb-select [(ngModel)]='algorithm' size="small">
                         <nb-option value="" disabled>Choose an algorithm:</nb-option>
                         <nb-option *ngFor='let alg of algos' [value]=alg.id>{{alg.name}}</nb-option>
                     </nb-select> -->
-                    <div class="dropdown-divider"></div>
-                <!-- <nb-checkbox status='info' type="checkbox" class="custom-control-input-label" [(ngModel)]='and'> Each word search</nb-checkbox>
+  <div class="dropdown-divider"></div>
+  <!-- <nb-checkbox status='info' type="checkbox" class="custom-control-input-label" [(ngModel)]='and'> Each word search</nb-checkbox>
                 <div class="dropdown-divider"></div>
                 
                 <nb-checkbox status='info' type="checkbox" class="custom-control-input-label" [(ngModel)]='bounded["active"]'> Bounded Query </nb-checkbox>
                 <input nbInput fieldSize="small" status='info' type="number" class="custom-control-input-label" [(ngModel)]='bounded["time"]' style="width: 80px;" min=1 max=10 [disabled]='!bounded["active"]'> Seconds of difference -->
-                          <nb-radio-group [(ngModel)]="option" (ngModelChange)='adapt(option)'>
-            <nb-radio
-              [value]="'and'" 
-              status='info'
-              >
-              Each word search
-            </nb-radio>
-            <nb-radio
-              [value]="'bounded'"
-              status='info'
-              >
-               Bounded Query <input nbInput fieldSize="small" status='info' type="number" class="custom-control-input-label" [(ngModel)]='bounded["time"]' style="width: 80px;" min=1 max=10 [disabled]='!bounded["active"]'> Seconds of difference
-            </nb-radio>
-          </nb-radio-group>
-                </div>
-<button (click)='apply()' [status]="'success'" nbButton class="btn-block">Apply</button>
+  <nb-radio-group [(ngModel)]="option" (ngModelChange)="adapt(option)">
+    <nb-radio [value]="'and'" status="info"> Each word search </nb-radio>
+    <nb-radio [value]="'bounded'" status="info">
+      Bounded Query
+      <input
+        nbInput
+        fieldSize="small"
+        status="info"
+        type="number"
+        class="custom-control-input-label"
+        [(ngModel)]="bounded['time']"
+        style="width: 80px"
+        min="1"
+        max="10"
+        [disabled]="!bounded['active']"
+      />
+      Seconds of difference
+    </nb-radio>
+  </nb-radio-group>
+</div>
+<button (click)="apply()" [status]="'success'" nbButton class="btn-block">
+  Apply
+</button>
 <!-- <button (click)='show()'>aaaaa</button> -->
-    <ng-template #rangeSelector>
-        <nb-list>
-            <nb-list-item >
-                <div class = "row">
-                    <div style = "width: 100px" class = "col-md-auto" (click) = "selectRangeType('Date')">  
-                        <nb-radio  name = "range" [checked] = "currentSelection=='Date'" >Date</nb-radio>
-                    </div>  
-                    <div class = "col">
-                        <input nbInput placeholder="Pick Date"  [disabled] = "currentSelection != 'Date'" [value]="range.start" [nbDatepicker]="dateTimePicker" fullWidth fieldSize="small">
-                                <!-- <nb-date-timepicker (dateChange) = "setDate($event)" [max]="fin" [datepickerAdapter]='' [(date)] = "selectedDate" #dateTimePicker singleColumn [step]="10"></nb-date-timepicker> -->
-                        <nb-datepicker (dateChange) = "setDate($event)" [max]="fin" [(date)] = "selectedDate" #dateTimePicker></nb-datepicker>
-                    </div>
-                </div>
-            </nb-list-item>
-            <nb-list-item >
-                <div class = "row" >
-                    <div style = "width: 100px" class = "col-md-auto" (click) = "selectRangeType('Month')">
-                        <nb-radio  name = "range" [checked] = "currentSelection=='Month'" (onClick) = "selectRangeType('Month')">Month</nb-radio>
-                    </div>  
-                    <div class = "col" >
-                        <nb-select (selectedChange) = "setMonth()" placeholder="Select Showcase" [disabled] = "currentSelection != 'Month'" [(ngModel)]="selectedMonth" fullWidth size="small">
-                            <nb-option  *ngFor='let month of lastMonths' [value]="month">{{calMonths[month.getMonth()] + " '" +  month.getFullYear()}} </nb-option>
-                        </nb-select>
-                    </div>
-                </div>
-            </nb-list-item>
-            <nb-list-item >
-                <div class = "row">
-                    <div style = "width: 100px" class = "col-md-auto" (click) = "selectRangeType('Custom')">
-                        <nb-radio  name = "range" [checked] = "currentSelection=='Custom'" (onClick) = "selectRangeType('Custom')">Custom</nb-radio>
-                    </div>  
-                    <div class = "col">
-                                <!-- <input nbInput placeholder="Pick Date" [nbDatepicker]="dateTimePicker" [disabled] = "currentSelection != 'Custom'" fullWidth fieldSize="small">
+<ng-template #rangeSelector>
+  <nb-list>
+    <nb-list-item>
+      <div class="row">
+        <div
+          style="width: 100px"
+          class="col-md-auto"
+          (click)="selectRangeType('Date')"
+        >
+          <nb-radio name="range" [checked]="currentSelection == 'Date'"
+            >Date</nb-radio
+          >
+        </div>
+        <div class="col">
+          <input
+            nbInput
+            placeholder="Pick Date"
+            [disabled]="currentSelection != 'Date'"
+            [value]="range.start"
+            [nbDatepicker]="dateTimePicker"
+            fullWidth
+            fieldSize="small"
+          />
+          <!-- <nb-date-timepicker (dateChange) = "setDate($event)" [max]="fin" [datepickerAdapter]='' [(date)] = "selectedDate" #dateTimePicker singleColumn [step]="10"></nb-date-timepicker> -->
+          <nb-datepicker
+            (dateChange)="setDate($event)"
+            [max]="fin"
+            [(date)]="selectedDate"
+            #dateTimePicker
+          ></nb-datepicker>
+        </div>
+      </div>
+    </nb-list-item>
+    <nb-list-item>
+      <div class="row">
+        <div
+          style="width: 100px"
+          class="col-md-auto"
+          (click)="selectRangeType('Month')"
+        >
+          <nb-radio
+            name="range"
+            [checked]="currentSelection == 'Month'"
+            (onClick)="selectRangeType('Month')"
+            >Month</nb-radio
+          >
+        </div>
+        <div class="col">
+          <nb-select
+            (selectedChange)="setMonth()"
+            placeholder="Select Showcase"
+            [disabled]="currentSelection != 'Month'"
+            [(ngModel)]="selectedMonth"
+            fullWidth
+            size="small"
+          >
+            <nb-option *ngFor="let month of lastMonths" [value]="month"
+              >{{ calMonths[month.getMonth()] + " '" + month.getFullYear() }}
+            </nb-option>
+          </nb-select>
+        </div>
+      </div>
+    </nb-list-item>
+    <nb-list-item>
+      <div class="row">
+        <div
+          style="width: 100px"
+          class="col-md-auto"
+          (click)="selectRangeType('Custom')"
+        >
+          <nb-radio
+            name="range"
+            [checked]="currentSelection == 'Custom'"
+            (onClick)="selectRangeType('Custom')"
+            >Custom</nb-radio
+          >
+        </div>
+        <div class="col">
+          <!-- <input nbInput placeholder="Pick Date" [nbDatepicker]="dateTimePicker" [disabled] = "currentSelection != 'Custom'" fullWidth fieldSize="small">
                                 <nb-date-timepicker
                                 singleColumn
                                 [step]="10"
                                 #dateTimePicker></nb-date-timepicker> -->
-                            <input  nbInput placeholder="Today - Pick a new Range" [nbDatepicker]="rangepicker" [disabled] = "currentSelection != 'Custom'" fullWidth fieldSize="small">
-                            <nb-rangepicker  #rangepicker [max]="max" [(range)]="range" style='margin-left: 2px;' (rangeChange)="changeRange($event)"></nb-rangepicker> 
-                    </div>
-                </div>
-            </nb-list-item>
-        </nb-list>
-        <!-- <button (click)='show()'>aaaa</button> -->
-    </ng-template>
+          <input
+            nbInput
+            placeholder="Today - Pick a new Range"
+            [nbDatepicker]="rangepicker"
+            [disabled]="currentSelection != 'Custom'"
+            fullWidth
+            fieldSize="small"
+          />
+          <nb-rangepicker
+            #rangepicker
+            [max]="max"
+            [(range)]="range"
+            style="margin-left: 2px"
+            (rangeChange)="changeRange($event)"
+          ></nb-rangepicker>
+        </div>
+      </div>
+    </nb-list-item>
+  </nb-list>
+  <!-- <button (click)='show()'>aaaa</button> -->
+</ng-template>
