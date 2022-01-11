@@ -128,6 +128,7 @@ import { HelpdeskReplyComponent } from "./helpdesk/helpdesk-reply/helpdesk-reply
 import { HelpdeskDetailsComponent } from "./helpdesk/helpdesk-details/helpdesk-details.component";
 import { AddIncidentComponent } from "./search/add-incident/add-incident.component";
 import { MemoComponent } from "./search/memo/memo.component";
+import { IncidentLogsComponent } from "./search/incident-logs/incident-logs.component";
 
 @NgModule({
   imports: [
@@ -262,6 +263,7 @@ import { MemoComponent } from "./search/memo/memo.component";
     HelpdeskDetailsComponent,
     AddIncidentComponent,
     MemoComponent,
+    IncidentLogsComponent,
   ],
   providers: [
     FacesService,

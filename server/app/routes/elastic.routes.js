@@ -18,6 +18,12 @@ module.exports = function (app) {
 
   app.get('/api/elastic/incident/:id', [authJwt.verifyToken], controller.incidentDetails)
 
+  app.get(
+    '/api/elastic/incidentLogs',
+    [authJwt.verifyToken, authJwt.isClient],
+    controller.incidentLogs
+  )
+
   app.post('/api/elastic/video', [authJwt.verifyToken], controller.upload)
 
   app.post('/api/elastic/zip', [authJwt.verifyToken], controller.uploadZip)

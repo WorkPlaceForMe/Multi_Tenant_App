@@ -161,6 +161,11 @@ export const MENU_ITEMSCLIENT: NbMenuItem[] = [
     icon: "browser-outline",
     link: "helpdesk-listing",
   },
+  {
+    title: "Incident Logs",
+    icon: "star",
+    link: "incident-logs",
+  },
 ];
 
 export const MENU_ITEMSUSER: NbMenuItem[] = [

@@ -26,6 +26,7 @@ db.relation = require('../models/relation.model.js')(sequelize, Sequelize)
 db.schedule = require('../models/schedule.model.js')(sequelize, Sequelize)
 db.helpdesk = require('../models/helpdesk.model.js')(sequelize, Sequelize)
 db.reply = require('../models/reply.model.js')(sequelize, Sequelize)
+db.incidentLog = require('../models/incidentLog.model.js')(sequelize, Sequelize)
 
 db.algorithm.belongsToMany(db.user, {
   through: 'account_algorithm',
@@ -87,6 +88,12 @@ db.ALGORITHMS = [
 db.helpdesk.belongsTo(db.user, {foreignKey: 'user_id'})
 
 db.user.hasMany(db.helpdesk, {
+  foreignKey: 'user_id'
+})
+
+db.incidentLog.belongsTo(db.user, {foreignKey: 'user_id'})
+
+db.user.hasMany(db.incidentLog, {
   foreignKey: 'user_id'
 })
 

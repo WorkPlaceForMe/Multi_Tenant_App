@@ -245,4 +245,8 @@ export class FacesService {
   incidentDetails(id: string) {
     return this.http.get(`${this.API_URI}/elastic/incident/${id}`);
   }
+
+  incidentLogs() {
+    return this.http.get(`${this.API_URI}/elastic/incidentLogs`);
+  }
 }

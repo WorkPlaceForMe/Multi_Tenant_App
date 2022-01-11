@@ -1,8 +1,6 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { trigger, style, animate, transition } from "@angular/animations";
-import { HelpDeskService } from "../../../services/helpdesk.service";
-import { NbDialogRef, NbDialogService } from "@nebular/theme";
-import { HelpdeskReplyComponent } from "../helpdesk-reply/helpdesk-reply.component";
+import { NbDialogRef } from "@nebular/theme";
 
 @Component({
   selector: "app-helpdesk-details",

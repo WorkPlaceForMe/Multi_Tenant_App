@@ -63,10 +63,14 @@ export class MemoComponent implements ViewCell, OnInit {
     this.incidentId = rowData.id;
     this.facesServide.incidentDetails(this.incidentId).subscribe(
       (res: any) => {
-        console.log(res.incidentDetails._source.memo);
-        if (res.incidentDetails._source && res.incidentDetails._source.memo) {
+        if (
+          res.incidentDetails._source &&
+          res.incidentDetails._source.memoDetails.details
+        ) {
           this.memoDetails = true;
-          this.addMemoForm.setValue({ memo: res.incidentDetails._source.memo });
+          this.addMemoForm.setValue({
+            memo: res.incidentDetails._source.memoDetails.details,
+          });
         }
 
         this.dialogRef = this.dialogService.open(template, {

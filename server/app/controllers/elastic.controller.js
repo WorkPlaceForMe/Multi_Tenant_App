@@ -10,6 +10,9 @@ const {v4: uuidv4} = require('uuid')
 const unzipper = require('unzipper')
 const moment = require('moment')
 const dateTimeFormat = 'YYYY-MM-DD HH:mm:ss'
+const User = db.user
+const IncidentLog = db.incidentLog
+const {Op} = require('sequelize')
 const client = new elasticsearch.Client({
   node: process.env.HOST_ELAST,
   log: 'trace',
@@ -29,6 +32,7 @@ const s3 = new AWS.S3({
   accessKeyId: process.env.ACCESSKEY,
   secretAccessKey: process.env.SECRETKEY
 })
+const incidentIndex = 'gmtc_incident'
 
 exports.ping = async (req, res) => {
   try {
@@ -182,6 +186,18 @@ async function searchAndAdd(
   }
 }
 
+async function getIncident(incidentId) {
+  try {
+    const incident = await client.get({
+      index: incidentIndex,
+      id: incidentId
+    })
+    return incident.body && incident.body._source ? incident.body._source : {}
+  } catch (error) {
+    return {}
+  }
+}
+
 const test = ['male', 'car', 'bicycle']
 
 exports.search1 = async (req, res) => {
@@ -320,9 +336,8 @@ exports.search1 = async (req, res) => {
 
 exports.search = async (req, res) => {
   const data = req.body
-  const index = 'gmtc_incident'
   const params = {
-    index: [index],
+    index: [incidentIndex],
     body: {
       query: {
         bool: {
@@ -381,7 +396,7 @@ exports.search = async (req, res) => {
     })
   }
   try {
-    console.dir(params, {depth: null})
+    // console.dir(params, {depth: null})
     const body = await client.search(params)
     const hits = body.body.hits
     if (hits.hits.length > 0) {
@@ -395,7 +410,7 @@ exports.search = async (req, res) => {
       const lt = new Date(Date.parse(hits.hits[0]._source.time) + 1000)
       try {
         const secondBody = await client.search({
-          index: [index],
+          index: [incidentIndex],
           body: {
             query: {
               bool: {
@@ -491,7 +506,6 @@ const upImage = multer({
 
 exports.addIncident = (req, res) => {
   const token = req.headers['x-access-token']
-  const incidentIndex = 'gmtc_incident'
   upImage(req, res, async function (err) {
     if (err) {
       if (req.fileValidationError) {
@@ -537,9 +551,11 @@ exports.addIncident = (req, res) => {
         const decoded = await jwt.verify(token, process.env.secret)
 
         const data = {
-          // time: reqBody.time ? new Date(reqBody.time) : new Date(),
           userId: decoded.id,
-          memo: '',
+          memoDetails: {
+            userId: '',
+            details: ''
+          },
           time: reqBody.time ? moment.utc(reqBody.time).format() : moment.utc().format(),
           description: reqBody.description,
           cam_name: reqBody.cameraName,
@@ -594,7 +610,7 @@ exports.addIncident = (req, res) => {
 
 exports.addMemo = async (req, res) => {
   try {
-    const incidentIndex = 'gmtc_incident'
+    const token = req.headers['x-access-token']
     const {memo} = req.body
     if (!memo) {
       return res.status(400).json({
@@ -611,6 +627,8 @@ exports.addMemo = async (req, res) => {
       })
     }
 
+    const decoded = await jwt.verify(token, process.env.secret)
+
     client.get(
       {
         index: incidentIndex,
@@ -625,13 +643,77 @@ exports.addMemo = async (req, res) => {
           })
         }
 
+        const incidentLogData = {
+          id: uuidv4(),
+          incident_id: incident.body._id,
+          user_id: decoded.id,
+          logType: 'MEMO'
+        }
+
+        if (incident.body._source.memoDetails.userId && incident.body._source.memoDetails.details) {
+          const userDetails = await User.findByPk(incident.body._source.memoDetails.userId)
+          if (!userDetails) {
+            return res.status(400).json({
+              success: false,
+              error_code: 1,
+              message: 'User not found'
+            })
+          }
+          incidentLogData.status = 'UPDATED'
+          if (userDetails.role === 'client' && userDetails.id !== decoded.id) {
+            incidentLogData.status = 'ERROR'
+            await IncidentLog.create(incidentLogData)
+            return res.status(400).json({
+              success: false,
+              error_code: 1,
+              message: 'You are not authorized to update memo'
+            })
+          } else if (userDetails.role === 'branch') {
+            if (!(decoded.id === userDetails.id || decoded.id === userDetails.id_account)) {
+              incidentLogData.status = 'ERROR'
+              await IncidentLog.create(incidentLogData)
+              return res.status(400).json({
+                success: false,
+                error_code: 1,
+                message: 'You are not authorized to update memo'
+              })
+            } else if (decoded.id === userDetails.id_account) {
+              incidentLogData.status = 'WARNING'
+            }
+          } else if (userDetails.role === 'user') {
+            if (
+              !(
+                decoded.id === userDetails.id ||
+                decoded.id === userDetails.id_account ||
+                decoded.id === userDetails.id_branch
+              )
+            ) {
+              incidentLogData.status = 'ERROR'
+              await IncidentLog.create(incidentLogData)
+              return res.status(400).json({
+                success: false,
+                error_code: 1,
+                message: 'You are not authorized to update memo'
+              })
+            } else if (
+              decoded.id === userDetails.id_account ||
+              decoded.id === userDetails.id_branch
+            ) {
+              incidentLogData.status = 'WARNING'
+            }
+          }
+        }
+
         client.update(
           {
             index: incidentIndex,
             id: req.params.id,
             body: {
               doc: {
-                memo
+                memoDetails: {
+                  userId: decoded.id,
+                  details: memo
+                }
               }
             }
           },
@@ -643,6 +725,8 @@ exports.addMemo = async (req, res) => {
                 message: 'Not able to add memo'
               })
             }
+
+            await IncidentLog.create(incidentLogData)
 
             res.status(200).send({
               success: true,
@@ -662,7 +746,6 @@ exports.addMemo = async (req, res) => {
 
 exports.incidentDetails = async (req, res) => {
   try {
-    const incidentIndex = 'gmtc_incident'
     if (!req.params.id) {
       return res.status(400).json({
         success: false,
@@ -691,6 +774,53 @@ exports.incidentDetails = async (req, res) => {
         })
       }
     )
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error
+    })
+  }
+}
+
+exports.incidentLogs = async (req, res) => {
+  try {
+    const token = req.headers['x-access-token']
+    const decoded = await jwt.verify(token, process.env.secret)
+    const userIdArray = []
+
+    const users = await User.findAll({
+      where: {id_account: decoded.id}
+    })
+    for (const user of users) {
+      userIdArray.push(user.id)
+    }
+
+    const incidentLogs = await IncidentLog.findAll({
+      where: {
+        user_id: {
+          [Op.in]: userIdArray
+        }
+      },
+      order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'username', 'email', 'id_account', 'id_branch', 'role', 'createdAt']
+        }
+      ]
+    })
+
+    const responseArray = [...JSON.parse(JSON.stringify(incidentLogs))]
+
+    for (let i = 0; i < responseArray.length; i++) {
+      const incidentDetails = await getIncident(responseArray[i].incident_id)
+      responseArray[i].incidentDetails = incidentDetails
+    }
+
+    res.status(200).send({
+      success: true,
+      logs: responseArray
+    })
   } catch (error) {
     res.status(500).json({
       success: false,

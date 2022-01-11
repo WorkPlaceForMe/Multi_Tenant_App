@@ -50,9 +50,9 @@
               nbButton
               [status]="'info'"
               *ngIf="!loading"
-              [disabled]="!addMemoForm.valid || memoDetails"
+              [disabled]="!addMemoForm.valid"
             >
-              ADD
+              {{ memoDetails ? "UPDATE" : "ADD" }}
             </button>
             <button
               class="btn-block"

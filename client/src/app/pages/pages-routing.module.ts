@@ -27,6 +27,7 @@ import { CenterComponent } from "./online/graphs/center/center.component";
 import { PagenotfoundComponent } from "./pagenotfound/pagenotfound.component";
 import { GenerateHelpDeskTicketComponent } from "./helpdesk/generate-helpdesk-ticket/generate-helpdesk-ticket.component";
 import { HelpdeskTicketListingComponent } from "./helpdesk/helpdesk-ticket -listing/helpdesk-ticket-listing.component";
+import { IncidentLogsComponent } from "./search/incident-logs/incident-logs.component";
 
 const routes: Routes = [
   {
@@ -136,6 +137,11 @@ const routes: Routes = [
       {
         path: "helpdesk-listing",
         component: HelpdeskTicketListingComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: "incident-logs",
+        component: IncidentLogsComponent,
         canActivate: [AuthGuard],
       },
       {
