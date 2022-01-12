@@ -1,14 +1,45 @@
 <button
-  class="btn-block"
   type="submit"
   nbButton
   [status]="'success'"
-  (click)="openModal(template, rowData)"
+  style="width: 45%"
+  (click)="openModal(memoTemplate, 'memo', $event)"
 >
-  <i class="fas fa-sticky-note" style="font-size: 16px"></i>
+  <i class="fas fa-sticky-note" style="font-size: 16px"></i></button
+>&nbsp;
+
+<button
+  id="rowData.id"
+  type="submit"
+  *ngIf="rowData.bookmarkDetails && rowData.bookmarkDetails.isBookMarked"
+  nbButton
+  style="width: 45%"
+>
+  <i
+    class="fas fa-bookmark"
+    style="font-size: 16px; color: rgb(56, 177, 56)"
+    (click)="openModal(bookMarkTemplate, 'bookmark', $event)"
+  ></i>
 </button>
 
-<ng-template #template>
+<button
+  id="rowData.id"
+  type="submit"
+  *ngIf="
+    !rowData.bookmarkDetails ||
+    (rowData.bookmarkDetails && !rowData.bookmarkDetails.isBookMarked)
+  "
+  nbButton
+  style="width: 45%"
+>
+  <i
+    class="fas fa-bookmark"
+    style="font-size: 16px; color: rgb(134, 139, 134)"
+    (click)="openModal(bookMarkTemplate, 'bookmark', $event)"
+  ></i>
+</button>
+
+<ng-template #memoTemplate>
   <div style="width: 35rem">
     <nb-card>
       <nb-card-header>
@@ -52,7 +83,7 @@
               *ngIf="!loading"
               [disabled]="!addMemoForm.valid"
             >
-              {{ memoDetails ? "UPDATE" : "ADD" }}
+              {{ memoOrBookmark ? "UPDATE" : "ADD" }}
             </button>
             <button
               class="btn-block"
@@ -72,6 +103,49 @@
             CLOSE
           </button>
         </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</ng-template>
+
+<ng-template #bookMarkTemplate>
+  <div style="width: 35rem">
+    <nb-card>
+      <nb-card-header>
+        <h6>
+          {{
+            memoOrBookmark
+              ? "Are You Sure To Remove This Incident From Bookmark?"
+              : "Are You Sure To Add This Incident As Bookmarked?"
+          }}
+        </h6>
+      </nb-card-header>
+      <nb-card-body>
+        <button
+          class="btn-block"
+          nbButton
+          [status]="'warning'"
+          *ngIf="!loading"
+          (click)="manageBookmark()"
+        >
+          YES
+        </button>
+        <button
+          class="btn-block"
+          nbButton
+          [status]="'primary'"
+          [nbSpinner]="true"
+          nbSpinnerSize="giant"
+          nbSpinnerStatus="primary"
+          [disabled]="loading"
+          *ngIf="loading"
+        >
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </button>
+
+        <button class="btn-block mt-4" nbButton (click)="closeModal()">
+          CLOSE
+        </button>
       </nb-card-body>
     </nb-card>
   </div>

@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { trigger, style, animate, transition } from "@angular/animations";
 import { NbDialogRef } from "@nebular/theme";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { FacesService } from "../../../services/faces.service";
 import * as moment from "moment";
+import { IncidentService } from "../../../services/incident.service";
 const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
 const imageTypes = ["jpg", "png", "jpeg"];
 
@@ -28,7 +28,7 @@ export class AddIncidentComponent implements OnInit {
   @ViewChild("fileInput", { static: false }) fileInputVariable: any;
 
   constructor(
-    private facesServide: FacesService,
+    private incidentServide: IncidentService,
     private fb: FormBuilder,
     public dialogRef: NbDialogRef<AddIncidentComponent>
   ) {
@@ -54,7 +54,7 @@ export class AddIncidentComponent implements OnInit {
       image: this.fileInputVariable.nativeElement.files[0],
     };
 
-    this.facesServide.addIncident(data).subscribe(
+    this.incidentServide.addIncident(data).subscribe(
       (res: any) => {
         this.closeModal();
         alert(res.message);

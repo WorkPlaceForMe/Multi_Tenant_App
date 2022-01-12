@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { trigger, style, animate, transition } from "@angular/animations";
-import { FacesService } from "../../../services/faces.service";
 import { AuthService } from "../../../services/auth.service";
+import { IncidentService } from "../../../services/incident.service";
 
 @Component({
   selector: "app-incident-logs",
@@ -20,7 +20,7 @@ export class IncidentLogsComponent implements OnInit {
   incidentLogs: Array<any> = [];
 
   constructor(
-    private faceService: FacesService,
+    private incidentService: IncidentService,
     private authService: AuthService
   ) {}
 
@@ -29,10 +29,9 @@ export class IncidentLogsComponent implements OnInit {
   }
 
   getIncidentLogs() {
-    this.faceService.incidentLogs().subscribe(
+    this.incidentService.incidentLogs().subscribe(
       (res: any) => {
         this.incidentLogs = res.logs;
-        console.log(this.incidentLogs);
       },
       (error) => {
         console.log(error);

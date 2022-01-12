@@ -225,28 +225,4 @@ export class FacesService {
   delVid(data) {
     return this.http.post(`${this.API_URI}/elastic/video/delete/`, data);
   }
-
-  addIncident(incidentDetails: any) {
-    const formData = new FormData();
-    formData.append("cameraName", incidentDetails.cameraName);
-    formData.append("description", incidentDetails.description);
-    if (incidentDetails.time) {
-      formData.append("time", incidentDetails.time);
-    }
-    formData.append("file", incidentDetails.image);
-
-    return this.http.post(`${this.API_URI}/elastic/addIncident/`, formData);
-  }
-
-  addMemo(id: string, memo: any) {
-    return this.http.post(`${this.API_URI}/elastic/memo/${id}`, memo);
-  }
-
-  incidentDetails(id: string) {
-    return this.http.get(`${this.API_URI}/elastic/incident/${id}`);
-  }
-
-  incidentLogs() {
-    return this.http.get(`${this.API_URI}/elastic/incidentLogs`);
-  }
 }
