@@ -342,7 +342,12 @@ exports.search = async (req, res) => {
         words.splice(i, 1)
       }
     }
-    const recRes = await searchAndAdd(words, data.filters.bounded.time, index, data.filters.range)
+    const recRes = await searchAndAdd(
+      words,
+      data.filters.bounded.time,
+      incidentIndex,
+      data.filters.range
+    )
     for (const elem of recRes) {
       if (elem._source.filename) {
         elem._source.url =
@@ -379,7 +384,7 @@ exports.search = async (req, res) => {
     })
   }
   try {
-    // console.dir(params, {depth: null})
+    console.dir(params, {depth: null})
     const body = await client.search(params)
     const hits = body.body.hits
     if (hits.hits.length > 0) {

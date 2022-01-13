@@ -32,4 +32,6 @@ module.exports = function (app) {
   )
 
   app.get('/api/incident/logs', [authJwt.verifyToken, authJwt.isClient], controller.incidentLogs)
+
+  app.post('/api/incident/timeline', [authJwt.verifyToken], controller.incidentsWithTimeline)
 }

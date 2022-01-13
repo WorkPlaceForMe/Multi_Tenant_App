@@ -36,4 +36,8 @@ export class IncidentService {
   manageBookmark(id: string, details: any) {
     return this.http.post(`${this.API_URI}/incident/bookmark/${id}`, details);
   }
+
+  getTimelineIncidents(data: any) {
+    return this.http.post(`${this.API_URI}/incident/timeline`, data);
+  }
 }

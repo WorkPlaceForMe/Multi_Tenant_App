@@ -1,0 +1,40 @@
+<nb-card>
+  <nb-card-header>
+    <h5 align="center" class="pr-5">Timeline Graph</h5>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="mb-5" align="center">
+      <input
+        nbInput
+        placeholder="Pick Date Range"
+        [(ngModel)]="dateRange"
+        [nbDatepicker]="dateRangePicker"
+      />
+      <nb-rangepicker #dateRangePicker></nb-rangepicker>&nbsp;
+
+      <button
+        nbButton
+        [status]="'success'"
+        [nbSpinner]="loading"
+        nbSpinnerStatus="primary"
+        type="submit"
+        (click)="getChartDetails(true)"
+        [disabled]="!dateRange || !dateRange.start || !dateRange.end"
+      >
+        Search
+      </button>
+    </div>
+    <div style="display: block">
+      <canvas
+        baseChart
+        [datasets]="barChartData"
+        [labels]="barChartLabels"
+        [options]="barChartOptions"
+        [plugins]="barChartPlugins"
+        [legend]="barChartLegend"
+        [chartType]="barChartType"
+      >
+      </canvas>
+    </div>
+  </nb-card-body>
+</nb-card>

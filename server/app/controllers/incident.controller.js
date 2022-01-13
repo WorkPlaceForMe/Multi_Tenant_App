@@ -537,3 +537,63 @@ exports.manageBookmark = async (req, res) => {
     })
   }
 }
+
+exports.incidentsWithTimeline = async (req, res) => {
+  try {
+    const reqBody = req.body
+    if (!reqBody.start || !reqBody.end) {
+      return res.status(400).json({
+        success: false,
+        error_code: 1,
+        message: 'Start date and End date both is required!'
+      })
+    }
+
+    if (
+      !moment(reqBody.start, dateTimeFormat, true).isValid() ||
+      !moment(reqBody.end, dateTimeFormat, true).isValid()
+    ) {
+      return res.status(400).send({
+        success: false,
+        error_code: 1,
+        message: `Invalid date format,pattern must be ${dateTimeFormat}`
+      })
+    }
+
+    const params = {
+      index: [incidentIndex],
+      body: {
+        size: 10000,
+        sort: [{time: {order: 'asc'}}],
+        query: {
+          bool: {
+            must: [
+              {
+                range: {
+                  time: {
+                    gte: moment.utc(reqBody.start).format(),
+                    lte: moment.utc(reqBody.end).format()
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+
+    // console.dir(params, {depth: null})
+    const result = await client.search(params)
+    const responseData = {
+      success: true,
+      total: result.body.hits.total.value,
+      incidents: result.body.hits.hits
+    }
+    res.status(200).send(responseData)
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error
+    })
+  }
+}

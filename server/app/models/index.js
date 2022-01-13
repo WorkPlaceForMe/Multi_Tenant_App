@@ -97,12 +97,4 @@ db.user.hasMany(db.incidentLog, {
   foreignKey: 'user_id'
 })
 
-// const syncOption = {
-//   alter: true
-// }
-
-// db.reply.sync(syncOption).then(() => {
-//   console.log('Helpdesk Reply table created')
-// })
-
 module.exports = db
