@@ -10,12 +10,14 @@ module.exports = (sequelize, Sequelize) => {
     },
     helpdesk_id: {
       type: Sequelize.STRING,
-      references: {model: HelpDeskModel, key: 'id'},
+      references: HelpDeskModel,
+      refereceKey: 'id',
       allowNull: false
     },
     user_id: {
       type: Sequelize.STRING,
-      references: {model: UserModel, key: 'id'},
+      references: UserModel,
+      refereceKey: 'id',
       allowNull: false
     },
     reply_message: {

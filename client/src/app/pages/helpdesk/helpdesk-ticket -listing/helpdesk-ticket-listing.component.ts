@@ -23,6 +23,7 @@ export class HelpdeskTicketListingComponent implements OnInit {
   dialogRef: NbDialogRef<any>;
   modalData: any;
   modalId: string;
+  loading: boolean = false;
 
   constructor(
     private helpDeskService: HelpDeskService,
@@ -78,14 +79,17 @@ export class HelpdeskTicketListingComponent implements OnInit {
   }
 
   updateStatus() {
+    this.loading = true;
     this.helpDeskService.updateStatus(this.modalId, "RESOLVED").subscribe(
       (res: any) => {
+        this.loading = false;
         this.getTickets();
         this.closeModal();
         alert(res.message);
       },
       (error) => {
         console.log(error);
+        this.loading = false;
         alert(error.error.message);
       }
     );

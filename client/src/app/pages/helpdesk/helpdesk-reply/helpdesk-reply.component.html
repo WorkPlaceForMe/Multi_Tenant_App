@@ -72,22 +72,11 @@
               type="submit"
               nbButton
               [status]="'info'"
-              *ngIf="!loading"
+              [nbSpinner]="loading"
+              nbSpinnerStatus="primary"
               [disabled]="!helpDeskReplyForm.valid || wrongFileType"
             >
               POST REPLY
-            </button>
-            <button
-              class="btn-block"
-              nbButton
-              [status]="'primary'"
-              [nbSpinner]="true"
-              nbSpinnerSize="giant"
-              nbSpinnerStatus="primary"
-              [disabled]="loading"
-              *ngIf="loading"
-            >
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </button>
           </div>
         </form>

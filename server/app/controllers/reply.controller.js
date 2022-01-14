@@ -211,7 +211,10 @@ exports.updateStatus = async (req, res) => {
 
     res.status(200).send({
       success: true,
-      message: 'Helpdesk status updated successfully!'
+      message:
+        status === 'RESOLVED'
+          ? 'Helpdesk status marked as resolved successfully!'
+          : 'Helpdesk ticket reopened successfully!'
     })
   } catch (error) {
     res.status(500).json({

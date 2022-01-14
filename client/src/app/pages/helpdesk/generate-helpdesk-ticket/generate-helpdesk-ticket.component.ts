@@ -125,14 +125,17 @@ export class GenerateHelpDeskTicketComponent implements OnInit {
   }
 
   updateStatus() {
+    this.loading = true;
     this.helpDeskService.updateStatus(this.modalId, "REOPENED").subscribe(
       (res: any) => {
+        this.loading = false;
         this.getTickets();
         this.closeModal();
         alert(res.message);
       },
       (error) => {
         console.log(error);
+        this.loading = false;
         alert(error.error.message);
       }
     );

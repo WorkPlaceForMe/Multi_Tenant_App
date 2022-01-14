@@ -9,7 +9,8 @@ module.exports = (sequelize, Sequelize) => {
     },
     user_id: {
       type: Sequelize.STRING,
-      references: {model: UserModel, key: 'id'},
+      references: UserModel,
+      refereceKey: 'id',
       allowNull: false
     },
     title: {
@@ -26,7 +27,8 @@ module.exports = (sequelize, Sequelize) => {
     },
     client_id: {
       type: Sequelize.STRING,
-      references: {model: UserModel, key: 'id'},
+      references: UserModel,
+      refereceKey: 'id',
       allowNull: false
     },
     image_path: {

@@ -162,22 +162,11 @@
               type="submit"
               nbButton
               [status]="'info'"
-              *ngIf="!loading"
+              [nbSpinner]="loading"
+              nbSpinnerStatus="primary"
               [disabled]="!helpDeskForm.valid || wrongFileType"
             >
               POST
-            </button>
-            <button
-              class="btn-block"
-              nbButton
-              [status]="'primary'"
-              [nbSpinner]="true"
-              nbSpinnerSize="giant"
-              nbSpinnerStatus="primary"
-              [disabled]="loading"
-              *ngIf="loading"
-            >
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </button>
           </div>
 
@@ -201,6 +190,8 @@
           class="btn-block"
           nbButton
           [status]="'warning'"
+          [nbSpinner]="loading"
+          nbSpinnerStatus="primary"
           (click)="updateStatus()"
         >
           YES
