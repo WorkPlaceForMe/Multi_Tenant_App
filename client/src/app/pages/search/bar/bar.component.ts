@@ -27,6 +27,7 @@ import {
 import { CheckComponent } from "../check/check.component";
 import { AddIncidentComponent } from "../add-incident/add-incident.component";
 import { MemoComponent } from "../memo/memo.component";
+import { AuthService } from "../../../services/auth.service";
 
 @Component({
   selector: "ngx-bar",
@@ -40,7 +41,8 @@ export class BarComponent implements OnInit, OnDestroy {
     public datepipe: DatePipe,
     private formBuilder: FormBuilder,
     private windowService: NbWindowService,
-    private dialogService: NbDialogService
+    private dialogService: NbDialogService,
+    public authService: AuthService
   ) {}
 
   ngOnDestroy() {}

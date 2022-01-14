@@ -69,7 +69,7 @@
       </div> -->
 </div>
 
-<div class="row" class="mt-5">
+<div class="row" class="mt-5" *ngIf="authService.isClient">
   <div class="col-md-12">
     <app-view-chart></app-view-chart>
   </div>
