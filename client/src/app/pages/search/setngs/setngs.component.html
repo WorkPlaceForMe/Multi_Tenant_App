@@ -38,8 +38,12 @@
                 
                 <nb-checkbox status='info' type="checkbox" class="custom-control-input-label" [(ngModel)]='bounded["active"]'> Bounded Query </nb-checkbox>
                 <input nbInput fieldSize="small" status='info' type="number" class="custom-control-input-label" [(ngModel)]='bounded["time"]' style="width: 80px;" min=1 max=10 [disabled]='!bounded["active"]'> Seconds of difference -->
+
+  <nb-checkbox [(ngModel)]="isBookMarked">Search Bookmarked</nb-checkbox>
+
   <nb-radio-group [(ngModel)]="option" (ngModelChange)="adapt(option)">
     <nb-radio [value]="'and'" status="info"> Each word search </nb-radio>
+
     <nb-radio [value]="'bounded'" status="info">
       Bounded Query
       <input

@@ -252,7 +252,7 @@ exports.getReplies = async (req, res) => {
     }
     const replies = await Reply.findAll({
       where: {helpdesk_id: helpdeskDetails.id},
-      order: [['createdAt', 'ASC']]
+      order: [['createdAt', 'DESC']]
     })
 
     res.status(200).send({

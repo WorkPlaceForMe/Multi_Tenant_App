@@ -383,6 +383,19 @@ exports.search = async (req, res) => {
       }
     })
   }
+  if (data.filters.isBookMarked) {
+    const isBookMarkedObj = {
+      match: {
+        'bookmarkDetails.isBookMarked': true
+      }
+    }
+    if (data.query === '') {
+      params.body.query.bool.must[0] = isBookMarkedObj
+    } else {
+      params.body.query.bool.must.push(isBookMarkedObj)
+    }
+  }
+
   try {
     console.dir(params, {depth: null})
     const body = await client.search(params)
