@@ -20,7 +20,7 @@ app.use(compression())
 
 if (process.env.NODE_ENV === 'production') {
   const corsOptions = {
-    origin: [`http://${process.env.my_ip}:4200`, `${process.env.app_url}`]
+    origin: [`http://${process.env.my_ip}:4200`, `${process.env.app_url}`, 'http://localhost:4200']
   }
   app.use(cors(corsOptions))
   console.log(`Running on Production for http://${process.env.my_ip}:4200`)
