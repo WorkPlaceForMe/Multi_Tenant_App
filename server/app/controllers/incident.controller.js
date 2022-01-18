@@ -23,12 +23,13 @@ const client = new elasticsearch.Client({
 })
 const path =
   process.env.home + process.env.username + process.env.pathDocker + process.env.resources
-const incidentIndex = 'gmtc_incident'
+const incidentIndex = 'gmtc_searcher'
 
-async function getIncident(incidentId) {
+async function getIncident(incidentId, id) {
   try {
+    const actualIndexName = `${incidentIndex}_${id}`
     const incident = await client.get({
-      index: incidentIndex,
+      index: actualIndexName,
       id: incidentId
     })
     return incident.body && incident.body._source ? incident.body._source : {}
@@ -115,6 +116,7 @@ exports.addIncident = (req, res) => {
         }
 
         const decoded = await jwt.verify(token, process.env.secret)
+        const actualIndexName = `${incidentIndex}_${decoded.id_account}`
 
         const data = {
           userId: decoded.id,
@@ -127,17 +129,17 @@ exports.addIncident = (req, res) => {
         }
 
         const indexAlreadyExists = await client.indices.exists({
-          index: incidentIndex
+          index: actualIndexName
         })
         if (!indexAlreadyExists) {
           await client.indices.create({
-            index: incidentIndex
+            index: actualIndexName
           })
-          console.log(incidentIndex, 'index created')
+          console.log(actualIndexName, 'index created')
         }
 
         const incidentCreated = await client.index({
-          index: incidentIndex,
+          index: actualIndexName,
           type: '_doc',
           body: data
         })
@@ -151,7 +153,7 @@ exports.addIncident = (req, res) => {
         }
 
         const {body} = await client.get({
-          index: incidentIndex,
+          index: actualIndexName,
           id: incidentCreated.body._id
         })
 
@@ -190,10 +192,11 @@ exports.addMemo = async (req, res) => {
     }
 
     const decoded = await jwt.verify(token, process.env.secret)
+    const actualIndexName = `${incidentIndex}_${decoded.id_account}`
 
     client.get(
       {
-        index: incidentIndex,
+        index: actualIndexName,
         id: req.params.id
       },
       async function (err, incident) {
@@ -272,7 +275,7 @@ exports.addMemo = async (req, res) => {
 
         client.update(
           {
-            index: incidentIndex,
+            index: actualIndexName,
             id: req.params.id,
             body: {
               doc: {
@@ -312,6 +315,7 @@ exports.addMemo = async (req, res) => {
 
 exports.incidentDetails = async (req, res) => {
   try {
+    const token = req.headers['x-access-token']
     if (!req.params.id) {
       return res.status(400).json({
         success: false,
@@ -320,9 +324,12 @@ exports.incidentDetails = async (req, res) => {
       })
     }
 
+    const decoded = await jwt.verify(token, process.env.secret)
+    const actualIndexName = `${incidentIndex}_${decoded.id_account}`
+
     client.get(
       {
-        index: incidentIndex,
+        index: actualIndexName,
         id: req.params.id
       },
       async function (err, incident) {
@@ -379,7 +386,7 @@ exports.incidentLogs = async (req, res) => {
     const responseArray = [...JSON.parse(JSON.stringify(incidentLogs))]
 
     for (let i = 0; i < responseArray.length; i++) {
-      const incidentDetails = await getIncident(responseArray[i].incident_id)
+      const incidentDetails = await getIncident(responseArray[i].incident_id, decoded.id_account)
       responseArray[i].incidentDetails = incidentDetails
     }
 
@@ -416,10 +423,11 @@ exports.manageBookmark = async (req, res) => {
     reqBody.bookMarked = String(reqBody.bookMarked) === 'true' ? true : false
     console.log(reqBody)
     const decoded = await jwt.verify(token, process.env.secret)
+    const actualIndexName = `${incidentIndex}_${decoded.id_account}`
 
     client.get(
       {
-        index: incidentIndex,
+        index: actualIndexName,
         id: req.params.id
       },
       async function (err, incident) {
@@ -498,7 +506,7 @@ exports.manageBookmark = async (req, res) => {
 
         client.update(
           {
-            index: incidentIndex,
+            index: actualIndexName,
             id: req.params.id,
             body: {
               doc: {
@@ -540,6 +548,7 @@ exports.manageBookmark = async (req, res) => {
 
 exports.incidentsWithTimeline = async (req, res) => {
   try {
+    const token = req.headers['x-access-token']
     const reqBody = req.body
     if (!reqBody.start || !reqBody.end) {
       return res.status(400).json({
@@ -560,8 +569,11 @@ exports.incidentsWithTimeline = async (req, res) => {
       })
     }
 
+    const decoded = await jwt.verify(token, process.env.secret)
+    const actualIndexName = `${incidentIndex}_${decoded.id_account}`
+
     const params = {
-      index: [incidentIndex],
+      index: [actualIndexName],
       body: {
         size: 10000,
         sort: [{time: {order: 'asc'}}],
@@ -582,12 +594,18 @@ exports.incidentsWithTimeline = async (req, res) => {
       }
     }
 
-    // console.dir(params, {depth: null})
-    const result = await client.search(params)
+    const indexAlreadyExists = await client.indices.exists({
+      index: actualIndexName
+    })
+    let result
+    if (indexAlreadyExists.statusCode === 200) {
+      result = await client.search(params)
+    }
+
     const responseData = {
       success: true,
-      total: result.body.hits.total.value,
-      incidents: result.body.hits.hits
+      total: result ? result.body.hits.total.value : 0,
+      incidents: result ? result.body.hits.hits : []
     }
     res.status(200).send(responseData)
   } catch (error) {

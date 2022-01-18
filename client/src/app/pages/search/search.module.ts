@@ -51,6 +51,7 @@ import {
 import { CheckComponent } from "./check/check.component";
 import { ViewChartComponent } from "./view-chart/view-chart.component";
 import { ChartsModule } from "ng2-charts";
+import { NgxHorizontalTimelineModule } from "ngx-horizontal-timeline";
 
 @NgModule({
   declarations: [
@@ -103,6 +104,7 @@ import { ChartsModule } from "ng2-charts";
     CommonModule,
     SearchRoutingModule,
     ChartsModule,
+    NgxHorizontalTimelineModule,
   ],
   providers: [authInterceptorProviders, WindowResultService],
 })

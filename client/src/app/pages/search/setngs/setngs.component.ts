@@ -189,8 +189,6 @@ export class SetngsComponent implements OnInit {
   }
 
   apply() {
-    console.log(this.isBookMarked);
-
     let filters = {};
     if (this.algorithm !== "") {
       filters["algo"] = this.algorithm;

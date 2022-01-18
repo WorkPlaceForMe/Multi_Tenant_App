@@ -27,7 +27,7 @@ const s3 = new AWS.S3({
   accessKeyId: process.env.ACCESSKEY,
   secretAccessKey: process.env.SECRETKEY
 })
-const incidentIndex = 'gmtc_incident'
+const incidentIndex = 'gmtc_searcher'
 
 exports.ping = async (req, res) => {
   try {
@@ -318,157 +318,170 @@ exports.search1 = async (req, res) => {
 }
 
 exports.search = async (req, res) => {
+  const token = req.headers['x-access-token']
   const data = req.body
-  const params = {
-    index: [incidentIndex],
-    body: {
-      query: {
-        bool: {
-          must: [
-            {
-              match: {
-                description: data.query
+  const decoded = await jwt.verify(token, process.env.secret)
+  const actualIndexName = `${incidentIndex}_${decoded.id_account}`
+  const indexAlreadyExists = await client.indices.exists({
+    index: actualIndexName
+  })
+  if (indexAlreadyExists.statusCode !== 200) {
+    res.status(200).json({
+      success: true,
+      data: {hits: []}
+    })
+  } else {
+    const params = {
+      index: [actualIndexName],
+      body: {
+        query: {
+          bool: {
+            must: [
+              {
+                match: {
+                  description: data.query
+                }
               }
-            }
-          ]
+            ]
+          }
         }
       }
     }
-  }
-  if (data.filters.bounded) {
-    const words = data.query.split(' ')
-    for (let i = 0; i < words.length; i++) {
-      if (words[i] === 'and') {
-        words.splice(i, 1)
-      }
-    }
-    const recRes = await searchAndAdd(
-      words,
-      data.filters.bounded.time,
-      incidentIndex,
-      data.filters.range
-    )
-    for (const elem of recRes) {
-      if (elem._source.filename) {
-        elem._source.url =
-          'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
-      }
-    }
-
-    return res.status(200).json({success: true, data: {hits: recRes}})
-  }
-  if (data.filters.and) {
-    const words = data.query.split(' ')
-    params.body.query.bool.must[0] = {
-      terms: {
-        description: words,
-        boost: 1.0
-      }
-    }
-  }
-  if (data.filters.range) {
-    params.body.query.bool.must.push({
-      range: {
-        time: {
-          gte: data.filters.range.start,
-          lte: data.filters.range.end
+    if (data.filters.bounded) {
+      const words = data.query.split(' ')
+      for (let i = 0; i < words.length; i++) {
+        if (words[i] === 'and') {
+          words.splice(i, 1)
         }
       }
-    })
-  }
-  if (data.filters.algo) {
-    params.body.query.bool.must.push({
-      match: {
-        algo: data.filters.algo
-      }
-    })
-  }
-  if (data.filters.isBookMarked) {
-    const isBookMarkedObj = {
-      match: {
-        'bookmarkDetails.isBookMarked': true
-      }
-    }
-    if (data.query === '') {
-      params.body.query.bool.must[0] = isBookMarkedObj
-    } else {
-      params.body.query.bool.must.push(isBookMarkedObj)
-    }
-  }
-
-  try {
-    console.dir(params, {depth: null})
-    const body = await client.search(params)
-    const hits = body.body.hits
-    if (hits.hits.length > 0) {
-      for (const elem of hits.hits) {
+      const recRes = await searchAndAdd(
+        words,
+        data.filters.bounded.time,
+        actualIndexName,
+        data.filters.range
+      )
+      for (const elem of recRes) {
         if (elem._source.filename) {
           elem._source.url =
             'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
         }
       }
-      const gt = new Date(Date.parse(hits.hits[0]._source.time) - 1000)
-      const lt = new Date(Date.parse(hits.hits[0]._source.time) + 1000)
-      try {
-        const secondBody = await client.search({
-          index: [incidentIndex],
-          body: {
-            query: {
-              bool: {
-                must: [
-                  {
-                    range: {
-                      time: {
-                        gte: gt,
-                        lte: lt
-                      }
-                    }
-                  }
-                ],
-                must_not: [
-                  {
-                    ids: {
-                      values: [hits.hits[0]._id]
-                    }
-                  }
-                ]
-              }
-            }
-          }
-        })
-        const hits2 = secondBody.body.hits
-        if (hits2.hits.length !== 0) {
-          for (const elem of hits2.hits) {
-            elem._source.url =
-              'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
-            hits.hits.push(elem)
-          }
+
+      return res.status(200).json({success: true, data: {hits: recRes}})
+    }
+    if (data.filters.and) {
+      const words = data.query.split(' ')
+      params.body.query.bool.must[0] = {
+        terms: {
+          description: words,
+          boost: 1.0
         }
-        // search = hits
-        return res.status(200).json({
-          success: true,
-          data: hits,
-          second: hits2
-        })
-      } catch (err) {
-        console.trace(err.message)
-        return res.status(500).json({
-          success: false,
-          mess: err
-        })
       }
     }
-    res.status(200).json({
-      success: true,
-      data: hits
-    })
-  } catch (error) {
-    console.trace(error.message)
-    console.log(error)
-    res.status(500).json({
-      success: false,
-      mess: error
-    })
+    if (data.filters.range) {
+      params.body.query.bool.must.push({
+        range: {
+          time: {
+            gte: data.filters.range.start,
+            lte: data.filters.range.end
+          }
+        }
+      })
+    }
+    if (data.filters.algo) {
+      params.body.query.bool.must.push({
+        match: {
+          algo: data.filters.algo
+        }
+      })
+    }
+    if (data.filters.isBookMarked) {
+      const isBookMarkedObj = {
+        match: {
+          'bookmarkDetails.isBookMarked': true
+        }
+      }
+      if (data.query === '') {
+        params.body.query.bool.must[0] = isBookMarkedObj
+      } else {
+        params.body.query.bool.must.push(isBookMarkedObj)
+      }
+    }
+
+    try {
+      // console.dir(params, {depth: null})
+      const body = await client.search(params)
+      const hits = body.body.hits
+      if (hits.hits.length > 0) {
+        for (const elem of hits.hits) {
+          if (elem._source.filename) {
+            elem._source.url =
+              'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
+          }
+        }
+        const gt = new Date(Date.parse(hits.hits[0]._source.time) - 1000)
+        const lt = new Date(Date.parse(hits.hits[0]._source.time) + 1000)
+        try {
+          const secondBody = await client.search({
+            index: [actualIndexName],
+            body: {
+              query: {
+                bool: {
+                  must: [
+                    {
+                      range: {
+                        time: {
+                          gte: gt,
+                          lte: lt
+                        }
+                      }
+                    }
+                  ],
+                  must_not: [
+                    {
+                      ids: {
+                        values: [hits.hits[0]._id]
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          })
+          const hits2 = secondBody.body.hits
+          if (hits2.hits.length !== 0) {
+            for (const elem of hits2.hits) {
+              elem._source.url =
+                'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
+              hits.hits.push(elem)
+            }
+          }
+          // search = hits
+          return res.status(200).json({
+            success: true,
+            data: hits,
+            second: hits2
+          })
+        } catch (err) {
+          console.trace(err.message)
+          return res.status(500).json({
+            success: false,
+            mess: err
+          })
+        }
+      }
+      res.status(200).json({
+        success: true,
+        data: hits
+      })
+    } catch (error) {
+      // console.trace(error.message)
+      //  console.log(error)
+      res.status(500).json({
+        success: false,
+        mess: error
+      })
+    }
   }
 }
 
