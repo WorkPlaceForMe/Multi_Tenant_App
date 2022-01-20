@@ -182,7 +182,7 @@ export class ClothComponent implements OnInit, OnDestroy {
         filter: false,
       },
       sleeve_length: {
-        title: 'CLOTHING',
+        title: 'UPPERWEAR',
         type: 'string',
         filter: false,
       },
