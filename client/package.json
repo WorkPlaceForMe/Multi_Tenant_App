@@ -71,6 +71,7 @@
     "ng2-ckeditor": "^1.2.2",
     "ng2-file-upload": "^1.4.0",
     "ng2-smart-table": "^1.6.0",
+    "ngx-capture": "^0.12.1",
     "ngx-echarts": "^4.2.2",
     "ngx-spinner": "^10.0.1",
     "ngx-videogular": "^10.1.0-0",
