@@ -118,6 +118,10 @@ import { PathComponent } from "./online/graphs/path/path.component";
 import { FireComponent } from "./online/graphs/fire/fire.component";
 import { CollapseComponent } from "./online/graphs/collapse/collapse.component";
 import { NgxCaptureModule } from "ngx-capture";
+import { VgCoreModule } from "@videogular/ngx-videogular/core";
+import { VgControlsModule } from "@videogular/ngx-videogular/controls";
+import { VgOverlayPlayModule } from "@videogular/ngx-videogular/overlay-play";
+import { VgBufferingModule } from "@videogular/ngx-videogular/buffering";
 
 @NgModule({
   imports: [
@@ -178,6 +182,10 @@ import { NgxCaptureModule } from "ngx-capture";
       null,
       null
     ),
+    VgCoreModule,
+    VgControlsModule,
+    VgOverlayPlayModule,
+    VgBufferingModule,
   ],
   declarations: [
     PagesComponent,
