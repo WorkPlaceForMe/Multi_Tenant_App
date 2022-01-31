@@ -38,6 +38,7 @@ export class LiveComponent implements OnInit {
   sanitizer: DomSanitizer;
   on: boolean = false;
   rtspIn: SafeResourceUrl;
+  unZippedVideoMessage: string = null;
   constructor(
     private facesService: FacesService,
     private router: Router,
@@ -107,10 +108,21 @@ export class LiveComponent implements OnInit {
         const rtspIn =
           res["data"]["http_in"] ||
           "http://13.76.172.134:3300/api/pictures/videos/b.mp4"; // FOR TESTING
-        if (rtspIn && rtspIn.startsWith("http")) {
-          this.isHttpStream = true;
-          this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(rtspIn);
+
+        if (!rtspIn) {
+          this.unZippedVideoMessage = "Video not found";
           return;
+        }
+        if (rtspIn && rtspIn.startsWith("http")) {
+          if (!rtspIn.match(/\.([^\./\?]+)($|\?)/)) {
+            this.unZippedVideoMessage =
+              "This video can not be played, There have multiple unzipped video in this folder";
+            return;
+          } else {
+            this.isHttpStream = true;
+            this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(rtspIn);
+            return;
+          }
         } else {
           this.isHttpStream = false;
         }
