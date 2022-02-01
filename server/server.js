@@ -12,8 +12,9 @@ const compression = require('compression')
 const swaggerJsDoc = require('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
 
-const resourcesFolderPath =
-  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+// const resourcesFolderPath =
+//  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+const resourcesFolderPath = path.resolve(__dirname, './resources/')
 const picResourceFolderPath = path.join(resourcesFolderPath)
 
 app.use(compression())
@@ -176,6 +177,7 @@ require('./app/routes/analytics.routes')(app)
 require('./app/routes/elastic.routes')(app)
 require('./app/routes/alerts.routes')(app)
 require('./app/routes/path.routes')(app)
+require('./app/routes/manualTrigger.routes')(app)
 
 // resources being served
 app.use('/api/pictures', express.static(picResourceFolderPath))
