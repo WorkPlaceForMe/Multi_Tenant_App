@@ -90,7 +90,7 @@ if (process.env.INSTALL === 'true') {
     })
     .then(connection => {
       connection.query('CREATE DATABASE IF NOT EXISTS ' + process.env.DB + ';').then(() => {
-        db.sequelize.sync({ force: true }).then(() => {
+        db.sequelize.sync({ force: false, alter: true }).then(() => {
           console.log('Drop and Resync Db')
           init.initial()
           connection.query(
