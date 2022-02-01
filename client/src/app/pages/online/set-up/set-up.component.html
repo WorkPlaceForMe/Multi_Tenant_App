@@ -97,6 +97,7 @@
         <div class="form-group" *ngIf='type === "client"'>
             <label class="label">Algorithms</label>
             <ul style="list-style-type:none;">
+            <li><nb-checkbox [status]="'primary'" [(ngModel)]='allAct' (ngModelChange)='changeAll()' [ngModelOptions]="{standalone: true}">Select All</nb-checkbox></li>
             <li *ngFor='let alg of algos'>
             <nb-checkbox [status]="values.algorithm" [(ngModel)]='alg.act' [ngModelOptions]="{standalone: true}">{{alg.name}}</nb-checkbox>
         </li>
