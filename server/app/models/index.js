@@ -1,4 +1,4 @@
-require('dotenv').config({ path: '../../config.env' })
+require('dotenv').config({path: '../../config.env'})
 const Sequelize = require('sequelize')
 const sequelize = new Sequelize(process.env.DB, process.env.USERM, process.env.PASSWORD, {
   host: process.env.HOST,
@@ -24,6 +24,7 @@ db.camera = require('../models/camera.model.js')(sequelize, Sequelize)
 db.algorithm = require('../models/algorithm.model.js')(sequelize, Sequelize)
 db.relation = require('../models/relation.model.js')(sequelize, Sequelize)
 db.schedule = require('../models/schedule.model.js')(sequelize, Sequelize)
+db.manualTrigger = require('../models/manualTrigger.model.js')(sequelize, Sequelize)
 
 db.algorithm.belongsToMany(db.user, {
   through: 'account_algorithm',
