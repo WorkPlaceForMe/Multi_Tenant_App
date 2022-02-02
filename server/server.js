@@ -91,7 +91,7 @@ if (process.env.INSTALL === 'true') {
     })
     .then(connection => {
       connection.query('CREATE DATABASE IF NOT EXISTS ' + process.env.DB + ';').then(() => {
-        db.sequelize.sync({force: true}).then(() => {
+        db.sequelize.sync({ force: false, alter: true }).then(() => {
           console.log('Drop and Resync Db')
           init.initial()
           connection.query(
@@ -177,7 +177,10 @@ require('./app/routes/analytics.routes')(app)
 require('./app/routes/elastic.routes')(app)
 require('./app/routes/alerts.routes')(app)
 require('./app/routes/path.routes')(app)
-require('./app/routes/manualTrigger.routes')(app)
+require('./app/routes/helpdesk.routes')(app)
+require('./app/routes/reply.routes')(app)
+require('./app/routes/incident.routes')(app)
+
 
 // resources being served
 app.use('/api/pictures', express.static(picResourceFolderPath))

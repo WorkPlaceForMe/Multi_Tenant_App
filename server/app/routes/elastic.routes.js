@@ -1,4 +1,4 @@
-const { authJwt, verifyCam } = require('../middleware')
+const {authJwt, verifyCam} = require('../middleware')
 const controller = require('../controllers/elastic.controller')
 const multer = require('multer')
 
@@ -13,6 +13,8 @@ module.exports = function (app) {
   app.post('/api/elastic/search/', [authJwt.verifyToken], controller.search)
 
   app.post('/api/elastic/video', [authJwt.verifyToken], controller.upload)
+
+  app.post('/api/elastic/zip', [authJwt.verifyToken], controller.uploadZip)
 
   app.get('/api/elastic/video/list', [authJwt.verifyToken], controller.viewVids)
 

@@ -7,6 +7,9 @@ module.exports = (sequelize, Sequelize) => {
     name: {
       type: Sequelize.STRING
     },
+    type: {
+      type: Sequelize.STRING
+    },
     rtsp_in: {
       type: Sequelize.STRING
     },
