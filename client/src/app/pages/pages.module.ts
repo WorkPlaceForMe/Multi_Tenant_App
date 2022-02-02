@@ -6,6 +6,7 @@ import {
   NbWindowModule,
 } from "@nebular/theme";
 
+
 import { ThemeModule } from "../@theme/theme.module";
 import { PagesComponent } from "./pages.component";
 import { PagesRoutingModule } from "./pages-routing.module";
@@ -122,13 +123,11 @@ import { Heatmap1Component } from "./online/graphs/heatmap/heatmap.component";
 import { PathComponent } from "./online/graphs/path/path.component";
 import { FireComponent } from "./online/graphs/fire/fire.component";
 import { CollapseComponent } from "./online/graphs/collapse/collapse.component";
-import { GenerateHelpDeskTicketComponent } from "./helpdesk/generate-helpdesk-ticket/generate-helpdesk-ticket.component";
-import { HelpdeskTicketListingComponent } from "./helpdesk/helpdesk-ticket -listing/helpdesk-ticket-listing.component";
-import { HelpdeskReplyComponent } from "./helpdesk/helpdesk-reply/helpdesk-reply.component";
-import { HelpdeskDetailsComponent } from "./helpdesk/helpdesk-details/helpdesk-details.component";
-import { AddIncidentComponent } from "./search/add-incident/add-incident.component";
-import { MemoComponent } from "./search/memo/memo.component";
-import { IncidentLogsComponent } from "./search/incident-logs/incident-logs.component";
+import { NgxCaptureModule } from "ngx-capture";
+import { VgCoreModule } from "@videogular/ngx-videogular/core";
+import { VgControlsModule } from "@videogular/ngx-videogular/controls";
+import { VgOverlayPlayModule } from "@videogular/ngx-videogular/overlay-play";
+import { VgBufferingModule } from "@videogular/ngx-videogular/buffering";
 
 @NgModule({
   imports: [

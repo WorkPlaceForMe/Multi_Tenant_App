@@ -23,13 +23,13 @@
                         <nb-option *ngFor='let cam of cameras' [value]=cam.id>{{cam.name}}</nb-option>
                     </nb-select>
                 </div>
-                <div class="col-md-auto less-padding" >
+                <div class="col-md-auto less-padding">
                     <button style = "width: 130px"  #popover (click) = "showRangeSelector(true)" [nbPopover]="rangeSelector" nbPopoverTrigger="noop" nbPopoverPlacement="bottom" size="small" nbButton>{{currentSelection}} <nb-icon icon="calendar"></nb-icon></button>
                 </div>
                 <div class = "col-md-auto less-padding">
                     <button style = "min-height: 32px"   nbButton (click)="reload()" size="small"><i class="fas fa-sync-alt"></i></button>
                 </div>
-                <div class = "col-md-auto less-padding" >
+                <div class = "col-md-auto less-padding">
                     <nb-select  [(ngModel)]='reTime' (ngModelChange)='set($event)' id='select' size="small">
                         <nb-option [value]=0>Off</nb-option>
                         <nb-option [value]=5>5 s</nb-option>

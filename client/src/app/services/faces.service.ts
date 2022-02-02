@@ -225,4 +225,28 @@ export class FacesService {
   delVid(data) {
     return this.http.post(`${this.API_URI}/elastic/video/delete/`, data);
   }
+
+  manualTrigger(data: any) {
+    const formData = new FormData();
+    if (data.file) {
+      formData.append("file", data.file);
+    }
+    if (data.description) {
+      formData.append("description", data.description);
+    }
+    if (data.severity) {
+      formData.append("severity", data.severity);
+    }
+    if (data.cameraId) {
+      formData.append("cameraId", data.cameraId);
+    }
+
+    return this.http.post(`${this.API_URI}/manualTrigger/create`, formData);
+  }
+
+  saveSnapshot(data: any) {
+    const formData = new FormData();
+    formData.append("file", data);
+    return this.http.post(`${this.API_URI}/manualTrigger/snapshot`, formData);
+  }
 }

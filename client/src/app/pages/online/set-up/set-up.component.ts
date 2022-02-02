@@ -34,6 +34,13 @@ export class SetUpComponent implements OnInit {
     algorithm: 'primary',
   };
 
+  allAct: boolean = false;
+  changeAll(){
+      for(const alg of this.algos){
+        alg.act = this.allAct
+      }
+  }
+
   ngOnInit() {
     this.now_user = JSON.parse(localStorage.getItem('now_user'));
     if (this.now_user.role === 'admin'){
@@ -69,6 +76,7 @@ export class SetUpComponent implements OnInit {
       .subscribe(
         res => {
           this.user = res['data'];
+          console.log(this.user)
           this.registerForm.controls['username'].setValue(this.user.username);
           this.registerForm.controls['email'].setValue(this.user.email);
           this.registerForm.controls['analytics'].setValue(this.user.analytics);

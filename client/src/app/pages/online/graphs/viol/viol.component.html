@@ -1,58 +1,146 @@
 <div class="container no-padding">
-    <div class='col-md-12 no-padding' style="margin-top: 15px;">
-        <div class="row justify-content-start">
-            <div class="col-md-3 less-padding">
-                <nb-card>
-                    <nb-card-body class = "top-badges">
-                        <p class = "badge-txt">Total</p>
-                        <p class = "badge-reading">{{violence == undefined ? 'None' : violence.total}}</p>
-                    </nb-card-body>
-                </nb-card>
-            </div>
-            <div class="col-md-9 less-padding">
-                <nb-card>
-                    <nb-card-body class = "top-badges">
-                        <p>Over Time</p>
-                        <chart type="line" [data]="dataL" [options]="optionsL"></chart>
-                    </nb-card-body>
-                </nb-card>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-7 less-padding">
-                <nb-card>
-                    <nb-card-body style = "padding: 0px">
-                        <ng2-smart-table [settings]="settings" [source]="source" (edit)='got($event)'>
-                        </ng2-smart-table>
-                    </nb-card-body>
-                </nb-card>
-            </div>
-            <div class="col-md-5 less-padding" *ngIf=video>
-                <nb-card>
-                    <nb-card-body align='center'>
-                        <video controls (click)="toggleVideo($event)" #videoPlayer class="responsive" muted loop controls preload="none" style = "width: 100%;height: 100%">
-                            <source [src]="videoFile" type="video/mp4"/>
-                            Browser not supported
-                        </video>
-                    </nb-card-body>
-                </nb-card>
-            </div>
-        </div>
-  <div class='col-md-12 no-padding' style="margin-top: 15px;">
-    <div class="row">
-      <div class="col-md-8 less-padding">
+  <div class="col-md-12 no-padding" style="margin-top: 15px">
+    <div class="row justify-content-start">
+      <div class="col-md-3 less-padding">
         <nb-card>
+          <nb-card-body class="top-badges">
+            <p class="badge-txt">Total</p>
+            <p class="badge-reading">
+              {{ violence == undefined ? "None" : violence.total }}
+            </p>
+          </nb-card-body>
+        </nb-card>
+      </div>
+      <div class="col-md-9 less-padding">
+        <nb-card>
+          <nb-card-body class="top-badges">
+            <p>Over Time</p>
+            <chart type="line" [data]="dataL" [options]="optionsL"></chart>
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-7 less-padding">
+        <nb-card>
+          <nb-card-body style="padding: 0px">
+            <ng2-smart-table
+              [settings]="settings"
+              [source]="source"
+              (edit)="got($event)"
+            >
+            </ng2-smart-table>
+          </nb-card-body>
+        </nb-card>
+      </div>
+      <div class="col-md-5 less-padding" *ngIf="video">
+        <nb-card>
+          <nb-card-body align="center">
+            <video
+              controls
+              (click)="toggleVideo($event)"
+              #videoPlayer
+              class="responsive"
+              muted
+              loop
+              controls
+              preload="none"
+              style="width: 100%; height: 100%"
+            >
+              <source [src]="videoFile" type="video/mp4" />
+              Browser not supported
+            </video>
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+    <div class="col-md-12 no-padding" style="margin-top: 15px">
+      <div class="row">
+        <div class="col-md-8 less-padding">
+          <nb-card>
             <nb-card-header>
               <h4>Live Output Feed</h4>
             </nb-card-header>
             <nb-card-body>
-              <div align='center'>
-                <img [src]='rtspIn' style='width: 100%; height: auto;'>
+              <div align="center">
+                <button
+                  class="btn btn-sm btn-info"
+                  (click)="openFormModal(openFromTemplate)"
+                >
+                  Take Screenshot
+                </button>
+                <img
+                  id="video"
+                  [src]="rtspIn"
+                  style="width: 100%; height: auto"
+                  #screen
+                />
+                <!-- <img
+                  id="video"
+                  src="http://40.84.143.162:8091/stream8.mjpeg"
+                  style="width: 100%; height: auto"
+                  #screen
+                /> -->
+
+                <!-- <img
+                  id="snapshot"
+                  src=""
+                  style="width: 100%; height: auto"
+                  #snapshot
+                />
+                <canvas
+                  id="canvasId"
+                  style="cursor: crosshair"
+                  (click)="drawRect($event)"
+                ></canvas> -->
               </div>
             </nb-card-body>
           </nb-card>
+        </div>
       </div>
     </div>
   </div>
-    </div>
 </div>
+
+<ng-template #openFromTemplate>
+  <div>
+    <nb-card>
+      <nb-card-header>
+        <h6>Add To Manual Trigger</h6>
+      </nb-card-header>
+      <nb-card-body>
+        <canvas
+          id="canvasId"
+          style="cursor: crosshair"
+          (click)="drawRect($event)"
+        ></canvas>
+        <div class="pt-2">
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="description"
+            fullWidth
+            id="description"
+            autofocus
+            placeholder="Add Description"
+          />
+        </div>
+      </nb-card-body>
+
+      <nb-card-footer>
+        <button
+          class="btn-block"
+          [status]="'warning'"
+          nbButton
+          (click)="saveManualTrigger()"
+        >
+          Save
+        </button>
+        <button class="btn-block" nbButton (click)="closeModal()">
+          CLOSE
+        </button></nb-card-footer
+      >
+    </nb-card>
+  </div>
+</ng-template>
+<!-- [style.background-image]="getBackground()" -->
