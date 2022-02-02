@@ -18,10 +18,12 @@ import {
   NbDialogModule,
   NbMenuModule,
   NbSidebarModule,
+  NbTimepickerModule,
   NbToastrModule,
   NbWindowModule,
 } from "@nebular/theme";
 import { authInterceptorProviders } from "./_helpers/auth.interceptor";
+import { VgCoreModule } from "@videogular/ngx-videogular/core";
 import { GoogleLoginProvider } from "angularx-social-login";
 
 @NgModule({
@@ -36,6 +38,7 @@ import { GoogleLoginProvider } from "angularx-social-login";
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
     NbDatepickerModule.forRoot(),
+    NbTimepickerModule.forRoot(),
     NbDialogModule.forRoot(),
     NbWindowModule.forRoot(),
     NbToastrModule.forRoot(),

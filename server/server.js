@@ -1,7 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-require('dotenv').config({ path: './config.env' })
+require('dotenv').config({path: './config.env'})
 const app = express()
 const morgan = require('morgan')
 const fs = require('fs')
@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === 'production') {
   console.log(`Running Dev version on port ${process.env.PORT}`)
 }
 
-function customHeaders (req, res, next) {
+function customHeaders(req, res, next) {
   app.disable('X-Powered-By')
   res.setHeader('X-Powered-By', 'Graymatics-server')
 
@@ -43,9 +43,9 @@ function customHeaders (req, res, next) {
 app.use(customHeaders)
 
 // parse requests of content-type - application/json
-app.use(bodyParser.json({ limit: '10mb', extended: true }))
+app.use(bodyParser.json({limit: '10mb', extended: true}))
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
+app.use(bodyParser.urlencoded({limit: '10mb', extended: true}))
 app.all(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', `http://${process.env.my_ip}:4200`)
   res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE')
@@ -65,7 +65,7 @@ app.use(
   morgan(
     'Date: :date[web] // Url: :remote-addr // Method: :method:url // Status::status // User-agent: :user-agent',
     {
-      stream: fs.createWriteStream('./access.log', { flags: 'a' })
+      stream: fs.createWriteStream('./access.log', {flags: 'a'})
     }
   )
 )
@@ -177,7 +177,10 @@ require('./app/routes/analytics.routes')(app)
 require('./app/routes/elastic.routes')(app)
 require('./app/routes/alerts.routes')(app)
 require('./app/routes/path.routes')(app)
-require('./app/routes/manualTrigger.routes')(app)
+require('./app/routes/helpdesk.routes')(app)
+require('./app/routes/reply.routes')(app)
+require('./app/routes/incident.routes')(app)
+
 
 // resources being served
 app.use('/api/pictures', express.static(picResourceFolderPath))

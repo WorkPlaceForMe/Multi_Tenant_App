@@ -1,0 +1,86 @@
+<nb-card>
+  <div class="mt-3">
+    <h6 align="center" class="pr-5">HELP DESK</h6>
+    <nb-card-body>
+      <div *ngIf="tickets && tickets.length > 0">
+        <table class="table table-hover" id="myTable">
+          <thead>
+            <tr>
+              <th scope="col">NAME</th>
+              <th scope="col">DATE</th>
+              <th scope="col">STATUS</th>
+              <th scope="col">ACTION</th>
+            </tr>
+          </thead>
+          <tr *ngFor="let ticket of tickets">
+            <td scope="row">
+              {{ ticket.account.username }}
+            </td>
+            <td scope="row">
+              {{ ticket.createdAt | date: "medium" }}
+            </td>
+            <td scope="row">
+              {{ ticket.status }}
+            </td>
+            <td scope="row">
+              <button
+                nbButton
+                [status]="'info'"
+                style="width: 30%"
+                (click)="openViewModal(ticket)"
+              >
+                <i class="fa fa-eye" style="font-size: 16px"></i></button
+              >&nbsp;
+              <button
+                nbButton
+                [status]="'info'"
+                style="width: 30%"
+                (click)="openReplyModal(ticket)"
+              >
+                <i class="fas fa-reply" style="font-size: 16px"></i></button
+              >&nbsp;
+              <button
+                nbButton
+                [status]="'success'"
+                style="width: 30%"
+                (click)="openUpdateStatusModal(resolvedTemplate, ticket.id)"
+                [disabled]="ticket.status === 'RESOLVED'"
+              >
+                <i class="fas fa-check-circle" style="font-size: 16px"></i>
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div align="center" class="pr-5" *ngIf="tickets && tickets.length === 0">
+        <p>No data found!</p>
+      </div>
+    </nb-card-body>
+  </div>
+</nb-card>
+
+<ng-template #resolvedTemplate>
+  <div style="width: 35rem">
+    <nb-card>
+      <nb-card-header>
+        <h6>Are You Sure To Mark This Ticket As Resolved?</h6>
+      </nb-card-header>
+      <nb-card-body>
+        <button
+          class="btn-block"
+          nbButton
+          [status]="'warning'"
+          [nbSpinner]="loading"
+          nbSpinnerStatus="primary"
+          (click)="updateStatus()"
+        >
+          YES
+        </button>
+
+        <button class="btn-block mt-4" nbButton (click)="closeModal()">
+          CLOSE
+        </button>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</ng-template>

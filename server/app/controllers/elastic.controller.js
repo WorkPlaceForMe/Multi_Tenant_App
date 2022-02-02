@@ -6,7 +6,8 @@ const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const db = require('../models')
 const Camera = db.camera
-const { v4: uuidv4 } = require('uuid')
+const {v4: uuidv4} = require('uuid')
+const unzipper = require('unzipper')
 const client = new elasticsearch.Client({
   node: process.env.HOST_ELAST,
   log: 'trace',
@@ -26,6 +27,7 @@ const s3 = new AWS.S3({
   accessKeyId: process.env.ACCESSKEY,
   secretAccessKey: process.env.SECRETKEY
 })
+const incidentIndex = 'gmtc_searcher'
 
 exports.ping = async (req, res) => {
   try {
@@ -48,7 +50,7 @@ exports.ping = async (req, res) => {
   }
 }
 
-async function searchAndAdd (
+async function searchAndAdd(
   arr,
   time,
   index,
@@ -181,7 +183,7 @@ async function searchAndAdd (
 
 const test = ['male', 'car', 'bicycle']
 
-exports.search = async (req, res) => {
+exports.search1 = async (req, res) => {
   const data = req.body
   const index = 'gmtc_searcher'
   const params = {
@@ -213,7 +215,7 @@ exports.search = async (req, res) => {
         'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
     }
 
-    return res.status(200).json({ success: true, data: { hits: recRes } })
+    return res.status(200).json({success: true, data: {hits: recRes}})
   }
   if (data.filters.and) {
     const words = data.query.split(' ')
@@ -242,6 +244,7 @@ exports.search = async (req, res) => {
     })
   }
   try {
+    console.dir(params, {depth: null})
     const body = await client.search(params)
     const hits = body.body.hits
     if (hits.hits.length > 0) {
@@ -314,10 +317,182 @@ exports.search = async (req, res) => {
   }
 }
 
+exports.search = async (req, res) => {
+  const token = req.headers['x-access-token']
+  const data = req.body
+  const decoded = await jwt.verify(token, process.env.secret)
+  const actualIndexName = `${incidentIndex}_${decoded.id_account}`
+  const indexAlreadyExists = await client.indices.exists({
+    index: actualIndexName
+  })
+  if (indexAlreadyExists.statusCode !== 200) {
+    res.status(200).json({
+      success: true,
+      data: {hits: []}
+    })
+  } else {
+    const params = {
+      index: [actualIndexName],
+      body: {
+        query: {
+          bool: {
+            must: [
+              {
+                match: {
+                  description: data.query
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+    if (data.filters.bounded) {
+      const words = data.query.split(' ')
+      for (let i = 0; i < words.length; i++) {
+        if (words[i] === 'and') {
+          words.splice(i, 1)
+        }
+      }
+      const recRes = await searchAndAdd(
+        words,
+        data.filters.bounded.time,
+        actualIndexName,
+        data.filters.range
+      )
+      for (const elem of recRes) {
+        if (elem._source.filename) {
+          elem._source.url =
+            'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
+        }
+      }
+
+      return res.status(200).json({success: true, data: {hits: recRes}})
+    }
+    if (data.filters.and) {
+      const words = data.query.split(' ')
+      params.body.query.bool.must[0] = {
+        terms: {
+          description: words,
+          boost: 1.0
+        }
+      }
+    }
+    if (data.filters.range) {
+      params.body.query.bool.must.push({
+        range: {
+          time: {
+            gte: data.filters.range.start,
+            lte: data.filters.range.end
+          }
+        }
+      })
+    }
+    if (data.filters.algo) {
+      params.body.query.bool.must.push({
+        match: {
+          algo: data.filters.algo
+        }
+      })
+    }
+    if (data.filters.isBookMarked) {
+      const isBookMarkedObj = {
+        match: {
+          'bookmarkDetails.isBookMarked': true
+        }
+      }
+      if (data.query === '') {
+        params.body.query.bool.must[0] = isBookMarkedObj
+      } else {
+        params.body.query.bool.must.push(isBookMarkedObj)
+      }
+    }
+
+    try {
+      // console.dir(params, {depth: null})
+      const body = await client.search(params)
+      const hits = body.body.hits
+      if (hits.hits.length > 0) {
+        for (const elem of hits.hits) {
+          if (elem._source.filename) {
+            elem._source.url =
+              'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
+          }
+        }
+        const gt = new Date(Date.parse(hits.hits[0]._source.time) - 1000)
+        const lt = new Date(Date.parse(hits.hits[0]._source.time) + 1000)
+        try {
+          const secondBody = await client.search({
+            index: [actualIndexName],
+            body: {
+              query: {
+                bool: {
+                  must: [
+                    {
+                      range: {
+                        time: {
+                          gte: gt,
+                          lte: lt
+                        }
+                      }
+                    }
+                  ],
+                  must_not: [
+                    {
+                      ids: {
+                        values: [hits.hits[0]._id]
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          })
+          const hits2 = secondBody.body.hits
+          if (hits2.hits.length !== 0) {
+            for (const elem of hits2.hits) {
+              elem._source.url =
+                'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
+              hits.hits.push(elem)
+            }
+          }
+          // search = hits
+          return res.status(200).json({
+            success: true,
+            data: hits,
+            second: hits2
+          })
+        } catch (err) {
+          console.trace(err.message)
+          return res.status(500).json({
+            success: false,
+            mess: err
+          })
+        }
+      }
+      res.status(200).json({
+        success: true,
+        data: hits
+      })
+    } catch (error) {
+      // console.trace(error.message)
+      //  console.log(error)
+      res.status(500).json({
+        success: false,
+        mess: error
+      })
+    }
+  }
+}
+
 const stor = multer.diskStorage({
   // multers disk storage settings
   filename: function (req, file, cb) {
     const format = file.originalname.split('.')[1]
+    if (req.type && req.type === 'zip' && format !== 'zip') {
+      req.fileValidationError = 'Provided file is not a zip file'
+      cb(new Error(req.fileValidationError))
+    }
     const newName = file.originalname.split('.')[0] + '-' + Date.now() + '.' + format
     cb(null, newName)
   },
@@ -326,8 +501,11 @@ const stor = multer.diskStorage({
 
     jwt.verify(token, process.env.secret, (_err, decoded) => {
       const where = `${path}${decoded.id_account}/${decoded.id_branch}/videos/`
+
       if (!fs.existsSync(where)) {
-        fs.mkdirSync(where)
+        fs.mkdirSync(where, {
+          recursive: true
+        })
       }
       cb(null, where)
     })
@@ -365,7 +543,8 @@ exports.upload = (req, res) => {
           http_in: `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/videos/${req.file.filename}`,
           id_account: decoded.id_account,
           id_branch: decoded.id_branch,
-          stored_vid: 'Yes'
+          stored_vid: 'Yes',
+          type: 'video'
         })
           .then(camera => {
             res.status(200).send({
@@ -382,6 +561,123 @@ exports.upload = (req, res) => {
               message: err.message
             })
           })
+      })
+    }
+  })
+}
+
+exports.uploadZip = (req, res) => {
+  const uuid = uuidv4()
+  const token = req.headers['x-access-token']
+  req.type = 'zip'
+  upVideo(req, res, function (err) {
+    if (err) {
+      if (req.fileValidationError) {
+        return res.status(400).json({
+          success: false,
+          error_code: 1,
+          err_desc: req.fileValidationError
+        })
+      } else {
+        return res.status(500).json({
+          success: false,
+          error_code: 1,
+          err_desc: err
+        })
+      }
+    } else {
+      if (!req.file) {
+        return res.status(500).json({
+          success: false,
+          error_code: 1
+        })
+      }
+
+      jwt.verify(token, process.env.secret, async (_err, decoded) => {
+        const unZipPath = `${path}${decoded.id_account}/${decoded.id_branch}/videos/`
+        const fileName = req.file.originalname.split('.')[0].split('_').join(' ')
+        const newPath = fileName + '-' + Date.now()
+        const refactoredPath = unZipPath + newPath
+        fs.mkdir(refactoredPath, err => {
+          if (err) console.error(err)
+        })
+
+        await fs
+          .createReadStream(req.file.path)
+          .pipe(
+            unzipper.Extract({
+              path: refactoredPath
+            })
+          )
+          .promise()
+          .then(
+            () => {
+              let count = 0
+              fs.readdirSync(refactoredPath).forEach(folder => {
+                console.log(folder)
+                const stats = fs.statSync(refactoredPath + '/' + folder)
+                console.log('directory found', stats.isDirectory())
+                if (stats.isDirectory()) {
+                  fs.readdirSync(refactoredPath + '/' + folder).forEach(unzippedFile => {
+                    fs.renameSync(
+                      refactoredPath + '/' + folder + '/' + unzippedFile,
+                      `${refactoredPath}/${fileName}-${count}.${unzippedFile.split('.').pop()}`,
+                      function (err) {
+                        if (err) throw err
+                      }
+                    )
+                    count++
+                  })
+
+                  fs.rmdirSync(refactoredPath + '/' + folder, {
+                    recursive: true
+                  })
+                } else {
+                  fs.renameSync(
+                    refactoredPath + '/' + folder,
+                    `${refactoredPath}/${fileName}-${count}.${folder.split('.').pop()}`,
+                    function (err) {
+                      if (err) throw err
+                    }
+                  )
+                  count++
+                }
+              })
+
+              fs.unlink(req.file.path, function (err) {
+                if (err) {
+                  console.log(err)
+                } else {
+                  Camera.create({
+                    id: uuid,
+                    name: req.file.originalname.split('.')[0].split('_').join(' '),
+                    rtsp_in: refactoredPath,
+                    http_in: `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/videos/${newPath}`,
+                    id_account: decoded.id_account,
+                    id_branch: decoded.id_branch,
+                    stored_vid: 'Yes',
+                    type: 'zip'
+                  })
+                    .then(camera => {
+                      res.status(200).send({
+                        success: true,
+                        message: 'Stored video added successfully!',
+                        id: uuid,
+                        name: req.file.originalname.split('.')[0]
+                      })
+                    })
+                    .catch(err => {
+                      console.log('Error while uploading..............', err)
+                      res.status(500).send({
+                        success: false,
+                        message: err.message
+                      })
+                    })
+                }
+              })
+            },
+            e => console.log('error', e)
+          )
       })
     }
   })
@@ -404,7 +700,7 @@ exports.s3up = (req, res) => {
 
     s3.upload(params, (error, data) => {
       if (error) {
-        return res.status(500).send({ success: false, mess: error })
+        return res.status(500).send({success: false, mess: error})
       }
       Camera.create({
         id: uuid,
@@ -470,10 +766,10 @@ exports.delVid = (req, res) => {
       const vid = `${path}${decoded.id_account}/${decoded.id_branch}/videos/${data.vidName}`
       const img = `${path}${decoded.id_account}/${decoded.id_branch}/heatmap_pics/${req.params.id}_heatmap.png`
       fs.unlink(img, err => {
-        if (err) console.log({ success: false, message: 'Image error: ' + err })
+        if (err) console.log({success: false, message: 'Image error: ' + err})
       })
       fs.unlink(vid, err => {
-        if (err) console.log({ success: false, message: 'Image error: ' + err })
+        if (err) console.log({success: false, message: 'Image error: ' + err})
       })
     } else if (data.which === 's3') {
       const params = {
@@ -481,16 +777,16 @@ exports.delVid = (req, res) => {
         Key: `${decoded.id_account}/${decoded.id_branch}/${req.body.vidName}`
       }
       s3.deleteObject(params, function (err, data) {
-        if (err) return res.status(500).json({ success: false, mess: err })
+        if (err) return res.status(500).json({success: false, mess: err})
       })
     }
     console.log('Debug Data : ', data)
 
     Camera.destroy({
-      where: { id: data.uuid, id_branch: decoded.id_branch, stored_vid: 'Yes' }
+      where: {id: data.uuid, id_branch: decoded.id_branch, stored_vid: 'Yes'}
     })
       .then(cam => {
-        res.status(200).send({ success: true, camera: data.uuid })
+        res.status(200).send({success: true, camera: data.uuid})
       })
       .catch(err => {
         console.log('err............', err)
@@ -508,13 +804,13 @@ exports.editVid = (req, res) => {
 
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Camera.update(updt, {
-      where: { id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'Yes' }
+      where: {id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'Yes'}
     })
       .then(_cam => {
-        res.status(200).send({ success: true, data: updt })
+        res.status(200).send({success: true, data: updt})
       })
       .catch(err => {
-        res.status(500).send({ success: false, message: err.message })
+        res.status(500).send({success: false, message: err.message})
       })
   })
 }
@@ -525,19 +821,19 @@ exports.some = async (req, res) => {
     console.log('-- Client Health --', resp)
     try {
       const r = await deleteIndex(table)
-      res.status(200).json({ success: true, data: r })
+      res.status(200).json({success: true, data: r})
     } catch (err) {
-      res.status(500).json({ success: false, mess: err })
+      res.status(500).json({success: false, mess: err})
     }
   })
 }
 
-async function deleteIndex (table) {
-  client.indices.delete({ index: table }, async function (_err, resp, status) {
+async function deleteIndex(table) {
+  client.indices.delete({index: table}, async function (_err, resp, status) {
     await createIndex(table)
   })
 }
-async function createIndex (table) {
+async function createIndex(table) {
   client.indices.create(
     {
       index: table
@@ -552,7 +848,7 @@ async function createIndex (table) {
   )
 }
 
-async function readMysql (table) {
+async function readMysql(table) {
   const sql = 'select * from ' + table + ';'
   con.con().query(sql, async function (err, result) {
     if (err) throw err
@@ -568,7 +864,7 @@ async function readMysql (table) {
   })
 }
 
-function saveToES (o, table) {
+function saveToES(o, table) {
   client.index(
     {
       index: table,
@@ -581,15 +877,15 @@ function saveToES (o, table) {
   )
 }
 
-function printHourlyData () {
+function printHourlyData() {
   printData('hour')
 }
 
-function printDailyData () {
+function printDailyData() {
   printData('day')
 }
 
-function printData (interval, table) {
+function printData(interval, table) {
   client.search(
     {
       index: table,
@@ -635,8 +931,8 @@ exports.loit = async (req, res) => {
         }
       }
     })
-    res.status(200).json({ success: true, data: search.aggregations.simpleDatehHistogram.buckets })
+    res.status(200).json({success: true, data: search.aggregations.simpleDatehHistogram.buckets})
   } catch (err) {
-    res.status(500).json({ success: false, mess: err })
+    res.status(500).json({success: false, mess: err})
   }
 }

@@ -1,5 +1,11 @@
 import { NgModule } from "@angular/core";
-import { NbMenuModule, NbPopoverModule, NbWindowModule } from "@nebular/theme";
+import {
+  NbMenuModule,
+  NbPopoverModule,
+  NbTimepickerModule,
+  NbWindowModule,
+} from "@nebular/theme";
+
 
 import { ThemeModule } from "../@theme/theme.module";
 import { PagesComponent } from "./pages.component";
@@ -135,6 +141,7 @@ import { VgBufferingModule } from "@videogular/ngx-videogular/buffering";
     NbCheckboxModule,
     NbRadioModule,
     NbDatepickerModule,
+    NbTimepickerModule,
     NbSelectModule,
     ngFormsModule,
     NbAccordionModule,
@@ -167,7 +174,6 @@ import { VgBufferingModule } from "@videogular/ngx-videogular/buffering";
     ScrollingModule,
     NbPopoverModule,
     SocialLoginModule,
-    NgxCaptureModule,
     MsalModule.forRoot(
       new PublicClientApplication({
         auth: {
@@ -182,10 +188,6 @@ import { VgBufferingModule } from "@videogular/ngx-videogular/buffering";
       null,
       null
     ),
-    VgCoreModule,
-    VgControlsModule,
-    VgOverlayPlayModule,
-    VgBufferingModule,
   ],
   declarations: [
     PagesComponent,
@@ -254,6 +256,13 @@ import { VgBufferingModule } from "@videogular/ngx-videogular/buffering";
     PathComponent,
     FireComponent,
     CollapseComponent,
+    GenerateHelpDeskTicketComponent,
+    HelpdeskTicketListingComponent,
+    HelpdeskReplyComponent,
+    HelpdeskDetailsComponent,
+    AddIncidentComponent,
+    MemoComponent,
+    IncidentLogsComponent,
   ],
   providers: [
     FacesService,
