@@ -74,6 +74,7 @@ export class GenerateHelpDeskTicketComponent implements OnInit {
 
     this.dialogRef.onClose.subscribe((resp) => {
       console.log(resp);
+      this.getTickets();
     });
   }
 
