@@ -14,8 +14,8 @@ module.exports = (sequelize, Sequelize) => {
       refereceKey: 'id',
       allowNull: false
     },
-    description: {
-      type: Sequelize.STRING
+    actions: {
+      type: Sequelize.TEXT
     },
     severity: {
       type: Sequelize.STRING
@@ -26,10 +26,16 @@ module.exports = (sequelize, Sequelize) => {
       refereceKey: 'id',
       allowNull: false
     },
-    image_path: {
+    http_in: {
       type: Sequelize.STRING
     },
-    http_in: {
+    results: {
+      type: Sequelize.TEXT
+    },
+    canvasWidth: {
+      type: Sequelize.STRING
+    },
+    canvasHeight: {
       type: Sequelize.STRING
     }
   })

@@ -8,14 +8,13 @@ module.exports = function (app) {
   })
 
   app.post(
-    '/api/manualTrigger/snapshot',
-    [authJwt.verifyToken, authJwt.isClient],
-    controller.saveSnapshot
-  )
-
-  app.post(
     '/api/manualTrigger/create',
     [authJwt.verifyToken, authJwt.isClient],
     controller.createManualTrigger
+  )
+  app.get(
+    '/api/manualTrigger',
+    [authJwt.verifyToken, authJwt.isClient],
+    controller.getManualTriggers
   )
 }
