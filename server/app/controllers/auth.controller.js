@@ -1,8 +1,8 @@
 const db = require('../models')
-require('dotenv').config({ path: '../../config.env' })
+require('dotenv').config({path: '../../config.env'})
 const User = db.user
 const Algorithm = db.algorithm
-const { v4: uuidv4 } = require('uuid')
+const {v4: uuidv4} = require('uuid')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const fs = require('fs')
@@ -50,13 +50,13 @@ exports.signupClient = (req, res) => {
               fs.mkdirSync(`${pathBranch}/pictures`)
               fs.mkdirSync(`${pathBranch}/heatmap_pics`)
             }
-            res.status(201).send({ message: 'User was registered successfully!' })
+            res.status(201).send({message: 'User was registered successfully!'})
           })
         })
       }
     })
     .catch(err => {
-      res.status(500).send({ message: err.message })
+      res.status(500).send({message: err.message})
     })
 }
 
@@ -85,10 +85,10 @@ exports.signupBranch = (req, res) => {
           fs.mkdirSync(`${pathPic}/pictures`)
           fs.mkdirSync(`${pathPic}/heatmap_pics`)
         }
-        res.status(201).send({ message: 'User was registered successfully!' })
+        res.status(201).send({message: 'User was registered successfully!'})
       })
       .catch(err => {
-        res.status(500).send({ message: err.message })
+        res.status(500).send({message: err.message})
       })
   })
 }
@@ -108,10 +108,10 @@ exports.signupUser = (req, res) => {
       disabled: '0'
     })
       .then(user => {
-        res.status(201).send({ success: true, message: 'User was registered successfully!' })
+        res.status(201).send({success: true, message: 'User was registered successfully!'})
       })
       .catch(err => {
-        res.status(500).send({ success: false, message: err.message })
+        res.status(500).send({success: false, message: err.message})
       })
   })
 }
@@ -126,10 +126,10 @@ exports.signupAdmin = (req, res) => {
     disabled: '0'
   })
     .then(user => {
-      res.status(201).send({ success: true, message: 'User was registered successfully!' })
+      res.status(201).send({success: true, message: 'User was registered successfully!'})
     })
     .catch(err => {
-      res.status(500).send({ success: false, message: err.message })
+      res.status(500).send({success: false, message: err.message})
     })
 }
 
@@ -142,10 +142,11 @@ exports.signin = (req, res) => {
     }
   })
     .then(user => {
+      console.log(user)
       if (!user) {
         return res
           .status(404)
-          .send({ success: false, message: 'User is not in the records', type: 'user' })
+          .send({success: false, message: 'User is not in the records', type: 'user'})
       }
 
       const passwordIsValid = bcrypt.compareSync(req.body.password, user.password)
@@ -167,7 +168,7 @@ exports.signin = (req, res) => {
       const exp = 43200
 
       const token = jwt.sign(
-        { id: user.id, id_account: user.id_account, id_branch: user.id_branch },
+        {id: user.id, id_account: user.id_account, id_branch: user.id_branch},
         process.env.secret,
         {
           expiresIn: exp // 12 hours
@@ -190,12 +191,13 @@ exports.signin = (req, res) => {
       })
     })
     .catch(err => {
-      res.status(500).send({ success: false, message: err.message })
+      console.log(err)
+      res.status(500).send({success: false, message: err.message})
     })
 }
 
 exports.check = (req, res) => {
-  res.status(200).send({ success: true, message: 'Session still active' })
+  res.status(200).send({success: true, message: 'Session still active'})
 }
 
 exports.loggOut = (req, res) => {
@@ -203,13 +205,13 @@ exports.loggOut = (req, res) => {
   for (let a = 0; a < usersIn.length; a++) {
     if (data.username === usersIn[a].name) {
       usersIn = arrayRemove(usersIn, data.username)
-      return res.status(200).send({ success: true, message: 'Logged Out' })
+      return res.status(200).send({success: true, message: 'Logged Out'})
     }
   }
-  res.status(500).send({ success: false, message: 'Session not found' })
+  res.status(500).send({success: false, message: 'Session not found'})
 }
 
-function arrayRemove (arr, value) {
+function arrayRemove(arr, value) {
   return arr.filter(function (ele) {
     return ele.name !== value
   })
@@ -227,7 +229,7 @@ exports.googleLogin = (req, res) => {
       if (!user) {
         return res
           .status(404)
-          .send({ success: false, message: 'User is not in the records', type: 'user' })
+          .send({success: false, message: 'User is not in the records', type: 'user'})
       }
 
       if (user.disabled === 1) {
@@ -240,7 +242,7 @@ exports.googleLogin = (req, res) => {
       const exp = 43200
 
       const token = jwt.sign(
-        { id: user.id, id_account: user.id_account, id_branch: user.id_branch },
+        {id: user.id, id_account: user.id_account, id_branch: user.id_branch},
         process.env.secret,
         {
           expiresIn: exp // 12 hours
@@ -263,7 +265,7 @@ exports.googleLogin = (req, res) => {
       })
     })
     .catch(err => {
-      res.status(500).send({ success: false, message: err.message })
+      res.status(500).send({success: false, message: err.message})
     })
 }
 
@@ -278,7 +280,7 @@ exports.msLogin = (req, res) => {
       if (!user) {
         return res
           .status(404)
-          .send({ success: false, message: 'User is not in the records', type: 'user' })
+          .send({success: false, message: 'User is not in the records', type: 'user'})
       }
 
       if (user.disabled === 1) {
@@ -291,7 +293,7 @@ exports.msLogin = (req, res) => {
       const exp = 43200
 
       const token = jwt.sign(
-        { id: user.id, id_account: user.id_account, id_branch: user.id_branch },
+        {id: user.id, id_account: user.id_account, id_branch: user.id_branch},
         process.env.secret,
         {
           expiresIn: exp // 12 hours
@@ -314,6 +316,6 @@ exports.msLogin = (req, res) => {
       })
     })
     .catch(err => {
-      res.status(500).send({ success: false, message: err.message })
+      res.status(500).send({success: false, message: err.message})
     })
 }

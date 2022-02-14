@@ -23,8 +23,6 @@ import {
   NbWindowModule,
 } from "@nebular/theme";
 import { authInterceptorProviders } from "./_helpers/auth.interceptor";
-import { VgCoreModule } from "@videogular/ngx-videogular/core";
-import { GoogleLoginProvider } from "angularx-social-login";
 
 @NgModule({
   declarations: [AppComponent],
@@ -42,7 +40,6 @@ import { GoogleLoginProvider } from "angularx-social-login";
     NbDialogModule.forRoot(),
     NbWindowModule.forRoot(),
     NbToastrModule.forRoot(),
-    VgCoreModule,
     NbChatModule.forRoot({
       messageGoogleMapKey: "AIzaSyA_wNuCzia92MAmdLRzmqitRGvCF7wCZPY",
     }),

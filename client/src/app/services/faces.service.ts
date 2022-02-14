@@ -225,4 +225,16 @@ export class FacesService {
   delVid(data) {
     return this.http.post(`${this.API_URI}/elastic/video/delete/`, data);
   }
+
+  manualTrigger(data: any) {
+    return this.http.post(`${this.API_URI}/manualTrigger/create`, data);
+  }
+
+  getmanualTriggers() {
+    return this.http.get(`${this.API_URI}/manualTrigger`);
+  }
+
+  getAllAlgos() {
+    return this.http.get(`${this.API_URI}/algos`);
+  }
 }

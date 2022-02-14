@@ -27,6 +27,7 @@ db.schedule = require('../models/schedule.model.js')(sequelize, Sequelize)
 db.helpdesk = require('../models/helpdesk.model.js')(sequelize, Sequelize)
 db.reply = require('../models/reply.model.js')(sequelize, Sequelize)
 db.incidentLog = require('../models/incidentLog.model.js')(sequelize, Sequelize)
+db.manualTrigger = require('../models/manualTrigger.model.js')(sequelize, Sequelize)
 
 db.algorithm.belongsToMany(db.user, {
   through: 'account_algorithm',
@@ -37,6 +38,12 @@ db.user.belongsToMany(db.algorithm, {
   through: 'account_algorithm',
   foreignKey: 'accountId',
   otherKey: 'algoId'
+})
+
+db.manualTrigger.belongsTo(db.camera, {foreignKey: 'camera_id'})
+
+db.camera.hasMany(db.manualTrigger, {
+  foreignKey: 'camera_id'
 })
 
 db.ALGORITHMS = [

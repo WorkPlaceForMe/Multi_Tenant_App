@@ -12,15 +12,16 @@ const compression = require('compression')
 const swaggerJsDoc = require('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
 
-const resourcesFolderPath =
-  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+// const resourcesFolderPath =
+//  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+const resourcesFolderPath = path.resolve(__dirname, './resources/')
 const picResourceFolderPath = path.join(resourcesFolderPath)
 
 app.use(compression())
 
 if (process.env.NODE_ENV === 'production') {
   const corsOptions = {
-    origin: [`http://${process.env.my_ip}:4200`, `${process.env.app_url}`]
+    origin: [`http://${process.env.my_ip}:4200`, `${process.env.app_url}`, 'http://localhost:4200']
   }
   app.use(cors(corsOptions))
   console.log(`Running on Production for http://${process.env.my_ip}:4200`)
@@ -179,6 +180,7 @@ require('./app/routes/path.routes')(app)
 require('./app/routes/helpdesk.routes')(app)
 require('./app/routes/reply.routes')(app)
 require('./app/routes/incident.routes')(app)
+require('./app/routes/manualTrigger.routes')(app)
 
 // resources being served
 app.use('/api/pictures', express.static(picResourceFolderPath))
