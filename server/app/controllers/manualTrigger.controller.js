@@ -22,6 +22,14 @@ exports.createManualTrigger = async (req, res) => {
         message: 'Camera id is required'
       })
     }
+
+    if (!String(reqBody.algoId)) {
+      return res.status(400).json({
+        success: false,
+        error_code: 1,
+        message: 'Algorithm id is required'
+      })
+    }
     if (!reqBody.httpIn) {
       return res.status(400).json({
         success: false,
@@ -63,7 +71,8 @@ exports.createManualTrigger = async (req, res) => {
       http_in: reqBody.httpIn,
       results: reqBody.results,
       canvasWidth: reqBody.canvasWidth,
-      canvasHeight: reqBody.canvasHeight
+      canvasHeight: reqBody.canvasHeight,
+      algo_id: Number(reqBody.algoId)
     }
 
     const created = await ManualTrigger.create(data)

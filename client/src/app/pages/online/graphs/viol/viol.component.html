@@ -64,6 +64,8 @@
                 <button
                   class="btn btn-sm btn-info"
                   (click)="openFormModal(openFromTemplate)"
+                  [nbSpinner]="loadingTakeScreenShot"
+                  nbSpinnerStatus="primary"
                 >
                   Take Screenshot
                 </button>
@@ -138,44 +140,75 @@
               </span>
             </span>
           </div>
-          <div class="pt-2">
-            <input
-              type="text"
-              class="form-control"
-              formControlName="severity"
-              fullWidth
-              id="severity"
-              autofocus
-              placeholder="Add Severity"
-            />
+          <div class="row pt-2">
+            <div class="col-md-4">
+              <nb-select formControlName="algoId" fullWidth>
+                <nb-option value="" disabled>Choose An Algorithm:</nb-option>
+                <nb-option
+                  *ngFor="let algorithm of algorithms"
+                  [value]="algorithm.id"
+                  >{{ algorithm.name }}</nb-option
+                >
+              </nb-select>
 
-            <span
-              *ngIf="
-                !manualTriggerForm.controls.severity.valid &&
-                manualTriggerForm.controls.severity.touched
-              "
-              class="error text-danger mb-1"
-            >
-              <span
-                *ngIf="manualTriggerForm.controls.severity.hasError('required')"
-              >
-                Please enter severity
-              </span>
               <span
                 *ngIf="
-                  manualTriggerForm.controls.severity.hasError('minlength')
+                  !manualTriggerForm.controls.algoId.valid &&
+                  manualTriggerForm.controls.algoId.touched
                 "
+                class="error text-danger mb-1"
               >
-                Severity must be at least 3 characters long.
+                <span
+                  *ngIf="manualTriggerForm.controls.algoId.hasError('required')"
+                >
+                  Please select an algorithm
+                </span>
               </span>
-            </span>
+            </div>
+            <div class="col-md-8">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="severity"
+                fullWidth
+                id="severity"
+                autofocus
+                placeholder="Add Severity"
+              />
+
+              <span
+                *ngIf="
+                  !manualTriggerForm.controls.severity.valid &&
+                  manualTriggerForm.controls.severity.touched
+                "
+                class="error text-danger mb-1"
+              >
+                <span
+                  *ngIf="
+                    manualTriggerForm.controls.severity.hasError('required')
+                  "
+                >
+                  Please enter severity
+                </span>
+                <span
+                  *ngIf="
+                    manualTriggerForm.controls.severity.hasError('minlength')
+                  "
+                >
+                  Severity must be at least 3 characters long.
+                </span>
+              </span>
+            </div>
           </div>
+
           <div class="pt-2">
             <button
               class="btn-block"
               [status]="'warning'"
               nbButton
               type="submit"
+              [nbSpinner]="loading"
+              nbSpinnerStatus="primary"
               [disabled]="!manualTriggerForm.valid || data.results.length == 0"
             >
               Save

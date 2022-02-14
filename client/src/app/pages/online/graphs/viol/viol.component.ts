@@ -44,6 +44,9 @@ export class ViolComponent implements OnInit, OnDestroy {
   context: any;
   data: any;
   manualTriggerForm: FormGroup;
+  algorithms: any;
+  loading: boolean = false;
+  loadingTakeScreenShot: boolean = false;
 
   constructor(
     private serv: AnalyticsService,
@@ -269,6 +272,7 @@ export class ViolComponent implements OnInit, OnDestroy {
             camera_name: manualTrigger.camera.name,
             picture: manualTrigger.http_in,
             actions: manualTrigger.actions,
+            status: manualTrigger.triggered,
           };
           manualTriggers.push(obj);
         }
@@ -288,6 +292,7 @@ export class ViolComponent implements OnInit, OnDestroy {
     this.manualTriggerForm = this.fb.group({
       actions: ["", [Validators.required, Validators.minLength(3)]],
       severity: ["", [Validators.required, Validators.minLength(3)]],
+      algoId: ["", [Validators.required]],
     });
   }
 
@@ -330,10 +335,24 @@ export class ViolComponent implements OnInit, OnDestroy {
     }
   }
 
+  getAlgorithms() {
+    this.face.getAllAlgos().subscribe(
+      (res: any) => {
+        this.algorithms = res.data;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
   openFormModal(template: any) {
+    this.loadingTakeScreenShot = true;
     this.initializeManualTriggerForm();
+    this.getAlgorithms();
     this.face.getCamera(this.camera).subscribe(
       (res: any) => {
+        this.loadingTakeScreenShot = false;
         this.dialogRef = this.dialogService.open(template, {
           hasScroll: true,
           dialogClass: "model-full",
@@ -349,6 +368,7 @@ export class ViolComponent implements OnInit, OnDestroy {
         };
       },
       (error) => {
+        this.loadingTakeScreenShot = false;
         console.log(error);
       }
     );
@@ -495,6 +515,7 @@ export class ViolComponent implements OnInit, OnDestroy {
   }
 
   saveManualTrigger() {
+    this.loading = true;
     const reqData = {
       cameraId: this.camera,
       httpIn: this.data.screenshot,
@@ -504,16 +525,18 @@ export class ViolComponent implements OnInit, OnDestroy {
         this.data.results.length > 0 ? JSON.stringify(this.data.results) : "",
       canvasWidth: String(this.context.canvas.width),
       canvasHeight: String(this.context.canvas.height),
+      algoId: this.manualTriggerForm.value.algoId,
     };
 
-    // console.log(reqData);
     this.face.manualTrigger(reqData).subscribe(
       (res: any) => {
+        this.loading = false;
         this.closeModal();
         this.getManualTriggers();
         alert(res.message);
       },
       (error) => {
+        this.loading = false;
         console.log(error);
         alert(error.error.message);
       }
@@ -581,6 +604,11 @@ export class ViolComponent implements OnInit, OnDestroy {
       },
       actions: {
         title: "ACTIONS",
+        type: "string",
+        filter: false,
+      },
+      status: {
+        title: "STATUS",
         type: "string",
         filter: false,
       },

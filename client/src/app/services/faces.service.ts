@@ -233,4 +233,8 @@ export class FacesService {
   getmanualTriggers() {
     return this.http.get(`${this.API_URI}/manualTrigger`);
   }
+
+  getAllAlgos() {
+    return this.http.get(`${this.API_URI}/algos`);
+  }
 }

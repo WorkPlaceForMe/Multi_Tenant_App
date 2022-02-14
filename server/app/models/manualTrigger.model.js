@@ -1,6 +1,7 @@
 const db = require('.')
 const UserModel = db.user
 const CameraModel = db.camera
+const AlgoModel = db.algorithm
 
 module.exports = (sequelize, Sequelize) => {
   const ManualTrigger = sequelize.define('manual_trigger', {
@@ -11,6 +12,12 @@ module.exports = (sequelize, Sequelize) => {
     user_id: {
       type: Sequelize.STRING,
       references: UserModel,
+      refereceKey: 'id',
+      allowNull: false
+    },
+    algo_id: {
+      type: Sequelize.INTEGER,
+      references: AlgoModel,
       refereceKey: 'id',
       allowNull: false
     },
@@ -37,6 +44,12 @@ module.exports = (sequelize, Sequelize) => {
     },
     canvasHeight: {
       type: Sequelize.STRING
+    },
+    triggered: {
+      type: Sequelize.ENUM,
+      allowNull: false,
+      values: ['YES', 'NO'],
+      defaultValue: 'NO'
     }
   })
 
