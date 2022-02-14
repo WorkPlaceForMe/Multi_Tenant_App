@@ -12,6 +12,7 @@ import { AnnotationsService } from "./services/annotations.service";
 import { ColorsService } from "./services/colors";
 import { StrService } from "./services/strArray";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { Ng2SmartTableModule } from "ng2-smart-table";
 import {
   NbChatModule,
   NbDatepickerModule,
@@ -20,6 +21,24 @@ import {
   NbSidebarModule,
   NbToastrModule,
   NbWindowModule,
+  NbCardModule,
+  NbIconModule,
+  NbInputModule,
+  NbTreeGridModule,
+  NbAccordionModule,
+  NbButtonModule,
+  NbListModule,
+  NbRouteTabsetModule,
+  NbStepperModule,
+  NbTabsetModule,
+  NbUserModule,
+  NbActionsModule,
+  NbCheckboxModule,
+  NbRadioModule,
+  NbFormFieldModule,
+  NbSelectModule,
+  NbSpinnerModule,
+  NbContextMenuModule,
 } from "@nebular/theme";
 import { authInterceptorProviders } from "./_helpers/auth.interceptor";
 import { GoogleLoginProvider } from "angularx-social-login";
@@ -27,6 +46,8 @@ import { GoogleLoginProvider } from "angularx-social-login";
 @NgModule({
   declarations: [AppComponent],
   imports: [
+    NbCardModule,
+    Ng2SmartTableModule,
     FormsModule,
     BrowserModule,
     ReactiveFormsModule,

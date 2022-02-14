@@ -120,6 +120,12 @@ export class AnalyticsService {
   collapse(id: string, dates){
     return this.http.post(`${this.API_URL}collapse/${id}`, dates);
   }
+  weapon(id: string, dates){
+    return this.http.post(`${this.API_URL}weapon/${id}`, dates);
+  }
+  bottle(id: string, dates){
+    return this.http.post(`${this.API_URL}bottle/${id}`, dates);
+  }
 
   constructor(private http: HttpClient) { }
 }

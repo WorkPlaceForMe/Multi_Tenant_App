@@ -33,9 +33,9 @@ export class LivestreamComponent implements OnInit, OnDestroy {
   constructor(private facesService: FacesService, private AccountService:AccountService) {}
 
     ngOnDestroy(){
-      if(this.date){
-        clearInterval(this.date);
-      }
+      // if(this.date){
+      //   clearInterval(this.date);
+      // }
     }
 
     remain(){
@@ -50,12 +50,12 @@ export class LivestreamComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
-    let currentDate = new Date();
-    this.dateMessage = currentDate.toDateString() + ' ' + currentDate.toLocaleTimeString('en-US',{ hour12: true });
-    this.date = setInterval(()=>{
-      let currentDate = new Date();
-      this.dateMessage = currentDate.toDateString() + ' ' + currentDate.toLocaleTimeString('en-US',{ hour12: true });
-    }, 1000);
+    // let currentDate = new Date();
+    // this.dateMessage = currentDate.toDateString() + ' ' + currentDate.toLocaleTimeString('en-US',{ hour12: true });
+    // this.date = setInterval(()=>{
+    //   let currentDate = new Date();
+    //   this.dateMessage = currentDate.toDateString() + ' ' + currentDate.toLocaleTimeString('en-US',{ hour12: true });
+    // }, 1000);
     this.remain()
 
       this.facesService.getLiveCameras().subscribe(

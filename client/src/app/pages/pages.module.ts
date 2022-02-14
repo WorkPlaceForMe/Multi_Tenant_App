@@ -21,7 +21,6 @@ import { UrlPipe } from "../pipes/url.pipe";
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from "ng-pick-datetime";
 import { PagenotfoundComponent } from "./pagenotfound/pagenotfound.component";
 import { ScheduleComponent } from "./facial_recognition/schedule/schedule.component";
-import { SettingsComponent } from "./settings/settings.component";
 import { LiveComponent } from "./cameras_conf/livestream/live.component";
 import { VidComponent } from "./cameras_conf/add_camera/vid.component";
 import { LivestreamComponent } from "./cameras_conf/camera_list/livestream.component";
@@ -122,6 +121,8 @@ import { VgCoreModule } from "@videogular/ngx-videogular/core";
 import { VgControlsModule } from "@videogular/ngx-videogular/controls";
 import { VgOverlayPlayModule } from "@videogular/ngx-videogular/overlay-play";
 import { VgBufferingModule } from "@videogular/ngx-videogular/buffering";
+import { WeaponComponent } from './online/graphs/weapon/weapon.component';
+import { BottleComponent } from './online/graphs/bottle/bottle.component';
 
 @NgModule({
   imports: [
@@ -196,7 +197,6 @@ import { VgBufferingModule } from "@videogular/ngx-videogular/buffering";
     PagenotfoundComponent,
     FaceListComponent,
     ScheduleComponent,
-    SettingsComponent,
     LiveComponent,
     VidComponent,
     LivestreamComponent,
@@ -254,6 +254,8 @@ import { VgBufferingModule } from "@videogular/ngx-videogular/buffering";
     PathComponent,
     FireComponent,
     CollapseComponent,
+    WeaponComponent,
+    BottleComponent,
   ],
   providers: [
     FacesService,

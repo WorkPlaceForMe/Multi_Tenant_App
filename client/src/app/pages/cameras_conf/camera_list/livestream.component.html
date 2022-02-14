@@ -2,9 +2,9 @@
   <nb-card>
     <nb-card-header>
       <div class='col-md-6 offset-md-3'>
-        <h4 align="left">
+        <!-- <h4 align="left">
           {{ dateMessage }}
-        </h4>
+        </h4> -->
         <label *ngIf='now_user.role != "user"' align='right' for="noth" class="label">Remaining Cameras:&nbsp;</label>
         <strong  *ngIf='now_user.role != "user"'>{{remaining.cameras}}</strong>
         </div>

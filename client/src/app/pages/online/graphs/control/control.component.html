@@ -92,10 +92,12 @@
             <ngx-fr *ngSwitchCase='15' [range]='range' [camera]='camera'></ngx-fr>
             <ngx-pc-camera *ngSwitchCase='33' [range]='range' [camera]='camera'></ngx-pc-camera>
             <ngx-brand-car *ngSwitchCase='34' [range]='range' [camera]='camera'></ngx-brand-car>
-            <ngx-path *ngSwitchCase='35' [range]='range' [camera]='camera' (refresh)="reloadPath($event)" [paths]='paths'></ngx-path>
+            <ngx-path *ngSwitchCase='37' [range]='range' [camera]='camera' (refresh)="reloadPath($event)" [paths]='paths'></ngx-path>
             <ngx-heatmap *ngSwitchCase='14' [range]='range' [camera]='camera' [info]='info'></ngx-heatmap>
             <ngx-collapse *ngSwitchCase='38' [range]='range' [camera]='camera'></ngx-collapse>
             <ngx-fire *ngSwitchCase='39' [range]='range' [camera]='camera'></ngx-fire>
+            <ngx-bottle *ngSwitchCase='36' [range]='range' [camera]='camera'></ngx-bottle>
+            <ngx-weapon *ngSwitchCase='35' [range]='range' [camera]='camera'></ngx-weapon>
             <app-live *ngSwitchCase='-4' [camera]='camera'></app-live>
         </div>
     </div>
