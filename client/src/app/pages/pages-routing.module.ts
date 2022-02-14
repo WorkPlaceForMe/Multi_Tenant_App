@@ -27,7 +27,7 @@ import { CenterComponent } from './online/graphs/center/center.component';
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 
 const routes: Routes = [
-    {
+{
   path: '',
   component: PagesComponent,
     children: [
@@ -135,6 +135,11 @@ canActivate: [AuthGuard]
   path: 'search',
   loadChildren: () => import('./search/search.module')
     .then(m => m.SearchModule),
+},
+{
+  path: 'main',
+  loadChildren: () => import('./main/main.module')
+    .then(m => m.MainModule),
 },
 { path: '', 
 redirectTo: 'sign-in',
