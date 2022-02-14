@@ -1,5 +1,11 @@
 import { NgModule } from "@angular/core";
-import { NbMenuModule, NbPopoverModule, NbWindowModule } from "@nebular/theme";
+import {
+  NbMenuModule,
+  NbPopoverModule,
+  NbTimepickerModule,
+  NbWindowModule,
+} from "@nebular/theme";
+
 
 import { ThemeModule } from "../@theme/theme.module";
 import { PagesComponent } from "./pages.component";
@@ -123,6 +129,13 @@ import { VgOverlayPlayModule } from "@videogular/ngx-videogular/overlay-play";
 import { VgBufferingModule } from "@videogular/ngx-videogular/buffering";
 import { WeaponComponent } from './online/graphs/weapon/weapon.component';
 import { BottleComponent } from './online/graphs/bottle/bottle.component';
+import { GenerateHelpDeskTicketComponent } from "./helpdesk/generate-helpdesk-ticket/generate-helpdesk-ticket.component";
+import { HelpdeskTicketListingComponent } from "./helpdesk/helpdesk-ticket -listing/helpdesk-ticket-listing.component";
+import { HelpdeskReplyComponent } from "./helpdesk/helpdesk-reply/helpdesk-reply.component";
+import { HelpdeskDetailsComponent } from "./helpdesk/helpdesk-details/helpdesk-details.component";
+import { AddIncidentComponent } from "./search/add-incident/add-incident.component";
+import { MemoComponent } from "./search/memo/memo.component";
+import { IncidentLogsComponent } from "./search/incident-logs/incident-logs.component";
 
 @NgModule({
   imports: [
@@ -136,6 +149,7 @@ import { BottleComponent } from './online/graphs/bottle/bottle.component';
     NbCheckboxModule,
     NbRadioModule,
     NbDatepickerModule,
+    NbTimepickerModule,
     NbSelectModule,
     ngFormsModule,
     NbAccordionModule,
@@ -168,7 +182,6 @@ import { BottleComponent } from './online/graphs/bottle/bottle.component';
     ScrollingModule,
     NbPopoverModule,
     SocialLoginModule,
-    NgxCaptureModule,
     MsalModule.forRoot(
       new PublicClientApplication({
         auth: {
@@ -183,10 +196,6 @@ import { BottleComponent } from './online/graphs/bottle/bottle.component';
       null,
       null
     ),
-    VgCoreModule,
-    VgControlsModule,
-    VgOverlayPlayModule,
-    VgBufferingModule,
   ],
   declarations: [
     PagesComponent,
@@ -256,6 +265,13 @@ import { BottleComponent } from './online/graphs/bottle/bottle.component';
     CollapseComponent,
     WeaponComponent,
     BottleComponent,
+    GenerateHelpDeskTicketComponent,
+    HelpdeskTicketListingComponent,
+    HelpdeskReplyComponent,
+    HelpdeskDetailsComponent,
+    AddIncidentComponent,
+    MemoComponent,
+    IncidentLogsComponent,
   ],
   providers: [
     FacesService,

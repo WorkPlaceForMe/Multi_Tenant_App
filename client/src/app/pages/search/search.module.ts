@@ -1,21 +1,36 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
 
-import { SearchRoutingModule } from './search-routing.module';
-import { SearchComponent } from './search.component';
-import { UploadComponent } from './upload/upload.component';
-import { BarComponent } from './bar/bar.component';
+import { SearchRoutingModule } from "./search-routing.module";
+import { SearchComponent } from "./search.component";
+import { UploadComponent } from "./upload/upload.component";
+import { BarComponent } from "./bar/bar.component";
 import { FileUploadModule } from "ng2-file-upload";
-import { Ng2SmartTableModule } from 'ng2-smart-table';
-import { NbCardModule, NbIconModule, NbInputModule, NbTreeGridModule, NbAccordionModule, NbButtonModule, NbListModule,NbRouteTabsetModule,
+import { Ng2SmartTableModule } from "ng2-smart-table";
+import {
+  NbCardModule,
+  NbIconModule,
+  NbInputModule,
+  NbTreeGridModule,
+  NbAccordionModule,
+  NbButtonModule,
+  NbListModule,
+  NbRouteTabsetModule,
   NbStepperModule,
-  NbTabsetModule, NbUserModule,    NbActionsModule,
+  NbTabsetModule,
+  NbUserModule,
+  NbActionsModule,
   NbCheckboxModule,
   NbRadioModule,
   NbDatepickerModule,
   NbFormFieldModule,
-  NbSelectModule, NbSpinnerModule,
-  NbContextMenuModule, NbPopoverModule, NbLayoutModule, NbMenuModule, NbWindowModule,
+  NbSelectModule,
+  NbSpinnerModule,
+  NbContextMenuModule,
+  NbPopoverModule,
+  NbLayoutModule,
+  NbMenuModule,
+  NbWindowModule,
   NbDialogModule,
   NbTooltipModule,
   NbCalendarKitModule,
@@ -23,21 +38,36 @@ import { NbCardModule, NbIconModule, NbInputModule, NbTreeGridModule, NbAccordio
   NbCalendarModule,
   NbCalendarRangeModule,
   NbChatModule,
-  NbProgressBarModule,  } from '@nebular/theme';
-import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
-import { ListComponent } from './list/list.component';
-import { authInterceptorProviders } from '../../_helpers/auth.interceptor';
-import { NgxSpinnerModule } from 'ngx-spinner';
-import { SetngsComponent, WindowResultService } from './setngs/setngs.component';
-import { CheckComponent } from './check/check.component';
+  NbProgressBarModule,
+} from "@nebular/theme";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { ListComponent } from "./list/list.component";
+import { authInterceptorProviders } from "../../_helpers/auth.interceptor";
+import { NgxSpinnerModule } from "ngx-spinner";
+import {
+  SetngsComponent,
+  WindowResultService,
+} from "./setngs/setngs.component";
+import { CheckComponent } from "./check/check.component";
+import { ViewChartComponent } from "./view-chart/view-chart.component";
+import { ChartsModule } from "ng2-charts";
+import { NgxHorizontalTimelineModule } from "ngx-horizontal-timeline";
 
 @NgModule({
-  declarations: [SearchComponent, UploadComponent, BarComponent, ListComponent, SetngsComponent, CheckComponent],
+  declarations: [
+    SearchComponent,
+    UploadComponent,
+    BarComponent,
+    ListComponent,
+    SetngsComponent,
+    CheckComponent,
+    ViewChartComponent,
+  ],
   imports: [
-      NbAlertModule,
-  NbCalendarModule,
-  NbCalendarRangeModule,
-  NbChatModule,
+    NbAlertModule,
+    NbCalendarModule,
+    NbCalendarRangeModule,
+    NbChatModule,
     NbCalendarKitModule,
     NbProgressBarModule,
     NbDialogModule.forChild(),
@@ -72,11 +102,10 @@ import { CheckComponent } from './check/check.component';
     NbInputModule,
     FileUploadModule,
     CommonModule,
-    SearchRoutingModule
+    SearchRoutingModule,
+    ChartsModule,
+    NgxHorizontalTimelineModule,
   ],
-    providers: [
-    authInterceptorProviders,
-    WindowResultService
-  ],
+  providers: [authInterceptorProviders, WindowResultService],
 })
-export class SearchModule { }
+export class SearchModule {}
