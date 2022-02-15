@@ -180,7 +180,7 @@ require('./app/routes/path.routes')(app)
 require('./app/routes/helpdesk.routes')(app)
 require('./app/routes/reply.routes')(app)
 require('./app/routes/incident.routes')(app)
-
+require('./app/routes/manualTrigger.routes')(app)
 
 // resources being served
 app.use('/api/pictures', express.static(picResourceFolderPath))

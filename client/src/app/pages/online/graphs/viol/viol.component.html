@@ -60,39 +60,20 @@
           <nb-card>
             <nb-card-header>
               <h4>Live Output Feed</h4>
-            </nb-card-header>
-            <nb-card-body>
               <div align="center">
                 <button
                   class="btn btn-sm btn-info"
                   (click)="openFormModal(openFromTemplate)"
+                  [nbSpinner]="loadingTakeScreenShot"
+                  nbSpinnerStatus="primary"
                 >
                   Take Screenshot
                 </button>
-                <img
-                  id="video"
-                  [src]="rtspIn"
-                  style="width: 100%; height: auto"
-                  #screen
-                />
-                <!-- <img
-                  id="video"
-                  src="http://40.84.143.162:8091/stream8.mjpeg"
-                  style="width: 100%; height: auto"
-                  #screen
-                /> -->
-
-                <!-- <img
-                  id="snapshot"
-                  src=""
-                  style="width: 100%; height: auto"
-                  #snapshot
-                />
-                <canvas
-                  id="canvasId"
-                  style="cursor: crosshair"
-                  (click)="drawRect($event)"
-                ></canvas> -->
+              </div>
+            </nb-card-header>
+            <nb-card-body>
+              <div align="center">
+                <img [src]="rtspIn" style="width: 100%; height: auto" />
               </div>
             </nb-card-body>
           </nb-card>
@@ -107,35 +88,136 @@
     <nb-card>
       <nb-card-header>
         <h6>Add To Manual Trigger</h6>
+        <div align="center">
+          <button
+            class="btn btn-sm btn-danger"
+            (click)="clear()"
+            [disabled]="data.results.length == 0"
+          >
+            Delete Last Boundary Box
+          </button>
+        </div>
       </nb-card-header>
       <nb-card-body>
-        <canvas
-          id="canvasId"
-          style="cursor: crosshair"
-          (click)="drawRect($event)"
-        ></canvas>
-        <div class="pt-2">
-          <input
-            type="text"
-            class="form-control"
-            [(ngModel)]="description"
-            fullWidth
-            id="description"
-            autofocus
-            placeholder="Add Description"
-          />
-        </div>
+        <form [formGroup]="manualTriggerForm" (ngSubmit)="saveManualTrigger()">
+          <canvas
+            id="canvasId"
+            style="
+              cursor: crosshair;
+              background-repeat: no-repeat;
+              background-size: 100% 100%;
+            "
+            (click)="drawRect($event)"
+            [style.background-image]="getBackground()"
+          ></canvas>
+          <div class="pt-2">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="actions"
+              fullWidth
+              id="actions"
+              autofocus
+              placeholder="Add Actions"
+            />
+
+            <span
+              *ngIf="
+                !manualTriggerForm.controls.actions.valid &&
+                manualTriggerForm.controls.actions.touched
+              "
+              class="error text-danger mb-1"
+            >
+              <span
+                *ngIf="manualTriggerForm.controls.actions.hasError('required')"
+              >
+                Please enter actions
+              </span>
+              <span
+                *ngIf="manualTriggerForm.controls.actions.hasError('minlength')"
+              >
+                Actions must be at least 3 characters long.
+              </span>
+            </span>
+          </div>
+          <div class="row pt-2">
+            <div class="col-md-4">
+              <nb-select formControlName="algoId" fullWidth>
+                <nb-option value="" disabled>Choose An Algorithm:</nb-option>
+                <nb-option
+                  *ngFor="let algorithm of algorithms"
+                  [value]="algorithm.id"
+                  >{{ algorithm.name }}</nb-option
+                >
+              </nb-select>
+
+              <span
+                *ngIf="
+                  !manualTriggerForm.controls.algoId.valid &&
+                  manualTriggerForm.controls.algoId.touched
+                "
+                class="error text-danger mb-1"
+              >
+                <span
+                  *ngIf="manualTriggerForm.controls.algoId.hasError('required')"
+                >
+                  Please select an algorithm
+                </span>
+              </span>
+            </div>
+            <div class="col-md-8">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="severity"
+                fullWidth
+                id="severity"
+                autofocus
+                placeholder="Add Severity"
+              />
+
+              <span
+                *ngIf="
+                  !manualTriggerForm.controls.severity.valid &&
+                  manualTriggerForm.controls.severity.touched
+                "
+                class="error text-danger mb-1"
+              >
+                <span
+                  *ngIf="
+                    manualTriggerForm.controls.severity.hasError('required')
+                  "
+                >
+                  Please enter severity
+                </span>
+                <span
+                  *ngIf="
+                    manualTriggerForm.controls.severity.hasError('minlength')
+                  "
+                >
+                  Severity must be at least 3 characters long.
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <button
+              class="btn-block"
+              [status]="'warning'"
+              nbButton
+              type="submit"
+              [nbSpinner]="loading"
+              nbSpinnerStatus="primary"
+              [disabled]="!manualTriggerForm.valid || data.results.length == 0"
+            >
+              Save
+            </button>
+          </div>
+        </form>
       </nb-card-body>
 
       <nb-card-footer>
-        <button
-          class="btn-block"
-          [status]="'warning'"
-          nbButton
-          (click)="saveManualTrigger()"
-        >
-          Save
-        </button>
         <button class="btn-block" nbButton (click)="closeModal()">
           CLOSE
         </button></nb-card-footer
@@ -143,4 +225,3 @@
     </nb-card>
   </div>
 </ng-template>
-<!-- [style.background-image]="getBackground()" -->

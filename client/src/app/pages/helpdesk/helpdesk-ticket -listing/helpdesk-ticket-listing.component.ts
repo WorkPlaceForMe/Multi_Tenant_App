@@ -63,6 +63,7 @@ export class HelpdeskTicketListingComponent implements OnInit {
 
     this.dialogRef.onClose.subscribe((resp) => {
       console.log(resp);
+      this.getTickets();
     });
   }
 

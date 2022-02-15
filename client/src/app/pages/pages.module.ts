@@ -6,7 +6,6 @@ import {
   NbWindowModule,
 } from "@nebular/theme";
 
-
 import { ThemeModule } from "../@theme/theme.module";
 import { PagesComponent } from "./pages.component";
 import { PagesRoutingModule } from "./pages-routing.module";
@@ -182,6 +181,7 @@ import { IncidentLogsComponent } from "./search/incident-logs/incident-logs.comp
     ScrollingModule,
     NbPopoverModule,
     SocialLoginModule,
+    NgxCaptureModule,
     MsalModule.forRoot(
       new PublicClientApplication({
         auth: {
@@ -196,6 +196,10 @@ import { IncidentLogsComponent } from "./search/incident-logs/incident-logs.comp
       null,
       null
     ),
+    VgCoreModule,
+    VgControlsModule,
+    VgOverlayPlayModule,
+    VgBufferingModule,
   ],
   declarations: [
     PagesComponent,

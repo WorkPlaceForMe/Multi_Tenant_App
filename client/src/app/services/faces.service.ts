@@ -227,26 +227,14 @@ export class FacesService {
   }
 
   manualTrigger(data: any) {
-    const formData = new FormData();
-    if (data.file) {
-      formData.append("file", data.file);
-    }
-    if (data.description) {
-      formData.append("description", data.description);
-    }
-    if (data.severity) {
-      formData.append("severity", data.severity);
-    }
-    if (data.cameraId) {
-      formData.append("cameraId", data.cameraId);
-    }
-
-    return this.http.post(`${this.API_URI}/manualTrigger/create`, formData);
+    return this.http.post(`${this.API_URI}/manualTrigger/create`, data);
   }
 
-  saveSnapshot(data: any) {
-    const formData = new FormData();
-    formData.append("file", data);
-    return this.http.post(`${this.API_URI}/manualTrigger/snapshot`, formData);
+  getmanualTriggers() {
+    return this.http.get(`${this.API_URI}/manualTrigger`);
+  }
+
+  getAllAlgos() {
+    return this.http.get(`${this.API_URI}/algos`);
   }
 }
