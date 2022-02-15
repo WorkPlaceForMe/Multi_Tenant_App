@@ -27,7 +27,6 @@ import { UrlPipe } from "../pipes/url.pipe";
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from "ng-pick-datetime";
 import { PagenotfoundComponent } from "./pagenotfound/pagenotfound.component";
 import { ScheduleComponent } from "./facial_recognition/schedule/schedule.component";
-import { SettingsComponent } from "./settings/settings.component";
 import { LiveComponent } from "./cameras_conf/livestream/live.component";
 import { VidComponent } from "./cameras_conf/add_camera/vid.component";
 import { LivestreamComponent } from "./cameras_conf/camera_list/livestream.component";
@@ -128,6 +127,15 @@ import { VgCoreModule } from "@videogular/ngx-videogular/core";
 import { VgControlsModule } from "@videogular/ngx-videogular/controls";
 import { VgOverlayPlayModule } from "@videogular/ngx-videogular/overlay-play";
 import { VgBufferingModule } from "@videogular/ngx-videogular/buffering";
+import { WeaponComponent } from './online/graphs/weapon/weapon.component';
+import { BottleComponent } from './online/graphs/bottle/bottle.component';
+import { GenerateHelpDeskTicketComponent } from "./helpdesk/generate-helpdesk-ticket/generate-helpdesk-ticket.component";
+import { HelpdeskTicketListingComponent } from "./helpdesk/helpdesk-ticket -listing/helpdesk-ticket-listing.component";
+import { HelpdeskReplyComponent } from "./helpdesk/helpdesk-reply/helpdesk-reply.component";
+import { HelpdeskDetailsComponent } from "./helpdesk/helpdesk-details/helpdesk-details.component";
+import { AddIncidentComponent } from "./search/add-incident/add-incident.component";
+import { MemoComponent } from "./search/memo/memo.component";
+import { IncidentLogsComponent } from "./search/incident-logs/incident-logs.component";
 
 @NgModule({
   imports: [
@@ -198,7 +206,6 @@ import { VgBufferingModule } from "@videogular/ngx-videogular/buffering";
     PagenotfoundComponent,
     FaceListComponent,
     ScheduleComponent,
-    SettingsComponent,
     LiveComponent,
     VidComponent,
     LivestreamComponent,
@@ -256,6 +263,8 @@ import { VgBufferingModule } from "@videogular/ngx-videogular/buffering";
     PathComponent,
     FireComponent,
     CollapseComponent,
+    WeaponComponent,
+    BottleComponent,
     GenerateHelpDeskTicketComponent,
     HelpdeskTicketListingComponent,
     HelpdeskReplyComponent,
