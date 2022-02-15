@@ -1,1 +1,1 @@
-export var ip :string = 'localhost';
+export var ip :string = '40.84.143.162';
