@@ -126,8 +126,8 @@ export class CollapseComponent implements OnInit , OnDestroy {
         res=>{
           this.collapse = res['data']
           for(var m of this.collapse.raw){
-            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/helmet/' + m['cam_id'] + '/' + m['picture'])
-            m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/helmet/' + m['cam_id'] + '/' + m['clip_path']
+            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/collapse/' + m['cam_id'] + '/' + m['picture'])
+            m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/collapse/' + m['cam_id'] + '/' + m['clip_path']
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss')
             switch(m['alert_type']){
               case '0':{
