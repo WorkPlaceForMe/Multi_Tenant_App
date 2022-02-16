@@ -2781,4 +2781,28 @@ module.exports = function (app) {
   app.post('/api/analytics/weapon/:id', [authJwt.verifyToken], controller.weapon)
 
   app.post('/api/analytics/bottle/:id', [authJwt.verifyToken], controller.bottle)
+
+  app.post('/api/analytics/wavingHands/:id', [authJwt.verifyToken], controller.waving)
+
+  app.post('/api/analytics/smoking/:id', [authJwt.verifyToken], controller.smoking)
+
+  app.post('/api/analytics/slapping/:id', [authJwt.verifyToken], controller.slapping)
+
+  app.post('/api/analytics/running/:id', [authJwt.verifyToken], controller.running)
+
+  app.post('/api/analytics/pushing/:id', [authJwt.verifyToken], controller.pushing)
+
+  app.post('/api/analytics/purse/:id', [authJwt.verifyToken], controller.purse)
+
+  app.post('/api/analytics/pullingHair/:id', [authJwt.verifyToken], controller.hair)
+
+  app.post('/api/analytics/following/:id', [authJwt.verifyToken], controller.following)
+
+  app.post('/api/analytics/disrobing/:id', [authJwt.verifyToken], controller.disrobing)
+
+  app.post('/api/analytics/crowd/:id', [authJwt.verifyToken], controller.crowd)
+
+  app.post('/api/analytics/blocking/:id', [authJwt.verifyToken], controller.blocking)
+
+  app.post('/api/analytics/disrobing/:id', [authJwt.verifyToken], controller.disrobing)
 }

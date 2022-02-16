@@ -126,6 +126,38 @@ export class AnalyticsService {
   bottle(id: string, dates){
     return this.http.post(`${this.API_URL}bottle/${id}`, dates);
   }
-
+  wavingHands(id: string, dates){
+    return this.http.post(`${this.API_URL}wavingHands/${id}`, dates);
+  }
+  smoking(id: string, dates){
+    return this.http.post(`${this.API_URL}smoking/${id}`, dates);
+  }
+  slapping(id: string, dates){
+    return this.http.post(`${this.API_URL}slapping/${id}`, dates);
+  }
+  running(id: string, dates){
+    return this.http.post(`${this.API_URL}running/${id}`, dates);
+  }
+  pushing(id: string, dates){
+    return this.http.post(`${this.API_URL}pushing/${id}`, dates);
+  }
+  purse(id: string, dates){
+    return this.http.post(`${this.API_URL}purse/${id}`, dates);
+  }
+  pullingHair(id: string, dates){
+    return this.http.post(`${this.API_URL}pullingHair/${id}`, dates);
+  }
+  following(id: string, dates){
+    return this.http.post(`${this.API_URL}following/${id}`, dates);
+  }
+  disrobing(id: string, dates){
+    return this.http.post(`${this.API_URL}disrobing/${id}`, dates);
+  }
+  crowd(id: string, dates){
+    return this.http.post(`${this.API_URL}crowd/${id}`, dates);
+  }
+  blocking(id: string, dates){
+    return this.http.post(`${this.API_URL}blocking/${id}`, dates);
+  }
   constructor(private http: HttpClient) { }
 }
