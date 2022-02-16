@@ -78,3 +78,13 @@ exports.viewAlgos = (req, res) => {
       res.status(500).send({success: false, message: err.message})
     })
 }
+
+exports.getAlgoById = (req, res) => {
+  Algorithm.findOne({where: {id: req.params.id}})
+    .then(algo => {
+      res.status(200).send({success: true, data: algo})
+    })
+    .catch(err => {
+      res.status(500).send({success: false, message: err.message})
+    })
+}

@@ -62,7 +62,7 @@
               <h4>Live Output Feed</h4>
               <div align="center">
                 <button
-                  class="btn btn-sm btn-info"
+                  class="btn btn-sm btn-danger"
                   (click)="openFormModal(openFromTemplate)"
                   [nbSpinner]="loadingTakeScreenShot"
                   nbSpinnerStatus="primary"
@@ -111,6 +111,9 @@
             [style.background-image]="getBackground()"
           ></canvas>
           <div class="pt-2">
+            <span class="pb-2" style="font-size: medium"
+              ><b>Add Actions:</b>
+            </span>
             <input
               type="text"
               class="form-control"
@@ -118,7 +121,7 @@
               fullWidth
               id="actions"
               autofocus
-              placeholder="Add Actions"
+              placeholder="Enter Actions"
             />
 
             <span
@@ -142,6 +145,9 @@
           </div>
           <div class="row pt-2">
             <div class="col-md-4">
+              <span class="pb-2" style="font-size: medium"
+                ><b>Choose Algorithm:</b>
+              </span>
               <nb-select formControlName="algoId" fullWidth>
                 <nb-option value="" disabled>Choose An Algorithm:</nb-option>
                 <nb-option
@@ -166,6 +172,9 @@
               </span>
             </div>
             <div class="col-md-8">
+              <span class="pb-2" style="font-size: medium"
+                ><b>Add Severity:</b>
+              </span>
               <input
                 type="text"
                 class="form-control"
@@ -173,7 +182,7 @@
                 fullWidth
                 id="severity"
                 autofocus
-                placeholder="Add Severity"
+                placeholder="Enter Severity"
               />
 
               <span

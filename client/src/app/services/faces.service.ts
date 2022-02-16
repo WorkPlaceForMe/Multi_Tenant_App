@@ -237,4 +237,8 @@ export class FacesService {
   getAllAlgos() {
     return this.http.get(`${this.API_URI}/algos`);
   }
+
+  getAlgoByID(id: any) {
+    return this.http.get(`${this.API_URI}/algo/${id}`);
+  }
 }
