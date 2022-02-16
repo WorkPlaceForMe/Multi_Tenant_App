@@ -50,6 +50,7 @@ const storage = multer.diskStorage({
     const newName = Date.now() + '.' + format
     cb(null, newName)
   },
+
   destination: function (req, file, cb) {
     const token = req.headers['x-access-token']
 
