@@ -184,6 +184,50 @@ exports.initial = function () {
     id: 39,
     name: 'Fire Detection'
   })
+  algo.create({
+    id: 40,
+    name: 'Pulling Hair'
+  })
+  algo.create({
+    id: 41,
+    name: 'Waving Hands'
+  })
+  algo.create({
+    id: 42,
+    name: 'Smoking'
+  })
+  algo.create({
+    id: 43,
+    name: 'Crowd'
+  })
+  algo.create({
+    id: 44,
+    name: 'Slapping'
+  })
+  algo.create({
+    id: 45,
+    name: 'Blocking'
+  })
+  algo.create({
+    id: 46,
+    name: 'Running'
+  })
+  algo.create({
+    id: 47,
+    name: 'Disrobing'
+  })
+  algo.create({
+    id: 48,
+    name: 'Purse Snatching'
+  })
+  algo.create({
+    id: 49,
+    name: 'Following'
+  })
+  algo.create({
+    id: 50,
+    name: 'Pushing'
+  })
 }
 // INSERT INTO `multi_tenant`.`algorithms` (`id`, `name`, `createdAt`, `updatedAt`) VALUES ('27', 'Camera Tampering', '2020-10-05 07:31:29', '2020-10-05 07:31:29');
 

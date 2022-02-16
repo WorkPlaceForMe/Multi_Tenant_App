@@ -40,7 +40,7 @@ db.user.belongsToMany(db.algorithm, {
   otherKey: 'algoId'
 })
 
-db.manualTrigger.belongsTo(db.camera, {foreignKey: 'camera_id'})
+db.manualTrigger.belongsTo(db.camera, { foreignKey: 'camera_id' })
 
 db.camera.hasMany(db.manualTrigger, {
   foreignKey: 'camera_id'
@@ -89,16 +89,27 @@ db.ALGORITHMS = [
   'Bottle',
   'People Path',
   'Person Collapsing',
-  'Fire Detection'
+  'Fire Detection',
+  'Pulling Hair',
+  'Waving Hands',
+  'Smoking',
+  'Crowd',
+  'Slapping',
+  'Blocking',
+  'Running',
+  'Disrobing',
+  'Purse Snatching',
+  'Following',
+  'Pushing'
 ]
 
-db.helpdesk.belongsTo(db.user, {foreignKey: 'user_id'})
+db.helpdesk.belongsTo(db.user, { foreignKey: 'user_id' })
 
 db.user.hasMany(db.helpdesk, {
   foreignKey: 'user_id'
 })
 
-db.incidentLog.belongsTo(db.user, {foreignKey: 'user_id'})
+db.incidentLog.belongsTo(db.user, { foreignKey: 'user_id' })
 
 db.user.hasMany(db.incidentLog, {
   foreignKey: 'user_id'
