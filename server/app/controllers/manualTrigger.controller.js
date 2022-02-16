@@ -98,7 +98,15 @@ exports.createManualTrigger = async (req, res) => {
 
 exports.getManualTriggers = async (req, res) => {
   try {
+    // if (!req.params.algoId) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     error_code: 1,
+    //     message: 'Algorithm id is required'
+    //   })
+    // }
     const manualTriggers = await ManualTrigger.findAll({
+      // where: {algo_id: req.params.algoId},
       order: [['createdAt', 'DESC']],
       include: [
         {

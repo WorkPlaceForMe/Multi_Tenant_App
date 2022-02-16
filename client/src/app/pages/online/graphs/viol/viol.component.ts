@@ -47,6 +47,7 @@ export class ViolComponent implements OnInit, OnDestroy {
   algorithms: any;
   loading: boolean = false;
   loadingTakeScreenShot: boolean = false;
+  algoId = 19;
 
   constructor(
     private serv: AnalyticsService,
@@ -114,7 +115,8 @@ export class ViolComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type,
     };
-    this.face.checkVideo(19, this.camera).subscribe(
+    // this.algoId = 19;
+    this.face.checkVideo(this.algoId, this.camera).subscribe(
       (res) => {
         this.video = res["video"];
 

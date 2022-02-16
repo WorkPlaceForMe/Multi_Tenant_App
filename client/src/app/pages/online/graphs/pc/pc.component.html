@@ -1,12 +1,12 @@
 <div class="container no-padding">
-  <div class='col-md-12 no-padding' style="margin-top: 15px;">
+  <div class="col-md-12 no-padding" style="margin-top: 15px">
     <p>Incidents</p>
     <div class="row">
       <div class="col-md-3 less-padding">
         <nb-card>
           <nb-card-body class="top-badges">
             <p class="badge-txt">Current Count</p>
-            <p class="badge-reading">{{pc == undefined ? 'None' : pc.in}}</p>
+            <p class="badge-reading">{{ pc == undefined ? "None" : pc.in }}</p>
           </nb-card-body>
         </nb-card>
       </div>
@@ -15,8 +15,11 @@
           <nb-card-body class="top-badges">
             <p>People inside over time</p>
             <chart type="line" [data]="dataL" [options]="optionsL"></chart>
-            <small
-              *ngIf='pc != null'>Min:&nbsp;<strong>{{pc.min.in}}</strong>&nbsp;Max:&nbsp;<strong>{{pc.max.in}}</strong>&nbsp;Avg:&nbsp;<strong>{{pc.avg.in}}</strong></small>
+            <small *ngIf="pc != null"
+              >Min:&nbsp;<strong>{{ pc.min.in }}</strong
+              >&nbsp;Max:&nbsp;<strong>{{ pc.max.in }}</strong
+              >&nbsp;Avg:&nbsp;<strong>{{ pc.avg.in }}</strong></small
+            >
           </nb-card-body>
         </nb-card>
       </div>
@@ -57,19 +60,43 @@
       </div>
     </div>
   </div> -->
-  <div class='col-md-12 no-padding' style="margin-top: 15px;">
-    <div class="row">
-      <div class="col-md-8 less-padding">
-        <nb-card>
+
+    <div>
+      <nb-card>
+        <nb-card-body style="padding: 0px">
+          <ng2-smart-table
+            [settings]="settings"
+            [source]="source"
+            (edit)="got()"
+          >
+          </ng2-smart-table>
+        </nb-card-body>
+      </nb-card>
+    </div>
+    <div class="col-md-12 no-padding" style="margin-top: 15px">
+      <div class="row">
+        <div class="col-md-8 less-padding">
+          <nb-card>
             <nb-card-header>
               <h4>Live Output Feed</h4>
+              <div align="center">
+                <button
+                  class="btn btn-sm btn-danger"
+                  (click)="openFormModal()"
+                  [nbSpinner]="loadingTakeScreenShot"
+                  nbSpinnerStatus="primary"
+                >
+                  Take Screenshot
+                </button>
+              </div>
             </nb-card-header>
             <nb-card-body>
-              <div align='center'>
-                  <img [src]='rtspIn' style='width: 100%; height: auto;'>
+              <div align="center">
+                <img [src]="rtspIn" style="width: 100%; height: auto" />
               </div>
             </nb-card-body>
           </nb-card>
+        </div>
       </div>
     </div>
   </div>
