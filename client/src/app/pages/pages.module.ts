@@ -126,8 +126,8 @@ import { VgCoreModule } from "@videogular/ngx-videogular/core";
 import { VgControlsModule } from "@videogular/ngx-videogular/controls";
 import { VgOverlayPlayModule } from "@videogular/ngx-videogular/overlay-play";
 import { VgBufferingModule } from "@videogular/ngx-videogular/buffering";
-import { WeaponComponent } from './online/graphs/weapon/weapon.component';
-import { BottleComponent } from './online/graphs/bottle/bottle.component';
+import { WeaponComponent } from "./online/graphs/weapon/weapon.component";
+import { BottleComponent } from "./online/graphs/bottle/bottle.component";
 import { GenerateHelpDeskTicketComponent } from "./helpdesk/generate-helpdesk-ticket/generate-helpdesk-ticket.component";
 import { HelpdeskTicketListingComponent } from "./helpdesk/helpdesk-ticket -listing/helpdesk-ticket-listing.component";
 import { HelpdeskReplyComponent } from "./helpdesk/helpdesk-reply/helpdesk-reply.component";
@@ -135,6 +135,7 @@ import { HelpdeskDetailsComponent } from "./helpdesk/helpdesk-details/helpdesk-d
 import { AddIncidentComponent } from "./search/add-incident/add-incident.component";
 import { MemoComponent } from "./search/memo/memo.component";
 import { IncidentLogsComponent } from "./search/incident-logs/incident-logs.component";
+import { ManualTriggerComponent } from "./online/graphs/manual-trigger/manual-trigger.component";
 
 @NgModule({
   imports: [
@@ -276,6 +277,7 @@ import { IncidentLogsComponent } from "./search/incident-logs/incident-logs.comp
     AddIncidentComponent,
     MemoComponent,
     IncidentLogsComponent,
+    ManualTriggerComponent,
   ],
   providers: [
     FacesService,

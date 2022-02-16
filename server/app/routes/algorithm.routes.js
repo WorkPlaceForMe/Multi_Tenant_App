@@ -14,4 +14,5 @@ module.exports = function (app) {
   app.put('/api/algorithms/edit/:id', [authJwt.verifyToken, authJwt.isAdmin], controller.updtAlgo)
 
   app.get('/api/algos', [authJwt.verifyToken], controller.viewAlgos)
+  app.get('/api/algo/:id', [authJwt.verifyToken], controller.getAlgoById)
 }
