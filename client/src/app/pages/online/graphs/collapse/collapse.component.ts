@@ -3,28 +3,24 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostListener,
   Input,
   OnDestroy,
   OnInit,
   Output,
+  Renderer2,
   ViewChild,
 } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import {
-  NbCalendarRange,
-  NbColorHelper,
-  NbDialogRef,
-  NbDialogService,
-  NbThemeService,
-} from "@nebular/theme";
+import { NbCalendarRange, NbColorHelper, NbThemeService } from "@nebular/theme";
 import { LocalDataSource, ViewCell } from "ng2-smart-table";
 import { api } from "../../../../models/API";
 import { AnalyticsService } from "../../../../services/analytics.service";
 import { FacesService } from "../../../../services/faces.service";
-import JSMpeg from "@cycjimmy/jsmpeg-player";
 import { Router } from "@angular/router";
 import { Account } from "../../../../models/Account";
-import { ManualTriggerComponent } from "../manual-trigger/manual-trigger.component";
+import { NbDialogRef, NbDialogService } from "@nebular/theme";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ip } from "../../../../models/IpServer";
 
 @Component({
@@ -41,11 +37,17 @@ export class CollapseComponent implements OnInit, OnDestroy {
   now_user: Account;
   themeSubscription: any;
   options: any = {};
-  loadingTakeScreenShot: boolean = false;
+  imageUrl: any;
   dialogRef: NbDialogRef<any>;
-  data: any;
-
   @ViewChild("streaming", { static: false }) streamingcanvas: ElementRef;
+  canvas: any;
+  context: any;
+  data: any;
+  manualTriggerForm: FormGroup;
+  algorithms: any;
+  loading: boolean = false;
+  loadingTakeScreenShot: boolean = false;
+  algoId = 45;
 
   constructor(
     private serv: AnalyticsService,
@@ -54,13 +56,17 @@ export class CollapseComponent implements OnInit, OnDestroy {
     public datepipe: DatePipe,
     private theme: NbThemeService,
     private route: Router,
-    private dialogService: NbDialogService
+    private dialogService: NbDialogService,
+    private rd: Renderer2,
+    private fb: FormBuilder
   ) {}
   single: any;
   colorScheme: any;
   source: any = new LocalDataSource();
   dataL: any;
   optionsL: any;
+  count: number = 0;
+  coords = [];
 
   ngOnDestroy() {
     if (this.player != undefined) {
@@ -77,33 +83,14 @@ export class CollapseComponent implements OnInit, OnDestroy {
   toggleVideo(event: any) {
     this.videoplayer.nativeElement.play();
   }
+
   videoFile: string = "";
-  pass(vid: string) {
-    this.videoplayer.nativeElement.src = vid;
-    this.videoplayer.nativeElement.load();
-    this.videoplayer.nativeElement.play();
-  }
 
   video: boolean = false;
   rtspIn: any;
 
   ngOnInit(): void {
     this.getManualTriggers();
-    if (api.length <= 1) {
-      setTimeout(() => {
-        this.face.camera({ id: this.camera }).subscribe(
-          (res) => {
-            this.player = new JSMpeg.Player(`ws://localhost:${res["port"]}`, {
-              canvas: this.streamingcanvas.nativeElement,
-              autoplay: true,
-              audio: false,
-              loop: true,
-            });
-          },
-          (err) => console.error(err)
-        );
-      }, 500);
-    }
     this.now_user = JSON.parse(localStorage.getItem("now_user"));
     var time = new Date();
     this.timezone = time
@@ -128,9 +115,11 @@ export class CollapseComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type,
     };
-    this.face.checkVideo(38, this.camera).subscribe(
+    // this.algoId = 19;
+    this.face.checkVideo(this.algoId, this.camera).subscribe(
       (res) => {
         this.video = res["video"];
+        this.link = res['http_out']
         this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(
           res["http_out"]
         );
@@ -148,9 +137,9 @@ export class CollapseComponent implements OnInit, OnDestroy {
           };
           this.settings = Object.assign({}, this.settings);
         }
-      }, err => console.error(err)
-    )
-    
+      },
+      (err) => console.error(err)
+    );
     this.serv.collapse(this.camera, l).subscribe(
       (res) => {
         this.collapse = res["data"];
@@ -161,7 +150,7 @@ export class CollapseComponent implements OnInit, OnDestroy {
               this.now_user["id_account"] +
               "/" +
               m["id_branch"] +
-              "/helmet/" +
+              "/collapse/" +
               m["cam_id"] +
               "/" +
               m["picture"]
@@ -172,22 +161,22 @@ export class CollapseComponent implements OnInit, OnDestroy {
             this.now_user["id_account"] +
             "/" +
             m["id_branch"] +
-            "/helmet/" +
+            "/collapse/" +
             m["cam_id"] +
             "/" +
             m["clip_path"];
           m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss");
-          switch (m["alert_type"]) {
+          switch (m["severity"]) {
             case "0": {
-              m["alert_type"] = "Low";
+              m["severity"] = "Low";
               break;
             }
             case "1": {
-              m["alert_type"] = "Mid";
+              m["severity"] = "Mid";
               break;
             }
             case "2": {
-              m["alert_type"] = "High";
+              m["severity"] = "High";
               break;
             }
           }
@@ -195,7 +184,6 @@ export class CollapseComponent implements OnInit, OnDestroy {
         // this.source = this.collapse.raw
         //   .slice()
         //   .sort((a, b) => +new Date(b.time) - +new Date(a.time));
-
         let labels = [];
         for (var o of Object.keys(this.collapse.over)) {
           o = o + ":00:00";
@@ -210,7 +198,7 @@ export class CollapseComponent implements OnInit, OnDestroy {
             labels: labels,
             datasets: [
               {
-                label: "PEople Collapsing Over Time",
+                label: "Hands Over Time",
                 backgroundColor: NbColorHelper.hexToRgbA(colors.primary, 0.3),
                 data: Object.values(this.collapse.over),
                 borderColor: colors.primary,
@@ -268,67 +256,9 @@ export class CollapseComponent implements OnInit, OnDestroy {
           };
         });
       },
-      (err) => {
-        console.error(err);
-        this.collapse = undefined;
-      }
+      (err) => console.error(err)
     );
   }
-
-  // got(id){
-  //   this.route.navigate([`/pages/tickets`])
-  //   // this.route.navigateByUrl(`/pages/tickets/view/${id.data.id}`)
-  // }
-
-  // settings = {
-  //   mode: 'external',
-  //   actions: {
-  //     position: 'right',
-  //     columnTitle: 'ACTIONS',
-  //     add: false,
-  //     edit: true,
-  //     delete: false,
-  //   },
-  //   edit: {
-  //     editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
-  //     saveButtonContent: '<i class="nb-checkmark"></i>',
-  //     cancelButtonContent: '<i class="nb-close"></i>',
-  //     confirmSave: true,
-  //   },
-  //   pager : {
-  //     display : true,
-  //     perPage:5
-  //     },
-  //   noDataMessage: "No data found",
-  //   columns: {
-  //     picture: {
-  //       title: 'PICTURE',
-  //       type: 'custom',
-  //       filter: false,
-  //       renderComponent: ButtonViewComponentPic,
-  //       onComponentInitFunction:(instance) => {
-  //         instance.save.subscribe((row: string)  => {
-  //           this.pass(row)
-  //         });
-  //       }
-  //     },
-  //     time: {
-  //       title: 'TIME',
-  //       type: 'string',
-  //       filter: false
-  //     },
-  //     cam_name: {
-  //       title: 'CAM',
-  //       type: 'string',
-  //       filter: false
-  //     },
-  //     alert_type: {
-  //       title: 'SEVERITY',
-  //       type: 'string',
-  //       filter: false
-  //     }
-  //   },
-  // };
 
   getManualTriggers() {
     const manualTriggers = [];
@@ -360,43 +290,296 @@ export class CollapseComponent implements OnInit, OnDestroy {
     );
   }
 
-  openFormModal() {
-    this.loadingTakeScreenShot = true;
-    this.face.getCamera(this.camera).subscribe(
+  initializeManualTriggerForm() {
+    this.manualTriggerForm = this.fb.group({
+      actions: ["", [Validators.required, Validators.minLength(3)]],
+      severity: ["", [Validators.required, Validators.minLength(3)]],
+      algoId: ["", [Validators.required]],
+    });
+  }
+
+  @HostListener("document:mousemove", ["$event"])
+  onMouseMove(e) {
+    let x, y, rect;
+    if (this.canvas) {
+      rect = this.canvas.getBoundingClientRect();
+      x = e.clientX - rect.left - 3;
+      y = e.clientY - rect.top - 3;
+      if (this.count == 1) {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.re_draw();
+        this.context.fillStyle = "rgba(0,0,0,0)";
+        this.context.strokeStyle = "white";
+        this.context.fillRect(
+          this.coords[0]["x"] - 2,
+          this.coords[0]["y"] - 2,
+          4,
+          4
+        );
+        this.context.fillRect(this.coords[0]["x"] - 2, y - 2, 4, 4);
+        this.context.fillRect(x - 2, this.coords[0]["y"] - 2, 4, 4);
+        this.context.strokeRect(
+          this.coords[0]["x"],
+          this.coords[0]["y"],
+          x - this.coords[0]["x"],
+          y - this.coords[0]["y"]
+        );
+        this.context.fillRect(
+          this.coords[0]["x"],
+          this.coords[0]["y"],
+          x - this.coords[0]["x"],
+          y - this.coords[0]["y"]
+        );
+        this.context.fillRect(x - 2, y - 2, 4, 4);
+        this.context.lineWidth = 2.5;
+        this.context.stroke();
+      }
+    }
+  }
+
+  getAlgorithms() {
+    this.face.getAllAlgos().subscribe(
       (res: any) => {
-        this.loadingTakeScreenShot = false;
-        const serverIp = ip === "localhost" ? "40.84.143.162" : ip;
-        this.data = {
-          screenshot: `http://${serverIp}${res["data"]["heatmap_pic"]}`,
-          results: [],
-          cameraId: this.camera,
-          // algoId: this.algoId,
-        };
-
-        this.dialogRef = this.dialogService.open<any>(ManualTriggerComponent, {
-          context: { data: this.data },
-          hasScroll: true,
-          dialogClass: "model-full",
-        });
-
-        this.dialogRef.onClose.subscribe((resp) => {
-          console.log(resp);
-          this.getManualTriggers();
-        });
+        this.algorithms = res.data;
       },
       (error) => {
-        this.loadingTakeScreenShot = false;
         console.log(error);
       }
     );
   }
 
-  got() {
+  link: string;
+  openFormModal(template: any) {
+    this.loadingTakeScreenShot = true;
+    this.face.screenshot({stream: this.link, id_account: this.now_user.id_account, id_branch: this.now_user.id_branch}).subscribe(
+      res => {
+        const screenShot = res['img']
+        this.initializeManualTriggerForm();
+        this.getAlgorithms();
+        this.face.getCamera(this.camera).subscribe(
+          (res: any) => {
+            this.loadingTakeScreenShot = false;
+            this.dialogRef = this.dialogService.open(template, {
+              hasScroll: true,
+              dialogClass: "model-full",
+            });
+            this.canvas = <HTMLCanvasElement>document.getElementById("canvasId");
+            this.context = this.canvas.getContext("2d");
+            this.context.canvas.width = 700;
+            this.context.canvas.height = 400;
+            const serverIp = ip === "localhost" ? "40.84.143.162" : ip;
+            this.data = {
+              screenshot: `http://${serverIp}/api/${screenShot}`,
+              results: [],
+            };
+          },
+          (error) => {
+            this.loadingTakeScreenShot = false;
+            console.log(error);
+          }
+        );
+      },
+      err => console.error(err)
+    )
+  }
+
+  drawRect(event: any) {
+    this.canvas = this.rd.selectRootElement(event.target);
+    this.context = this.canvas.getContext("2d");
+    this.goAnnotate(event);
+  }
+
+  clear() {
+    this.context = this.canvas.getContext("2d");
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.data["results"].splice(this.data["results"].length - 1, 1);
+    this.re_draw();
+  }
+
+  getBackground() {
+    const backgroundImage = `url(${this.data.screenshot})`;
+    return this.sanitizer.bypassSecurityTrustStyle(backgroundImage);
+  }
+
+  goAnnotate(event) {
+    this.re_draw();
+    let x, y, rect;
+    this.count++;
+    if (this.count == 1) {
+      this.context.beginPath();
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.re_draw();
+      rect = this.canvas.getBoundingClientRect();
+      x = event.clientX - rect.left;
+      y = event.clientY - rect.top;
+      this.coords.push({ x: x, y: y });
+      this.context.moveTo(x, y);
+      this.context.fillRect(x - 2, y - 2, 4, 4);
+    } else if (this.count == 2) {
+      this.count = 0;
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      rect = this.canvas.getBoundingClientRect();
+      x = event.clientX - rect.left;
+      y = event.clientY - rect.top;
+      this.context.fillRect(
+        this.coords[0]["x"] - 2,
+        this.coords[0]["y"] - 2,
+        4,
+        4
+      );
+      this.context.fillRect(this.coords[0]["x"] - 2, y - 2, 4, 4);
+      this.context.fillRect(x - 2, this.coords[0]["y"] - 2, 4, 4);
+      this.context.strokeStyle = "lime";
+      this.context.strokeRect(
+        this.coords[0]["x"],
+        this.coords[0]["y"],
+        x - this.coords[0]["x"],
+        y - this.coords[0]["y"]
+      );
+      this.context.fillRect(x - 2, y - 2, 4, 4);
+      x = x - this.coords[0].x;
+      y = y - this.coords[0].y;
+      this.coords.push({ x: x, y: y });
+      this.coords.push({
+        general_detection: "No",
+        detection_source: "Manual Drawn",
+      });
+      this.context.lineWidth = 2.5;
+      this.context.stroke();
+      this.data["results"].push(this.coords);
+      this.re_draw();
+      this.coords = [];
+    }
+  }
+
+  re_draw() {
+    for (let e = 0; e < this.data["results"].length; e++) {
+      this.context.strokeStyle = "lime";
+      if (this.data["results"][e][2]["general_detection"] == "Yes") {
+        this.context.fillRect(
+          this.data["results"][e][0]["x"] - 2,
+          this.data["results"][e][0]["y"] - 2,
+          4,
+          4
+        );
+        this.context.fillRect(
+          this.data["results"][e][0]["x"] - 2,
+          this.data["results"][e][1]["y"] - 2,
+          4,
+          4
+        );
+        this.context.fillRect(
+          this.data["results"][e][1]["x"] - 2,
+          this.data["results"][e][0]["y"] - 2,
+          4,
+          4
+        );
+        this.context.strokeRect(
+          this.data["results"][e][0]["x"],
+          this.data["results"][e][0]["y"],
+          this.data["results"][e][1]["x"] - this.data["results"][e][0]["x"],
+          this.data["results"][e][1]["y"] - this.data["results"][e][0]["y"]
+        );
+        this.context.fillRect(
+          this.data["results"][e][1]["x"] - 2,
+          this.data["results"][e][1]["y"] - 2,
+          4,
+          4
+        );
+      } else {
+        this.context.fillRect(
+          this.data["results"][e][0]["x"] - 2,
+          this.data["results"][e][0]["y"] - 2,
+          4,
+          4
+        );
+        this.context.fillRect(
+          this.data["results"][e][0]["x"] + this.data["results"][e][1]["x"] - 4,
+          this.data["results"][e][0]["y"] - 4,
+          4,
+          4
+        );
+        this.context.fillRect(
+          this.data["results"][e][0]["x"] - 2,
+          this.data["results"][e][0]["y"] + this.data["results"][e][1]["y"] - 2,
+          4,
+          4
+        );
+        this.context.strokeRect(
+          this.data["results"][e][0]["x"],
+          this.data["results"][e][0]["y"],
+          this.data["results"][e][1]["x"],
+          this.data["results"][e][1]["y"]
+        );
+        this.context.fillRect(
+          this.data["results"][e][0]["x"] + this.data["results"][e][1]["x"] - 3,
+          this.data["results"][e][0]["y"] + this.data["results"][e][1]["y"] - 3,
+          4,
+          4
+        );
+      }
+      this.context.lineWidth = 2.5;
+      this.context.stroke();
+    }
+  }
+
+  saveManualTrigger() {
+    this.loading = true;
+    const reqData = {
+      cameraId: this.camera,
+      httpIn: this.data.screenshot,
+      actions: this.manualTriggerForm.value.actions,
+      severity: this.manualTriggerForm.value.severity,
+      results:
+        this.data.results.length > 0 ? JSON.stringify(this.data.results) : "",
+      canvasWidth: String(this.context.canvas.width),
+      canvasHeight: String(this.context.canvas.height),
+      algoId: this.manualTriggerForm.value.algoId,
+    };
+
+    this.face.manualTrigger(reqData).subscribe(
+      (res: any) => {
+        this.loading = false;
+        this.closeModal();
+        this.getManualTriggers();
+        alert(res.message);
+      },
+      (error) => {
+        this.loading = false;
+        console.log(error);
+        alert(error.error.message);
+      }
+    );
+  }
+
+  closeModal() {
+    this.dialogRef.close();
+  }
+
+  got(id) {
     this.route.navigate([`/pages/tickets`]);
   }
 
+  pass(vid: string) {
+    this.videoplayer.nativeElement.src = vid;
+    this.videoplayer.nativeElement.load();
+    this.videoplayer.nativeElement.play();
+  }
   settings = {
     mode: "external",
+    // actions: {
+    //   position: "right",
+    //   columnTitle: "ACTIONS",
+    //   add: false,
+    //   edit: true,
+    //   delete: false,
+    // },
+    // edit: {
+    //   editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
+    //   saveButtonContent: '<i class="nb-checkmark"></i>',
+    //   cancelButtonContent: '<i class="nb-close"></i>',
+    //   confirmSave: true,
+    // },
     actions: false,
     pager: {
       display: true,
@@ -444,6 +627,20 @@ export class CollapseComponent implements OnInit, OnDestroy {
 
 @Component({
   selector: "button-view",
+  template: ` <img [src]="rowData.picture" width="60" height="60" /> `,
+})
+export class ButtonViewComponentPic implements ViewCell, OnInit {
+  constructor() {}
+
+  @Input() value: string | number;
+  @Input() rowData: any;
+  @Output() save: EventEmitter<any> = new EventEmitter();
+
+  ngOnInit() {}
+}
+
+@Component({
+  selector: "button-view",
   styles: [
     ".play-btn { position: absolute; left: 50%; top: 50%; margin-top: -17px; margin-left: -20px; color: #f7f9fc47}",
   ],
@@ -475,18 +672,4 @@ export class ButtonViewComponent implements ViewCell, OnInit {
   ngOnInit() {
     this.renderValue = this.value.toString().toUpperCase();
   }
-}
-
-@Component({
-  selector: "button-view",
-  template: ` <img [src]="rowData.picture" width="60" height="60" /> `,
-})
-export class ButtonViewComponentPic implements ViewCell, OnInit {
-  constructor() {}
-
-  @Input() value: string | number;
-  @Input() rowData: any;
-  @Output() save: EventEmitter<any> = new EventEmitter();
-
-  ngOnInit() {}
 }
