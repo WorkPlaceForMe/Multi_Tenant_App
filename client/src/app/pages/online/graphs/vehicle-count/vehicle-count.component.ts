@@ -1,13 +1,28 @@
-import { DatePipe } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { NbCalendarRange, NbThemeService } from '@nebular/theme';
-import { LocalDataSource, ViewCell } from 'ng2-smart-table';
-import { api } from '../../../../models/API';
-import { AnalyticsService } from '../../../../services/analytics.service';
-import { FacesService } from '../../../../services/faces.service';
-import { Router } from '@angular/router';
-import { Account } from '../../../../models/Account';
+import { DatePipe } from "@angular/common";
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  Renderer2,
+  ViewChild,
+} from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
+import { NbCalendarRange, NbColorHelper, NbThemeService } from "@nebular/theme";
+import { LocalDataSource, ViewCell } from "ng2-smart-table";
+import { api } from "../../../../models/API";
+import { AnalyticsService } from "../../../../services/analytics.service";
+import { FacesService } from "../../../../services/faces.service";
+import { Router } from "@angular/router";
+import { Account } from "../../../../models/Account";
+import { NbDialogRef, NbDialogService } from "@nebular/theme";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ip } from "../../../../models/IpServer";
+
 
 @Component({
   selector: 'ngx-vehicle-count',
@@ -25,9 +40,17 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
   now_user: Account;
   themeSubscription: any;
   options: any = {};
-  optionsBPre: any = {};
-
-  @ViewChild('streaming', { static: false }) streamingcanvas: ElementRef;
+  imageUrl: any;
+  dialogRef: NbDialogRef<any>;
+  @ViewChild("streaming", { static: false }) streamingcanvas: ElementRef;
+  canvas: any;
+  context: any;
+  data: any;
+  manualTriggerForm: FormGroup;
+  algorithms: any;
+  loading: boolean = false;
+  loadingTakeScreenShot: boolean = false;
+  algoId = 26;
 
   constructor(
     private serv: AnalyticsService,
@@ -36,6 +59,9 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
     public datepipe: DatePipe,
     private route: Router,
     private theme: NbThemeService,
+    private dialogService: NbDialogService,
+    private rd: Renderer2,
+    private fb: FormBuilder
   ) { }
   single: any;
   colorScheme: any;
@@ -47,6 +73,10 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
   motorbikesData: any;
   rtspIn: any;
   dataVehicles: any;
+  dataL: any;
+  optionsBPre: any;
+  count: number = 0;
+  coords = [];
 
   ngOnDestroy() {
     if (this.player !== undefined) {
@@ -90,6 +120,7 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
     //     )
     //   },500)
     // }
+    this.getManualTriggers();
     this.now_user = JSON.parse(localStorage.getItem('now_user'));
     const time = new Date();
     this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0, 3);
@@ -110,7 +141,7 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type,
     };
-    this.face.checkVideo(26, this.camera).subscribe(
+    this.face.checkVideo(this.algoId, this.camera).subscribe(
       res => {
         this.video = res['video'];
         this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
@@ -145,30 +176,6 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
         for (const t of this.vcount.labels){
           labels.push(this.datepipe.transform(t, 'yyyy-M-dd HH:mm'));
         }
-
-        // for (const c of this.vcount.carsLabel){
-        //   carsTimes.push(this.datepipe.transform(c, 'yyyy-M-dd HH:mm'));
-        // }
-
-        // const busesTimes = [];
-        // for (const b of this.vcount.busesLabel){
-        //   busesTimes.push(this.datepipe.transform(b, 'yyyy-M-dd HH:mm'));
-        // }
-
-        // const trucksTimes = [];
-        // for (const t of this.vcount.trucksLabel){
-        //   trucksTimes.push(this.datepipe.transform(t, 'yyyy-M-dd HH:mm'));
-        // }
-
-        // const rickshawsTimes = [];
-        // for (const r of this.vcount.rickshawsLabel){
-        //   rickshawsTimes.push(this.datepipe.transform(r, 'yyyy-M-dd HH:mm'));
-        // }
-
-        // const motorbikesTimes = [];
-        // for (const m of this.vcount.motorbikesLabel){
-        //   motorbikesTimes.push(this.datepipe.transform(m, 'yyyy-M-dd HH:mm'));
-        // }
 
         this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
 
@@ -426,6 +433,298 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
     );
   }
 
+
+  getManualTriggers() {
+    const manualTriggers = [];
+    this.face.getmanualTriggers().subscribe(
+      (res: any) => {
+        for (const manualTrigger of res["manualTriggers"]) {
+          const obj = {
+            time: this.datepipe.transform(
+              manualTrigger.createdAt,
+              "yyyy-M-dd HH:mm:ss"
+            ),
+            severity: manualTrigger.severity,
+            camera_name: manualTrigger.camera.name,
+            picture: manualTrigger.http_in,
+            actions: manualTrigger.actions,
+            status: manualTrigger.triggered,
+          };
+          manualTriggers.push(obj);
+        }
+        this.source.load(
+          manualTriggers
+            .slice()
+            .sort((a, b) => +new Date(b.time) - +new Date(a.time))
+        );
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  initializeManualTriggerForm() {
+    this.manualTriggerForm = this.fb.group({
+      actions: ["", [Validators.required, Validators.minLength(3)]],
+      severity: ["", [Validators.required, Validators.minLength(3)]],
+      algoId: ["", [Validators.required]],
+    });
+  }
+
+  @HostListener("document:mousemove", ["$event"])
+  onMouseMove(e) {
+    let x, y, rect;
+    if (this.canvas) {
+      rect = this.canvas.getBoundingClientRect();
+      x = e.clientX - rect.left - 3;
+      y = e.clientY - rect.top - 3;
+      if (this.count == 1) {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.re_draw();
+        this.context.fillStyle = "rgba(0,0,0,0)";
+        this.context.strokeStyle = "white";
+        this.context.fillRect(
+          this.coords[0]["x"] - 2,
+          this.coords[0]["y"] - 2,
+          4,
+          4
+        );
+        this.context.fillRect(this.coords[0]["x"] - 2, y - 2, 4, 4);
+        this.context.fillRect(x - 2, this.coords[0]["y"] - 2, 4, 4);
+        this.context.strokeRect(
+          this.coords[0]["x"],
+          this.coords[0]["y"],
+          x - this.coords[0]["x"],
+          y - this.coords[0]["y"]
+        );
+        this.context.fillRect(
+          this.coords[0]["x"],
+          this.coords[0]["y"],
+          x - this.coords[0]["x"],
+          y - this.coords[0]["y"]
+        );
+        this.context.fillRect(x - 2, y - 2, 4, 4);
+        this.context.lineWidth = 2.5;
+        this.context.stroke();
+      }
+    }
+  }
+
+
+
+  getAlgorithms() {
+    this.face.getAllAlgos().subscribe(
+      (res: any) => {
+        this.algorithms = res.data;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  openFormModal(template: any) {
+    this.loadingTakeScreenShot = true;
+    this.initializeManualTriggerForm();
+    this.getAlgorithms();
+    this.face.getCamera(this.camera).subscribe(
+      (res: any) => {
+        this.loadingTakeScreenShot = false;
+        this.dialogRef = this.dialogService.open(template, {
+          hasScroll: true,
+          dialogClass: "model-full",
+        });
+        this.canvas = <HTMLCanvasElement>document.getElementById("canvasId");
+        this.context = this.canvas.getContext("2d");
+        this.context.canvas.width = 700;
+        this.context.canvas.height = 400;
+        const serverIp = ip === "localhost" ? "40.84.143.162" : ip;
+        this.data = {
+          screenshot: `http://${serverIp}${res["data"]["heatmap_pic"]}`,
+          results: [],
+        };
+      },
+      (error) => {
+        this.loadingTakeScreenShot = false;
+        console.log(error);
+      }
+    );
+  }
+
+  drawRect(event: any) {
+    this.canvas = this.rd.selectRootElement(event.target);
+    this.context = this.canvas.getContext("2d");
+    this.goAnnotate(event);
+  }
+
+  clear() {
+    this.context = this.canvas.getContext("2d");
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.data["results"].splice(this.data["results"].length - 1, 1);
+    this.re_draw();
+  }
+
+  getBackground() {
+    const backgroundImage = `url(${this.data.screenshot})`;
+    return this.sanitizer.bypassSecurityTrustStyle(backgroundImage);
+  }
+
+  goAnnotate(event) {
+    this.re_draw();
+    let x, y, rect;
+    this.count++;
+    if (this.count == 1) {
+      this.context.beginPath();
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.re_draw();
+      rect = this.canvas.getBoundingClientRect();
+      x = event.clientX - rect.left;
+      y = event.clientY - rect.top;
+      this.coords.push({ x: x, y: y });
+      this.context.moveTo(x, y);
+      this.context.fillRect(x - 2, y - 2, 4, 4);
+    } else if (this.count == 2) {
+      this.count = 0;
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      rect = this.canvas.getBoundingClientRect();
+      x = event.clientX - rect.left;
+      y = event.clientY - rect.top;
+      this.context.fillRect(
+        this.coords[0]["x"] - 2,
+        this.coords[0]["y"] - 2,
+        4,
+        4
+      );
+      this.context.fillRect(this.coords[0]["x"] - 2, y - 2, 4, 4);
+      this.context.fillRect(x - 2, this.coords[0]["y"] - 2, 4, 4);
+      this.context.strokeStyle = "lime";
+      this.context.strokeRect(
+        this.coords[0]["x"],
+        this.coords[0]["y"],
+        x - this.coords[0]["x"],
+        y - this.coords[0]["y"]
+      );
+      this.context.fillRect(x - 2, y - 2, 4, 4);
+      x = x - this.coords[0].x;
+      y = y - this.coords[0].y;
+      this.coords.push({ x: x, y: y });
+      this.coords.push({
+        general_detection: "No",
+        detection_source: "Manual Drawn",
+      });
+      this.context.lineWidth = 2.5;
+      this.context.stroke();
+      this.data["results"].push(this.coords);
+      this.re_draw();
+      this.coords = [];
+    }
+  }
+
+  re_draw() {
+    for (let e = 0; e < this.data["results"].length; e++) {
+      this.context.strokeStyle = "lime";
+      if (this.data["results"][e][2]["general_detection"] == "Yes") {
+        this.context.fillRect(
+          this.data["results"][e][0]["x"] - 2,
+          this.data["results"][e][0]["y"] - 2,
+          4,
+          4
+        );
+        this.context.fillRect(
+          this.data["results"][e][0]["x"] - 2,
+          this.data["results"][e][1]["y"] - 2,
+          4,
+          4
+        );
+        this.context.fillRect(
+          this.data["results"][e][1]["x"] - 2,
+          this.data["results"][e][0]["y"] - 2,
+          4,
+          4
+        );
+        this.context.strokeRect(
+          this.data["results"][e][0]["x"],
+          this.data["results"][e][0]["y"],
+          this.data["results"][e][1]["x"] - this.data["results"][e][0]["x"],
+          this.data["results"][e][1]["y"] - this.data["results"][e][0]["y"]
+        );
+        this.context.fillRect(
+          this.data["results"][e][1]["x"] - 2,
+          this.data["results"][e][1]["y"] - 2,
+          4,
+          4
+        );
+      } else {
+        this.context.fillRect(
+          this.data["results"][e][0]["x"] - 2,
+          this.data["results"][e][0]["y"] - 2,
+          4,
+          4
+        );
+        this.context.fillRect(
+          this.data["results"][e][0]["x"] + this.data["results"][e][1]["x"] - 4,
+          this.data["results"][e][0]["y"] - 4,
+          4,
+          4
+        );
+        this.context.fillRect(
+          this.data["results"][e][0]["x"] - 2,
+          this.data["results"][e][0]["y"] + this.data["results"][e][1]["y"] - 2,
+          4,
+          4
+        );
+        this.context.strokeRect(
+          this.data["results"][e][0]["x"],
+          this.data["results"][e][0]["y"],
+          this.data["results"][e][1]["x"],
+          this.data["results"][e][1]["y"]
+        );
+        this.context.fillRect(
+          this.data["results"][e][0]["x"] + this.data["results"][e][1]["x"] - 3,
+          this.data["results"][e][0]["y"] + this.data["results"][e][1]["y"] - 3,
+          4,
+          4
+        );
+      }
+      this.context.lineWidth = 2.5;
+      this.context.stroke();
+    }
+  }
+
+  saveManualTrigger() {
+    this.loading = true;
+    const reqData = {
+      cameraId: this.camera,
+      httpIn: this.data.screenshot,
+      actions: this.manualTriggerForm.value.actions,
+      severity: this.manualTriggerForm.value.severity,
+      results:
+        this.data.results.length > 0 ? JSON.stringify(this.data.results) : "",
+      canvasWidth: String(this.context.canvas.width),
+      canvasHeight: String(this.context.canvas.height),
+      algoId: this.manualTriggerForm.value.algoId,
+    };
+
+    this.face.manualTrigger(reqData).subscribe(
+      (res: any) => {
+        this.loading = false;
+        this.closeModal();
+        this.getManualTriggers();
+        alert(res.message);
+      },
+      (error) => {
+        this.loading = false;
+        console.log(error);
+        alert(error.error.message);
+      }
+    );
+  }
+
+  closeModal() {
+    this.dialogRef.close();
+  }
+
   got(id) {
     this.route.navigate([`/pages/tickets`]);
   }
@@ -498,22 +797,50 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
 }
 
 @Component({
-  selector: 'button-view',
-  template: `
-    <img [src]="rowData.picture" width='60' height='60'>
-  `,
+  selector: "button-view",
+  template: ` <img [src]="rowData.picture" width="60" height="60" /> `,
 })
-export class ButtonViewComponent implements ViewCell, OnInit {
-
-  constructor() {
-  }
+export class ButtonViewComponentPic implements ViewCell, OnInit {
+  constructor() {}
 
   @Input() value: string | number;
   @Input() rowData: any;
   @Output() save: EventEmitter<any> = new EventEmitter();
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }
 
+@Component({
+  selector: "button-view",
+  styles: [
+    ".play-btn { position: absolute; left: 50%; top: 50%; margin-top: -17px; margin-left: -20px; color: #f7f9fc47}",
+  ],
+  template: `
+    <div>
+      <div style="width:60px; height: 60px">
+        <img [src]="rowData.picture" width="60" height="60" />
+        <button class="btn btn-link play-btn" (click)="openVideo()">
+          <i class="fas fa-play"></i>
+        </button>
+      </div>
+    </div>
+  `,
+})
+export class ButtonViewComponent implements ViewCell, OnInit {
+  renderValue: string;
+
+  constructor() {}
+
+  @Input() value: string | number;
+  @Input() rowData: any;
+
+  @Output() save: EventEmitter<any> = new EventEmitter();
+
+  openVideo() {
+    this.save.emit(this.rowData.clip_path);
+  }
+
+  ngOnInit() {
+    this.renderValue = this.value.toString().toUpperCase();
+  }
+}
