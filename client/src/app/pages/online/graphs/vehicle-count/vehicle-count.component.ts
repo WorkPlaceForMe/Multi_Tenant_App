@@ -1,22 +1,36 @@
-import { DatePipe } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { NbCalendarRange, NbThemeService } from '@nebular/theme';
-import { LocalDataSource, ViewCell } from 'ng2-smart-table';
-import { api } from '../../../../models/API';
-import { AnalyticsService } from '../../../../services/analytics.service';
-import { FacesService } from '../../../../services/faces.service';
-import { Router } from '@angular/router';
-import { Account } from '../../../../models/Account';
+import { DatePipe } from "@angular/common";
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
+import {
+  NbCalendarRange,
+  NbDialogRef,
+  NbDialogService,
+  NbThemeService,
+} from "@nebular/theme";
+import { LocalDataSource, ViewCell } from "ng2-smart-table";
+import { api } from "../../../../models/API";
+import { AnalyticsService } from "../../../../services/analytics.service";
+import { FacesService } from "../../../../services/faces.service";
+import { Router } from "@angular/router";
+import { Account } from "../../../../models/Account";
+import { ManualTriggerComponent } from "../manual-trigger/manual-trigger.component";
+import { ip } from "../../../../models/IpServer";
 
 @Component({
-  selector: 'ngx-vehicle-count',
-  templateUrl: './vehicle-count.component.html',
-  styleUrls: ['./vehicle-count.component.scss', '../smart-table.scss']
+  selector: "ngx-vehicle-count",
+  templateUrl: "./vehicle-count.component.html",
+  styleUrls: ["./vehicle-count.component.scss", "../smart-table.scss"],
 })
-
 export class VehicleCountComponent implements OnInit, OnDestroy {
-
   @Input() range: NbCalendarRange<Date>;
   @Input() camera;
   vcount: any = [];
@@ -26,8 +40,12 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
   themeSubscription: any;
   options: any = {};
   optionsBPre: any = {};
+  algoId = 26;
+  loadingTakeScreenShot: boolean = false;
+  dialogRef: NbDialogRef<any>;
+  data: any;
 
-  @ViewChild('streaming', { static: false }) streamingcanvas: ElementRef;
+  @ViewChild("streaming", { static: false }) streamingcanvas: ElementRef;
 
   constructor(
     private serv: AnalyticsService,
@@ -36,7 +54,8 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
     public datepipe: DatePipe,
     private route: Router,
     private theme: NbThemeService,
-  ) { }
+    private dialogService: NbDialogService
+  ) {}
   single: any;
   colorScheme: any;
   source: any = new LocalDataSource();
@@ -52,30 +71,29 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
     if (this.player !== undefined) {
       this.player.destroy();
       this.face.cameraStop({ id: this.camera }).subscribe(
-        res => {
-        },
-        err => console.error(err),
+        (res) => {},
+        (err) => console.error(err)
       );
     }
   }
 
-  @ViewChild('videoPlayer', { static: false }) videoplayer: ElementRef;
+  @ViewChild("videoPlayer", { static: false }) videoplayer: ElementRef;
   isPlay: boolean = false;
   toggleVideo(event: any) {
     this.videoplayer.nativeElement.play();
   }
 
-  videoFile: string = '';
+  videoFile: string = "";
   pass(vid: string) {
     this.videoplayer.nativeElement.src = vid;
     this.videoplayer.nativeElement.load();
     this.videoplayer.nativeElement.play();
-
   }
 
   video: boolean = false;
 
   ngOnInit(): void {
+    this.getManualTriggers();
     // // if(api.length <= 4){
     //   if(api.length <= 1){
     //   setTimeout(()=>{
@@ -90,60 +108,77 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
     //     )
     //   },500)
     // }
-    this.now_user = JSON.parse(localStorage.getItem('now_user'));
+    this.now_user = JSON.parse(localStorage.getItem("now_user"));
     const time = new Date();
-    this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0, 3);
+    this.timezone = time
+      .toString()
+      .match(/[\+,\-](\d{4})\s/g)[0]
+      .split(" ")[0]
+      .slice(0, 3);
     this.timezone = parseInt(this.timezone);
-    let p = '';
+    let p = "";
     if (this.timezone > 0) {
-      p = '+';
+      p = "+";
     }
-    this.timezone = p + JSON.stringify(this.timezone) + '00';
+    this.timezone = p + JSON.stringify(this.timezone) + "00";
     let type;
-    if (this.now_user.id_branch !== '0000') {
-      type = 'cam_id';
+    if (this.now_user.id_branch !== "0000") {
+      type = "cam_id";
     } else {
-      type = 'id_account';
+      type = "id_account";
     }
     const l = {
       start: this.range.start,
       end: this.range.end,
       type: type,
     };
-    this.face.checkVideo(26, this.camera).subscribe(
-      res => {
-        this.video = res['video'];
-        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
+    this.face.checkVideo(this.algoId, this.camera).subscribe(
+      (res) => {
+        this.video = res["video"];
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(
+          res["http_out"]
+        );
         if (this.video === true) {
-          this.settings['columns']['picture'] = {
-            title: 'VIDEO',
-            type: 'custom',
+          this.settings["columns"]["picture"] = {
+            title: "VIDEO",
+            type: "custom",
             filter: false,
             renderComponent: ButtonViewComponent,
             onComponentInitFunction: (instance) => {
-              instance.save.subscribe((row: string)  => {
+              instance.save.subscribe((row: string) => {
                 this.pass(row);
               });
             },
           };
           this.settings = Object.assign({}, this.settings);
         }
-      }, err => console.error(err),
+      },
+      (err) => console.error(err)
     );
     this.serv.vcount(this.camera, l).subscribe(
-      res => {
-        this.vcount = res['data'];
-        console.log(this.vcount)
+      (res) => {
+        this.vcount = res["data"];
+        console.log(this.vcount);
         for (const m of this.vcount.raw) {
-          m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/vcount/' + m['cam_id'] + '/' + m['picture']);
-          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss');
+          m["picture"] = this.sanitizer.bypassSecurityTrustUrl(
+            api +
+              "/pictures/" +
+              this.now_user["id_account"] +
+              "/" +
+              m["id_branch"] +
+              "/vcount/" +
+              m["cam_id"] +
+              "/" +
+              m["picture"]
+          );
+          m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss");
         }
-        this.source = this.vcount.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+        //  this.source = this.vcount.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
 
         const carsTimes = [];
         const labels = [];
-        for (const t of this.vcount.labels){
-          labels.push(this.datepipe.transform(t, 'yyyy-M-dd HH:mm'));
+        for (const t of this.vcount.labels) {
+          labels.push(this.datepipe.transform(t, "yyyy-M-dd HH:mm"));
         }
 
         // for (const c of this.vcount.carsLabel){
@@ -170,59 +205,57 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
         //   motorbikesTimes.push(this.datepipe.transform(m, 'yyyy-M-dd HH:mm'));
         // }
 
-        this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
-
+        this.themeSubscription = this.theme.getJsTheme().subscribe((config) => {
           const colors: any = config.variables;
           const chartjs: any = config.variables.chartjs;
 
-              this.optionsBPre = {
-              maintainAspectRatio: true,
-              responsive: true,
-              legend: {
-                labels: {
-                  fontColor: chartjs.textColor,
+          this.optionsBPre = {
+            maintainAspectRatio: true,
+            responsive: true,
+            legend: {
+              labels: {
+                fontColor: chartjs.textColor,
+              },
+            },
+            scales: {
+              xAxes: [
+                {
+                  stacked: true,
+                  gridLines: {
+                    display: false,
+                    color: chartjs.axisLineColor,
+                  },
+                  ticks: {
+                    fontColor: chartjs.textColor,
+                  },
                 },
-              },
-              scales: {
-                xAxes: [
-                  {
-                    stacked: true,
-                    gridLines: {
-                      display: false,
-                      color: chartjs.axisLineColor,
-                    },
-                    ticks: {
-                      fontColor: chartjs.textColor,
-                    },
+              ],
+              yAxes: [
+                {
+                  stacked: true,
+                  gridLines: {
+                    display: true,
+                    color: chartjs.axisLineColor,
                   },
-                ],
-                yAxes: [
-                  {
-                    stacked: true,
-                    gridLines: {
-                      display: true,
-                      color: chartjs.axisLineColor,
-                    },
-                    ticks: {
-                      fontColor: chartjs.textColor,
-                    },
+                  ticks: {
+                    fontColor: chartjs.textColor,
                   },
-                ],
-              },
-            };
+                },
+              ],
+            },
+          };
 
           this.options = {
             responsive: true,
             maintainAspectRatio: false,
             legend: {
-
-              position: 'bottom',
+              position: "bottom",
               labels: {
                 fontColor: chartjs.textColor,
               },
             },
             hover: {
-              mode: 'index',
+              mode: "index",
             },
             scales: {
               xAxes: [
@@ -230,7 +263,7 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
                   display: false,
                   scaleLabel: {
                     display: false,
-                    labelString: 'Month',
+                    labelString: "Month",
                   },
                   gridLines: {
                     display: true,
@@ -261,46 +294,48 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
           };
           this.dataVehicles = {
             labels: labels,
-            datasets: [{
-              label: 'Cars',
-              data: this.vcount.carsLabel,
-              borderColor: colors.success,
-              backgroundColor: colors.success,
-              fill: false,
-              // borderDash: [2, 2],
-              pointRadius: 2,
-              pointHoverRadius: 5,
-            },
-            {
-              label: 'Buses',
-              data: this.vcount.busesLabel,
-              borderColor: colors.danger,
-              backgroundColor: colors.danger,
-              fill: false,
-              // borderDash: [2, 2],
-              pointRadius: 2,
-              pointHoverRadius: 5,
-            },
-            {
-              label: 'Motorbikes',
-              data: this.vcount.motorbikesLabel,
-              borderColor: colors.warning,
-              backgroundColor: colors.warning,
-              fill: false,
-              // borderDash: [2, 2],
-              pointRadius: 2,
-              pointHoverRadius: 5,
-            },
-            {
-              label: 'Trucks',
-              data: this.vcount.trucksLabel,
-              borderColor: colors.info,
-              backgroundColor: colors.info,
-              fill: false,
-              // borderDash: [2, 2],
-              pointRadius: 2,
-              pointHoverRadius: 5,
-            }],
+            datasets: [
+              {
+                label: "Cars",
+                data: this.vcount.carsLabel,
+                borderColor: colors.success,
+                backgroundColor: colors.success,
+                fill: false,
+                // borderDash: [2, 2],
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              },
+              {
+                label: "Buses",
+                data: this.vcount.busesLabel,
+                borderColor: colors.danger,
+                backgroundColor: colors.danger,
+                fill: false,
+                // borderDash: [2, 2],
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              },
+              {
+                label: "Motorbikes",
+                data: this.vcount.motorbikesLabel,
+                borderColor: colors.warning,
+                backgroundColor: colors.warning,
+                fill: false,
+                // borderDash: [2, 2],
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              },
+              {
+                label: "Trucks",
+                data: this.vcount.trucksLabel,
+                borderColor: colors.info,
+                backgroundColor: colors.info,
+                fill: false,
+                // borderDash: [2, 2],
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              },
+            ],
           };
           // this.carsData = {
           //   labels: carsTimes,
@@ -419,101 +454,254 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
           // };
         });
       },
-      err => {
+      (err) => {
         console.error(err);
         this.vcount = undefined;
-      },
+      }
     );
   }
 
-  got(id) {
+  getManualTriggers() {
+    const manualTriggers = [];
+    this.face.getmanualTriggers().subscribe(
+      (res: any) => {
+        for (const manualTrigger of res["manualTriggers"]) {
+          const obj = {
+            time: this.datepipe.transform(
+              manualTrigger.createdAt,
+              "yyyy-M-dd HH:mm:ss"
+            ),
+            severity: manualTrigger.severity,
+            camera_name: manualTrigger.camera.name,
+            picture: manualTrigger.http_in,
+            actions: manualTrigger.actions,
+            status: manualTrigger.triggered,
+          };
+          manualTriggers.push(obj);
+        }
+        this.source.load(
+          manualTriggers
+            .slice()
+            .sort((a, b) => +new Date(b.time) - +new Date(a.time))
+        );
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  openFormModal() {
+    this.loadingTakeScreenShot = true;
+    this.face.getCamera(this.camera).subscribe(
+      (res: any) => {
+        this.loadingTakeScreenShot = false;
+        const serverIp = ip === "localhost" ? "40.84.143.162" : ip;
+        this.data = {
+          screenshot: `http://${serverIp}${res["data"]["heatmap_pic"]}`,
+          results: [],
+          cameraId: this.camera,
+          algoId: this.algoId,
+        };
+
+        this.dialogRef = this.dialogService.open<any>(ManualTriggerComponent, {
+          context: { data: this.data },
+          hasScroll: true,
+          dialogClass: "model-full",
+        });
+
+        this.dialogRef.onClose.subscribe((resp) => {
+          console.log(resp);
+          this.getManualTriggers();
+        });
+      },
+      (error) => {
+        this.loadingTakeScreenShot = false;
+        console.log(error);
+      }
+    );
+  }
+
+  got() {
     this.route.navigate([`/pages/tickets`]);
   }
 
   settings = {
-    mode: 'external',
-    actions: {
-      position: 'right',
-      columnTitle: 'ACTIONS',
-      add: false,
-      edit: true,
-      delete: false,
-    },
-    edit: {
-      editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
-      saveButtonContent: '<i class="nb-checkmark"></i>',
-      cancelButtonContent: '<i class="nb-close"></i>',
-      confirmSave: true,
-    },
+    mode: "external",
+    actions: false,
     pager: {
       display: true,
       perPage: 5,
     },
-    noDataMessage: 'No data found',
+    noDataMessage: "No data found",
     columns: {
-      /* picture: {
-        title: 'PHOTO',
-        type: 'custom',
+      picture: {
+        title: "PICTURE",
+        type: "custom",
         filter: false,
-        renderComponent: ButtonViewComponent,
-        onComponentInitFunction(instance) {
-          instance.save.subscribe(row => {
-            alert(`${row.name} saved!`);
-          });
+        renderComponent: ButtonViewComponentPic,
+        onComponentInitFunction: (instance) => {
+          instance.save.subscribe((row: string) => {});
         },
-      }, */
+      },
       time: {
-        title: 'TIME',
-        type: 'string',
-        filter: false,
-      },
-      car_numbers: {
-        title: 'CAR COUNT',
-        type: 'string',
-        filter: false,
-      },
-      motorbike_numbers: {
-        title: 'MOTORBIKE COUNT',
-        type: 'string',
-        filter: false,
-      },
-      truck_numbers: {
-        title: 'TRUCK COUNT',
-        type: 'string',
-        filter: false,
-      },
-      bus_numbers: {
-        title: 'BUS COUNT',
-        type: 'string',
+        title: "TIME",
+        type: "string",
         filter: false,
       },
       camera_name: {
-        title: 'CAM',
-        type: 'string',
+        title: "CAM",
+        type: "string",
+        filter: false,
+      },
+      severity: {
+        title: "SEVERITY",
+        type: "string",
+        filter: false,
+      },
+      actions: {
+        title: "ACTIONS",
+        type: "string",
+        filter: false,
+      },
+      status: {
+        title: "STATUS",
+        type: "string",
         filter: false,
       },
     },
   };
-
 }
 
 @Component({
-  selector: 'button-view',
-  template: `
-    <img [src]="rowData.picture" width='60' height='60'>
-  `,
+  selector: "button-view",
+  template: ` <img [src]="rowData.picture" width="60" height="60" /> `,
 })
-export class ButtonViewComponent implements ViewCell, OnInit {
-
-  constructor() {
-  }
+export class ButtonViewComponentPic implements ViewCell, OnInit {
+  constructor() {}
 
   @Input() value: string | number;
   @Input() rowData: any;
   @Output() save: EventEmitter<any> = new EventEmitter();
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }
 
+@Component({
+  selector: "button-view",
+  styles: [
+    ".play-btn { position: absolute; left: 50%; top: 50%; margin-top: -17px; margin-left: -20px; color: #f7f9fc47}",
+  ],
+  template: `
+    <div>
+      <div style="width:60px; height: 60px">
+        <img [src]="rowData.picture" width="60" height="60" />
+        <button class="btn btn-link play-btn" (click)="openVideo()">
+          <i class="fas fa-play"></i>
+        </button>
+      </div>
+    </div>
+  `,
+})
+export class ButtonViewComponent implements ViewCell, OnInit {
+  renderValue: string;
+
+  constructor() {}
+
+  @Input() value: string | number;
+  @Input() rowData: any;
+
+  @Output() save: EventEmitter<any> = new EventEmitter();
+
+  openVideo() {
+    this.save.emit(this.rowData.clip_path);
+  }
+
+  ngOnInit() {
+    this.renderValue = this.value.toString().toUpperCase();
+  }
+}
+
+//   got(id) {
+//     this.route.navigate([`/pages/tickets`]);
+//   }
+
+//   settings = {
+//     mode: "external",
+//     actions: {
+//       position: "right",
+//       columnTitle: "ACTIONS",
+//       add: false,
+//       edit: true,
+//       delete: false,
+//     },
+//     edit: {
+//       editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
+//       saveButtonContent: '<i class="nb-checkmark"></i>',
+//       cancelButtonContent: '<i class="nb-close"></i>',
+//       confirmSave: true,
+//     },
+//     pager: {
+//       display: true,
+//       perPage: 5,
+//     },
+//     noDataMessage: "No data found",
+//     columns: {
+//       /* picture: {
+//         title: 'PHOTO',
+//         type: 'custom',
+//         filter: false,
+//         renderComponent: ButtonViewComponent,
+//         onComponentInitFunction(instance) {
+//           instance.save.subscribe(row => {
+//             alert(`${row.name} saved!`);
+//           });
+//         },
+//       }, */
+//       time: {
+//         title: "TIME",
+//         type: "string",
+//         filter: false,
+//       },
+//       car_numbers: {
+//         title: "CAR COUNT",
+//         type: "string",
+//         filter: false,
+//       },
+//       motorbike_numbers: {
+//         title: "MOTORBIKE COUNT",
+//         type: "string",
+//         filter: false,
+//       },
+//       truck_numbers: {
+//         title: "TRUCK COUNT",
+//         type: "string",
+//         filter: false,
+//       },
+//       bus_numbers: {
+//         title: "BUS COUNT",
+//         type: "string",
+//         filter: false,
+//       },
+//       camera_name: {
+//         title: "CAM",
+//         type: "string",
+//         filter: false,
+//       },
+//     },
+//   };
+// }
+
+// @Component({
+//   selector: "button-view",
+//   template: ` <img [src]="rowData.picture" width="60" height="60" /> `,
+// })
+// export class ButtonViewComponent implements ViewCell, OnInit {
+//   constructor() {}
+
+//   @Input() value: string | number;
+//   @Input() rowData: any;
+//   @Output() save: EventEmitter<any> = new EventEmitter();
+
+//   ngOnInit() {}
+// }
