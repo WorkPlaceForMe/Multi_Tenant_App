@@ -47,7 +47,7 @@ export class BlockingComponent implements OnInit, OnDestroy {
   algorithms: any;
   loading: boolean = false;
   loadingTakeScreenShot: boolean = false;
-  algoId = 19;
+  algoId = 45;
 
   constructor(
     private serv: AnalyticsService,

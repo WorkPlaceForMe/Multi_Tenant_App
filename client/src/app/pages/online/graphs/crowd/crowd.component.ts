@@ -47,7 +47,7 @@ export class CrowdComponent implements OnInit, OnDestroy {
   algorithms: any;
   loading: boolean = false;
   loadingTakeScreenShot: boolean = false;
-  algoId = 19;
+  algoId = 43;
 
   constructor(
     private serv: AnalyticsService,

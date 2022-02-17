@@ -47,7 +47,7 @@ export class PushingComponent implements OnInit, OnDestroy {
   algorithms: any;
   loading: boolean = false;
   loadingTakeScreenShot: boolean = false;
-  algoId = 19;
+  algoId = 50;
 
   constructor(
     private serv: AnalyticsService,

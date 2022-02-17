@@ -47,7 +47,7 @@ export class PurseSnatchingComponent implements OnInit, OnDestroy {
   algorithms: any;
   loading: boolean = false;
   loadingTakeScreenShot: boolean = false;
-  algoId = 19;
+  algoId = 48;
 
   constructor(
     private serv: AnalyticsService,

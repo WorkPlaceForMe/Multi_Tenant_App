@@ -47,7 +47,7 @@ export class SlappingComponent implements OnInit, OnDestroy {
   algorithms: any;
   loading: boolean = false;
   loadingTakeScreenShot: boolean = false;
-  algoId = 19;
+  algoId = 44;
 
   constructor(
     private serv: AnalyticsService,

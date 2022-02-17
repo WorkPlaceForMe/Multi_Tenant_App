@@ -47,7 +47,7 @@ export class PullingHairComponent implements OnInit, OnDestroy {
   algorithms: any;
   loading: boolean = false;
   loadingTakeScreenShot: boolean = false;
-  algoId = 19;
+  algoId = 40;
 
   constructor(
     private serv: AnalyticsService,

@@ -47,7 +47,7 @@ export class DisrobingComponent implements OnInit, OnDestroy {
   algorithms: any;
   loading: boolean = false;
   loadingTakeScreenShot: boolean = false;
-  algoId = 19;
+  algoId = 47;
 
   constructor(
     private serv: AnalyticsService,

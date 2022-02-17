@@ -47,7 +47,7 @@ export class FollowingComponent implements OnInit, OnDestroy {
   algorithms: any;
   loading: boolean = false;
   loadingTakeScreenShot: boolean = false;
-  algoId = 19;
+  algoId = 49;
 
   constructor(
     private serv: AnalyticsService,

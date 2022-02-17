@@ -47,7 +47,7 @@ export class WavingHandsComponent implements OnInit, OnDestroy {
   algorithms: any;
   loading: boolean = false;
   loadingTakeScreenShot: boolean = false;
-  algoId = 19;
+  algoId = 41;
 
   constructor(
     private serv: AnalyticsService,
