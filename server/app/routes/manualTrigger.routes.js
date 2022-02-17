@@ -1,4 +1,4 @@
-const {authJwt} = require('../middleware')
+const { authJwt } = require('../middleware')
 const controller = require('../controllers/manualTrigger.controller')
 
 module.exports = function (app) {
@@ -9,12 +9,17 @@ module.exports = function (app) {
 
   app.post(
     '/api/manualTrigger/create',
-    [authJwt.verifyToken, authJwt.isClient],
+    [authJwt.verifyToken, authJwt.isClientOrBranch],
     controller.createManualTrigger
   )
   app.get(
     '/api/manualTrigger',
-    [authJwt.verifyToken, authJwt.isClient],
+    [authJwt.verifyToken, authJwt.isClientOrBranch],
     controller.getManualTriggers
+  )
+  app.post(
+    '/api/screenshot',
+    [authJwt.verifyToken, authJwt.isClientOrBranch],
+    controller.getScreenshot
   )
 }

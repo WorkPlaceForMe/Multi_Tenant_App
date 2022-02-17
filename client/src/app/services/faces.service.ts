@@ -241,4 +241,7 @@ export class FacesService {
   getAlgoByID(id: any) {
     return this.http.get(`${this.API_URI}/algo/${id}`);
   }
+  screenshot(body){
+    return this.http.post(`${this.API_URI}/screenshot`, body);
+  }
 }

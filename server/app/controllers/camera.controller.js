@@ -1,9 +1,9 @@
 const db = require('../models')
-require('dotenv').config({path: '../../config.env'})
+require('dotenv').config({ path: '../../config.env' })
 const Camera = db.camera
 const Relations = db.relation
 const jwt = require('jsonwebtoken')
-const {v4: uuidv4} = require('uuid')
+const { v4: uuidv4 } = require('uuid')
 const cp = require('child_process')
 const fs = require('fs')
 
@@ -32,10 +32,10 @@ exports.addCamera = (req, res) => {
       .then(_camera => {
         res
           .status(200)
-          .send({success: true, message: 'Camera was registered successfully!', id: uuid})
+          .send({ success: true, message: 'Camera was registered successfully!', id: uuid })
       })
       .catch(err => {
-        res.status(500).send({success: false, message: err.message})
+        res.status(500).send({ success: false, message: err.message })
       })
   })
 }
@@ -45,14 +45,14 @@ exports.viewCams = (req, res) => {
 
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Camera.findAll({
-      where: {id_branch: decoded.id_branch},
+      where: { id_branch: decoded.id_branch },
       attributes: ['name', 'id', 'createdAt', 'updatedAt']
     })
       .then(cameras => {
-        res.status(200).send({success: true, data: cameras})
+        res.status(200).send({ success: true, data: cameras })
       })
       .catch(err => {
-        res.status(500).send({success: false, message: err.message})
+        res.status(500).send({ success: false, message: err.message })
       })
   })
 }
@@ -62,14 +62,14 @@ exports.viewLiveCams = (req, res) => {
 
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Camera.findAll({
-      where: {id_branch: decoded.id_branch, stored_vid: 'No'},
+      where: { id_branch: decoded.id_branch, stored_vid: 'No' },
       attributes: ['name', 'id', 'createdAt', 'updatedAt', 'heatmap_pic']
     })
       .then(cameras => {
-        res.status(200).send({success: true, data: cameras})
+        res.status(200).send({ success: true, data: cameras })
       })
       .catch(err => {
-        res.status(500).send({success: false, message: err.message})
+        res.status(500).send({ success: false, message: err.message })
       })
   })
 }
@@ -79,13 +79,13 @@ exports.viewCam = (req, res) => {
 
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Camera.findOne({
-      where: {id: req.params.id, id_branch: decoded.id_branch}
+      where: { id: req.params.id, id_branch: decoded.id_branch }
     })
       .then(camera => {
-        res.status(200).send({success: true, data: camera})
+        res.status(200).send({ success: true, data: camera })
       })
       .catch(err => {
-        res.status(500).send({success: false, message: err.message})
+        res.status(500).send({ success: false, message: err.message })
       })
   })
 }
@@ -95,20 +95,20 @@ exports.delCam = (req, res) => {
 
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Relations.destroy({
-      where: {camera_id: req.params.id}
+      where: { camera_id: req.params.id }
     })
     const img = `${path}${decoded.id_account}/${decoded.id_branch}/heatmap_pics/${req.params.id}_heatmap.png`
     fs.unlink(img, err => {
-      if (err) console.log({success: false, message: 'Image error: ' + err})
+      if (err) console.log({ success: false, message: 'Image error: ' + err })
     })
     Camera.destroy({
-      where: {id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'No'}
+      where: { id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'No' }
     })
       .then(_cam => {
-        res.status(200).send({success: true, camera: req.params.uuid})
+        res.status(200).send({ success: true, camera: req.params.uuid })
       })
       .catch(err => {
-        res.status(500).send({success: false, message: err.message})
+        res.status(500).send({ success: false, message: err.message })
       })
   })
 }
@@ -119,13 +119,13 @@ exports.editCam = (req, res) => {
 
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Camera.update(updt, {
-      where: {id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'No'}
+      where: { id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'No' }
     })
       .then(_cam => {
-        res.status(200).send({success: true, data: updt})
+        res.status(200).send({ success: true, data: updt })
       })
       .catch(err => {
-        res.status(500).send({success: false, message: err.message})
+        res.status(500).send({ success: false, message: err.message })
       })
   })
 }
@@ -139,14 +139,14 @@ exports.addAtr = (req, res) => {
     cp.exec(
       `python ./scripts/heatmap.py --cameraid ${camID}  --id_account ${decoded.id_account} --id_branch ${decoded.id_branch}`,
       function (err, data) {
-        if (err) res.status(500).send({success: false, message: err})
-        if (data) res.status(200).send({success: true, data: data})
+        if (err) res.status(500).send({ success: false, message: err })
+        if (data) res.status(200).send({ success: true, data: data })
       }
     )
   })
 }
 
-function getStream(camera, port, id, tries) {
+function getStream (camera, port, id, tries) {
   if (tries == undefined) {
     tries = 0
   }
@@ -180,8 +180,8 @@ function getStream(camera, port, id, tries) {
     stream.on('camdata', _data => {
       if (sent) return
 
-      streams.push({str: stream, id: id, port: port})
-      resolve({str: stream, port: port})
+      streams.push({ str: stream, id: id, port: port })
+      resolve({ str: stream, port: port })
 
       sent = true
     })
@@ -198,22 +198,22 @@ exports.cam = (req, res) => {
 
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Camera.findOne({
-      where: {id: data.id, id_branch: decoded.id_branch, stored_vid: 'No'}
+      where: { id: data.id, id_branch: decoded.id_branch, stored_vid: 'No' }
     })
       .then(camera => {
         let port = 9999
         port = port - streams.length
         stream = getStream(camera, port, data.id)
           .then(stream => {
-            res.status(200).send({success: true, my_ip: my_ip, port: stream.port})
+            res.status(200).send({ success: true, my_ip: my_ip, port: stream.port })
           })
           .catch(err => {
             if (stream && stream.stop) stream.stop()
-            res.status(500).send({success: false, message: err})
+            res.status(500).send({ success: false, message: err })
           })
       })
       .catch(err => {
-        res.status(500).send({success: false, message: err.message})
+        res.status(500).send({ success: false, message: err.message })
       })
   })
 }
@@ -227,7 +227,7 @@ exports.stopCam = (req, res) => {
       continue
     }
   }
-  res.status(200).send({success: true, message: 'Stopped'})
+  res.status(200).send({ success: true, message: 'Stopped' })
 }
 
 var streams = []
@@ -235,22 +235,22 @@ var streams = []
 exports.checkCamRel = (req, res) => {
   const data = req.body
   if (data.algo_id == -1) {
-    return res.status(200).send({success: true, message: 'Skipping'})
+    return res.status(200).send({ success: true, message: 'Skipping' })
   }
   if (data.algo_id == -2) {
-    return res.status(200).send({success: true, message: 'Skipping'})
+    return res.status(200).send({ success: true, message: 'Skipping' })
   }
   if (data.algo_id == -3) {
-    return res.status(200).send({success: true, fact: true})
+    return res.status(200).send({ success: true, fact: true })
   }
   if (data.algo_id == -4) {
-    return res.status(200).send({success: true, fact: true})
+    return res.status(200).send({ success: true, fact: true })
   }
   let wh
   if (data.type == 'show') {
-    wh = {id_branch: data.id, algo_id: data.algo_id}
+    wh = { id_branch: data.id, algo_id: data.algo_id }
   } else {
-    wh = {camera_id: data.id, algo_id: data.algo_id}
+    wh = { camera_id: data.id, algo_id: data.algo_id }
   }
   Relations.findAll({
     where: wh
@@ -262,9 +262,9 @@ exports.checkCamRel = (req, res) => {
       } else {
         mess = true
       }
-      res.status(200).send({success: true, fact: mess})
+      res.status(200).send({ success: true, fact: mess })
     })
     .catch(err => {
-      res.status(500).send({success: false, message: err.message})
+      res.status(500).send({ success: false, message: err.message })
     })
 }
