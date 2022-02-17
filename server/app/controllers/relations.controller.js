@@ -206,6 +206,61 @@ const tables = {
     id: 38,
     table: 'fire',
     alert: true
+  },
+  'Pulling Hair': {
+    id: 40,
+    table: 'pulling',
+    alert: true
+  },
+  'Waving Hands': {
+    id: 41,
+    table: 'waving',
+    alert: true
+  },
+  Smoking: {
+    id: 42,
+    table: 'smoking',
+    alert: true
+  },
+  Crowd: {
+    id: 43,
+    table: 'crowd',
+    alert: true
+  },
+  Slapping: {
+    id: 44,
+    table: 'slapping',
+    alert: true
+  },
+  Blocking: {
+    id: 45,
+    table: 'blocking',
+    alert: true
+  },
+  Running: {
+    id: 46,
+    table: 'running',
+    alert: true
+  },
+  Disrobing: {
+    id: 47,
+    table: 'disrobing',
+    alert: true
+  },
+  'Purse Snatching': {
+    id: 48,
+    table: 'purse_snatching',
+    alert: true
+  },
+  Following: {
+    id: 49,
+    table: 'following',
+    alert: true
+  },
+  Pushing: {
+    id: 50,
+    table: 'pushing',
+    alert: true
   }
 }
 

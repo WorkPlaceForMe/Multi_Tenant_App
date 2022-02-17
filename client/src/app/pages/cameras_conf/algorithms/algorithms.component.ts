@@ -1,23 +1,40 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild, HostListener } from '@angular/core';
-import { FacesService } from '../../../services/faces.service';
-import { ColorsService } from '../../../services/colors';
-import { Relation } from '../../../models/Relation';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { Camera } from '../../../models/Camera';
-import { AccountService } from '../../../services/account.service';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  Renderer2,
+  ViewChild,
+  HostListener,
+} from "@angular/core";
+import { FacesService } from "../../../services/faces.service";
+import { ColorsService } from "../../../services/colors";
+import { Relation } from "../../../models/Relation";
+import { ActivatedRoute, Router } from "@angular/router";
+import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
+import { Camera } from "../../../models/Camera";
+import { AccountService } from "../../../services/account.service";
 
 @Component({
-  selector: 'app-algorithms',
-  templateUrl: './algorithms.component.html',
-  styleUrls: ['./algorithms.component.css'],
+  selector: "app-algorithms",
+  templateUrl: "./algorithms.component.html",
+  styleUrls: ["./algorithms.component.css"],
 })
 export class AlgorithmsComponent implements OnInit {
-
   link: SafeResourceUrl;
   previousUrl: string;
 
-  constructor(private rd: Renderer2, private facesService: FacesService, private activatedRoute: ActivatedRoute, sanitizer: DomSanitizer, private colo: ColorsService, private router: Router, private AccountService: AccountService) {
+  constructor(
+    private rd: Renderer2,
+    private facesService: FacesService,
+    private activatedRoute: ActivatedRoute,
+    sanitizer: DomSanitizer,
+    private colo: ColorsService,
+    private router: Router,
+    private AccountService: AccountService
+  ) {
     // this.router.events
     // .pipe(filter((evt: any) => evt instanceof RoutesRecognized), pairwise())
     // .subscribe((events: RoutesRecognized[]) => {
@@ -26,8 +43,8 @@ export class AlgorithmsComponent implements OnInit {
     // });
     const params = this.activatedRoute.snapshot.params;
     this.facesService.getCamera(params.uuid).subscribe(
-      res => {
-        this.camera = res['data'];
+      (res) => {
+        this.camera = res["data"];
         this.res_width = this.camera.cam_width;
         this.res_height = this.camera.cam_height;
         this.resRelation = this.res_height / this.res_width;
@@ -44,103 +61,158 @@ export class AlgorithmsComponent implements OnInit {
           this.width = 485;
           this.height = this.width * this.resRelation;
         }
-        this.link = sanitizer.bypassSecurityTrustStyle('url(' + this.camera.heatmap_pic + ')');
+        this.link = sanitizer.bypassSecurityTrustStyle(
+          "url(" + this.camera.heatmap_pic + ")"
+        );
       },
-      err => console.error(err),
+      (err) => console.error(err)
     );
-    this.facesService.getAlgos()
-      .subscribe(
-        res => {
-          for (let i = 0; i < this.algos.length; i++) {
-            for (let t = 0; t < res['data'].length; t++) {
-              this.algos[i]['available'] = 0;
-              if (res['data'][t].id === i) {
-                this.algos[i].name = res['data'][t].name;
-                this.algos[i].available = res['data'][t].available;
-                this.algos[i].id = res['data'][t].id;
-              }
-              this.algos[i].conf = 95
-              if (this.algos[i]['available'] === 1) {
-                if (this.algos[i]['id'] <= 3 || this.algos[i]['id'] === 12 || this.algos[i]['id'] === 14 || this.algos[i]['id'] === 15 || this.algos[i]['id'] === 16 || this.algos[i]['id'] === 17 || this.algos[i]['id'] === 18 || this.algos[i]['id'] === 19 || this.algos[i]['id'] === 20 || this.algos[i]['id'] === 21 || this.algos[i]['id'] === 22 || this.algos[i]['id'] === 23 || this.algos[i]['id'] === 24 || this.algos[i]['id'] === 32 || this.algos[i]['id'] === 35 || this.algos[i]['id'] === 38 || this.algos[i]['id'] === 36 || this.algos[i]['id'] === 37) {
-                  this.Calgos.push(this.algos[i]);
-                } else if (this.algos[i]['id'] > 3 && this.algos[i]['id'] <= 8 || this.algos[i]['id'] === 5 || this.algos[i]['id'] === 13 || this.algos[i]['id'] === 25 || this.algos[i]['id'] === 26 || this.algos[i]['id'] === 28 || this.algos[i]['id'] === 29 || this.algos[i]['id'] === 30 || this.algos[i]['id'] === 31 || this.algos[i]['id'] === 33) {
-                  this.Balgos.push(this.algos[i]);
-                } else if (this.algos[i]['id'] > 8 && this.algos[i]['id'] <= 11 || this.algos[i]['id'] === 27 || this.algos[i]['id'] === 39) {
+    this.facesService.getAlgos().subscribe(
+      (res) => {
+        for (let i = 0; i < this.algos.length; i++) {
+          for (let t = 0; t < res["data"].length; t++) {
+            this.algos[i]["available"] = 0;
+            if (res["data"][t].id === i) {
+              this.algos[i].name = res["data"][t].name;
+              this.algos[i].available = res["data"][t].available;
+              this.algos[i].id = res["data"][t].id;
+            }
+            this.algos[i].conf = 95;
+            if (this.algos[i]["available"] === 1) {
+              if (
+                this.algos[i]["id"] <= 3 ||
+                this.algos[i]["id"] === 12 ||
+                this.algos[i]["id"] === 14 ||
+                this.algos[i]["id"] === 15 ||
+                this.algos[i]["id"] === 16 ||
+                this.algos[i]["id"] === 17 ||
+                this.algos[i]["id"] === 18 ||
+                this.algos[i]["id"] === 19 ||
+                this.algos[i]["id"] === 20 ||
+                this.algos[i]["id"] === 21 ||
+                this.algos[i]["id"] === 22 ||
+                this.algos[i]["id"] === 23 ||
+                this.algos[i]["id"] === 24 ||
+                this.algos[i]["id"] === 32 ||
+                this.algos[i]["id"] === 35 ||
+                this.algos[i]["id"] === 38 ||
+                this.algos[i]["id"] === 36 ||
+                this.algos[i]["id"] === 37 ||
+                this.algos[i]["id"] === 40 ||
+                this.algos[i]["id"] === 41 ||
+                this.algos[i]["id"] === 42 ||
+                this.algos[i]["id"] === 43 ||
+                this.algos[i]["id"] === 44 ||
+                this.algos[i]["id"] === 45 ||
+                this.algos[i]["id"] === 46 ||
+                this.algos[i]["id"] === 47 ||
+                this.algos[i]["id"] === 48 ||
+                this.algos[i]["id"] === 49 ||
+                this.algos[i]["id"] === 50
+              ) {
+                this.Calgos.push(this.algos[i]);
+                // console.log(this.Calgos);
+              } else if (
+                (this.algos[i]["id"] > 3 && this.algos[i]["id"] <= 8) ||
+                this.algos[i]["id"] === 5 ||
+                this.algos[i]["id"] === 13 ||
+                this.algos[i]["id"] === 25 ||
+                this.algos[i]["id"] === 26 ||
+                this.algos[i]["id"] === 28 ||
+                this.algos[i]["id"] === 29 ||
+                this.algos[i]["id"] === 30 ||
+                this.algos[i]["id"] === 31 ||
+                this.algos[i]["id"] === 33
+              ) {
+                this.Balgos.push(this.algos[i]);
+              } else if (
+                (this.algos[i]["id"] > 8 && this.algos[i]["id"] <= 11) ||
+                this.algos[i]["id"] === 27 ||
+                this.algos[i]["id"] === 39
+              ) {
                 this.Aalgos.push(this.algos[i]);
-                }
               }
             }
           }
-          this.facesService.getRelations(params.uuid).subscribe(
-            res => {
-              this.relations = res['data'];
-              for (let i = 0; i < this.algos.length; i++) {
-                for (let e = 0; e < this.relations.length; e++) {
-                  if (this.algos[i].id == this.relations[e]['algo_id']) {
-                    this.algos[i].activated = true;
-                    this.algos[i].conf = this.relations[e]['atributes'][0]['conf'];
-                    this.algos[i].save = this.relations[e]['atributes'][0]['save'];
-                    this.algos[i].time = this.relations[e]['atributes'][0]['time'];
-                    if (this.relations[e]['atributes'].length == 2) {
-                      if (this.relations[e]['algo_id'] == 1) {
-                        this.climb = this.relations[e]['atributes'][1];
-                      } else if (this.relations[e]['algo_id'] == 7) {
-                        this.unwanted = this.relations[e]['atributes'][1];
-                      } else if (this.relations[e]['algo_id'] == 5) {
-                        this.speed = this.relations[e]['atributes'][1];
-                      } else if (this.relations[e]['algo_id'] == 2) {
-                        this.loiteringTime = this.relations[e]['atributes'][1];
-                      } else if (this.relations[e]['algo_id'] == 3) {
-                        this.dac = this.relations[e]['atributes'][1];
-                      } else if (this.relations[e]['algo_id'] == 12) {
-                        this.quantity = this.relations[e]['atributes'][1];
-                      } else if (this.relations[e]['algo_id'] == 16) {
-                        this.aod = this.relations[e]['atributes'][1];
-                      } else if (this.relations[e]['algo_id'] == 32) {
-                        this.parkingTime = this.relations[e]['atributes'][1];
-                      }
+        }
+        this.facesService.getRelations(params.uuid).subscribe(
+          (res) => {
+            this.relations = res["data"];
+            for (let i = 0; i < this.algos.length; i++) {
+              for (let e = 0; e < this.relations.length; e++) {
+                if (this.algos[i].id == this.relations[e]["algo_id"]) {
+                  this.algos[i].activated = true;
+                  this.algos[i].conf =
+                    this.relations[e]["atributes"][0]["conf"];
+                  this.algos[i].save =
+                    this.relations[e]["atributes"][0]["save"];
+                  this.algos[i].time =
+                    this.relations[e]["atributes"][0]["time"];
+                  if (this.relations[e]["atributes"].length == 2) {
+                    if (this.relations[e]["algo_id"] == 1) {
+                      this.climb = this.relations[e]["atributes"][1];
+                    } else if (this.relations[e]["algo_id"] == 7) {
+                      this.unwanted = this.relations[e]["atributes"][1];
+                    } else if (this.relations[e]["algo_id"] == 5) {
+                      this.speed = this.relations[e]["atributes"][1];
+                    } else if (this.relations[e]["algo_id"] == 2) {
+                      this.loiteringTime = this.relations[e]["atributes"][1];
+                    } else if (this.relations[e]["algo_id"] == 3) {
+                      this.dac = this.relations[e]["atributes"][1];
+                    } else if (this.relations[e]["algo_id"] == 12) {
+                      this.quantity = this.relations[e]["atributes"][1];
+                    } else if (this.relations[e]["algo_id"] == 16) {
+                      this.aod = this.relations[e]["atributes"][1];
+                    } else if (this.relations[e]["algo_id"] == 32) {
+                      this.parkingTime = this.relations[e]["atributes"][1];
                     }
                   }
-
-                }
-                if (this.algos[i].activated === undefined) {
-                  this.algos[i].activated = false;
-                }
-                if (this.algos[i].time === undefined) {
-                  this.algos[i].time = 0;
-                }
-                if (this.algos[i].save === undefined) {
-                  this.algos[i].save = false;
                 }
               }
-              for (let u = 0; u < this.relations.length; u++) {
-                if (this.relations[u]['roi_id'] != null) {
-                  for (let l = 0; l < this.relations[u]['roi_id'].length; l++) {
-                    // these parameters is to scalate it according to RoI resolution
-                    this.relations[u]['roi_id'][l]['x'] = this.relations[u]['roi_id'][l]['x'] * this.width / this.res_width;
-                    this.relations[u]['roi_id'][l]['y'] = this.relations[u]['roi_id'][l]['y'] * this.height / this.res_height;
-                  }
-
-                  this.relations[u]['roi_id'].push(parseInt(this.relations[u]['algo_id']));
-                  this.polygons.push(this.relations[u]['roi_id']);
-                }
-                if (u === this.relations.length - 1 && this.polygons != null) {
-                  this.re_draw(true);
-                }
+              if (this.algos[i].activated === undefined) {
+                this.algos[i].activated = false;
               }
-              this.actA = this.getNbOccur(true, this.Aalgos);
-              this.actB = this.getNbOccur(true, this.Balgos);
-              this.actC = this.getNbOccur(true, this.Calgos);
-            },
-            err => console.error(err),
-          );
-        },
-        err => console.error(err),
-      );
+              if (this.algos[i].time === undefined) {
+                this.algos[i].time = 0;
+              }
+              if (this.algos[i].save === undefined) {
+                this.algos[i].save = false;
+              }
+            }
+            for (let u = 0; u < this.relations.length; u++) {
+              if (this.relations[u]["roi_id"] != null) {
+                for (let l = 0; l < this.relations[u]["roi_id"].length; l++) {
+                  // these parameters is to scalate it according to RoI resolution
+                  this.relations[u]["roi_id"][l]["x"] =
+                    (this.relations[u]["roi_id"][l]["x"] * this.width) /
+                    this.res_width;
+                  this.relations[u]["roi_id"][l]["y"] =
+                    (this.relations[u]["roi_id"][l]["y"] * this.height) /
+                    this.res_height;
+                }
+
+                this.relations[u]["roi_id"].push(
+                  parseInt(this.relations[u]["algo_id"])
+                );
+                this.polygons.push(this.relations[u]["roi_id"]);
+              }
+              if (u === this.relations.length - 1 && this.polygons != null) {
+                this.re_draw(true);
+              }
+            }
+            this.actA = this.getNbOccur(true, this.Aalgos);
+            this.actB = this.getNbOccur(true, this.Balgos);
+            this.actC = this.getNbOccur(true, this.Calgos);
+          },
+          (err) => console.error(err)
+        );
+      },
+      (err) => console.error(err)
+    );
   }
 
   relation: Relation = {
-    camera_id: '',
+    camera_id: "",
     algo_id: 0,
     roi_id: null,
     atributes: null,
@@ -148,12 +220,12 @@ export class AlgorithmsComponent implements OnInit {
 
   @Input() private src: string;
   @Output() private created = new EventEmitter();
-  @ViewChild('polygon', { static: true }) private polygon: ElementRef;
+  @ViewChild("polygon", { static: true }) private polygon: ElementRef;
 
   public innerWidth: any;
   public innerHeight: any;
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener("window:resize", ["$event"])
   onResize(event) {
     this.innerWidth = window.innerWidth;
     this.innerHeight = window.innerHeight;
@@ -173,24 +245,73 @@ export class AlgorithmsComponent implements OnInit {
     }
   }
 
-
   width: number;
   height: number;
   resRelation: number;
   camera: Camera = {
-    name: 'Loading',
+    name: "Loading",
   };
   polygons = [];
   perimeter = [];
   relations: any = [];
   algos: any = [
-    { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false }, { activated: false },{ activated: false }, { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
+    { activated: false },
   ];
   Aalgos: any = [];
   Balgos: any = [];
   Calgos: any = [];
-  colour: string = '';
-  fill: string = '';
+  colour: string = "";
+  fill: string = "";
   complete = false;
   param = this.activatedRoute.snapshot.params.uuid;
   actA: number;
@@ -225,106 +346,118 @@ export class AlgorithmsComponent implements OnInit {
     analytics: 0,
   };
 
-  back(which){
-    if (which === 'Yes'){
-      this.router.navigateByUrl('/pages/search/list');
+  back(which) {
+    if (which === "Yes") {
+      this.router.navigateByUrl("/pages/search/list");
     } else {
-      this.router.navigateByUrl('/pages/camerasList');
+      this.router.navigateByUrl("/pages/camerasList");
     }
   }
 
   ngOnInit() {
     this.setBcg();
     this.complete = true;
-    this.AccountService.remaining().subscribe(
-      res => {
-        this.remaining['analytics'] = res['data']['analytics'];
-      },
-    );
+    this.AccountService.remaining().subscribe((res) => {
+      this.remaining["analytics"] = res["data"]["analytics"];
+    });
   }
 
   getNbOccur(boolean: boolean, arr) {
     let occurs = 0;
     for (let i = 0; i < arr.length; i++) {
-      if (arr[i]['activated'] === boolean)
-        occurs++;
+      if (arr[i]["activated"] === boolean) occurs++;
     }
     return occurs;
   }
 
   checkTime(input) {
-    if (input === undefined || input === '') {
+    if (input === undefined || input === "") {
       this.showL = true;
-    }
-    else if (input !== undefined) {
+    } else if (input !== undefined) {
       this.showL = false;
     }
   }
 
   checkTimeRangeS(input0, input1) {
-    if (input0 === undefined || input0 === '' || input1 === undefined || input1 === '') {
+    if (
+      input0 === undefined ||
+      input0 === "" ||
+      input1 === undefined ||
+      input1 === ""
+    ) {
       this.showS = true;
-    }
-    else if (input0 !== undefined && input1 !== undefined) {
+    } else if (input0 !== undefined && input1 !== undefined) {
       this.showS = false;
     }
   }
 
   checkTimeRangeU0(input0, input1) {
-    if (input0 === undefined || input0 === '' || input1 === undefined || input1 === '') {
+    if (
+      input0 === undefined ||
+      input0 === "" ||
+      input1 === undefined ||
+      input1 === ""
+    ) {
       this.showU0 = true;
-    }
-    else if (input0 !== undefined && input1 !== undefined) {
+    } else if (input0 !== undefined && input1 !== undefined) {
       this.showU0 = false;
     }
   }
 
   checkTimeRangeU1(input0, input1) {
-    if (input0 === undefined || input0 === '' || input1 === undefined || input1 === '') {
+    if (
+      input0 === undefined ||
+      input0 === "" ||
+      input1 === undefined ||
+      input1 === ""
+    ) {
       this.showU1 = true;
-    }
-    else if (input0 !== undefined && input1 !== undefined) {
+    } else if (input0 !== undefined && input1 !== undefined) {
       this.showU1 = false;
     }
   }
 
   checkTimeRangeU2(input0, input1) {
-    if (input0 === undefined || input0 === '' || input1 === undefined || input1 === '') {
+    if (
+      input0 === undefined ||
+      input0 === "" ||
+      input1 === undefined ||
+      input1 === ""
+    ) {
       this.showU2 = true;
-    }
-    else if (input0 !== undefined && input1 !== undefined) {
+    } else if (input0 !== undefined && input1 !== undefined) {
       this.showU2 = false;
     }
   }
 
   resetTimeUc() {
-    this.unwanted['car.rangeB'] = 0;
-    this.unwanted['car.rangeE'] = 0;
+    this.unwanted["car.rangeB"] = 0;
+    this.unwanted["car.rangeE"] = 0;
   }
 
   resetTimeUt() {
-    this.unwanted['truck.rangeB'] = 0;
-    this.unwanted['truck.rangeE'] = 0;
+    this.unwanted["truck.rangeB"] = 0;
+    this.unwanted["truck.rangeE"] = 0;
   }
   resetTimeUtwo() {
-    this.unwanted['two_wheeler.rangeB'] = 0;
-    this.unwanted['two_wheeler.rangeE'] = 0;
+    this.unwanted["two_wheeler.rangeB"] = 0;
+    this.unwanted["two_wheeler.rangeE"] = 0;
   }
 
   resetTimeS() {
-    this.speed['rangeB'] = '';
-    this.speed['rangeE'] = '';
+    this.speed["rangeB"] = "";
+    this.speed["rangeE"] = "";
   }
 
   resetTime() {
-    this.loiteringTime = '';
-    this.parkingTime = '';
+    this.loiteringTime = "";
+    this.parkingTime = "";
   }
 
   private setBcg() {
     // this.src = 'assets/heatmap_picture.png';
-    this.canvas = this.rd.selectRootElement(this.polygon['nativeElement']);
-    this.ctx = this.canvas.getContext('2d');
+    this.canvas = this.rd.selectRootElement(this.polygon["nativeElement"]);
+    this.ctx = this.canvas.getContext("2d");
     // let bcg = new Image();
     // bcg.src = this.src;
     // bcg.onload = () => {
@@ -377,27 +510,37 @@ export class AlgorithmsComponent implements OnInit {
       for (let u = 0; u < this.algos.length; u++) {
         if (this.polygons[e][this.polygons[e].length - 1] === u) {
           const rgb = this.colo.ran_col(u, this.algos.length);
-          pred_colour = 'rgba(' + rgb + ',1)';
-          pred_fill = 'rgba(' + rgb + ',0.3)';
+          pred_colour = "rgba(" + rgb + ",1)";
+          pred_fill = "rgba(" + rgb + ",0.3)";
         }
       }
       this.ctx.lineWidth = 1;
-      this.ctx.strokeStyle = 'yellow';
-      this.ctx.lineCap = 'circle';
+      this.ctx.strokeStyle = "yellow";
+      this.ctx.lineCap = "circle";
       this.ctx.beginPath();
       for (let i = 0; i < this.polygons[e].length; i++) {
         if (i === 0) {
-          this.ctx.moveTo(this.polygons[e][i]['x'], this.polygons[e][i]['y']);
+          this.ctx.moveTo(this.polygons[e][i]["x"], this.polygons[e][i]["y"]);
           this.ctx.fillStyle = pred_colour;
-          this.ctx.fillRect(this.polygons[e][i]['x'] - 2, this.polygons[e][i]['y'] - 2, 4, 4);
+          this.ctx.fillRect(
+            this.polygons[e][i]["x"] - 2,
+            this.polygons[e][i]["y"] - 2,
+            4,
+            4
+          );
         } else {
-          this.ctx.lineTo(this.polygons[e][i]['x'], this.polygons[e][i]['y']);
+          this.ctx.lineTo(this.polygons[e][i]["x"], this.polygons[e][i]["y"]);
           this.ctx.fillStyle = pred_colour;
-          this.ctx.fillRect(this.polygons[e][i]['x'] - 2, this.polygons[e][i]['y'] - 2, 4, 4);
+          this.ctx.fillRect(
+            this.polygons[e][i]["x"] - 2,
+            this.polygons[e][i]["y"] - 2,
+            4,
+            4
+          );
         }
       }
       if (end) {
-        this.ctx.lineTo(this.polygons[e][0]['x'], this.polygons[e][0]['y']);
+        this.ctx.lineTo(this.polygons[e][0]["x"], this.polygons[e][0]["y"]);
         this.ctx.closePath();
         this.ctx.fillStyle = pred_fill;
         this.ctx.fill();
@@ -413,39 +556,57 @@ export class AlgorithmsComponent implements OnInit {
 
   saveAndBack(which) {
     this.nSave();
-    if (which === 'Yes'){
-      this.router.navigateByUrl('/pages/search/list');
+    if (which === "Yes") {
+      this.router.navigateByUrl("/pages/search/list");
     } else {
-      this.router.navigateByUrl('/pages/camerasList');
+      this.router.navigateByUrl("/pages/camerasList");
     }
     //this.router.navigateByUrl('/pages/camerasList');
   }
   saave() {
     const data = [];
     const id = this.activatedRoute.snapshot.params.uuid;
-    data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime);
+    data.push(
+      this.algos,
+      this.climb,
+      this.loiteringTime,
+      this.aod,
+      this.speed,
+      this.unwanted,
+      this.dac,
+      this.quantity,
+      this.parkingTime
+    );
     this.facesService.sendAlgs(id, data).subscribe(
-      res => {
+      (res) => {
         // this.router.navigateByUrl(`/pages/cameras/algorithms/${id}`)
         window.location.reload();
       },
-      err => {
+      (err) => {
         // console.log(err);
         // this.router.navigateByUrl(`/pages/cameras/algorithms/${id}`)
         window.location.reload();
-      },
+      }
     );
   }
 
   nSave() {
     const data = [];
     const id = this.activatedRoute.snapshot.params.uuid;
-    data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime);
+    data.push(
+      this.algos,
+      this.climb,
+      this.loiteringTime,
+      this.aod,
+      this.speed,
+      this.unwanted,
+      this.dac,
+      this.quantity,
+      this.parkingTime
+    );
     this.facesService.sendAlgs(id, data).subscribe(
-      res => {},
-      err => console.log(err),
+      (res) => {},
+      (err) => console.log(err)
     );
   }
-
 }
-
