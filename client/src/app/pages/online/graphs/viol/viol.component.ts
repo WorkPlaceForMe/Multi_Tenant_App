@@ -22,6 +22,7 @@ import { Account } from "../../../../models/Account";
 import { NbDialogRef, NbDialogService } from "@nebular/theme";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ip } from "../../../../models/IpServer";
+import { ViewManualTriggerComponent } from "../view-manual-trigger/view-manual-trigger.component";
 
 @Component({
   selector: "ngx-viol",
@@ -275,6 +276,9 @@ export class ViolComponent implements OnInit, OnDestroy {
             picture: manualTrigger.http_in,
             actions: manualTrigger.actions,
             status: manualTrigger.triggered,
+            results: manualTrigger.results,
+            canvasHeight: manualTrigger.canvasHeight,
+            canvasWidth: manualTrigger.canvasWidth,
           };
           manualTriggers.push(obj);
         }
@@ -386,6 +390,8 @@ export class ViolComponent implements OnInit, OnDestroy {
     this.context = this.canvas.getContext("2d");
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.data["results"].splice(this.data["results"].length - 1, 1);
+    console.log(this.data["results"]);
+
     this.re_draw();
   }
 
@@ -612,6 +618,15 @@ export class ViolComponent implements OnInit, OnDestroy {
       status: {
         title: "STATUS",
         type: "string",
+        filter: false,
+      },
+      button: {
+        title: "Action",
+        type: "custom",
+        valuePrepareFunction: (value, row, cell) => {
+          return row;
+        },
+        renderComponent: ViewManualTriggerComponent,
         filter: false,
       },
     },
