@@ -31,7 +31,7 @@ import { ip } from "../../../../models/IpServer";
 export class PushingComponent implements OnInit, OnDestroy {
   @Input() range: NbCalendarRange<Date>;
   @Input() camera;
-  running: any = [];
+  pushing: any = [];
   player: any;
   timezone: any;
   now_user: Account;
@@ -140,17 +140,17 @@ export class PushingComponent implements OnInit, OnDestroy {
       },
       (err) => console.error(err)
     );
-    this.serv.running(this.camera, l).subscribe(
+    this.serv.pushing(this.camera, l).subscribe(
       (res) => {
-        this.running = res["data"];
-        for (var m of this.running.raw) {
+        this.pushing = res["data"];
+        for (var m of this.pushing.raw) {
           m["picture"] = this.sanitizer.bypassSecurityTrustUrl(
             api +
               "/pictures/" +
               this.now_user["id_account"] +
               "/" +
               m["id_branch"] +
-              "/running/" +
+              "/pushing/" +
               m["cam_id"] +
               "/" +
               m["picture"]
@@ -161,7 +161,7 @@ export class PushingComponent implements OnInit, OnDestroy {
             this.now_user["id_account"] +
             "/" +
             m["id_branch"] +
-            "/running/" +
+            "/pushing/" +
             m["cam_id"] +
             "/" +
             m["clip_path"];
@@ -181,11 +181,11 @@ export class PushingComponent implements OnInit, OnDestroy {
             }
           }
         }
-        // this.source = this.running.raw
+        // this.source = this.pushing.raw
         //   .slice()
         //   .sort((a, b) => +new Date(b.time) - +new Date(a.time));
         let labels = [];
-        for (var o of Object.keys(this.running.over)) {
+        for (var o of Object.keys(this.pushing.over)) {
           o = o + ":00:00";
           labels.push(this.datepipe.transform(o, "yyyy-M-dd HH:mm"));
         }
@@ -200,7 +200,7 @@ export class PushingComponent implements OnInit, OnDestroy {
               {
                 label: "Hands Over Time",
                 backgroundColor: NbColorHelper.hexToRgbA(colors.primary, 0.3),
-                data: Object.values(this.running.over),
+                data: Object.values(this.pushing.over),
                 borderColor: colors.primary,
               },
             ],
