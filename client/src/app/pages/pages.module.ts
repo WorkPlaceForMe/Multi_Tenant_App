@@ -136,17 +136,18 @@ import { AddIncidentComponent } from "./search/add-incident/add-incident.compone
 import { MemoComponent } from "./search/memo/memo.component";
 import { IncidentLogsComponent } from "./search/incident-logs/incident-logs.component";
 import { ManualTriggerComponent } from "./online/graphs/manual-trigger/manual-trigger.component";
-import { PullingHairComponent } from './online/graphs/pulling-hair/pulling-hair.component';
-import { FollowingComponent } from './online/graphs/following/following.component';
-import { PushingComponent } from './online/graphs/pushing/pushing.component';
-import { WavingHandsComponent } from './online/graphs/waving-hands/waving-hands.component';
-import { SmokingComponent } from './online/graphs/smoking/smoking.component';
-import { CrowdComponent } from './online/graphs/crowd/crowd.component';
-import { SlappingComponent } from './online/graphs/slapping/slapping.component';
-import { BlockingComponent } from './online/graphs/blocking/blocking.component';
-import { RunningComponent } from './online/graphs/running/running.component';
-import { DisrobingComponent } from './online/graphs/disrobing/disrobing.component';
-import { PurseSnatchingComponent } from './online/graphs/purse-snatching/purse-snatching.component';
+import { PullingHairComponent } from "./online/graphs/pulling-hair/pulling-hair.component";
+import { FollowingComponent } from "./online/graphs/following/following.component";
+import { PushingComponent } from "./online/graphs/pushing/pushing.component";
+import { WavingHandsComponent } from "./online/graphs/waving-hands/waving-hands.component";
+import { SmokingComponent } from "./online/graphs/smoking/smoking.component";
+import { CrowdComponent } from "./online/graphs/crowd/crowd.component";
+import { SlappingComponent } from "./online/graphs/slapping/slapping.component";
+import { BlockingComponent } from "./online/graphs/blocking/blocking.component";
+import { RunningComponent } from "./online/graphs/running/running.component";
+import { DisrobingComponent } from "./online/graphs/disrobing/disrobing.component";
+import { PurseSnatchingComponent } from "./online/graphs/purse-snatching/purse-snatching.component";
+import { ViewManualTriggerComponent } from "./online/graphs/view-manual-trigger/view-manual-trigger.component";
 
 @NgModule({
   imports: [
@@ -300,6 +301,7 @@ import { PurseSnatchingComponent } from './online/graphs/purse-snatching/purse-s
     RunningComponent,
     DisrobingComponent,
     PurseSnatchingComponent,
+    ViewManualTriggerComponent,
   ],
   providers: [
     FacesService,

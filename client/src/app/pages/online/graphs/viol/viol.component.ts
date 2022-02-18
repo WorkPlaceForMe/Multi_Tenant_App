@@ -22,6 +22,7 @@ import { Account } from "../../../../models/Account";
 import { NbDialogRef, NbDialogService } from "@nebular/theme";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ip } from "../../../../models/IpServer";
+import { ViewManualTriggerComponent } from "../view-manual-trigger/view-manual-trigger.component";
 
 @Component({
   selector: "ngx-viol",
@@ -119,7 +120,7 @@ export class ViolComponent implements OnInit, OnDestroy {
     this.face.checkVideo(this.algoId, this.camera).subscribe(
       (res) => {
         this.video = res["video"];
-        this.link = res['http_out']
+        this.link = res["http_out"];
         this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(
           res["http_out"]
         );
@@ -275,6 +276,9 @@ export class ViolComponent implements OnInit, OnDestroy {
             picture: manualTrigger.http_in,
             actions: manualTrigger.actions,
             status: manualTrigger.triggered,
+            results: manualTrigger.results,
+            canvasHeight: manualTrigger.canvasHeight,
+            canvasWidth: manualTrigger.canvasWidth,
           };
           manualTriggers.push(obj);
         }
@@ -351,36 +355,48 @@ export class ViolComponent implements OnInit, OnDestroy {
   link: string;
   openFormModal(template: any) {
     this.loadingTakeScreenShot = true;
-    this.face.screenshot({stream: this.link, id_account: this.now_user.id_account, id_branch: this.now_user.id_branch}).subscribe(
-      res => {
-        const screenShot = res['img']
-        this.initializeManualTriggerForm();
-        this.getAlgorithms();
-        this.face.getCamera(this.camera).subscribe(
-          (res: any) => {
-            this.loadingTakeScreenShot = false;
-            this.dialogRef = this.dialogService.open(template, {
-              hasScroll: true,
-              dialogClass: "model-full",
-            });
-            this.canvas = <HTMLCanvasElement>document.getElementById("canvasId");
-            this.context = this.canvas.getContext("2d");
-            this.context.canvas.width = 700;
-            this.context.canvas.height = 400;
-            const serverIp = ip === "localhost" ? "40.84.143.162" : ip;
-            this.data = {
-              screenshot: `http://${serverIp}/api/${screenShot}`,
-              results: [],
-            };
-          },
-          (error) => {
-            this.loadingTakeScreenShot = false;
-            console.log(error);
-          }
-        );
-      },
-      err => console.error(err)
-    )
+    this.face
+      .screenshot({
+        stream: this.link,
+        id_account: this.now_user.id_account,
+        id_branch: this.now_user.id_branch,
+      })
+      .subscribe(
+        (res) => {
+          const screenShot = res["img"];
+          this.initializeManualTriggerForm();
+          this.getAlgorithms();
+          this.face.getCamera(this.camera).subscribe(
+            (res: any) => {
+              this.loadingTakeScreenShot = false;
+              this.dialogRef = this.dialogService.open(template, {
+                hasScroll: true,
+                dialogClass: "model-full",
+              });
+              this.canvas = <HTMLCanvasElement>(
+                document.getElementById("canvasId")
+              );
+              this.context = this.canvas.getContext("2d");
+              this.context.canvas.width = 700;
+              this.context.canvas.height = 400;
+              const serverIp = ip === "localhost" ? "40.84.143.162" : ip;
+              this.data = {
+                screenshot: `http://${serverIp}/api/${screenShot}`,
+                results: [],
+              };
+            },
+            (error) => {
+              this.loadingTakeScreenShot = false;
+              console.log(error);
+            }
+          );
+        },
+        (err) => {
+          this.loadingTakeScreenShot = false;
+          alert("There have some problem to take screenshot");
+          console.error(err);
+        }
+      );
   }
 
   drawRect(event: any) {
@@ -393,6 +409,8 @@ export class ViolComponent implements OnInit, OnDestroy {
     this.context = this.canvas.getContext("2d");
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.data["results"].splice(this.data["results"].length - 1, 1);
+    console.log(this.data["results"]);
+
     this.re_draw();
   }
 
@@ -619,6 +637,15 @@ export class ViolComponent implements OnInit, OnDestroy {
       status: {
         title: "STATUS",
         type: "string",
+        filter: false,
+      },
+      button: {
+        title: "IMAGE",
+        type: "custom",
+        valuePrepareFunction: (value, row, cell) => {
+          return row;
+        },
+        renderComponent: ViewManualTriggerComponent,
         filter: false,
       },
     },

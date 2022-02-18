@@ -1,0 +1,30 @@
+<button
+  nbButton
+  [status]="'info'"
+  style="width: 30%"
+  (click)="openModal(viewImageTemplate)"
+>
+  <i class="fa fa-eye" style="font-size: 16px"></i>
+</button>
+<ng-template #viewImageTemplate>
+  <div>
+    <nb-card>
+      <nb-card-header>
+        <h5>EVENT</h5>
+      </nb-card-header>
+      <nb-card-body>
+        <canvas
+          id="canvasId"
+          style="background-repeat: no-repeat; background-size: 100% 100%"
+          [style.background-image]="getBackground()"
+        ></canvas>
+      </nb-card-body>
+
+      <nb-card-footer>
+        <button class="btn-block" nbButton (click)="closeModal()">
+          CLOSE
+        </button></nb-card-footer
+      >
+    </nb-card>
+  </div>
+</ng-template>
