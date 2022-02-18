@@ -38,7 +38,7 @@ export class ViewManualTriggerComponent implements OnInit {
   openModal(template: any) {
     this.dialogRef = this.dialogService.open(template, {
       dialogClass: "model-full",
-      closeOnBackdropClick: false,
+      closeOnBackdropClick: true,
     });
 
     this.canvas = <HTMLCanvasElement>document.getElementById("canvasId");

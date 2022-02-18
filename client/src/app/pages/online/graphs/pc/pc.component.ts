@@ -25,6 +25,7 @@ import { FacesService } from "../../../../services/faces.service";
 import { ManualTriggerComponent } from "../manual-trigger/manual-trigger.component";
 import { ip } from "../../../../models/IpServer";
 import { Router } from "@angular/router";
+import { ViewManualTriggerComponent } from "../view-manual-trigger/view-manual-trigger.component";
 
 @Component({
   selector: "ngx-pc",
@@ -373,6 +374,9 @@ export class PcComponent implements OnInit, OnDestroy {
             picture: manualTrigger.http_in,
             actions: manualTrigger.actions,
             status: manualTrigger.triggered,
+            results: manualTrigger.results,
+            canvasHeight: manualTrigger.canvasHeight,
+            canvasWidth: manualTrigger.canvasWidth,
           };
           manualTriggers.push(obj);
         }
@@ -414,6 +418,7 @@ export class PcComponent implements OnInit, OnDestroy {
       },
       (error) => {
         this.loadingTakeScreenShot = false;
+        alert("There have some problem to take screenshot");
         console.log(error);
       }
     );
@@ -477,6 +482,15 @@ export class PcComponent implements OnInit, OnDestroy {
       status: {
         title: "STATUS",
         type: "string",
+        filter: false,
+      },
+      button: {
+        title: "IMAGE",
+        type: "custom",
+        valuePrepareFunction: (value, row, cell) => {
+          return row;
+        },
+        renderComponent: ViewManualTriggerComponent,
         filter: false,
       },
     },
