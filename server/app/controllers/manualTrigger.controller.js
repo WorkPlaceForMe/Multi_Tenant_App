@@ -3,10 +3,11 @@ require('dotenv').config({
 })
 const jwt = require('jsonwebtoken')
 const db = require('../models')
-const {v4: uuidv4} = require('uuid')
+const { v4: uuidv4 } = require('uuid')
 const User = db.user
 const ManualTrigger = db.manualTrigger
 const Camera = db.camera
+const cp = require('child_process')
 
 exports.createManualTrigger = async (req, res) => {
   const uuid = uuidv4()
@@ -125,4 +126,23 @@ exports.getManualTriggers = async (req, res) => {
       message: error
     })
   }
+}
+
+exports.getScreenshot = async (req, res) => {
+  const uuid = uuidv4()
+  const dat = req.body
+  console.log(dat)
+  cp.exec(
+    `python ./scripts/screenshot.py --stream ${dat.stream}  --id_account ${dat.id_account} --id_branch ${dat.id_branch} --uuid ${uuid}`,
+    function (err, data) {
+      if (err) res.status(500).send({ success: false, message: err })
+      if (data) {
+        res.status(200).send({
+          success: true,
+          data: data,
+          img: `pictures/${dat.id_account}/${dat.id_branch}/pictures/heatmap_pics/${uuid}_trigger.png`
+        })
+      }
+    }
+  )
 }

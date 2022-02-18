@@ -22,6 +22,8 @@ import { Account } from "../../../../models/Account";
 import { NbDialogRef, NbDialogService } from "@nebular/theme";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ip } from "../../../../models/IpServer";
+import { NgxCaptureService } from 'ngx-capture';
+import { tap } from "rxjs/operators";
 
 @Component({
   selector: 'ngx-bottle',
@@ -58,7 +60,8 @@ export class BottleComponent implements OnInit, OnDestroy {
     private route: Router,
     private dialogService: NbDialogService,
     private rd: Renderer2,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    public captureService: NgxCaptureService
   ) {}
   single: any;
   colorScheme: any;
@@ -119,10 +122,10 @@ export class BottleComponent implements OnInit, OnDestroy {
     this.face.checkVideo(this.algoId, this.camera).subscribe(
       (res) => {
         this.video = res["video"];
-
         this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(
           res["http_out"]
         );
+        this.link = res["http_out"]
         if (this.video === true) {
           this.settings["columns"]["picture"] = {
             title: "VIDEO",
@@ -260,6 +263,9 @@ export class BottleComponent implements OnInit, OnDestroy {
     );
   }
 
+  @ViewChild('img', { static: true }) img: any;
+
+
   getManualTriggers() {
     const manualTriggers = [];
     this.face.getmanualTriggers().subscribe(
@@ -348,32 +354,39 @@ export class BottleComponent implements OnInit, OnDestroy {
     );
   }
 
+  link: string;
   openFormModal(template: any) {
     this.loadingTakeScreenShot = true;
-    this.initializeManualTriggerForm();
-    this.getAlgorithms();
-    this.face.getCamera(this.camera).subscribe(
-      (res: any) => {
-        this.loadingTakeScreenShot = false;
-        this.dialogRef = this.dialogService.open(template, {
-          hasScroll: true,
-          dialogClass: "model-full",
-        });
-        this.canvas = <HTMLCanvasElement>document.getElementById("canvasId");
-        this.context = this.canvas.getContext("2d");
-        this.context.canvas.width = 700;
-        this.context.canvas.height = 400;
-        const serverIp = ip === "localhost" ? "40.84.143.162" : ip;
-        this.data = {
-          screenshot: `http://${serverIp}${res["data"]["heatmap_pic"]}`,
-          results: [],
-        };
+    this.face.screenshot({stream: this.link, id_account: this.now_user.id_account, id_branch: this.now_user.id_branch}).subscribe(
+      res => {
+        const screenShot = res['img']
+        this.initializeManualTriggerForm();
+        this.getAlgorithms();
+        this.face.getCamera(this.camera).subscribe(
+          (res: any) => {
+            this.loadingTakeScreenShot = false;
+            this.dialogRef = this.dialogService.open(template, {
+              hasScroll: true,
+              dialogClass: "model-full",
+            });
+            this.canvas = <HTMLCanvasElement>document.getElementById("canvasId");
+            this.context = this.canvas.getContext("2d");
+            this.context.canvas.width = 700;
+            this.context.canvas.height = 400;
+            const serverIp = ip === "localhost" ? "40.84.143.162" : ip;
+            this.data = {
+              screenshot: `http://${serverIp}/api/${screenShot}`,
+              results: [],
+            };
+          },
+          (error) => {
+            this.loadingTakeScreenShot = false;
+            console.log(error);
+          }
+        );
       },
-      (error) => {
-        this.loadingTakeScreenShot = false;
-        console.log(error);
-      }
-    );
+      err => console.error(err)
+    )
   }
 
   drawRect(event: any) {

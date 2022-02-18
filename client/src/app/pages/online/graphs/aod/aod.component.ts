@@ -119,7 +119,7 @@ export class AodComponent implements OnInit, OnDestroy {
     this.face.checkVideo(this.algoId, this.camera).subscribe(
       (res) => {
         this.video = res["video"];
-
+        this.link = res['http_out']
         this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(
           res["http_out"]
         );
@@ -348,32 +348,39 @@ export class AodComponent implements OnInit, OnDestroy {
     );
   }
 
+  link: string;
   openFormModal(template: any) {
     this.loadingTakeScreenShot = true;
-    this.initializeManualTriggerForm();
-    this.getAlgorithms();
-    this.face.getCamera(this.camera).subscribe(
-      (res: any) => {
-        this.loadingTakeScreenShot = false;
-        this.dialogRef = this.dialogService.open(template, {
-          hasScroll: true,
-          dialogClass: "model-full",
-        });
-        this.canvas = <HTMLCanvasElement>document.getElementById("canvasId");
-        this.context = this.canvas.getContext("2d");
-        this.context.canvas.width = 700;
-        this.context.canvas.height = 400;
-        const serverIp = ip === "localhost" ? "40.84.143.162" : ip;
-        this.data = {
-          screenshot: `http://${serverIp}${res["data"]["heatmap_pic"]}`,
-          results: [],
-        };
+    this.face.screenshot({stream: this.link, id_account: this.now_user.id_account, id_branch: this.now_user.id_branch}).subscribe(
+      res => {
+        const screenShot = res['img']
+        this.initializeManualTriggerForm();
+        this.getAlgorithms();
+        this.face.getCamera(this.camera).subscribe(
+          (res: any) => {
+            this.loadingTakeScreenShot = false;
+            this.dialogRef = this.dialogService.open(template, {
+              hasScroll: true,
+              dialogClass: "model-full",
+            });
+            this.canvas = <HTMLCanvasElement>document.getElementById("canvasId");
+            this.context = this.canvas.getContext("2d");
+            this.context.canvas.width = 700;
+            this.context.canvas.height = 400;
+            const serverIp = ip === "localhost" ? "40.84.143.162" : ip;
+            this.data = {
+              screenshot: `http://${serverIp}/api/${screenShot}`,
+              results: [],
+            };
+          },
+          (error) => {
+            this.loadingTakeScreenShot = false;
+            console.log(error);
+          }
+        );
       },
-      (error) => {
-        this.loadingTakeScreenShot = false;
-        console.log(error);
-      }
-    );
+      err => console.error(err)
+    )
   }
 
   drawRect(event: any) {
