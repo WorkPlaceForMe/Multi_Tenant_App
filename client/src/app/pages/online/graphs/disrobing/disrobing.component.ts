@@ -355,7 +355,6 @@ export class DisrobingComponent implements OnInit, OnDestroy {
   link: string;
   openFormModal(template: any) {
     this.loadingTakeScreenShot = true;
-<<<<<<< HEAD
     this.face.screenshot({stream: this.link, id_account: this.now_user.id_account, id_branch: this.now_user.id_branch}).subscribe(
       res => {
         const screenShot = res['img']
@@ -386,50 +385,6 @@ export class DisrobingComponent implements OnInit, OnDestroy {
       },
       err => console.error(err)
     )
-=======
-    this.face
-      .screenshot({
-        stream: this.link,
-        id_account: this.now_user.id_account,
-        id_branch: this.now_user.id_branch,
-      })
-      .subscribe(
-        (res) => {
-          const screenShot = res["img"];
-          this.initializeManualTriggerForm();
-          this.getAlgorithms();
-          this.face.getCamera(this.camera).subscribe(
-            (res: any) => {
-              this.loadingTakeScreenShot = false;
-              this.dialogRef = this.dialogService.open(template, {
-                hasScroll: true,
-                dialogClass: "model-full",
-              });
-              this.canvas = <HTMLCanvasElement>(
-                document.getElementById("canvasId")
-              );
-              this.context = this.canvas.getContext("2d");
-              this.context.canvas.width = 700;
-              this.context.canvas.height = 400;
-              const serverIp = ip === "localhost" ? "40.84.143.162" : ip;
-              this.data = {
-                screenshot: `http://${serverIp}/api/${screenShot}`,
-                results: [],
-              };
-            },
-            (error) => {
-              this.loadingTakeScreenShot = false;
-              console.log(error);
-            }
-          );
-        },
-        (err) => {
-          this.loadingTakeScreenShot = false;
-          alert("There have some problem to take screenshot");
-          console.error(err);
-        }
-      );
->>>>>>> a037c53b4c8a10a547b25b262de21a76646b8583
   }
 
   drawRect(event: any) {
