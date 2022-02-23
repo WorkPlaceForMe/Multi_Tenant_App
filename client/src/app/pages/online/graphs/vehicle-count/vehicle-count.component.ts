@@ -22,16 +22,14 @@ import { Account } from "../../../../models/Account";
 import { NbDialogRef, NbDialogService } from "@nebular/theme";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ip } from "../../../../models/IpServer";
-
+import { ViewManualTriggerComponent } from "../view-manual-trigger/view-manual-trigger.component";
 
 @Component({
-  selector: 'ngx-vehicle-count',
-  templateUrl: './vehicle-count.component.html',
-  styleUrls: ['./vehicle-count.component.scss', '../smart-table.scss']
+  selector: "ngx-vehicle-count",
+  templateUrl: "./vehicle-count.component.html",
+  styleUrls: ["./vehicle-count.component.scss", "../smart-table.scss"],
 })
-
 export class VehicleCountComponent implements OnInit, OnDestroy {
-
   @Input() range: NbCalendarRange<Date>;
   @Input() camera;
   vcount: any = [];
@@ -62,7 +60,7 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
     private dialogService: NbDialogService,
     private rd: Renderer2,
     private fb: FormBuilder
-  ) { }
+  ) {}
   single: any;
   colorScheme: any;
   source: any = new LocalDataSource();
@@ -82,25 +80,23 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
     if (this.player !== undefined) {
       this.player.destroy();
       this.face.cameraStop({ id: this.camera }).subscribe(
-        res => {
-        },
-        err => console.error(err),
+        (res) => {},
+        (err) => console.error(err)
       );
     }
   }
 
-  @ViewChild('videoPlayer', { static: false }) videoplayer: ElementRef;
+  @ViewChild("videoPlayer", { static: false }) videoplayer: ElementRef;
   isPlay: boolean = false;
   toggleVideo(event: any) {
     this.videoplayer.nativeElement.play();
   }
 
-  videoFile: string = '';
+  videoFile: string = "";
   pass(vid: string) {
     this.videoplayer.nativeElement.src = vid;
     this.videoplayer.nativeElement.load();
     this.videoplayer.nativeElement.play();
-
   }
 
   video: boolean = false;
@@ -121,20 +117,24 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
     //   },500)
     // }
     this.getManualTriggers();
-    this.now_user = JSON.parse(localStorage.getItem('now_user'));
+    this.now_user = JSON.parse(localStorage.getItem("now_user"));
     const time = new Date();
-    this.timezone = time.toString().match(/[\+,\-](\d{4})\s/g)[0].split(' ')[0].slice(0, 3);
+    this.timezone = time
+      .toString()
+      .match(/[\+,\-](\d{4})\s/g)[0]
+      .split(" ")[0]
+      .slice(0, 3);
     this.timezone = parseInt(this.timezone);
-    let p = '';
+    let p = "";
     if (this.timezone > 0) {
-      p = '+';
+      p = "+";
     }
-    this.timezone = p + JSON.stringify(this.timezone) + '00';
+    this.timezone = p + JSON.stringify(this.timezone) + "00";
     let type;
-    if (this.now_user.id_branch !== '0000') {
-      type = 'cam_id';
+    if (this.now_user.id_branch !== "0000") {
+      type = "cam_id";
     } else {
-      type = 'id_account';
+      type = "id_account";
     }
     const l = {
       start: this.range.start,
@@ -142,95 +142,108 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
       type: type,
     };
     this.face.checkVideo(this.algoId, this.camera).subscribe(
-      res => {
-        this.video = res['video'];
-        this.link = res['http_out']
-        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
+      (res) => {
+        this.video = res["video"];
+        this.link = res["http_out"];
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(
+          res["http_out"]
+        );
         if (this.video === true) {
-          this.settings['columns']['picture'] = {
-            title: 'VIDEO',
-            type: 'custom',
+          this.settings["columns"]["picture"] = {
+            title: "VIDEO",
+            type: "custom",
             filter: false,
             renderComponent: ButtonViewComponent,
             onComponentInitFunction: (instance) => {
-              instance.save.subscribe((row: string)  => {
+              instance.save.subscribe((row: string) => {
                 this.pass(row);
               });
             },
           };
           this.settings = Object.assign({}, this.settings);
         }
-      }, err => console.error(err),
+      },
+      (err) => console.error(err)
     );
     this.serv.vcount(this.camera, l).subscribe(
-      res => {
-        this.vcount = res['data'];
-        console.log(this.vcount)
+      (res) => {
+        this.vcount = res["data"];
+        console.log(this.vcount);
         for (const m of this.vcount.raw) {
-          m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/vcount/' + m['cam_id'] + '/' + m['picture']);
-          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss');
+          m["picture"] = this.sanitizer.bypassSecurityTrustUrl(
+            api +
+              "/pictures/" +
+              this.now_user["id_account"] +
+              "/" +
+              m["id_branch"] +
+              "/vcount/" +
+              m["cam_id"] +
+              "/" +
+              m["picture"]
+          );
+          m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss");
         }
-        this.source = this.vcount.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+        // this.source = this.vcount.raw
+        //   .slice()
+        //   .sort((a, b) => +new Date(b.time) - +new Date(a.time));
 
         const carsTimes = [];
         const labels = [];
-        for (const t of this.vcount.labels){
-          labels.push(this.datepipe.transform(t, 'yyyy-M-dd HH:mm'));
+        for (const t of this.vcount.labels) {
+          labels.push(this.datepipe.transform(t, "yyyy-M-dd HH:mm"));
         }
 
-        this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
-
+        this.themeSubscription = this.theme.getJsTheme().subscribe((config) => {
           const colors: any = config.variables;
           const chartjs: any = config.variables.chartjs;
 
-              this.optionsBPre = {
-              maintainAspectRatio: true,
-              responsive: true,
-              legend: {
-                labels: {
-                  fontColor: chartjs.textColor,
+          this.optionsBPre = {
+            maintainAspectRatio: true,
+            responsive: true,
+            legend: {
+              labels: {
+                fontColor: chartjs.textColor,
+              },
+            },
+            scales: {
+              xAxes: [
+                {
+                  stacked: true,
+                  gridLines: {
+                    display: false,
+                    color: chartjs.axisLineColor,
+                  },
+                  ticks: {
+                    fontColor: chartjs.textColor,
+                  },
                 },
-              },
-              scales: {
-                xAxes: [
-                  {
-                    stacked: true,
-                    gridLines: {
-                      display: false,
-                      color: chartjs.axisLineColor,
-                    },
-                    ticks: {
-                      fontColor: chartjs.textColor,
-                    },
+              ],
+              yAxes: [
+                {
+                  stacked: true,
+                  gridLines: {
+                    display: true,
+                    color: chartjs.axisLineColor,
                   },
-                ],
-                yAxes: [
-                  {
-                    stacked: true,
-                    gridLines: {
-                      display: true,
-                      color: chartjs.axisLineColor,
-                    },
-                    ticks: {
-                      fontColor: chartjs.textColor,
-                    },
+                  ticks: {
+                    fontColor: chartjs.textColor,
                   },
-                ],
-              },
-            };
+                },
+              ],
+            },
+          };
 
           this.options = {
             responsive: true,
             maintainAspectRatio: false,
             legend: {
-
-              position: 'bottom',
+              position: "bottom",
               labels: {
                 fontColor: chartjs.textColor,
               },
             },
             hover: {
-              mode: 'index',
+              mode: "index",
             },
             scales: {
               xAxes: [
@@ -238,7 +251,7 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
                   display: false,
                   scaleLabel: {
                     display: false,
-                    labelString: 'Month',
+                    labelString: "Month",
                   },
                   gridLines: {
                     display: true,
@@ -269,46 +282,48 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
           };
           this.dataVehicles = {
             labels: labels,
-            datasets: [{
-              label: 'Cars',
-              data: this.vcount.carsLabel,
-              borderColor: colors.success,
-              backgroundColor: colors.success,
-              fill: false,
-              // borderDash: [2, 2],
-              pointRadius: 2,
-              pointHoverRadius: 5,
-            },
-            {
-              label: 'Buses',
-              data: this.vcount.busesLabel,
-              borderColor: colors.danger,
-              backgroundColor: colors.danger,
-              fill: false,
-              // borderDash: [2, 2],
-              pointRadius: 2,
-              pointHoverRadius: 5,
-            },
-            {
-              label: 'Motorbikes',
-              data: this.vcount.motorbikesLabel,
-              borderColor: colors.warning,
-              backgroundColor: colors.warning,
-              fill: false,
-              // borderDash: [2, 2],
-              pointRadius: 2,
-              pointHoverRadius: 5,
-            },
-            {
-              label: 'Trucks',
-              data: this.vcount.trucksLabel,
-              borderColor: colors.info,
-              backgroundColor: colors.info,
-              fill: false,
-              // borderDash: [2, 2],
-              pointRadius: 2,
-              pointHoverRadius: 5,
-            }],
+            datasets: [
+              {
+                label: "Cars",
+                data: this.vcount.carsLabel,
+                borderColor: colors.success,
+                backgroundColor: colors.success,
+                fill: false,
+                // borderDash: [2, 2],
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              },
+              {
+                label: "Buses",
+                data: this.vcount.busesLabel,
+                borderColor: colors.danger,
+                backgroundColor: colors.danger,
+                fill: false,
+                // borderDash: [2, 2],
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              },
+              {
+                label: "Motorbikes",
+                data: this.vcount.motorbikesLabel,
+                borderColor: colors.warning,
+                backgroundColor: colors.warning,
+                fill: false,
+                // borderDash: [2, 2],
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              },
+              {
+                label: "Trucks",
+                data: this.vcount.trucksLabel,
+                borderColor: colors.info,
+                backgroundColor: colors.info,
+                fill: false,
+                // borderDash: [2, 2],
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              },
+            ],
           };
           // this.carsData = {
           //   labels: carsTimes,
@@ -427,13 +442,12 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
           // };
         });
       },
-      err => {
+      (err) => {
         console.error(err);
         this.vcount = undefined;
-      },
+      }
     );
   }
-
 
   getManualTriggers() {
     const manualTriggers = [];
@@ -450,6 +464,9 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
             picture: manualTrigger.http_in,
             actions: manualTrigger.actions,
             status: manualTrigger.triggered,
+            results: manualTrigger.results,
+            canvasHeight: manualTrigger.canvasHeight,
+            canvasWidth: manualTrigger.canvasWidth,
           };
           manualTriggers.push(obj);
         }
@@ -512,8 +529,6 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
   getAlgorithms() {
     this.face.getAllAlgos().subscribe(
       (res: any) => {
@@ -528,6 +543,7 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
   link: string;
   openFormModal(template: any) {
     this.loadingTakeScreenShot = true;
+<<<<<<< HEAD
     this.face.screenshot({stream: this.link, id_account: this.now_user.id_account, id_branch: this.now_user.id_branch}).subscribe(
       res => {
         const screenShot = res['img']
@@ -558,6 +574,50 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
       },
       err => console.error(err)
     )
+=======
+    this.face
+      .screenshot({
+        stream: this.link,
+        id_account: this.now_user.id_account,
+        id_branch: this.now_user.id_branch,
+      })
+      .subscribe(
+        (res) => {
+          const screenShot = res["img"];
+          this.initializeManualTriggerForm();
+          this.getAlgorithms();
+          this.face.getCamera(this.camera).subscribe(
+            (res: any) => {
+              this.loadingTakeScreenShot = false;
+              this.dialogRef = this.dialogService.open(template, {
+                hasScroll: true,
+                dialogClass: "model-full",
+              });
+              this.canvas = <HTMLCanvasElement>(
+                document.getElementById("canvasId")
+              );
+              this.context = this.canvas.getContext("2d");
+              this.context.canvas.width = 700;
+              this.context.canvas.height = 400;
+              const serverIp = ip === "localhost" ? "40.84.143.162" : ip;
+              this.data = {
+                screenshot: `http://${serverIp}/api/${screenShot}`,
+                results: [],
+              };
+            },
+            (error) => {
+              this.loadingTakeScreenShot = false;
+              console.log(error);
+            }
+          );
+        },
+        (err) => {
+          this.loadingTakeScreenShot = false;
+          alert("There have some problem to take screenshot");
+          console.error(err);
+        }
+      );
+>>>>>>> a037c53b4c8a10a547b25b262de21a76646b8583
   }
 
   drawRect(event: any) {
@@ -738,70 +798,137 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
   }
 
   settings = {
-    mode: 'external',
-    actions: {
-      position: 'right',
-      columnTitle: 'ACTIONS',
-      add: false,
-      edit: true,
-      delete: false,
-    },
-    edit: {
-      editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
-      saveButtonContent: '<i class="nb-checkmark"></i>',
-      cancelButtonContent: '<i class="nb-close"></i>',
-      confirmSave: true,
-    },
+    mode: "external",
+    // actions: {
+    //   position: "right",
+    //   columnTitle: "ACTIONS",
+    //   add: false,
+    //   edit: true,
+    //   delete: false,
+    // },
+    // edit: {
+    //   editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
+    //   saveButtonContent: '<i class="nb-checkmark"></i>',
+    //   cancelButtonContent: '<i class="nb-close"></i>',
+    //   confirmSave: true,
+    // },
+    actions: false,
     pager: {
       display: true,
       perPage: 5,
     },
-    noDataMessage: 'No data found',
+    noDataMessage: "No data found",
     columns: {
-      /* picture: {
-        title: 'PHOTO',
-        type: 'custom',
+      picture: {
+        title: "PICTURE",
+        type: "custom",
         filter: false,
-        renderComponent: ButtonViewComponent,
-        onComponentInitFunction(instance) {
-          instance.save.subscribe(row => {
-            alert(`${row.name} saved!`);
-          });
+        renderComponent: ButtonViewComponentPic,
+        onComponentInitFunction: (instance) => {
+          instance.save.subscribe((row: string) => {});
         },
-      }, */
+      },
       time: {
-        title: 'TIME',
-        type: 'string',
-        filter: false,
-      },
-      car_numbers: {
-        title: 'CAR COUNT',
-        type: 'string',
-        filter: false,
-      },
-      motorbike_numbers: {
-        title: 'MOTORBIKE COUNT',
-        type: 'string',
-        filter: false,
-      },
-      truck_numbers: {
-        title: 'TRUCK COUNT',
-        type: 'string',
-        filter: false,
-      },
-      bus_numbers: {
-        title: 'BUS COUNT',
-        type: 'string',
+        title: "TIME",
+        type: "string",
         filter: false,
       },
       camera_name: {
-        title: 'CAM',
-        type: 'string',
+        title: "CAM",
+        type: "string",
+        filter: false,
+      },
+      severity: {
+        title: "SEVERITY",
+        type: "string",
+        filter: false,
+      },
+      actions: {
+        title: "ACTIONS",
+        type: "string",
+        filter: false,
+      },
+      status: {
+        title: "STATUS",
+        type: "string",
+        filter: false,
+      },
+      button: {
+        title: "IMAGE",
+        type: "custom",
+        valuePrepareFunction: (value, row, cell) => {
+          return row;
+        },
+        renderComponent: ViewManualTriggerComponent,
         filter: false,
       },
     },
   };
 
+  // settings = {
+  //   mode: "external",
+  //   actions: {
+  //     position: "right",
+  //     columnTitle: "ACTIONS",
+  //     add: false,
+  //     edit: true,
+  //     delete: false,
+  //   },
+  //   edit: {
+  //     editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
+  //     saveButtonContent: '<i class="nb-checkmark"></i>',
+  //     cancelButtonContent: '<i class="nb-close"></i>',
+  //     confirmSave: true,
+  //   },
+  //   pager: {
+  //     display: true,
+  //     perPage: 5,
+  //   },
+  //   noDataMessage: "No data found",
+  //   columns: {
+  //     /* picture: {
+  //       title: 'PHOTO',
+  //       type: 'custom',
+  //       filter: false,
+  //       renderComponent: ButtonViewComponent,
+  //       onComponentInitFunction(instance) {
+  //         instance.save.subscribe(row => {
+  //           alert(`${row.name} saved!`);
+  //         });
+  //       },
+  //     }, */
+  //     time: {
+  //       title: "TIME",
+  //       type: "string",
+  //       filter: false,
+  //     },
+  //     car_numbers: {
+  //       title: "CAR COUNT",
+  //       type: "string",
+  //       filter: false,
+  //     },
+  //     motorbike_numbers: {
+  //       title: "MOTORBIKE COUNT",
+  //       type: "string",
+  //       filter: false,
+  //     },
+  //     truck_numbers: {
+  //       title: "TRUCK COUNT",
+  //       type: "string",
+  //       filter: false,
+  //     },
+  //     bus_numbers: {
+  //       title: "BUS COUNT",
+  //       type: "string",
+  //       filter: false,
+  //     },
+  //     camera_name: {
+  //       title: "CAM",
+  //       type: "string",
+  //       filter: false,
+  //     },
+  //   },
+  // };
 }
 
 @Component({

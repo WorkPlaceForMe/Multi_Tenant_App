@@ -22,13 +22,14 @@ import { Account } from "../../../../models/Account";
 import { NbDialogRef, NbDialogService } from "@nebular/theme";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ip } from "../../../../models/IpServer";
-import { NgxCaptureService } from 'ngx-capture';
+import { NgxCaptureService } from "ngx-capture";
 import { tap } from "rxjs/operators";
+import { ViewManualTriggerComponent } from "../view-manual-trigger/view-manual-trigger.component";
 
 @Component({
-  selector: 'ngx-bottle',
-  templateUrl: './bottle.component.html',
-  styleUrls: ['./bottle.component.scss']
+  selector: "ngx-bottle",
+  templateUrl: "./bottle.component.html",
+  styleUrls: ["./bottle.component.scss"],
 })
 export class BottleComponent implements OnInit, OnDestroy {
   @Input() range: NbCalendarRange<Date>;
@@ -125,7 +126,7 @@ export class BottleComponent implements OnInit, OnDestroy {
         this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(
           res["http_out"]
         );
-        this.link = res["http_out"]
+        this.link = res["http_out"];
         if (this.video === true) {
           this.settings["columns"]["picture"] = {
             title: "VIDEO",
@@ -263,8 +264,7 @@ export class BottleComponent implements OnInit, OnDestroy {
     );
   }
 
-  @ViewChild('img', { static: true }) img: any;
-
+  @ViewChild("img", { static: true }) img: any;
 
   getManualTriggers() {
     const manualTriggers = [];
@@ -281,6 +281,9 @@ export class BottleComponent implements OnInit, OnDestroy {
             picture: manualTrigger.http_in,
             actions: manualTrigger.actions,
             status: manualTrigger.triggered,
+            results: manualTrigger.results,
+            canvasHeight: manualTrigger.canvasHeight,
+            canvasWidth: manualTrigger.canvasWidth,
           };
           manualTriggers.push(obj);
         }
@@ -357,6 +360,7 @@ export class BottleComponent implements OnInit, OnDestroy {
   link: string;
   openFormModal(template: any) {
     this.loadingTakeScreenShot = true;
+<<<<<<< HEAD
     this.face.screenshot({stream: this.link, id_account: this.now_user.id_account, id_branch: this.now_user.id_branch}).subscribe(
       res => {
         const screenShot = res['img']
@@ -387,6 +391,50 @@ export class BottleComponent implements OnInit, OnDestroy {
       },
       err => console.error(err)
     )
+=======
+    this.face
+      .screenshot({
+        stream: this.link,
+        id_account: this.now_user.id_account,
+        id_branch: this.now_user.id_branch,
+      })
+      .subscribe(
+        (res) => {
+          const screenShot = res["img"];
+          this.initializeManualTriggerForm();
+          this.getAlgorithms();
+          this.face.getCamera(this.camera).subscribe(
+            (res: any) => {
+              this.loadingTakeScreenShot = false;
+              this.dialogRef = this.dialogService.open(template, {
+                hasScroll: true,
+                dialogClass: "model-full",
+              });
+              this.canvas = <HTMLCanvasElement>(
+                document.getElementById("canvasId")
+              );
+              this.context = this.canvas.getContext("2d");
+              this.context.canvas.width = 700;
+              this.context.canvas.height = 400;
+              const serverIp = ip === "localhost" ? "40.84.143.162" : ip;
+              this.data = {
+                screenshot: `http://${serverIp}/api/${screenShot}`,
+                results: [],
+              };
+            },
+            (error) => {
+              this.loadingTakeScreenShot = false;
+              console.log(error);
+            }
+          );
+        },
+        (err) => {
+          this.loadingTakeScreenShot = false;
+          alert("There have some problem to take screenshot");
+          console.error(err);
+        }
+      );
+>>>>>>> a037c53b4c8a10a547b25b262de21a76646b8583
   }
 
   drawRect(event: any) {
@@ -625,6 +673,15 @@ export class BottleComponent implements OnInit, OnDestroy {
       status: {
         title: "STATUS",
         type: "string",
+        filter: false,
+      },
+      button: {
+        title: "IMAGE",
+        type: "custom",
+        valuePrepareFunction: (value, row, cell) => {
+          return row;
+        },
+        renderComponent: ViewManualTriggerComponent,
         filter: false,
       },
     },
