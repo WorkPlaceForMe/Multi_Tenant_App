@@ -131,7 +131,6 @@ exports.getManualTriggers = async (req, res) => {
 exports.getScreenshot = async (req, res) => {
   const uuid = uuidv4()
   const dat = req.body
-  console.log(dat)
   cp.exec(
     `python ./scripts/screenshot.py --stream ${dat.stream}  --id_account ${dat.id_account} --id_branch ${dat.id_branch} --uuid ${uuid}`,
     function (err, data) {
@@ -140,7 +139,7 @@ exports.getScreenshot = async (req, res) => {
         res.status(200).send({
           success: true,
           data: data,
-          img: `pictures/${dat.id_account}/${dat.id_branch}/pictures/heatmap_pics/${uuid}_trigger.png`
+          img: `http://${process.env.my_ip}/api/pictures/${dat.id_account}/${dat.id_branch}/pictures/heatmap_pics/${uuid}_trigger.png`
         })
       }
     }

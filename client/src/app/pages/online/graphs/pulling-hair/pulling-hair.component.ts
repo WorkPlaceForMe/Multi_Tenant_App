@@ -369,7 +369,7 @@ export class PullingHairComponent implements OnInit, OnDestroy {
             this.context.canvas.height = 400;
             const serverIp = ip === "localhost" ? "40.84.143.162" : ip;
             this.data = {
-              screenshot: `http://${serverIp}/api/${screenShot}`,
+              screenshot: `${screenShot}`,
               results: [],
             };
           },
