@@ -41,7 +41,7 @@ export class WeaponComponent implements OnInit, OnDestroy {
   source:any = new LocalDataSource();
   dataL: any;
   optionsL: any;
-
+  rtspIn:any;  
   ngOnDestroy(){
     if(this.player != undefined){
       this.player.destroy()
@@ -86,6 +86,13 @@ export class WeaponComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type
     }
+    this.face.checkVideo(35, this.camera).subscribe(
+      res => {
+        
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
+             
+             }, err => console.error(err),
+    );
       this.serv.weapon(this.camera,l).subscribe(
         res=>{
           this.weapon = res['data']
@@ -228,6 +235,7 @@ export class WeaponComponent implements OnInit, OnDestroy {
         type: 'string',
         filter: false
       }
+      
     },
   };
 
