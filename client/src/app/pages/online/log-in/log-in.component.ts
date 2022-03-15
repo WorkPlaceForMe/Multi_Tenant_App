@@ -51,11 +51,12 @@ export class LogInComponent implements OnInit {
 
   iconGoogle(){
     let icon = {
-    'background': "url('" + api + "/pictures/g-normal.png') transparent 5px 50% no-repeat",
+    'background': "url('" + api + "/pictures/googleLogo.png') 100% 100% no-repeat",
     'display': 'inline-block',
     'vertical-align': 'middle',
     'width': '42px',
-    'height': '42px'
+    'height': '42px',
+    'background-size': '100%'
     }
     return icon;
   }
@@ -127,13 +128,14 @@ export class LogInComponent implements OnInit {
 
   iconMs(){
     let icon = {
-    'background': "url('" + api + "/pictures/ms-white.png') 45% 50% no-repeat",
-    'display': 'inline-block',
-    'vertical-align': 'middle',    
-    'width': '215px',
-    'height': '41px'
-    }
-    return icon;
+      'background': "url('" + api + "/pictures/Microsoft_logo.svg.png') 100% 100% no-repeat",
+      'display': 'inline-block',
+      'vertical-align': 'middle',
+      'width': '42px',
+      'height': '42px',
+      'background-size': '100%'
+      }
+      return icon;
   }
 
   onSubmit(){

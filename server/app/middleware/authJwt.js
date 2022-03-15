@@ -3,7 +3,7 @@ require('dotenv').config({path: '../../config.env'})
 const db = require('../models')
 const User = db.user
 
-verifyToken = (req, res, next) => {
+const verifyToken = (req, res, next) => {
   const token = req.headers['x-access-token']
 
   if (!token) {
@@ -23,7 +23,7 @@ verifyToken = (req, res, next) => {
   })
 }
 
-isAdmin = (req, res, next) => {
+const isAdmin = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     if (user.role === 'admin') {
       next()
@@ -36,7 +36,7 @@ isAdmin = (req, res, next) => {
   })
 }
 
-isBranch = (req, res, next) => {
+const isBranch = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     if (user.role === 'branch') {
       next()
@@ -49,7 +49,7 @@ isBranch = (req, res, next) => {
   })
 }
 
-isClient = (req, res, next) => {
+const isClient = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     if (user.role === 'client') {
       next()
@@ -62,7 +62,7 @@ isClient = (req, res, next) => {
   })
 }
 
-isClientOrBranch = (req, res, next) => {
+const isClientOrBranch = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     if (user.role === 'client') {
       next()
@@ -80,7 +80,7 @@ isClientOrBranch = (req, res, next) => {
   })
 }
 
-isClientOrBranchOrAdmin = (req, res, next) => {
+const isClientOrBranchOrAdmin = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     if (user.role === 'client') {
       next()
@@ -103,7 +103,7 @@ isClientOrBranchOrAdmin = (req, res, next) => {
   })
 }
 
-isUserOrBranch = (req, res, next) => {
+const isUserOrBranch = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     if (user.role === 'user') {
       next()
@@ -121,7 +121,7 @@ isUserOrBranch = (req, res, next) => {
   })
 }
 
-isClientOrUserOrBranch = (req, res, next) => {
+const isClientOrUserOrBranch = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
     if (user.role === 'user') {
       next()

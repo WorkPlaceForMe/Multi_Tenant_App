@@ -52,9 +52,10 @@
       <span class="buttonText">Google</span>
     </div>
     <br>
-    <button (click)="loginWithMs()" style="margin-top: 5px; padding: 0; background-color: 'transparent'; border: 0; -webkit-appearance: 'none'">
+    <div id="customBtn" class="customGPlusSignIn" (click)="loginWithMs()">
       <span class="icon" [ngStyle]='iconMs()'></span>
-    </button>
+      <span class="buttonText">Microsoft</span>
+    </div>
 
       </div>
     </nb-card-body>

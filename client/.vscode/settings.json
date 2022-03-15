@@ -1,4 +1,8 @@
 {
     "typescript.tsdk": "./node_modules/typescript/lib",
-    "tslint.enable": false
+    "tslint.enable": false,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "eslint.validate": ["javascript"]
 }

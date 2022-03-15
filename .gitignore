@@ -3,6 +3,8 @@ server/node_modules/
 server/access.log
 server/resources/**
 !server/resources/graymaticsLogo.png
+!server/resources/Microsoft_logo.svg.png
+!server/resources/googleLogo.png
 server/dist/
 server/config.env
 node_ubuntu.sh

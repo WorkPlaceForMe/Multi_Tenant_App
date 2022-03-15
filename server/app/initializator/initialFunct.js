@@ -7,7 +7,7 @@ exports.initial = function () {
   usr.create({
     id: '0000-11111-aaaaaa-bbbbbb',
     username: 'admin',
-    password: bcrypt.hashSync('graymatics', 12),
+    password: bcrypt.hashSync('gr@ymaticsAdmin312', 12),
     email: 'test@graymatics.com',
     role: 'admin',
     id_account: '0000',
@@ -17,7 +17,7 @@ exports.initial = function () {
   usr.create({
     id: '3333-666666-cccccc-nnnnnn',
     username: 'test',
-    password: bcrypt.hashSync('test', 12),
+    password: bcrypt.hashSync('testUser123', 12),
     email: 'test@graymatics.com',
     role: 'client',
     id_account: '3333-666666-cccccc-nnnnnn',
