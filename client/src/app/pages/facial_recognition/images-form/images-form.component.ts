@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { api } from '../../../models/API';
 import { User } from '../../../models/User';
 import { AnnotationsService } from '../../../services/annotations.service';
+import { Account } from '../../../models/Account';
 
 // const URL = '/api/image/';
 
