@@ -788,33 +788,39 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
         type: "string",
         filter: false,
       },
-      camera_name: {
+      cam_name: {
         title: "CAM",
         type: "string",
         filter: false,
       },
-      severity: {
-        title: "SEVERITY",
+      vehicle_type: {
+        title: "VEHICLE",
         type: "string",
         filter: false,
       },
-      actions: {
-        title: "ACTIONS",
+      alert: {
+        title: "ALERT",
         type: "string",
         filter: false,
       },
-      status: {
-        title: "STATUS",
+      car_numbers: {
+        title: "CAR COUNT",
         type: "string",
         filter: false,
       },
-      button: {
-        title: "IMAGE",
-        type: "custom",
-        valuePrepareFunction: (value, row, cell) => {
-          return row;
-        },
-        renderComponent: ViewManualTriggerComponent,
+      motorbike_numbers: {
+        title: "MOTORBIKE COUNT",
+        type: "string",
+        filter: false,
+      },
+      truck_numbers: {
+        title: "TRUCK COUNT",
+        type: "string",
+        filter: false,
+      },
+      bus_numbers: {
+        title: "BUS COUNT",
+        type: "string",
         filter: false,
       },
     },

@@ -304,11 +304,6 @@ export class LoitComponent implements OnInit, OnDestroy {
         type: 'string',
         filter: false,
       },
-      alert: {
-        title: 'SEVERITY',
-        type: 'string',
-        filter: false,
-      },
     },
   };
 
