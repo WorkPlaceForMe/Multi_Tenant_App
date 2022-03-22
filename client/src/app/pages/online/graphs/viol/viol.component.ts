@@ -617,25 +617,25 @@ export class ViolComponent implements OnInit, OnDestroy {
         type: "string",
         filter: false,
       },
-      actions: {
-        title: "ACTIONS",
-        type: "string",
-        filter: false,
-      },
-      status: {
-        title: "STATUS",
-        type: "string",
-        filter: false,
-      },
-      button: {
-        title: "IMAGE",
-        type: "custom",
-        valuePrepareFunction: (value, row, cell) => {
-          return row;
-        },
-        renderComponent: ViewManualTriggerComponent,
-        filter: false,
-      },
+      // actions: {
+      //   title: "ACTIONS",
+      //   type: "string",
+      //   filter: false,
+      // },
+      // status: {
+      //   title: "STATUS",
+      //   type: "string",
+      //   filter: false,
+      // },
+      // button: {
+      //   title: "IMAGE",
+      //   type: "custom",
+      //   valuePrepareFunction: (value, row, cell) => {
+      //     return row;
+      //   },
+      //   renderComponent: ViewManualTriggerComponent,
+      //   filter: false,
+      // },
     },
   };
 }
