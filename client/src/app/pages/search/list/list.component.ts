@@ -69,7 +69,6 @@ export class ListComponent implements OnInit {
       uuid: id,
       which: where
     };
-    console.log(body);
     if (confirm('Do you want to delete this camera?')) {
       this.face.delVid(body).subscribe(
         res => {

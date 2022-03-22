@@ -69,7 +69,6 @@ export class UploadComponent implements OnInit {
       const name = this.name.split(" ").join("_");
       const newName = name + "." + format;
       file.file.name = newName;
-      console.log(file.file.name, "file.file.name");
     };
     this.uploader.onErrorItem = (item, response, status, headers) => {
       //this.SpinnerService.hide();
@@ -91,7 +90,6 @@ export class UploadComponent implements OnInit {
     this.uploader.onProgressItem = (progress: any) => {
       this.progress = progress["progress"];
       // this.progress = this.messageBar
-      console.log(this.progress);
       if (progress["progress"] === 100) {
         //this.SpinnerService.hide();
         this.finished = true;
@@ -107,7 +105,6 @@ export class UploadComponent implements OnInit {
       const name = this.zipName.split(" ").join("_");
       const newName = name + "." + format;
       file.file.name = newName;
-      console.log(file.file.name, "file.file.name");
     };
     this.zipUploader.onErrorItem = (item, response, status, headers) => {
       console.log(response);
@@ -128,7 +125,6 @@ export class UploadComponent implements OnInit {
       this.progress = progress["progress"];
       if (progress["progress"] === 100) {
         this.zipUploadFinished = true;
-        console.log("zip uploaded");
       }
     };
   }
