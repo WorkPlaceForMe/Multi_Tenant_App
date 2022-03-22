@@ -95,6 +95,7 @@ export class LivestreamComponent implements OnInit, OnDestroy {
   getCameras(){
     this.facesService.getCameras().subscribe(
       res => {
+        console.log(res)
         this.cams = res['data'];
         // console.log(this.cams)
       },
@@ -107,9 +108,13 @@ export class LivestreamComponent implements OnInit, OnDestroy {
     if(confirm('Do you want to delete this camera?')){
       this.facesService.deleteCamera(id).subscribe(
         res =>{
-          // console.log(res);
-          this.getCameras();
-          this.remain();
+          this.facesService.getLiveCameras().subscribe(
+            res => {
+              this.cams = res['data'];
+              this.remain();
+            },
+            err => console.error(err)          )
+          
         },
         err => console.log(err)
       )
