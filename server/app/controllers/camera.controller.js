@@ -4,8 +4,8 @@ const Camera = db.camera
 const Relations = db.relation
 const jwt = require('jsonwebtoken')
 const { v4: uuidv4 } = require('uuid')
-const cp = require('child_process')
 const fs = require('fs')
+const axios = require('axios')
 
 const path =
   process.env.home + process.env.username + process.env.pathDocker + process.env.resources
@@ -130,19 +130,23 @@ exports.editCam = (req, res) => {
   })
 }
 
-exports.addAtr = (req, res) => {
+exports.addAtr = async (req, res) => {
   const camID = req.body.cam_id
 
   const token = req.headers['x-access-token']
 
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
-    cp.exec(
-      `python ./scripts/heatmap.py --cameraid ${camID}  --id_account ${decoded.id_account} --id_branch ${decoded.id_branch}`,
-      function (err, data) {
-        if (err) res.status(500).send({ success: false, message: err })
-        if (data) res.status(200).send({ success: true, data: data })
-      }
-    )
+    try {
+      const response = await axios.post(`${process.env.pythonApi}/api/frame`, {
+        cameraId: camID,
+        id_account: decoded.id_account,
+        id_branch: decoded.id_branch
+      })
+      res.status(200).send({ success: true, data: response.data })
+    } catch (err) {
+      console.error(err)
+      res.status(500).send({ success: false, message: err })
+    }
   })
 }
 
@@ -268,3 +272,4 @@ exports.checkCamRel = (req, res) => {
       res.status(500).send({ success: false, message: err.message })
     })
 }
+
