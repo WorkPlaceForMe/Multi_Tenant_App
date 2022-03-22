@@ -50,14 +50,7 @@ exports.ping = async (req, res) => {
   }
 }
 
-async function searchAndAdd(
-  arr,
-  time,
-  index,
-  range,
-  n = 0,
-  output = [],
-  del = [],
+async function searchAndAdd(arr, time, index, range, n = 0, output = [], del = [],
   params = {
     index: [index],
     body: {
@@ -760,16 +753,14 @@ exports.delVid = (req, res) => {
   const token = req.headers['x-access-token']
   const data = req.body
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
-    if (data.which === 'local') {
-      // const vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/videos/${data.vidName}`
-      // const img = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/heatmap_pics/${req.params.id}_heatmap.png`
+    if (data.which === 'Yes') {
       const vid = `${path}${decoded.id_account}/${decoded.id_branch}/videos/${data.vidName}`
       const img = `${path}${decoded.id_account}/${decoded.id_branch}/heatmap_pics/${req.params.id}_heatmap.png`
       fs.unlink(img, err => {
-        if (err) console.log({success: false, message: 'Image error: ' + err})
+        if (err) console.log({ success: false, message: 'Image error: ' + err })
       })
       fs.unlink(vid, err => {
-        if (err) console.log({success: false, message: 'Image error: ' + err})
+        if (err) console.log({ success: false, message: 'Image error: ' + err })
       })
     } else if (data.which === 's3') {
       const params = {
@@ -783,10 +774,10 @@ exports.delVid = (req, res) => {
     console.log('Debug Data : ', data)
 
     Camera.destroy({
-      where: {id: data.uuid, id_branch: decoded.id_branch, stored_vid: 'Yes'}
+      where: { id: data.uuid, id_branch: decoded.id_branch, stored_vid: 'Yes' }
     })
       .then(cam => {
-        res.status(200).send({success: true, camera: data.uuid})
+        res.status(200).send({ success: true, camera: data.uuid })
       })
       .catch(err => {
         console.log('err............', err)
@@ -804,13 +795,13 @@ exports.editVid = (req, res) => {
 
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Camera.update(updt, {
-      where: {id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'Yes'}
+      where: { id: req.params.id, id_branch: decoded.id_branch, stored_vid: 'Yes' }
     })
       .then(_cam => {
-        res.status(200).send({success: true, data: updt})
+        res.status(200).send({ success: true, data: updt })
       })
       .catch(err => {
-        res.status(500).send({success: false, message: err.message})
+        res.status(500).send({ success: false, message: err.message })
       })
   })
 }
@@ -821,9 +812,9 @@ exports.some = async (req, res) => {
     console.log('-- Client Health --', resp)
     try {
       const r = await deleteIndex(table)
-      res.status(200).json({success: true, data: r})
+      res.status(200).json({ success: true, data: r })
     } catch (err) {
-      res.status(500).json({success: false, mess: err})
+      res.status(500).json({ success: false, mess: err })
     }
   })
 }
