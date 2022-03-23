@@ -182,7 +182,7 @@ export class ViolComponent implements OnInit, OnDestroy {
             }
           }
         }
-        // this.source = this.violence.raw
+        this.source = this.violence.raw
         //   .slice()
         //   .sort((a, b) => +new Date(b.time) - +new Date(a.time));
         let labels = [];

@@ -142,6 +142,7 @@ export class PcComponent implements OnInit, OnDestroy {
           );
           m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss");
         }
+        this.source = this.pc.raw
         let labels = [];
         // for(var o of Object.keys(this.pc.histogramEn)){
         //   o = o + ':00:00'
@@ -450,15 +451,15 @@ export class PcComponent implements OnInit, OnDestroy {
     },
     noDataMessage: "No data found",
     columns: {
-      picture: {
-        title: "PICTURE",
-        type: "custom",
-        filter: false,
-        renderComponent: ButtonViewComponentPic,
-        onComponentInitFunction: (instance) => {
-          instance.save.subscribe((row: string) => {});
-        },
-      },
+      // picture: {
+      //   title: "PICTURE",
+      //   type: "custom",
+      //   filter: false,
+      //   renderComponent: ButtonViewComponentPic,
+      //   onComponentInitFunction: (instance) => {
+      //     instance.save.subscribe((row: string) => {});
+      //   },
+      // },
       time: {
         title: "TIME",
         type: "string",
@@ -469,30 +470,30 @@ export class PcComponent implements OnInit, OnDestroy {
         type: "string",
         filter: false,
       },
-      severity: {
-        title: "SEVERITY",
+      number_of_ppl: {
+        title: "COUNT",
         type: "string",
         filter: false,
       },
-      actions: {
-        title: "ACTIONS",
-        type: "string",
-        filter: false,
-      },
-      status: {
-        title: "STATUS",
-        type: "string",
-        filter: false,
-      },
-      button: {
-        title: "IMAGE",
-        type: "custom",
-        valuePrepareFunction: (value, row, cell) => {
-          return row;
-        },
-        renderComponent: ViewManualTriggerComponent,
-        filter: false,
-      },
+      // actions: {
+      //   title: "ACTIONS",
+      //   type: "string",
+      //   filter: false,
+      // },
+      // status: {
+      //   title: "STATUS",
+      //   type: "string",
+      //   filter: false,
+      // },
+      // button: {
+      //   title: "IMAGE",
+      //   type: "custom",
+      //   valuePrepareFunction: (value, row, cell) => {
+      //     return row;
+      //   },
+      //   renderComponent: ViewManualTriggerComponent,
+      //   filter: false,
+      // },
     },
   };
 }

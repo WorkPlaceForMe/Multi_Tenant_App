@@ -22,3 +22,4 @@ runDocker.sh
 node_modules
 client/dist
 client/dist.zip
+pythonServer/**
