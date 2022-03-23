@@ -282,11 +282,11 @@ export class ViolComponent implements OnInit, OnDestroy {
           };
           manualTriggers.push(obj);
         }
-        this.source.load(
-          manualTriggers
-            .slice()
-            .sort((a, b) => +new Date(b.time) - +new Date(a.time))
-        );
+        // this.source.load(
+        //   manualTriggers
+        //     .slice()
+        //     .sort((a, b) => +new Date(b.time) - +new Date(a.time))
+        // );
       },
       (error) => {
         console.log(error);
