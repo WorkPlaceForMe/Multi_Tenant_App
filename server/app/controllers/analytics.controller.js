@@ -754,10 +754,10 @@ exports.violence = async (req, res) => {
               se
             v['picture'] = `${d}.jpg`
             v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/violence/${req.params.id}/${v.picture}`
-            if (rel.atributes[0].time > 0) {
-              v.clip_path = `${d}.mp4`
-              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/violence/${req.params.id}/${v.clip_path}`
-            }
+            // if (rel.atributes[0].time > 0) {
+            //   v.clip_path = `${d}.mp4`
+            //   v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/violence/${req.params.id}/${v.clip_path}`
+            // }
           }
           let a = {
             total: result.length,

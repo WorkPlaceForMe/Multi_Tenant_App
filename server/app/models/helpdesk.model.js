@@ -1,6 +1,3 @@
-const db = require('.')
-const UserModel = db.user
-
 module.exports = (sequelize, Sequelize) => {
   const HelpDesk = sequelize.define('helpdesk', {
     id: {
@@ -8,10 +5,7 @@ module.exports = (sequelize, Sequelize) => {
       primaryKey: true
     },
     user_id: {
-      type: Sequelize.STRING,
-      references: UserModel,
-      refereceKey: 'id',
-      allowNull: false
+      type: Sequelize.STRING
     },
     title: {
       type: Sequelize.STRING,
@@ -26,10 +20,7 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false
     },
     client_id: {
-      type: Sequelize.STRING,
-      references: UserModel,
-      refereceKey: 'id',
-      allowNull: false
+      type: Sequelize.STRING
     },
     image_path: {
       type: Sequelize.STRING

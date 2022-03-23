@@ -1,8 +1,3 @@
-const db = require('.')
-const UserModel = db.user
-const CameraModel = db.camera
-const AlgoModel = db.algorithm
-
 module.exports = (sequelize, Sequelize) => {
   const ManualTrigger = sequelize.define('manual_trigger', {
     id: {
@@ -10,16 +5,10 @@ module.exports = (sequelize, Sequelize) => {
       primaryKey: true
     },
     user_id: {
-      type: Sequelize.STRING,
-      references: UserModel,
-      refereceKey: 'id',
-      allowNull: false
+      type: Sequelize.STRING
     },
     algo_id: {
-      type: Sequelize.INTEGER,
-      references: AlgoModel,
-      refereceKey: 'id',
-      allowNull: false
+      type: Sequelize.INTEGER
     },
     actions: {
       type: Sequelize.TEXT
@@ -28,10 +17,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING
     },
     camera_id: {
-      type: Sequelize.STRING,
-      references: CameraModel,
-      refereceKey: 'id',
-      allowNull: false
+      type: Sequelize.STRING
     },
     http_in: {
       type: Sequelize.STRING
@@ -52,14 +38,6 @@ module.exports = (sequelize, Sequelize) => {
       defaultValue: 'NO'
     }
   })
-
-  // ManualTrigger.sync({force: true})
-  //   .then(result => {
-  //     console.log(result, 'table created')
-  //   })
-  //   .catch(err => {
-  //     console.log(err)
-  //   })
 
   return ManualTrigger
 }

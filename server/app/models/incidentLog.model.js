@@ -1,6 +1,3 @@
-const db = require('.')
-const UserModel = db.user
-
 module.exports = (sequelize, Sequelize) => {
   const IncidentLog = sequelize.define('incident_log', {
     id: {
@@ -12,10 +9,7 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false
     },
     user_id: {
-      type: Sequelize.STRING,
-      references: UserModel,
-      refereceKey: 'id',
-      allowNull: false
+      type: Sequelize.STRING
     },
     status: {
       type: Sequelize.ENUM,

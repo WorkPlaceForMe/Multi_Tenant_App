@@ -1,7 +1,3 @@
-const db = require('.')
-const UserModel = db.user
-const HelpDeskModel = db.helpdesk
-
 module.exports = (sequelize, Sequelize) => {
   const Reply = sequelize.define('helpdesk_reply', {
     id: {
@@ -9,16 +5,10 @@ module.exports = (sequelize, Sequelize) => {
       primaryKey: true
     },
     helpdesk_id: {
-      type: Sequelize.STRING,
-      references: HelpDeskModel,
-      refereceKey: 'id',
-      allowNull: false
+      type: Sequelize.STRING
     },
     user_id: {
-      type: Sequelize.STRING,
-      references: UserModel,
-      refereceKey: 'id',
-      allowNull: false
+      type: Sequelize.STRING
     },
     reply_message: {
       type: Sequelize.TEXT,
