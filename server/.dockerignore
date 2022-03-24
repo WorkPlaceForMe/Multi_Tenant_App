@@ -1,3 +1,13 @@
 node_modules/**
 npm-debug.log
 resources/**
+config.env
+configDocker.env
+access.log
+.dockerignore
+Dockerfile
+.eslintrc.js
+.gitignore
+.prettierrc
+mpeg1muxer.js
+Dockerfile
