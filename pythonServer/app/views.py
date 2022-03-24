@@ -53,4 +53,25 @@ def frame():
 
 @app.route('/api/screenshot', methods=['POST'])
 def screenshot():
-   return "Its gonna come"
+   body = request.get_json(silent=True)
+   HOME = os.environ.get('home')
+   USER = os.environ.get('username')
+   PATHD = os.environ.get('pathDocker')
+   RES = os.environ.get('resources')
+   pathIm = ('{}{}{}{}{}/{}/').format(HOME,USER,PATHD,RES,body['id_account'],body['id_branch'])
+
+   cap = cv2.VideoCapture(body['stream'])
+   ret,frame = cap.read()
+   if not os.path.exists(('{}{}{}{}{}/').format(HOME,USER,PATHD,RES,body['id_account'])):
+      os.mkdir(('{}{}{}{}{}/').format(HOME,USER,PATHD,RES,body['id_account']))
+      os.mkdir(pathIm)
+      os.mkdir(('{}heatmap_pics/').format(pathIm))
+   cv2.imwrite('{}heatmap_pics/{}_trigger.png'.format(pathIm,body['uuid']),frame)
+
+   res={ "success": True, "data": body['uuid']}
+   json_object = json.dumps(res, indent = 4)
+   return json_object
+
+@app.route('/api/test', methods=['GET'])
+def test():
+   return 'Works'

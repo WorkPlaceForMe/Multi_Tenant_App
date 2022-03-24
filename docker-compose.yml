@@ -1,20 +1,9 @@
 version: '3'
 
 services:
-  # db:
-  #   image: mysql:5.7
-  #   volumes:
-  #     - /var/lib/mysql:/var/lib/mysql
-  #   restart: always
-  #   network_mode: host
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: MultiTenant@123
-  #     MYSQL_DATABASE: multi_tenant
-  #     MYSQL_USER: graymatics
-  #     MYSQL_PASSWORD: graymatics12
-
   multi-tenant-server:
-    network_mode: host
+    ports:
+      - 3300:3300
     image: back-end
     restart: always
     volumes:
@@ -28,4 +17,12 @@ services:
       - 80:80
     volumes:
       - /home/alex/Desktop/office/Multi_Tenant_App/nginx.conf:/etc/nginx/conf.d/default.conf
+  
+  multi-tenant-pythonServer:
+    network_mode: host
+    image: python-back-end
+    restart: always
+    volumes:
+      - /home/alex/Desktop/office/Multi_Tenant_App/server/resources:/usr/src/app/resources
+      - /home/alex/Desktop/office/Multi_Tenant_App/pythonServer/configPythonDocker.env:/usr/src/app/configPython.env
       

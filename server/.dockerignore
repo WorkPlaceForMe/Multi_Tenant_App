@@ -10,3 +10,4 @@ Dockerfile
 .gitignore
 .prettierrc
 mpeg1muxer.js
+Dockerfile
