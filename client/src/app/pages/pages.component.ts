@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { AuthService } from "../services/auth.service";
+import { Component } from '@angular/core'
+import { AuthService } from '../services/auth.service'
 import { Router, NavigationEnd } from '@angular/router'
 import { MENU_ITEMSADMIN, MENU_ITEMSBRANCH, MENU_ITEMSCLIENT, MENU_ITEMSUSER } from './pages-menu';
-import { FacesService } from '../services/faces.service';
+import { FacesService } from '../services/faces.service'
 
 @Component({
   selector: 'ngx-pages',

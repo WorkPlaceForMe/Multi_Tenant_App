@@ -2,8 +2,7 @@ version: '3'
 
 services:
   multi-tenant-server:
-    ports:
-      - 3300:3300
+    network_mode: host
     image: back-end
     restart: always
     volumes:
