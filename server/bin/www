@@ -6,6 +6,7 @@
 
 var app = require('../server');
 var http = require('http');
+const serial = require('../app/helpers/serial')
 
 /**
  * Get port from environment and store in Express.
@@ -24,9 +25,27 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
+ const check = async function () {
+   console.log("Checking serial...")
+  try {
+    const val = await serial.send()
+    if (!val) {
+      console.log('Server has been stopped...')
+      process.exit(1)
+    }else{
+      console.log('Serial Valid.')
+    }
+  } catch (err) {
+    console.log('Server has been stopped...')
+    process.exit(1)
+  }
+}
+
 server.listen(port, '0.0.0.0');
 server.on('error', onError);
 server.on('listening', onListening);
+
+check()
 
 /**
  * Normalize a port into a number, string, or false.
@@ -86,5 +105,5 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   // console.log(`Listening on ${JSON.stringify(addr)}`);
-  console.log(Date(Date.now()).toString());
+  console.log(Date(Date.now()).toString())
 }
