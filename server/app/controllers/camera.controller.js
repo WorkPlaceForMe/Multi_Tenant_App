@@ -137,7 +137,7 @@ exports.addAtr = async (req, res) => {
 
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
     try {
-      const response = await axios.post(`${process.env.pythonApi}/api/frame`, {
+      const response = await axios.post(`${process.env.pythonApi}/api2/frame`, {
         cameraId: camID,
         id_account: decoded.id_account,
         id_branch: decoded.id_branch
@@ -272,4 +272,3 @@ exports.checkCamRel = (req, res) => {
       res.status(500).send({ success: false, message: err.message })
     })
 }
-
