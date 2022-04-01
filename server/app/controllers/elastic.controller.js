@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const db = require('../models')
 const Camera = db.camera
-const {v4: uuidv4} = require('uuid')
+const { v4: uuidv4 } = require('uuid')
 const unzipper = require('unzipper')
 const client = new elasticsearch.Client({
   node: process.env.HOST_ELAST,
@@ -50,7 +50,7 @@ exports.ping = async (req, res) => {
   }
 }
 
-async function searchAndAdd(arr, time, index, range, n = 0, output = [], del = [],
+async function searchAndAdd (arr, time, index, range, n = 0, output = [], del = [],
   params = {
     index: [index],
     body: {
@@ -208,7 +208,7 @@ exports.search1 = async (req, res) => {
         'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
     }
 
-    return res.status(200).json({success: true, data: {hits: recRes}})
+    return res.status(200).json({ success: true, data: { hits: recRes } })
   }
   if (data.filters.and) {
     const words = data.query.split(' ')
@@ -237,7 +237,7 @@ exports.search1 = async (req, res) => {
     })
   }
   try {
-    console.dir(params, {depth: null})
+    console.dir(params, { depth: null })
     const body = await client.search(params)
     const hits = body.body.hits
     if (hits.hits.length > 0) {
@@ -321,7 +321,7 @@ exports.search = async (req, res) => {
   if (indexAlreadyExists.statusCode !== 200) {
     res.status(200).json({
       success: true,
-      data: {hits: []}
+      data: { hits: [] }
     })
   } else {
     const params = {
@@ -360,7 +360,7 @@ exports.search = async (req, res) => {
         }
       }
 
-      return res.status(200).json({success: true, data: {hits: recRes}})
+      return res.status(200).json({ success: true, data: { hits: recRes } })
     }
     if (data.filters.and) {
       const words = data.query.split(' ')
@@ -693,7 +693,7 @@ exports.s3up = (req, res) => {
 
     s3.upload(params, (error, data) => {
       if (error) {
-        return res.status(500).send({success: false, mess: error})
+        return res.status(500).send({ success: false, mess: error })
       }
       Camera.create({
         id: uuid,
@@ -768,7 +768,7 @@ exports.delVid = (req, res) => {
         Key: `${decoded.id_account}/${decoded.id_branch}/${req.body.vidName}`
       }
       s3.deleteObject(params, function (err, data) {
-        if (err) return res.status(500).json({success: false, mess: err})
+        if (err) return res.status(500).json({ success: false, mess: err })
       })
     }
     console.log('Debug Data : ', data)
@@ -819,12 +819,12 @@ exports.some = async (req, res) => {
   })
 }
 
-async function deleteIndex(table) {
-  client.indices.delete({index: table}, async function (_err, resp, status) {
+async function deleteIndex (table) {
+  client.indices.delete({ index: table }, async function (_err, resp, status) {
     await createIndex(table)
   })
 }
-async function createIndex(table) {
+async function createIndex (table) {
   client.indices.create(
     {
       index: table
@@ -839,7 +839,7 @@ async function createIndex(table) {
   )
 }
 
-async function readMysql(table) {
+async function readMysql (table) {
   const sql = 'select * from ' + table + ';'
   con.con().query(sql, async function (err, result) {
     if (err) throw err
@@ -855,7 +855,7 @@ async function readMysql(table) {
   })
 }
 
-function saveToES(o, table) {
+function saveToES (o, table) {
   client.index(
     {
       index: table,
@@ -868,15 +868,15 @@ function saveToES(o, table) {
   )
 }
 
-function printHourlyData() {
+function printHourlyData () {
   printData('hour')
 }
 
-function printDailyData() {
+function printDailyData () {
   printData('day')
 }
 
-function printData(interval, table) {
+function printData (interval, table) {
   client.search(
     {
       index: table,
@@ -922,8 +922,8 @@ exports.loit = async (req, res) => {
         }
       }
     })
-    res.status(200).json({success: true, data: search.aggregations.simpleDatehHistogram.buckets})
+    res.status(200).json({ success: true, data: search.aggregations.simpleDatehHistogram.buckets })
   } catch (err) {
-    res.status(500).json({success: false, mess: err})
+    res.status(500).json({ success: false, mess: err })
   }
 }
