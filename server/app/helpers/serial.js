@@ -8,7 +8,8 @@ exports.send = async () => {
   return new Promise((resolve, reject) => {
     si.getStaticData()
       .then(async data => {
-        const phrase = `${process.env.SERIAL}/|${data.uuid.os}/|${data.uuid.hardware}/|${data.os.hostname}/|${data.diskLayout[0].size}/|${data.versions.kernel}/|${data.system.model}/|${data.version}/|${data.diskLayout[0].serialNum}`
+        const phrase = `${process.env.SERIAL}/|${data.uuid.os}/|${data.uuid.hardware}/|${data.os.hostname}/|${data.versions.kernel}/|${data.system.model}/|${data.version}`
+
         const encrypted = crypt.AES.encrypt(phrase, process.env.SECRETLOCAL).toString()
         const file = './resources/.key.scrt'
         let result
@@ -18,7 +19,6 @@ exports.send = async () => {
             const data = await fs.readFileSync(file, 'utf8')
             const bytes = crypt.AES.decrypt(data, process.env.SECRETLOCAL)
             const comparison = bytes.toString(crypt.enc.Utf8)
-
             if (phrase !== comparison) {
               result = "Unsuccessful read: Serial don't match with the present one."
               console.log(result)

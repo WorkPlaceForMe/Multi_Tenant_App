@@ -5,7 +5,7 @@ import os
 import MySQLdb
 import cv2
 
-@app.route('/api/frame', methods=['POST'])
+@app.route('/api2/frame', methods=['POST'])
 def frame():
    body = request.get_json(silent=True)
    HOME = os.environ.get('home')
@@ -51,7 +51,7 @@ def frame():
    json_object = json.dumps(res, indent = 4)
    return json_object
 
-@app.route('/api/screenshot', methods=['POST'])
+@app.route('/api2/screenshot', methods=['POST'])
 def screenshot():
    body = request.get_json(silent=True)
    HOME = os.environ.get('home')
@@ -72,6 +72,6 @@ def screenshot():
    json_object = json.dumps(res, indent = 4)
    return json_object
 
-@app.route('/api/test', methods=['GET'])
+@app.route('/api2/test', methods=['GET'])
 def test():
    return 'Works'
