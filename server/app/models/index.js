@@ -40,6 +40,17 @@ db.user.belongsToMany(db.algorithm, {
   otherKey: 'algoId'
 })
 
+db.camera.belongsToMany(db.algorithm, {
+  through: 'relations',
+  foreignKey: 'camera_id',
+  otherKey: 'algo_id'
+})
+db.algorithm.belongsToMany(db.camera, {
+  through: 'relations',
+  foreignKey: 'algo_id',
+  otherKey: 'camera_id'
+})
+
 db.manualTrigger.belongsTo(db.camera, { foreignKey: 'camera_id' })
 
 db.camera.hasMany(db.manualTrigger, {

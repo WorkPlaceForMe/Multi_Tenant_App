@@ -5,9 +5,10 @@ import os
 import MySQLdb
 import cv2
 
-@app.route('/api/frame', methods=['POST'])
+@app.route('/api2/frame', methods=['POST'])
 def frame():
    body = request.get_json(silent=True)
+   print(body)
    HOME = os.environ.get('home')
    USER = os.environ.get('username')
    PATHD = os.environ.get('pathDocker')
@@ -22,9 +23,10 @@ def frame():
    docker = os.environ.get("DOCKER")
    db = MySQLdb.connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB)
    cursor = db.cursor()
-
+   print(body)
    cursor.execute('select rtsp_in from cameras where id=\"{}\"'.format(body['cameraId']))
    path = cursor.fetchall()
+   print(path)
    path = path[0][0]
    cap = cv2.VideoCapture(path)
    ret,frame = cap.read()
@@ -51,7 +53,7 @@ def frame():
    json_object = json.dumps(res, indent = 4)
    return json_object
 
-@app.route('/api/screenshot', methods=['POST'])
+@app.route('/api2/screenshot', methods=['POST'])
 def screenshot():
    body = request.get_json(silent=True)
    HOME = os.environ.get('home')
@@ -72,6 +74,6 @@ def screenshot():
    json_object = json.dumps(res, indent = 4)
    return json_object
 
-@app.route('/api/test', methods=['GET'])
+@app.route('/api2/test', methods=['GET'])
 def test():
    return 'Works'

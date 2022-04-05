@@ -3,14 +3,14 @@ version: '3'
 services:
   multi-tenant-server:
     network_mode: host
-    image: back-end
+    image: graymatics1/multi-tenant-server:1.0.1
     restart: always
     volumes:
       - /home/alex/Desktop/office/Multi_Tenant_App/server/resources:/usr/src/app/resources
       - /home/alex/Desktop/office/Multi_Tenant_App/server/configDocker.env:/usr/src/app/config.env
 
   multi-tenant-ui:
-    image: front-end
+    image: graymatics1/multi-tenant-ui:1.0.1
     restart: always
     ports:
       - 80:80
@@ -19,7 +19,7 @@ services:
   
   multi-tenant-pythonServer:
     network_mode: host
-    image: python-back-end
+    image: graymatics1/multi-tenant-python:1.0.1 
     restart: always
     volumes:
       - /home/alex/Desktop/office/Multi_Tenant_App/server/resources:/usr/src/app/resources
