@@ -1,10 +1,14 @@
 const db = require('../models')
 const usr = db.user
 const algo = db.algorithm
+const aa = db.aa
 const bcrypt = require('bcryptjs')
+const fs = require('fs')
 
-exports.initial = function () {
-  usr.create({
+exports.initial = async function () {
+  const path =
+  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+  await usr.create({
     id: '0000-11111-aaaaaa-bbbbbb',
     username: 'admin',
     password: bcrypt.hashSync('gr@ymaticsAdmin312', 12),
@@ -14,220 +18,237 @@ exports.initial = function () {
     id_branch: '0000',
     disabled: 0
   })
-  usr.create({
-    id: '3333-666666-cccccc-nnnnnn',
-    username: 'test',
-    password: bcrypt.hashSync('testUser123', 12),
-    email: 'test@graymatics.com',
-    role: 'client',
-    id_account: '3333-666666-cccccc-nnnnnn',
-    id_branch: '0000',
-    disabled: 0
-  })
-  algo.create({
+  await algo.create({
     id: 0,
     name: 'Facial Recognition'
   })
-  algo.create({
+  await algo.create({
     id: 1,
     name: 'Person Climbing Barricade'
   })
-  algo.create({
+  await algo.create({
     id: 2,
     name: 'Loitering Detection'
   })
-  algo.create({
+  await algo.create({
     id: 3,
     name: 'D&C of human, animal and vehicle'
   })
-  algo.create({
+  await algo.create({
     id: 4,
     name: 'Parking Violation'
   })
-  algo.create({
+  await algo.create({
     id: 5,
     name: 'Speeding Vehicle'
   })
-  algo.create({
+  await algo.create({
     id: 6,
     name: 'Helmet detection on two-wheeler'
   })
-  algo.create({
+  await algo.create({
     id: 7,
     name: 'Banned vehicle detection'
   })
-  algo.create({
+  await algo.create({
     id: 8,
     name: 'Wrong way or illegal turn detection'
   })
-  algo.create({
+  await algo.create({
     id: 9,
     name: 'Graffiti & Vandalism detection'
   })
-  algo.create({
+  await algo.create({
     id: 10,
     name: 'Debris & Garbage detection'
   })
-  algo.create({
+  await algo.create({
     id: 11,
     name: 'Garbage bin, cleanned or not'
   })
-  algo.create({
+  await algo.create({
     id: 12,
     name: 'People Count'
   })
-  algo.create({
+  await algo.create({
     id: 13,
     name: 'ANPR'
   })
-  algo.create({
+  await algo.create({
     id: 14,
     name: 'Heatmap'
   })
-  algo.create({
+  await algo.create({
     id: 15,
     name: 'Demographics'
   })
-  algo.create({
+  await algo.create({
     id: 16,
     name: 'Abandoned Object'
   })
-  algo.create({
+  await algo.create({
     id: 17,
     name: 'Intrusion Alert'
   })
-  algo.create({
+  await algo.create({
     id: 18,
     name: 'Attendance Management'
   })
-  algo.create({
+  await algo.create({
     id: 19,
     name: 'Violence'
   })
-  algo.create({
+  await algo.create({
     id: 20,
     name: 'No Mask'
   })
-  algo.create({
+  await algo.create({
     id: 21,
     name: 'Social Distancing'
   })
-  algo.create({
+  await algo.create({
     id: 22,
     name: 'Queue Management'
   })
-  algo.create({
+  await algo.create({
     id: 23,
     name: 'Helmet Detection'
   })
-  algo.create({
+  await algo.create({
     id: 24,
     name: 'Vault Open'
   })
-  algo.create({
+  await algo.create({
     id: 25,
     name: 'Barrier Not Closed'
   })
-  algo.create({
+  await algo.create({
     id: 26,
     name: 'Vehicle Counting'
   })
-  algo.create({
+  await algo.create({
     id: 27,
     name: 'Camera Tampering'
   })
-  algo.create({
+  await algo.create({
     id: 28,
     name: 'Animals On Road'
   })
-  algo.create({
+  await algo.create({
     id: 29,
     name: 'Accident Detection'
   })
-  algo.create({
+  await algo.create({
     id: 30,
     name: 'Axle Detection'
   })
-  algo.create({
+  await algo.create({
     id: 31,
     name: 'Carmake'
   })
-  algo.create({
+  await algo.create({
     id: 32,
     name: 'Clothing'
   })
-  algo.create({
+  await algo.create({
     id: 33,
     name: 'Vehicle Count at Screen'
   })
-  algo.create({
+  await algo.create({
     id: 34,
     name: 'Car Brand'
   })
-  algo.create({
+  await algo.create({
     id: 35,
     name: 'Weapon'
   })
-  algo.create({
+  await algo.create({
     id: 36,
     name: 'Bottle'
   })
-  algo.create({
+  await algo.create({
     id: 37,
     name: 'People Path'
   })
-  algo.create({
+  await algo.create({
     id: 38,
     name: 'Person Collapsing'
   })
-  algo.create({
+  await algo.create({
     id: 39,
     name: 'Fire Detection'
   })
-  algo.create({
+  await algo.create({
     id: 40,
     name: 'Pulling Hair'
   })
-  algo.create({
+  await algo.create({
     id: 41,
     name: 'Waving Hands'
   })
-  algo.create({
+  await algo.create({
     id: 42,
     name: 'Smoking'
   })
-  algo.create({
+  await algo.create({
     id: 43,
     name: 'Crowd'
   })
-  algo.create({
+  await algo.create({
     id: 44,
     name: 'Slapping'
   })
-  algo.create({
+  await algo.create({
     id: 45,
     name: 'Blocking'
   })
-  algo.create({
+  await algo.create({
     id: 46,
     name: 'Running'
   })
-  algo.create({
+  await algo.create({
     id: 47,
     name: 'Disrobing'
   })
-  algo.create({
+  await algo.create({
     id: 48,
     name: 'Purse Snatching'
   })
-  algo.create({
+  await algo.create({
     id: 49,
     name: 'Following'
   })
-  algo.create({
+  await algo.create({
     id: 50,
     name: 'Pushing'
   })
+  const lastId = 50
+  await usr.create({
+    id: '3333-666666-cccccc-nnnnnn',
+    username: 'testing',
+    password: bcrypt.hashSync('Graymatics1!', 12),
+    email: 'testing@graymatics.com',
+    role: 'client',
+    id_account: '3333-666666-cccccc-nnnnnn',
+    id_branch: '3333-666666-cccccc-nnnnnn',
+    cameras: 9999,
+    analytics: 9999,
+    disabled: 0
+  })
+  const pathPic = `${path}3333-666666-cccccc-nnnnnn`
+  if (!fs.existsSync(pathPic)) {
+    fs.mkdirSync(pathPic)
+    const pathBranch = `${pathPic}/3333-666666-cccccc-nnnnnn`
+    fs.mkdirSync(pathBranch)
+    fs.mkdirSync(`${pathBranch}/pictures`)
+    fs.mkdirSync(`${pathBranch}/heatmap_pics`)
+  }
+  for (let i = 0; i <= lastId; i++) {
+    aa.create({
+      algoId: i,
+      accountId: '3333-666666-cccccc-nnnnnn'
+    })
+  }
 }
 // INSERT INTO `multi_tenant`.`algorithms` (`id`, `name`, `createdAt`, `updatedAt`) VALUES ('27', 'Camera Tampering', '2020-10-05 07:31:29', '2020-10-05 07:31:29');
 

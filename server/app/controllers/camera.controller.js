@@ -90,11 +90,11 @@ exports.viewCam = (req, res) => {
   })
 }
 
-exports.delCam = (req, res) => {
+exports.delCam = async (req, res) => {
   const token = req.headers['x-access-token']
 
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
-    Relations.destroy({
+    await Relations.destroy({
       where: { camera_id: req.params.id }
     })
     const img = `${path}${decoded.id_account}/${decoded.id_branch}/heatmap_pics/${req.params.id}_heatmap.png`

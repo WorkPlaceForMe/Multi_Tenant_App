@@ -94,12 +94,12 @@ if (process.env.INSTALL === 'true') {
       password: process.env.PASSWORD,
       host: process.env.HOST
     })
-    .then(connection => {
+    .then(async connection => {
       console.log('Connected to MySQL...')
-      connection.query('CREATE DATABASE IF NOT EXISTS ' + process.env.DB + ';').then(() => {
-        db.sequelize.sync({ force: false, alter: true }).then(() => {
+      connection.query('CREATE DATABASE IF NOT EXISTS ' + process.env.DB + ';').then(async () => {
+        db.sequelize.sync({ force: false, alter: true }).then(async () => {
           console.log('Drop and Resync Db...')
-          init.initial()
+          await init.initial()
           connection.query(
             'CREATE TABLE IF NOT EXISTS `' +
               process.env.DB +

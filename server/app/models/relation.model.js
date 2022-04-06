@@ -1,5 +1,10 @@
 module.exports = (sequelize, Sequelize) => {
   const Relation = sequelize.define('relations', {
+    id: {
+      type: Sequelize.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    },
     camera_id: {
       type: Sequelize.STRING
     },

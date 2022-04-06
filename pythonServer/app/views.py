@@ -8,7 +8,6 @@ import cv2
 @app.route('/api2/frame', methods=['POST'])
 def frame():
    body = request.get_json(silent=True)
-   print(body)
    HOME = os.environ.get('home')
    USER = os.environ.get('username')
    PATHD = os.environ.get('pathDocker')
@@ -23,10 +22,8 @@ def frame():
    docker = os.environ.get("DOCKER")
    db = MySQLdb.connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB)
    cursor = db.cursor()
-   print(body)
    cursor.execute('select rtsp_in from cameras where id=\"{}\"'.format(body['cameraId']))
    path = cursor.fetchall()
-   print(path)
    path = path[0][0]
    cap = cv2.VideoCapture(path)
    ret,frame = cap.read()
@@ -42,7 +39,7 @@ def frame():
    if docker == 'True':
       cursor.execute('update cameras set heatmap_pic = "/api/pictures/{}/{}/heatmap_pics/{}_heatmap.png" where id=\"{}\"'.format(body['id_account'],body['id_branch'],body['cameraId'],body['cameraId']))
    else:
-      cursor.execute('update cameras set heatmap_pic = "{}/api/pictures/{}/{}/heatmap_pics/{}_heatmap.png" where id=\"{}\"'.format(ip,body['id_account'],body['id_branch'],body['cameraId'],body['cameraId']))
+      cursor.execute('update cameras set heatmap_pic = "http://{}:3300/api/pictures/{}/{}/heatmap_pics/{}_heatmap.png" where id=\"{}\"'.format(ip,body['id_account'],body['id_branch'],body['cameraId'],body['cameraId']))
    cursor.execute('update cameras set pic_width = \"{}\" where id=\"{}\"'.format(width,body['cameraId']))
    cursor.execute('update cameras set cam_height = \"{}\" where id=\"{}\"'.format(height,body['cameraId']))
    cursor.execute('update cameras set cam_width = \"{}\" where id=\"{}\"'.format(width,body['cameraId']))
