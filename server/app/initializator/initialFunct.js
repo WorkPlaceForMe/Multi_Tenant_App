@@ -222,7 +222,11 @@ exports.initial = async function () {
     id: 50,
     name: 'Pushing'
   })
-  const lastId = 50
+  await algo.create({
+    id: 51,
+    name: 'People Tracking'
+  })
+  const lastId = 51
   await usr.create({
     id: '3333-666666-cccccc-nnnnnn',
     username: 'testing',
@@ -251,5 +255,3 @@ exports.initial = async function () {
   }
 }
 // INSERT INTO `multi_tenant`.`algorithms` (`id`, `name`, `createdAt`, `updatedAt`) VALUES ('27', 'Camera Tampering', '2020-10-05 07:31:29', '2020-10-05 07:31:29');
-
-// Remember to add any new algorithm into ../models/index.js DB.Algorithms

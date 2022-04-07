@@ -2,7 +2,7 @@
   "rules": {
     "color-hex-case": "lower",
     "color-no-invalid-hex": true,
-
+    "allowKeywords": false ,
     "function-calc-no-unspaced-operator": true,
     "function-comma-space-after": "always-single-line",
     "function-comma-space-before": "never",

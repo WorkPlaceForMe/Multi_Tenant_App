@@ -18,7 +18,6 @@ module.exports = function (app) {
     '/api/auth/signup/client',
     [
       verifySignUp.checkDuplicateUsernameOrEmail,
-      verifySignUp.checkAlgosExisted,
       authJwt.verifyToken,
       authJwt.isAdmin
     ],

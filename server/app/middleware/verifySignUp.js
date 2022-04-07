@@ -1,5 +1,4 @@
 const db = require('../models')
-const ALGOS = db.ALGORITHMS
 const User = db.user
 
 const checkDuplicateUsernameOrEmail = (req, res, next) => {
@@ -75,24 +74,8 @@ const checkDuplicateUsernameOrEmailEdit = (req, res, next) => {
   })
 }
 
-const checkAlgosExisted = (req, res, next) => {
-  if (req.body.algorithm) {
-    for (let i = 0; i < req.body.algorithm.length; i++) {
-      if (!ALGOS.includes(req.body.algorithm[i])) {
-        res.status(400).send({
-          message: 'Failed! Role does not exist = ' + req.body.algorithm[i]
-        })
-        return
-      }
-    }
-  }
-
-  next()
-}
-
 const verifySignUp = {
   checkDuplicateUsernameOrEmail: checkDuplicateUsernameOrEmail,
-  checkAlgosExisted: checkAlgosExisted,
   checkDuplicateUsernameOrEmailEdit: checkDuplicateUsernameOrEmailEdit
 }
 

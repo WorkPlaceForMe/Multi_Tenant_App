@@ -148,6 +148,7 @@ import { RunningComponent } from "./online/graphs/running/running.component";
 import { DisrobingComponent } from "./online/graphs/disrobing/disrobing.component";
 import { PurseSnatchingComponent } from "./online/graphs/purse-snatching/purse-snatching.component";
 import { ViewManualTriggerComponent } from "./online/graphs/view-manual-trigger/view-manual-trigger.component";
+import { PeopleTrackingComponent } from './online/graphs/people-tracking/people-tracking.component';
 
 @NgModule({
   imports: [
@@ -302,6 +303,7 @@ import { ViewManualTriggerComponent } from "./online/graphs/view-manual-trigger/
     DisrobingComponent,
     PurseSnatchingComponent,
     ViewManualTriggerComponent,
+    PeopleTrackingComponent,
   ],
   providers: [
     FacesService,
