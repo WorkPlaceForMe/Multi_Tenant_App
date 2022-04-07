@@ -23,27 +23,8 @@ import {
   NbToastrModule,
   NbWindowModule,
   NbCardModule,
-  NbIconModule,
-  NbInputModule,
-  NbTreeGridModule,
-  NbAccordionModule,
-  NbButtonModule,
-  NbListModule,
-  NbRouteTabsetModule,
-  NbStepperModule,
-  NbTabsetModule,
-  NbUserModule,
-  NbActionsModule,
-  NbCheckboxModule,
-  NbRadioModule,
-  NbFormFieldModule,
-  NbSelectModule,
-  NbSpinnerModule,
-  NbContextMenuModule,
 } from "@nebular/theme";
 import { authInterceptorProviders } from "./_helpers/auth.interceptor";
-import { VgCoreModule } from "@videogular/ngx-videogular/core";
-import { GoogleLoginProvider } from "angularx-social-login";
 
 @NgModule({
   declarations: [AppComponent],

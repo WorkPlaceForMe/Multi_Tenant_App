@@ -21,18 +21,6 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-7 less-padding">
-        <nb-card>
-          <nb-card-body style="padding: 0px">
-            <ng2-smart-table
-              [settings]="settings"
-              [source]="source"
-              (edit)="got($event)"
-            >
-            </ng2-smart-table>
-          </nb-card-body>
-        </nb-card>
-      </div>
       <div class="col-md-5 less-padding" *ngIf="video">
         <nb-card>
           <nb-card-body align="center">

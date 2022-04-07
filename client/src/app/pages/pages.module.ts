@@ -152,7 +152,9 @@ import { PeopleTrackingComponent } from './online/graphs/people-tracking/people-
 
 @NgModule({
   imports: [
-    NgxEchartsModule,
+    NgxEchartsModule.forRoot({
+      echarts: () => import('echarts')
+    }),
     NgxChartsModule,
     ChartModule,
     Ng2SmartTableModule,
