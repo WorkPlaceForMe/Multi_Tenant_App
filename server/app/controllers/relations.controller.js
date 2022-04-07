@@ -260,6 +260,11 @@ const tables = {
     id: 50,
     alert: true,
     table: 'pushing'
+  },
+  'People Tracking': {
+    id: 51,
+    alert: true,
+    table: 'none'
   }
 }
 
@@ -531,7 +536,8 @@ exports.dashboards = (req, res) => {
                           parseInt(d) == 2 ||
                           parseInt(d) == 24 ||
                           parseInt(d) == 14 ||
-                          parseInt(d) == 35
+                          parseInt(d) == 35 || 
+                          parseInt(d) == 51
                         ) {
                           analyticsPrem.push({
                             algo_id: parseInt(d),
