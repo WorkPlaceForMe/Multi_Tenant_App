@@ -10,4 +10,5 @@ Dockerfile
 .gitignore
 .prettierrc
 mpeg1muxer.js
-Dockerfile
+DockerfileLightNode
+DockerfileLight

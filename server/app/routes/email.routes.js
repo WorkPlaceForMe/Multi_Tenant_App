@@ -1,4 +1,3 @@
-const { authJwt, verifyCam } = require('../middleware')
 const controller = require('../controllers/email.controller')
 
 module.exports = function (app) {

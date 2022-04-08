@@ -1,4 +1,4 @@
-const {authJwt} = require('../middleware')
+const { authJwt } = require('../middleware')
 const controller = require('../controllers/algorithm.controller')
 
 module.exports = function (app) {

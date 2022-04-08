@@ -1,14 +1,14 @@
 from app import app
 import os
 from dotenv import load_dotenv
-load_dotenv('./configPython.env')
+load_dotenv('../config.env')
 import logging
 from logging.handlers import RotatingFileHandler
 from time import strftime
 import traceback
 from flask import request
 
-MODE = os.environ.get('MODE')
+MODE = os.environ.get('NODE_ENV')
 
 @app.after_request
 def after_request(response):

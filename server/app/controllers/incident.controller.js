@@ -1,16 +1,16 @@
 const elasticsearch = require('@elastic/elasticsearch')
 require('dotenv').config({
-  path: '../../config.env'
+  path: '../../../config.env'
 })
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const db = require('../models')
-const {v4: uuidv4} = require('uuid')
+const { v4: uuidv4 } = require('uuid')
 const moment = require('moment')
 const dateTimeFormat = 'YYYY-MM-DD HH:mm:ss'
 const User = db.user
 const IncidentLog = db.incidentLog
-const {Op} = require('sequelize')
+const { Op } = require('sequelize')
 const multer = require('multer')
 const client = new elasticsearch.Client({
   node: process.env.HOST_ELAST,
@@ -25,7 +25,7 @@ const path =
   process.env.home + process.env.username + process.env.pathDocker + process.env.resources
 const incidentIndex = 'gmtc_searcher'
 
-async function getIncident(incidentId, id) {
+async function getIncident (incidentId, id) {
   try {
     const actualIndexName = `${incidentIndex}_${id}`
     const incident = await client.get({
@@ -153,7 +153,7 @@ exports.addIncident = (req, res) => {
           })
         }
 
-        const {body} = await client.get({
+        const { body } = await client.get({
           index: actualIndexName,
           id: incidentCreated.body._id
         })
@@ -176,7 +176,7 @@ exports.addIncident = (req, res) => {
 exports.addMemo = async (req, res) => {
   try {
     const token = req.headers['x-access-token']
-    const {memo} = req.body
+    const { memo } = req.body
     if (!memo) {
       return res.status(400).json({
         success: false,
@@ -363,7 +363,7 @@ exports.incidentLogs = async (req, res) => {
     const userIdArray = []
 
     const users = await User.findAll({
-      where: {id_account: decoded.id}
+      where: { id_account: decoded.id }
     })
     for (const user of users) {
       userIdArray.push(user.id)
@@ -421,7 +421,7 @@ exports.manageBookmark = async (req, res) => {
         message: 'Incident id is required'
       })
     }
-    reqBody.bookMarked = String(reqBody.bookMarked) === 'true' ? true : false
+    reqBody.bookMarked = String(reqBody.bookMarked) === 'true'
     console.log(reqBody)
     const decoded = await jwt.verify(token, process.env.secret)
     const actualIndexName = `${incidentIndex}_${decoded.id_account}`
@@ -577,7 +577,7 @@ exports.incidentsWithTimeline = async (req, res) => {
       index: [actualIndexName],
       body: {
         size: 10000,
-        sort: [{time: {order: 'asc'}}],
+        sort: [{ time: { order: 'asc' } }],
         query: {
           bool: {
             must: [

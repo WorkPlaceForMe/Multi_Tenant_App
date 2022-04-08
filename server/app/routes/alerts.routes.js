@@ -1,4 +1,3 @@
-const { authJwt } = require('../middleware')
 const controller = require('../controllers/alerts.controller')
 
 module.exports = function (app) {

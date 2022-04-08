@@ -1,4 +1,4 @@
-require('dotenv').config({ path: '../../config.env' })
+require('dotenv').config({ path: '../../../config.env' })
 const jwt = require('jsonwebtoken')
 const db = require('../models/dbmysql')
 

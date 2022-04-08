@@ -1,5 +1,5 @@
 require('dotenv').config({
-  path: '../../config.env'
+  path: '../../../config.env'
 })
 const jwt = require('jsonwebtoken')
 const db = require('../models')

@@ -3,3 +3,4 @@ configPython.env
 configPythonDocker.env
 app.log
 app/__pycache__/**
+DockerfileLatest

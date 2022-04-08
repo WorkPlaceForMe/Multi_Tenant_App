@@ -1,6 +1,6 @@
 const elasticsearch = require('@elastic/elasticsearch')
 require('dotenv').config({
-  path: '../../config.env'
+  path: '../../../config.env'
 })
 const jwt = require('jsonwebtoken')
 const fs = require('fs')

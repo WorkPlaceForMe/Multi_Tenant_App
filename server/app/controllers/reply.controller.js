@@ -1,4 +1,4 @@
-const {v4: uuidv4} = require('uuid')
+const { v4: uuidv4 } = require('uuid')
 const multer = require('multer')
 const fs = require('fs')
 const jwt = require('jsonwebtoken')
@@ -6,7 +6,7 @@ const db = require('../models')
 const HelpDesk = db.helpdesk
 const Reply = db.reply
 const User = db.user
-const {Op} = require('sequelize')
+const { Op } = require('sequelize')
 const imageTypes = ['jpg', 'png', 'jpeg']
 const path =
   process.env.home + process.env.username + process.env.pathDocker + process.env.resources
@@ -93,7 +93,7 @@ exports.postReply = async (req, res) => {
         const authToReply = await HelpDesk.findOne({
           where: {
             id: req.params.id,
-            [Op.or]: [{client_id: decoded.id}, {user_id: decoded.id}]
+            [Op.or]: [{ client_id: decoded.id }, { user_id: decoded.id }]
           }
         })
         if (!authToReply) {
@@ -124,7 +124,7 @@ exports.postReply = async (req, res) => {
           })
         }
 
-        await HelpDesk.update({status: 'PROCESSING'}, {where: {id: req.params.id}})
+        await HelpDesk.update({ status: 'PROCESSING' }, { where: { id: req.params.id } })
         res.status(200).send({
           success: true,
           message: 'Helpdesk reply added successfully!',
@@ -150,7 +150,7 @@ exports.updateStatus = async (req, res) => {
         message: 'Helpdesk id is required'
       })
     }
-    const {status} = req.body
+    const { status } = req.body
     if (!status) {
       return res.status(400).json({
         success: false,
@@ -171,7 +171,7 @@ exports.updateStatus = async (req, res) => {
     if (currentUserDetails.role === 'client') {
       const isAuthClient = await User.findOne({
         where: {
-          [Op.and]: [{id: helpdeskDetails.user_id}, {id_account: currentUserDetails.id}]
+          [Op.and]: [{ id: helpdeskDetails.user_id }, { id_account: currentUserDetails.id }]
         }
       })
       if (!isAuthClient) {
@@ -207,7 +207,7 @@ exports.updateStatus = async (req, res) => {
       }
     }
 
-    await HelpDesk.update({status}, {where: {id: helpdeskDetails.id}})
+    await HelpDesk.update({ status }, { where: { id: helpdeskDetails.id } })
 
     res.status(200).send({
       success: true,
@@ -240,7 +240,7 @@ exports.getReplies = async (req, res) => {
     const helpdeskDetails = await HelpDesk.findOne({
       where: {
         id: req.params.id,
-        [Op.or]: [{client_id: decoded.id}, {user_id: decoded.id}]
+        [Op.or]: [{ client_id: decoded.id }, { user_id: decoded.id }]
       }
     })
     if (!helpdeskDetails) {
@@ -251,7 +251,7 @@ exports.getReplies = async (req, res) => {
       })
     }
     const replies = await Reply.findAll({
-      where: {helpdesk_id: helpdeskDetails.id},
+      where: { helpdesk_id: helpdeskDetails.id },
       order: [['createdAt', 'DESC']]
     })
 

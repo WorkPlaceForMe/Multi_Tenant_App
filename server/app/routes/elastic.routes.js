@@ -1,4 +1,4 @@
-const {authJwt, verifyCam} = require('../middleware')
+const { authJwt } = require('../middleware')
 const controller = require('../controllers/elastic.controller')
 const multer = require('multer')
 

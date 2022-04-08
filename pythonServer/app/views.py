@@ -23,6 +23,7 @@ def frame():
    db = MySQLdb.connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB)
    cursor = db.cursor()
    cursor.execute('select rtsp_in from cameras where id=\"{}\"'.format(body['cameraId']))
+
    path = cursor.fetchall()
    path = path[0][0]
    cap = cv2.VideoCapture(path)
@@ -45,7 +46,6 @@ def frame():
    cursor.execute('update cameras set cam_width = \"{}\" where id=\"{}\"'.format(width,body['cameraId']))
    db.commit()
    cursor.fetchall()
-
    res={ "success": True, "data":'none'}
    json_object = json.dumps(res, indent = 4)
    return json_object

@@ -1,4 +1,4 @@
-const {v4: uuidv4} = require('uuid')
+const { v4: uuidv4 } = require('uuid')
 const multer = require('multer')
 const fs = require('fs')
 const jwt = require('jsonwebtoken')
@@ -119,7 +119,7 @@ exports.getHelpDeskIssus = async (req, res) => {
     const decoded = await jwt.verify(token, process.env.secret)
 
     const helpDeskIssues = await HelpDesk.findAll({
-      where: {client_id: decoded.id},
+      where: { client_id: decoded.id },
       order: [['createdAt', 'DESC']],
       include: [
         {
@@ -152,7 +152,7 @@ exports.getGeneratedHelpDeskIssus = async (req, res) => {
     const token = req.headers['x-access-token']
     const decoded = await jwt.verify(token, process.env.secret)
     const helpDeskIssues = await HelpDesk.findAll({
-      where: {user_id: decoded.id},
+      where: { user_id: decoded.id },
       order: [['createdAt', 'DESC']],
       include: [
         {

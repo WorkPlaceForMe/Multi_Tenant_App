@@ -1,5 +1,5 @@
 const db = require('../models')
-require('dotenv').config({ path: '../../config.env' })
+require('dotenv').config({ path: '../../../config.env' })
 const jwt = require('jsonwebtoken')
 const User = db.user
 const Camera = db.camera

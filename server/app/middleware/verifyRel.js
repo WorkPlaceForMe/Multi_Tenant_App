@@ -1,42 +1,40 @@
-const db = require("../models");
-const Relations = db.relation;
-const jwt = require("jsonwebtoken");
-const User = db.user;
+const db = require('../models')
+const Relations = db.relation
+const jwt = require('jsonwebtoken')
+const User = db.user
 
-  numRels= (req, res, next) => {
-    // Username
-    let token = req.headers["x-access-token"];
+const numRels = (req, res, next) => {
+  // Username
+  const token = req.headers['x-access-token']
 
-    jwt.verify(token, process.env.secret, (err, decoded) => {
-      User.findOne({
-        where:{
-          id: decoded.id_account
-        }
-      }).then(resp=>{
-    Relations.findAll({
+  jwt.verify(token, process.env.secret, (err, decoded) => {
+    User.findOne({
       where: {
-        id_account: decoded.id_account
+        id: decoded.id_account
       }
-    }).then(analytics => {
-      if (analytics.length >= resp.analytics) {
-        res.status(400).send({
-          success: false,
-          type: 'analytics',
-          message: "Failed! Number of analytics exceeded!"
-        });
-        return;
-      }
+    }).then(resp => {
+      Relations.findAll({
+        where: {
+          id_account: decoded.id_account
+        }
+      }).then(analytics => {
+        if (analytics.length >= resp.analytics) {
+          res.status(400).send({
+            success: false,
+            type: 'analytics',
+            message: 'Failed! Number of analytics exceeded!'
+          })
+          return
+        }
 
-      next();
-    });
+        next()
+      })
+    })
   })
-  })
-  };
-  
-  
-  const verifyCamera = {
-    rtsp: rtsp,
-    numRels: numRels
-  };
-  
-  module.exports = verifyCamera;
+}
+
+const verifyCamera = {
+  numRels: numRels
+}
+
+module.exports = verifyCamera

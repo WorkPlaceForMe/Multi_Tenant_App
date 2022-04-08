@@ -1,7 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-require('dotenv').config({ path: './config.env' })
+require('dotenv').config({ path: '../config.env' })
 const app = express()
 const morgan = require('morgan')
 const fs = require('fs')
@@ -31,7 +31,16 @@ if (process.env.NODE_ENV === 'production') {
   app.use(cors(corsOptions))
   console.log(`Running on Production for http://${process.env.my_ip}:4200`)
 } else {
-  console.log(`Running Dev version on port ${process.env.PORT}`)
+  const corsOptions = {
+    origin: [
+      `http://${process.env.my_ip}:4200`,
+      `${process.env.app_url}`,
+      'http://localhost:4200',
+      `http://${process.env.my_ip}:3200`
+    ]
+  }
+  app.use(cors(corsOptions))
+  console.log(`Running Dev version on port ${process.env.PORTNODE}`)
 }
 
 function customHeaders (req, res, next) {

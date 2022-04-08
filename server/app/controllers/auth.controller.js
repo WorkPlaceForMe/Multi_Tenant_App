@@ -1,5 +1,5 @@
 const db = require('../models')
-require('dotenv').config({ path: '../../config.env' })
+require('dotenv').config({ path: '../../../config.env' })
 const User = db.user
 const Algorithm = db.algorithm
 const { v4: uuidv4 } = require('uuid')
