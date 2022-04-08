@@ -1,7 +1,13 @@
 version: '3'
 
+# networks:
+#   dev:
+#     external: true
+
 services:
   multi-tenant-server:
+    # networks:
+    #   - dev
     network_mode: host
     image: graymatics1/multi-tenant-server:1.0.6
     restart: always
@@ -11,6 +17,8 @@ services:
 
   multi-tenant-ui:
     image: graymatics1/multi-tenant-ui:1.0.3
+    # networks:
+    #   - dev
     restart: always
     ports:
       - 80:80
@@ -19,6 +27,8 @@ services:
   
   multi-tenant-pythonServer:
     network_mode: host
+    # networks:
+    #   - dev
     image: graymatics1/multi-tenant-python:1.0.2
     restart: always
     volumes:
