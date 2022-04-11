@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ChangeDetectionStrategy, HostListener, OnInit } from '@angular/core';
 import { FacesService } from '../../../services/faces.service';
 import { DatePipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Camera } from '../../../models/Camera';
 import { NbDateService, NbCalendarRange } from '@nebular/theme';
 import h337 from '../../../../assets/heatmap.min.js';
@@ -20,15 +20,19 @@ export class HeatmapComponent implements AfterViewInit, OnInit {
     
   camera: Camera;
 
-  constructor(private activatedRoute: ActivatedRoute, private facesService: FacesService, public datepipe: DatePipe,protected dateService: NbDateService<Date>) {
+  constructor(
+    private activatedRoute: ActivatedRoute, 
+    private facesService: FacesService, 
+    public datepipe: DatePipe,
+    protected dateService: NbDateService<Date>,
+    private router: Router,
+    ) {
     const params = this.activatedRoute.snapshot.params;
     this.facesService.getCamera(params.uuid).subscribe(
         res =>{
           this.camera = res['data'];
-          console.log(this.camera)
           this.size.width = this.camera.cam_width;
           this.size.height = this.camera.cam_height;
-          console.log(this.heatmap_size, window.innerWidth)
           if(window.innerWidth >= 1200){
             this.heatmap_size.width = 1050;
             this.heatmap_size.height = this.heatmap_size.width*(this.size.height/this.size.width);
@@ -45,17 +49,6 @@ export class HeatmapComponent implements AfterViewInit, OnInit {
             this.heatmap_size.width = window.innerWidth - 110;
             this.heatmap_size.height = this.heatmap_size.width*(this.size.height/this.size.width);
           }
-          // this.heatmap_size = {
-          //   width: this.camera.cam_width,
-          //   height: this.camera.cam_height
-          // }
-          console.log(this.heatmap_size)
-          // this.heatmap = h337.create({
-          //   container: document.getElementById('testNotSameName'),
-          //   radius: 50,
-          //   maxOpacity: 0.6,
-          //   blur: 1,
-          // });
            },
         err => console.error(err)
       );
@@ -161,6 +154,14 @@ export class HeatmapComponent implements AfterViewInit, OnInit {
         },
         err => console.error(err)
       );
+  }
+
+  back(){
+    if(this.camera.stored_vid === "Yes"){
+      return this.router.navigateByUrl(`/pages/search/list`)
+    }else{
+      return this.router.navigateByUrl(`/pages/camerasList`)
+    }
   }
 
   clearHeatmap(){

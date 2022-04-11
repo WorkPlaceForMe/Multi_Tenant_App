@@ -26,8 +26,9 @@
 
 </div>
 <br>
-<a class="btn-block" nbButton [status]="'warning'" [href]="['/pages/cameras/heatmap/'+ id]">Erase data</a>
+<button class="btn-block" nbButton [status]="'warning'" (click)="clearHeatmap()">Erase data</button>
+<!-- <a class="btn-block" nbButton [status]="'warning'" [href]="['/pages/cameras/heatmap/'+ id]">Erase data</a> -->
 <hr>
-<button class="btn-block" nbButton [status]="'primary'" [routerLink]="['/pages/camerasList']"><i class="arrow-ios-back-outline"></i>Back</button>
+<button class="btn-block" nbButton [status]="'primary'" (click)="back()"><i class="arrow-ios-back-outline"></i>Back</button>
 </nb-card-body>
 </nb-card>
