@@ -4,7 +4,7 @@ import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Camera } from '../../../models/Camera';
 import { NbDateService, NbCalendarRange } from '@nebular/theme';
-import h337 from '../../../../assets/heatmap.min.js';
+import * as h337 from '../../../../assets/heatmap.min';
 
 
 // declare const h337: any;
@@ -174,12 +174,12 @@ export class HeatmapComponent implements AfterViewInit, OnInit {
   }
 
   getAll(){
-  this.heatmap = h337.create({
-      container: document.getElementById('testNotSameName'),
-      radius: 50,
-      maxOpacity: 0.6,
-      blur: 1,
-    });
+    this.heatmap = h337.create({
+        container: document.getElementById('testNotSameName'),
+        radius: 50,
+        maxOpacity: 0.6,
+        blur: 1,
+      });
     const camera_id = this.activatedRoute.snapshot.params.uuid;
     this.facesService.getallhm1(camera_id).subscribe(
       res => {
