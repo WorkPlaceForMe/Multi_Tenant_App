@@ -6,7 +6,7 @@
 
 const app = require('../server')
 const http = require('http')
-
+const socketapi = require('../app/models/socketapi')
 /**
  * Get port from environment and store in Express.
  */
@@ -19,7 +19,7 @@ app.set('port', port)
  */
 
 const server = http.createServer(app)
-
+socketapi.io.attach(server)
 /**
  * Listen on provided port, on all network interfaces.
  */

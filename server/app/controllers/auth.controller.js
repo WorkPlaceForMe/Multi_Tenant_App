@@ -136,6 +136,12 @@ exports.signupAdmin = (req, res) => {
 let usersIn = []
 
 exports.signin = (req, res) => {
+  if (Object.keys(req.body).length === 0) {
+    return res
+      .status(402)
+      .send({ success: false, message: 'Forbidden' })
+  }
+
   User.findOne({
     where: {
       username: req.body.username
