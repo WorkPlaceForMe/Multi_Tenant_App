@@ -79,7 +79,7 @@ app.use(
   morgan(
     'Date: :date[web] // Url: :remote-addr // Method: :method:url // Status::status // User-agent: :user-agent',
     {
-      stream: fs.createWriteStream('./access.log', { flags: 'a' })
+      stream: fs.createWriteStream('./resources/logs/access.log', { flags: 'a' })
     }
   )
 )
@@ -198,6 +198,7 @@ require('./app/routes/helpdesk.routes')(app)
 require('./app/routes/reply.routes')(app)
 require('./app/routes/incident.routes')(app)
 require('./app/routes/manualTrigger.routes')(app)
+require('./app/routes/info.routes')(app)
 
 // resources being served
 app.use('/api/pictures', express.static(picResourceFolderPath))

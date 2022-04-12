@@ -9,6 +9,7 @@ import traceback
 from flask import request
 
 MODE = os.environ.get('NODE_ENV')
+log = './resources/logs/pythonAccess.log'
 
 @app.after_request
 def after_request(response):
@@ -26,7 +27,7 @@ def exceptions(e):
 if __name__=='__main__':
     if MODE == 'production':
         print('Running in production')
-        handler = RotatingFileHandler('app.log', maxBytes=100000, backupCount=3)
+        handler = RotatingFileHandler(log, maxBytes=100000, backupCount=3)
         logger = logging.getLogger('tdm')
         logger.setLevel(logging.INFO)
         logger.addHandler(handler)
@@ -34,7 +35,7 @@ if __name__=='__main__':
         serve(app, host="0.0.0.0", port=3330)
     else:
         print('Running in development')
-        handler = RotatingFileHandler('app.log', maxBytes=100000, backupCount=3)
+        handler = RotatingFileHandler(log, maxBytes=100000, backupCount=3)
         logger = logging.getLogger('tdm')
         logger.setLevel(logging.INFO)
         logger.addHandler(handler)

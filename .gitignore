@@ -25,4 +25,5 @@ client/dist.zip
 pythonServer/configPython.env
 pythonServer/configPythonDocker.env
 pythonServer/app.log
+pythonServer/resources/logs/pythonAccess.log
 pythonServer/app/__pycache__/**
