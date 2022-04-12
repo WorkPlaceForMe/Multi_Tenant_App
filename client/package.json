@@ -2,7 +2,7 @@
   "name": "client",
   "version": "5.2.0",
   "license": "MIT",
-  "author": "Alex Kaiser",
+  "author": "Alex Ignacio Kaiser",
   "scripts": {
     "ng": "ng",
     "conventional-changelog": "conventional-changelog",
