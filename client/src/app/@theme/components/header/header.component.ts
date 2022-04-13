@@ -55,7 +55,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private authservice: AuthService,
               public router: Router,
               ) {
-                this.pic = `${api}/pictures/graymaticsLogo.png`
+                this.pic = `${api}/assets/graymaticsLogo.png`
   }
 
   signOff(){

@@ -19,8 +19,7 @@ const client = new elasticsearch.Client({
 })
 
 const con = require('../models/dbmysql')
-const path =
-  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+const path = process.env.resourcePath
 const multer = require('multer')
 const AWS = require('aws-sdk')
 const s3 = new AWS.S3({
@@ -494,6 +493,8 @@ const stor = multer.diskStorage({
 
     jwt.verify(token, process.env.secret, (_err, decoded) => {
       const where = `${path}${decoded.id_account}/${decoded.id_branch}/videos/`
+      console.log('Path: ', path)
+      console.log('id_account: ', decoded.id_account)
 
       if (!fs.existsSync(where)) {
         fs.mkdirSync(where, {

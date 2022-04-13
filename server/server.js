@@ -12,10 +12,8 @@ const compression = require('compression')
 const swaggerJsDoc = require('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
 
-// const resourcesFolderPath =
-//  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
-const resourcesFolderPath = path.resolve(__dirname, './resources/')
-const picResourceFolderPath = path.join(resourcesFolderPath)
+const resourcesFolderPath = path.join(process.env.resourcePath)
+const assetsFolderPath = path.resolve(__dirname, './resources/')
 
 app.use(compression())
 
@@ -161,9 +159,9 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(swaggerDocs, {
     explorer: true,
-    customCss: `img[alt='Swagger UI'] { content:url(${process.env.app_url}/api/pictures/graymaticsLogo.png);}`,
+    customCss: `img[alt='Swagger UI'] { content:url(${process.env.app_url}/api/assets/graymaticsLogo.png);}`,
     customSiteTitle: 'Graymatics API Manual',
-    customfavIcon: `${process.env.app_url}/api/pictures/favicon1.ico`,
+    customfavIcon: `${process.env.app_url}/api/assets/favicon1.ico`,
     swaggerOptions: {
       url: `${process.env.app_url}/api/pictures/swagger.json`,
       docExpansion: 'none',
@@ -200,7 +198,10 @@ require('./app/routes/incident.routes')(app)
 require('./app/routes/manualTrigger.routes')(app)
 
 // resources being served
-app.use('/api/pictures', express.static(picResourceFolderPath))
+app.use('/api/pictures', express.static(resourcesFolderPath))
+
+// assets being served
+app.use('/api/assets', express.static(assetsFolderPath))
 
 // client side
 // app.use(express.static(process.env.WEBSITE_PATH));

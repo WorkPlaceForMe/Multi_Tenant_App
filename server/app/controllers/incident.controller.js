@@ -21,8 +21,7 @@ const client = new elasticsearch.Client({
     password: process.env.PASS_ELAST
   }
 })
-const path =
-  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+const path = process.env.resourcePath
 const incidentIndex = 'gmtc_searcher'
 
 async function getIncident (incidentId, id) {

@@ -7,8 +7,7 @@ const { v4: uuidv4 } = require('uuid')
 const fs = require('fs')
 const axios = require('axios')
 
-const path =
-  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+const path = process.env.resourcePath
 const my_ip = process.env.my_ip
 
 exports.addCamera = (req, res) => {

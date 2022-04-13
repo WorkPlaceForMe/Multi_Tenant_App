@@ -39,7 +39,7 @@ export class CenterComponent implements OnInit {
     status: "'primary"
   }
 
-pic:string = `${api}/pictures/graymaticsLogo.png`
+pic:string = `${api}/assets/graymaticsLogo.png`
 
   aaa(event){
     this.camera = event

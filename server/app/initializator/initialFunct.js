@@ -6,8 +6,8 @@ const bcrypt = require('bcryptjs')
 const fs = require('fs')
 
 exports.initial = async function () {
-  const path =
-  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+  const path = process.env.resourcePath
+
   await usr.create({
     id: '0000-11111-aaaaaa-bbbbbb',
     username: 'admin',

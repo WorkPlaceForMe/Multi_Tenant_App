@@ -73,6 +73,10 @@ export const MENU_ITEMSBRANCH: NbMenuItem[] = [
         title: "Forensic Search",
         link: "search/bar",
       },
+      {
+        title: "Summarization",
+        link: "search/summarization",
+      }
     ],
   },
   {
@@ -154,6 +158,10 @@ export const MENU_ITEMSCLIENT: NbMenuItem[] = [
         title: "Forensic Search",
         link: "search/bar",
       },
+      {
+        title: "Summarization",
+        link: "search/summarization",
+      }
     ],
   },
   {

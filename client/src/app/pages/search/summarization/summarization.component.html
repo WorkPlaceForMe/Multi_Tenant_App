@@ -1,0 +1,74 @@
+<label><b>Summarization</b></label>
+
+
+<form [formGroup]="processForm" (ngSubmit)="onProcessVideoSubmit()">
+  <div class="card mb-3">
+    <div class="row" style="margin: 10px;">
+      <div class="col-md-5" style="margin-top: 10px;">
+        <label><b>Summarization Video File</b></label>
+      </div>
+      <div class="col-md-4">
+        <input style="width: auto" type="text" nbInput id="search" placeholder="Choose a video file"
+          [status]="'primary'" formControlName="inputFileName" />
+      </div>
+    </div>
+    <div class="row" style="margin: 10px;">
+      <div class="col-md-5" style="margin-top: 10px;">
+        <label><b>Start time</b></label>
+      </div>
+      <div class="col-md-4">
+        <input id="startTime" nbInput type="text" [nbTimepicker]="startTimepicker" formControlName="startTime" />
+        <nb-timepicker #startTimepicker withSeconds></nb-timepicker>
+        <button type="button" class="btn-sm" [status]="'primary'" nbButton (click)="clearStartOrEnd('startTime')">
+          <i class="fa fa-trash" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    <div class="row" style="margin: 10px;">
+      <div class="col-md-5" style="margin-top: 10px;">
+        <label><b>Stop time</b></label>
+      </div>
+      <div class="col-md-4">
+        <input id="endTime" nbInput type="text" [nbTimepicker]="endTimepicker" formControlName="endTime" />
+        <nb-timepicker #endTimepicker withSeconds></nb-timepicker>
+        <button type="button" class="btn-sm" [status]="'primary'" nbButton (click)="clearStartOrEnd('endTime')">
+          <i class="fa fa-trash" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    <div class="row" style="margin: 10px;">
+      <div class="col-md-5" style="margin-top: 10px;">
+        <label><b>Duration</b></label>
+      </div>
+      <div class="col-md-4">
+        <input nbInput type="number" placeholder="Enter Duration" formControlName="duration" />
+        <p *ngIf="processForm.controls.inputFileName.touched &&
+        !processForm.controls.inputFileName.valid
+      " class="error text-danger mb-1">
+          <span>
+            Input file must be choosen
+          </span>
+        </p>
+        <p *ngIf="
+        !processForm.controls.duration.valid
+      " class="error text-danger mb-1">
+          <span>
+            Duration value must be atleast 3 minutes
+          </span>
+        </p>
+        <p *ngIf="processForm.errors?.['invalidStartTimeEndTime'] && (processForm.touched || processForm.dirty)"
+          class="error text-danger mb-1">
+          <span>
+            End time must be greater than start time
+          </span>
+        </p>
+      </div>
+    </div>
+    <div class="p-3 mb-4">
+      <div class=" text-center" style="margin-top: 10px;">
+        <button class="btn btn-success" type="submit" [disabled]="
+        !processForm.valid">Process Video</button>
+      </div>
+    </div>
+    </div>
+</form>

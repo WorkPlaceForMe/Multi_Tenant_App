@@ -4,8 +4,7 @@ const fs = require('fs')
 const ExifImage = require('exif').ExifImage
 const cp = require('child_process')
 const jwt = require('jsonwebtoken')
-const path =
-  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+const path = process.env.resourcePath
 
 exports.imageUp = (req, res) => {
   let base64 = req.body.base64

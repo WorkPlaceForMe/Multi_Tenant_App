@@ -73,6 +73,10 @@ export class ControlComponent implements OnInit, OnDestroy {
           title: 'Add Video',
           link: '/pages/search/upload',
         },
+        {
+          title: 'Summarization',
+          link: '/pages/search/summarization',
+        },
       ],
     },
   ];

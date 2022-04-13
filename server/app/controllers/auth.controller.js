@@ -6,8 +6,7 @@ const { v4: uuidv4 } = require('uuid')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const fs = require('fs')
-const path =
-  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+const path = process.env.resourcePath
 
 const Op = db.Sequelize.Op
 
