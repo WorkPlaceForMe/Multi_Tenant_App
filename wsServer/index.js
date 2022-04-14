@@ -2,7 +2,7 @@ const express = require('express');
 const compression = require('compression')
 const cors = require('cors')
 const bodyParser = require('body-parser')
-require('dotenv').config({ path: './config.env' })
+require('dotenv').config({ path: '../config.env' })
 const enableWs = require('express-ws')
 const morgan = require('morgan')
 const fs = require('fs')
