@@ -1,6 +1,10 @@
 {
+  "/api/video": {
+    "target": "http://13.76.172.134:3300",
+    "secure": false,
+  },
   "/api": {
     "target": "http://localhost:3300",
     "secure": "false"
-  }
+  }    
 }
