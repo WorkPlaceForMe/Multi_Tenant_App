@@ -752,128 +752,39 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
     this.route.navigate([`/pages/tickets`]);
   }
 
-  settings = {
-    mode: "external",
-    // actions: {
-    //   position: "right",
-    //   columnTitle: "ACTIONS",
-    //   add: false,
-    //   edit: true,
-    //   delete: false,
-    // },
-    // edit: {
-    //   editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
-    //   saveButtonContent: '<i class="nb-checkmark"></i>',
-    //   cancelButtonContent: '<i class="nb-close"></i>',
-    //   confirmSave: true,
-    // },
-    actions: false,
-    pager: {
-      display: true,
-      perPage: 5,
-    },
-    noDataMessage: "No data found",
-    columns: {
-      picture: {
-        title: "PICTURE",
-        type: "custom",
-        filter: false,
-        renderComponent: ButtonViewComponentPic,
-        onComponentInitFunction: (instance) => {
-          instance.save.subscribe((row: string) => {});
-        },
-      },
-      time: {
-        title: "TIME",
-        type: "string",
-        filter: false,
-      },
-      camera_name: {
-        title: "CAM",
-        type: "string",
-        filter: false,
-      },
-      severity: {
-        title: "SEVERITY",
-        type: "string",
-        filter: false,
-      },
-      actions: {
-        title: "ACTIONS",
-        type: "string",
-        filter: false,
-      },
-      status: {
-        title: "STATUS",
-        type: "string",
-        filter: false,
-      },
-      button: {
-        title: "IMAGE",
-        type: "custom",
-        valuePrepareFunction: (value, row, cell) => {
-          return row;
-        },
-        renderComponent: ViewManualTriggerComponent,
-        filter: false,
-      },
-    },
-  };
-
   // settings = {
   //   mode: "external",
-  //   actions: {
-  //     position: "right",
-  //     columnTitle: "ACTIONS",
-  //     add: false,
-  //     edit: true,
-  //     delete: false,
-  //   },
-  //   edit: {
-  //     editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
-  //     saveButtonContent: '<i class="nb-checkmark"></i>',
-  //     cancelButtonContent: '<i class="nb-close"></i>',
-  //     confirmSave: true,
-  //   },
+  //   // actions: {
+  //   //   position: "right",
+  //   //   columnTitle: "ACTIONS",
+  //   //   add: false,
+  //   //   edit: true,
+  //   //   delete: false,
+  //   // },
+  //   // edit: {
+  //   //   editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
+  //   //   saveButtonContent: '<i class="nb-checkmark"></i>',
+  //   //   cancelButtonContent: '<i class="nb-close"></i>',
+  //   //   confirmSave: true,
+  //   // },
+  //   actions: false,
   //   pager: {
   //     display: true,
   //     perPage: 5,
   //   },
   //   noDataMessage: "No data found",
   //   columns: {
-  //     /* picture: {
-  //       title: 'PHOTO',
-  //       type: 'custom',
+  //     picture: {
+  //       title: "PICTURE",
+  //       type: "custom",
   //       filter: false,
-  //       renderComponent: ButtonViewComponent,
-  //       onComponentInitFunction(instance) {
-  //         instance.save.subscribe(row => {
-  //           alert(`${row.name} saved!`);
-  //         });
+  //       renderComponent: ButtonViewComponentPic,
+  //       onComponentInitFunction: (instance) => {
+  //         instance.save.subscribe((row: string) => {});
   //       },
-  //     }, */
+  //     },
   //     time: {
   //       title: "TIME",
-  //       type: "string",
-  //       filter: false,
-  //     },
-  //     car_numbers: {
-  //       title: "CAR COUNT",
-  //       type: "string",
-  //       filter: false,
-  //     },
-  //     motorbike_numbers: {
-  //       title: "MOTORBIKE COUNT",
-  //       type: "string",
-  //       filter: false,
-  //     },
-  //     truck_numbers: {
-  //       title: "TRUCK COUNT",
-  //       type: "string",
-  //       filter: false,
-  //     },
-  //     bus_numbers: {
-  //       title: "BUS COUNT",
   //       type: "string",
   //       filter: false,
   //     },
@@ -882,8 +793,97 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
   //       type: "string",
   //       filter: false,
   //     },
+  //     severity: {
+  //       title: "SEVERITY",
+  //       type: "string",
+  //       filter: false,
+  //     },
+  //     actions: {
+  //       title: "ACTIONS",
+  //       type: "string",
+  //       filter: false,
+  //     },
+  //     status: {
+  //       title: "STATUS",
+  //       type: "string",
+  //       filter: false,
+  //     },
+  //     button: {
+  //       title: "IMAGE",
+  //       type: "custom",
+  //       valuePrepareFunction: (value, row, cell) => {
+  //         return row;
+  //       },
+  //       renderComponent: ViewManualTriggerComponent,
+  //       filter: false,
+  //     },
   //   },
   // };
+
+  settings = {
+    mode: "external",
+    actions: {
+      position: "right",
+      columnTitle: "ACTIONS",
+      add: false,
+      edit: true,
+      delete: false,
+    },
+    edit: {
+      editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
+      saveButtonContent: '<i class="nb-checkmark"></i>',
+      cancelButtonContent: '<i class="nb-close"></i>',
+      confirmSave: true,
+    },
+    pager: {
+      display: true,
+      perPage: 5,
+    },
+    noDataMessage: "No data found",
+    columns: {
+      /* picture: {
+        title: 'PHOTO',
+        type: 'custom',
+        filter: false,
+        renderComponent: ButtonViewComponent,
+        onComponentInitFunction(instance) {
+          instance.save.subscribe(row => {
+            alert(`${row.name} saved!`);
+          });
+        },
+      }, */
+      time: {
+        title: "TIME",
+        type: "string",
+        filter: false,
+      },
+      car_numbers: {
+        title: "CAR COUNT",
+        type: "string",
+        filter: false,
+      },
+      motorbike_numbers: {
+        title: "MOTORBIKE COUNT",
+        type: "string",
+        filter: false,
+      },
+      truck_numbers: {
+        title: "TRUCK COUNT",
+        type: "string",
+        filter: false,
+      },
+      bus_numbers: {
+        title: "BUS COUNT",
+        type: "string",
+        filter: false,
+      },
+      camera_name: {
+        title: "CAM",
+        type: "string",
+        filter: false,
+      },
+    },
+  };
 }
 
 @Component({

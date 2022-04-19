@@ -54,6 +54,10 @@ export class TamperComponent implements OnInit, OnDestroy {
     }
   }
 
+  video: boolean = false;
+  rtspIn: any;
+  link: string;
+
   ngOnInit(): void {
     if(api.length <= 1){
       setTimeout(()=>{
@@ -87,6 +91,16 @@ export class TamperComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type
     }
+    this.face.checkVideo(27, this.camera).subscribe(
+      (res) => {
+        this.video = res["video"];
+        this.link = res["http_out"];
+        this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(
+          res["http_out"]
+        );
+      },
+      (err) => console.error(err)
+    );
       this.serv.tamper(this.camera,l).subscribe(
         res=>{
           this.tamper = res['data']

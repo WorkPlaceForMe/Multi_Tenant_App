@@ -2804,5 +2804,17 @@ module.exports = function (app) {
 
   app.post('/api/analytics/blocking/:id', [authJwt.verifyToken], controller.blocking)
 
-  app.post('/api/analytics/disrobing/:id', [authJwt.verifyToken], controller.disrobing)
+  app.post('/api/analytics/transpassing/:id', [authJwt.verifyToken], controller.transpassing)
+
+  app.post('/api/analytics/cameraDefocused/:id', [authJwt.verifyToken], controller.cameraDefocused)
+
+  app.post('/api/analytics/sceneChange/:id', [authJwt.verifyToken], controller.sceneChange)
+
+  app.post('/api/analytics/cameraBlinded/:id', [authJwt.verifyToken], controller.cameraBlinded)
+
+  app.post('/api/analytics/objectRemoval/:id', [authJwt.verifyToken], controller.objectRemoval)
+
+  app.post('/api/analytics/smokeDetection/:id', [authJwt.verifyToken], controller.smokeDetection)
+
+  app.post('/api/analytics/velocity/:id', [authJwt.verifyToken], controller.velocity)
 }

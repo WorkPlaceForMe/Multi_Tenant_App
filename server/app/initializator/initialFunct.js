@@ -226,7 +226,35 @@ exports.initial = async function () {
     id: 51,
     name: 'People Tracking'
   })
-  const lastId = 51
+  await algo.create({
+    id: 52,
+    name: 'Transpassing'
+  })
+  await algo.create({
+    id: 53,
+    name: 'Camera Defocused'
+  })
+  await algo.create({
+    id: 54,
+    name: 'Camera Blinded'
+  })
+  await algo.create({
+    id: 55,
+    name: 'Scene Change'
+  })
+  await algo.create({
+    id: 56,
+    name: 'Object Removal'
+  })
+  await algo.create({
+    id: 57,
+    name: 'Smoke Detection'
+  })
+  await algo.create({
+    id: 58,
+    name: 'Velocity'
+  })
+  const lastId = 58
   await usr.create({
     id: '3333-666666-cccccc-nnnnnn',
     username: 'testing',

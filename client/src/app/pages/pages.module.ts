@@ -149,6 +149,13 @@ import { DisrobingComponent } from "./online/graphs/disrobing/disrobing.componen
 import { PurseSnatchingComponent } from "./online/graphs/purse-snatching/purse-snatching.component";
 import { ViewManualTriggerComponent } from "./online/graphs/view-manual-trigger/view-manual-trigger.component";
 import { PeopleTrackingComponent } from './online/graphs/people-tracking/people-tracking.component';
+import { TranspassingComponent } from './online/graphs/transpassing/transpassing.component';
+import { CameraDefocusedComponent } from './online/graphs/camera-defocused/camera-defocused.component';
+import { CameraBlindedComponent } from './online/graphs/camera-blinded/camera-blinded.component';
+import { SceneChangeComponent } from './online/graphs/scene-change/scene-change.component';
+import { ObjectRemovalComponent } from './online/graphs/object-removal/object-removal.component';
+import { SmokeDetectionComponent } from './online/graphs/smoke-detection/smoke-detection.component';
+import { VelocityComponent } from './online/graphs/velocity/velocity.component';
 
 @NgModule({
   imports: [
@@ -306,6 +313,13 @@ import { PeopleTrackingComponent } from './online/graphs/people-tracking/people-
     PurseSnatchingComponent,
     ViewManualTriggerComponent,
     PeopleTrackingComponent,
+    TranspassingComponent,
+    CameraDefocusedComponent,
+    CameraBlindedComponent,
+    SceneChangeComponent,
+    ObjectRemovalComponent,
+    SmokeDetectionComponent,
+    VelocityComponent,
   ],
   providers: [
     FacesService,

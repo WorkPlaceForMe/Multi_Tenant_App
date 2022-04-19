@@ -159,5 +159,26 @@ export class AnalyticsService {
   blocking(id: string, dates){
     return this.http.post(`${this.API_URL}blocking/${id}`, dates);
   }
+  transpassing(id: string, dates){
+    return this.http.post(`${this.API_URL}transpassing/${id}`, dates);
+  }
+  cameraDefocused(id: string, dates){
+    return this.http.post(`${this.API_URL}cameraDefocused/${id}`, dates);
+  }
+  cameraBlinded(id: string, dates){
+    return this.http.post(`${this.API_URL}cameraBlinded/${id}`, dates);
+  }
+  sceneChange(id: string, dates){
+    return this.http.post(`${this.API_URL}sceneChange/${id}`, dates);
+  }
+  objectRemoval(id: string, dates){
+    return this.http.post(`${this.API_URL}objectRemoval/${id}`, dates);
+  }
+  smokeDetection(id: string, dates){
+    return this.http.post(`${this.API_URL}smokeDetection/${id}`, dates);
+  }
+  velocity(id: string, dates){
+    return this.http.post(`${this.API_URL}velocity/${id}`, dates);
+  }
   constructor(private http: HttpClient) { }
 }

@@ -464,33 +464,14 @@ export class PcComponent implements OnInit, OnDestroy {
         type: "string",
         filter: false,
       },
+      number_of_ppl: {
+        title: "PEOPLE",
+        type: "string",
+        filter: false,
+      },
       camera_name: {
         title: "CAM",
         type: "string",
-        filter: false,
-      },
-      severity: {
-        title: "SEVERITY",
-        type: "string",
-        filter: false,
-      },
-      actions: {
-        title: "ACTIONS",
-        type: "string",
-        filter: false,
-      },
-      status: {
-        title: "STATUS",
-        type: "string",
-        filter: false,
-      },
-      button: {
-        title: "IMAGE",
-        type: "custom",
-        valuePrepareFunction: (value, row, cell) => {
-          return row;
-        },
-        renderComponent: ViewManualTriggerComponent,
         filter: false,
       },
     },
