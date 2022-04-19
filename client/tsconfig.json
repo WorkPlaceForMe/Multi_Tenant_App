@@ -8,7 +8,7 @@
     "declaration": false,
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "target": "es2015",
+    "target": "es6",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -19,5 +19,15 @@
     "plugins": [
       { "name": "tslint-language-service"}
     ]
-  }
+  },
+  "files": [
+    "src/main.ts",
+    "src/polyfills.ts"
+  ],
+  "include": [
+    "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "src/**/*.spec.ts"
+  ]
 }

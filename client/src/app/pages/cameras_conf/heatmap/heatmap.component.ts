@@ -173,6 +173,37 @@ export class HeatmapComponent implements AfterViewInit, OnInit {
     this.heatmap.setData(data)
   }
 
+  getTest(){
+    this.heatmap = h337.create({
+      container: document.getElementById('testNotSameName'),
+      radius: 50,
+      maxOpacity: 0.6,
+      blur: 1,
+    });
+
+  this.facesService.testHm().subscribe(
+    res => {
+      this.Hms = res['data'];
+      // console.log("aaaaaaaaaaaa")
+      this.date.size = this.Hms.length;
+      this.date.value = 280*80000/this.Hms.length;
+      if(this.date.value >= 400){
+        this.date.value = 400;
+      }
+      this.date.value = 10000
+      for(var i = 0; i < this.date.size; i++){
+        this.Datas[i] = {x: (this.Hms[i].x * this.heatmap_size.width / this.size.width), y: (this.Hms[i].y * this.heatmap_size.height / this.size.height), value: this.date.value};
+      }
+        this.heatmap.setData({
+          max: this.Datas.length,
+          min: 1,
+          data: this.Datas
+      });
+    },
+    err => console.error(err)
+  );
+  }
+
   getAll(){
     this.heatmap = h337.create({
         container: document.getElementById('testNotSameName'),

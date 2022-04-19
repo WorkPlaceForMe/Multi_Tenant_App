@@ -122,6 +122,9 @@ export class FacesService {
   getallhm1(camera_id: string) {
     return this.http.get(`${this.API_URI}/heatmap/all/${camera_id}`);
   }
+  testHm() {
+    return this.http.get(`${this.API_URI}/heatmap/test`);
+  }
   getPath(start: string, end: string, camera_id: string) {
     return this.http.get(
       `${this.API_URI}/path/date/${start}/${end}/${camera_id}`

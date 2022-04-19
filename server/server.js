@@ -203,12 +203,8 @@ require('./app/routes/info.routes')(app)
 // resources being served
 app.use('/api/pictures', express.static(picResourceFolderPath))
 
-// client side
-// app.use(express.static(process.env.WEBSITE_PATH));
-
-// // 404 re-route
-// app.get('*', function(req,res){
-//     res.redirect('/');
-//   });
+app.use((req, res, next) => {
+  res.sendFile('/app/views/error.html', { root: __dirname })
+})
 
 module.exports = app

@@ -527,9 +527,9 @@ exports.dashboards = (req, res) => {
                   for (var c of algors) {
                     for (var d of rels) {
                       if (c['id'] == parseInt(d)) {
-                        // if (c['name'] == 'Heatmap') {
-                        //   continue
-                        // }
+                        if (c['name'] == 'Heatmap') {
+                          continue
+                        }
                         if (
                           parseInt(d) == 12 ||
                           parseInt(d) == 22 ||

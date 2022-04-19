@@ -19,7 +19,7 @@
             <th scope="col"><h5>Play</h5></th>
             <th scope="col"  *ngIf='now_user.role != "user"'><h5>Edit</h5></th>
             <th scope="col"  *ngIf='now_user.role != "user"'><h5><i class="far fa-dot-circle"></i>&nbsp;Algorithms</h5></th>
-            <!-- <th scope="col" *ngIf='heatmap == true'><h5><i class="far fa-map"></i> &nbsp;Heatmap</h5></th> -->
+            <th scope="col" *ngIf='heatmap == true'><h5><i class="far fa-map"></i> &nbsp;Heatmap</h5></th>
             <th scope="col" *ngIf='now_user.role != "user"'><h5>Delete</h5></th>
           </tr>
         </thead>
@@ -34,9 +34,9 @@
             <td *ngIf='now_user.role != "user"'><button [routerLink]="['/pages/cameras/algorithms', camera.id]" class='btn-block' nbButton [status]="'info'">
               Algorithms
             </button></td>
-              <!-- <td *ngIf='heatmap == true'><button [routerLink]="['/pages/cameras/heatmap', camera.id]" class='btn-block' nbButton [status]="'info'" [disabled]= 'camera.hm == undefined'>
+              <td *ngIf='heatmap == true'><button [routerLink]="['/pages/cameras/heatmap', camera.id]" class='btn-block' nbButton [status]="'info'" [disabled]= 'camera.hm == undefined'>
                 Heatmap
-              </button></td> -->
+              </button></td>
             <td *ngIf='now_user.role != "user"'><button  class='btn-block' nbButton [status]="'danger'" (click)="deleteCamera(camera.id)">
               <i class="far fa-trash-alt"></i>
             </button></td>

@@ -755,7 +755,7 @@ exports.delVid = (req, res) => {
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
     if (data.which === 'Yes') {
       const vid = `${path}${decoded.id_account}/${decoded.id_branch}/videos/${data.vidName}`
-      const img = `${path}${decoded.id_account}/${decoded.id_branch}/heatmap_pics/${req.params.id}_heatmap.png`
+      const img = `${path}${decoded.id_account}/${decoded.id_branch}/heatmap_pics/${data.uuid}_heatmap.png`
       fs.unlink(img, err => {
         if (err) console.log({ success: false, message: 'Image error: ' + err })
       })

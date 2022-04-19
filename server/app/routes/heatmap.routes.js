@@ -17,6 +17,12 @@ module.exports = function (app) {
   )
 
   app.get(
+    '/api/heatmap/test/',
+    [authJwt.verifyToken, authJwt.isClientOrBranch],
+    controller.test
+  )
+
+  app.get(
     '/api/heatmap/date/:st/:end/:id',
     [authJwt.verifyToken, authJwt.isClientOrBranch],
     controller.getHm
