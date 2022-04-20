@@ -12,6 +12,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TrustedUrlPipe } from "../../../pipes/trusted-url.pipe";
 import JSMpeg from "@cycjimmy/jsmpeg-player";
+import { environment } from "../../../../environments/environment";
 
 @Component({
   selector: "app-live",
@@ -20,6 +21,8 @@ import JSMpeg from "@cycjimmy/jsmpeg-player";
 })
 export class LiveComponent implements OnInit {
   @Input() camera: string;
+  @Input() isSummarizedVideo: boolean = true;
+
   live: Camera = {
     id: "",
     name: "",
@@ -27,6 +30,7 @@ export class LiveComponent implements OnInit {
     rtsp_out: "",
     cam_height: 0,
     cam_width: 0,
+    summarization_status: 0
   };
   link: SafeResourceUrl;
   ffmpege: any;
@@ -39,9 +43,9 @@ export class LiveComponent implements OnInit {
   on: boolean = false;
   rtspIn: SafeResourceUrl;
   unZippedVideoMessage: string = null;
+  
   constructor(
     private facesService: FacesService,
-    private router: Router,
     private activatedRoute: ActivatedRoute,
     sanitizer: DomSanitizer,
     private face: FacesService
@@ -89,25 +93,27 @@ export class LiveComponent implements OnInit {
   ngOnInit() {
     let camId: string;
     if (this.camera) {
-      this.loadCam(this.camera);
+      this.loadCam(this.camera, this.isSummarizedVideo);
     } else if (
       this.activatedRoute.snapshot &&
       this.activatedRoute.snapshot.params
     ) {
       const params = this.activatedRoute.snapshot.params;
-      camId = params.id;
-      if (camId) this.loadCam(camId);
+      this.loadCam(params.id, params.summarizedVideo);
     }
   }
 
   isHttpStream: boolean = false;
 
-  loadCam(camId) {
+  loadCam(camId, summarizedVideo) {
     this.facesService.getCamera(camId).subscribe(
-      (res) => {
-        const rtspIn =
-          res["data"]["http_in"] ||
-          "http://13.76.172.134:3300/api/pictures/videos/b.mp4"; // FOR TESTING
+      (res: any) => {
+        const rtspIn = summarizedVideo == 1
+          ? environment.summarizationURL + "/api/video/videoChunk?clientId=" +
+          res["data"]["id_account"] +
+            "&inputFileName=" +
+            res["data"]["rtsp_in"].replaceAll("\\", "/")
+          : res["data"]["http_in"];
 
         if (!rtspIn) {
           this.unZippedVideoMessage = "Video not found";

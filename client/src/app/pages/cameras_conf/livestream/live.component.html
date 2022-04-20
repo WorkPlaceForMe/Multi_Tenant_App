@@ -7,10 +7,7 @@
       <span>{{ unZippedVideoMessage }}</span>
     </div>
 
-    <div align="center" *ngIf="!unZippedVideoMessage">
-      <!-- <iframe frameBorder = "0" height="100%" width="100%" style = "width:100%;height:100%;min-height: 800px" *ngIf = "isHttpStream" [src]="rtspIn">
-          </iframe> -->
-
+    <div align="center" *ngIf="!unZippedVideoMessage">     
       <vg-player>
         <video
           autoplay
@@ -35,7 +32,7 @@
           width: 640px !important;
           height: 480px !important;
         "
-        *ngIf="isHttpStream == false"
+        *ngIf="!isHttpStream"
       ></canvas>
     </div>
 
@@ -44,7 +41,7 @@
         nbButton
         [status]="'primary'"
         class="btn-block"
-        [routerLink]="['/pages/camerasList']"
+        [routerLink]="['/pages/search/list']"
       >
         <i class="fas fa-arrow-circle-left"></i>&nbsp; Go Back
       </button>

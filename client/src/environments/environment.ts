@@ -10,4 +10,5 @@
 
 export const environment = {
   production: false,
+  summarizationURL: 'http://13.76.172.134'
 };

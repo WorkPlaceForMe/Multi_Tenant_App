@@ -95,7 +95,7 @@ const routes: Routes = [
         canActivate: [OtherGuard],
       },
       {
-        path: "cameras/live/:id",
+        path: "cameras/live/:id/:summarizedVideo",
         component: LiveComponent,
         canActivate: [AuthGuard],
       },

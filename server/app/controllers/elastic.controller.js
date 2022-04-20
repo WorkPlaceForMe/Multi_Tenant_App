@@ -27,6 +27,8 @@ const s3 = new AWS.S3({
   secretAccessKey: process.env.SECRETKEY
 })
 const incidentIndex = 'gmtc_searcher'
+const summarizationStatus = require('../utils/summarization.status')
+const summarizationService = require('../services/summarization.service')
 
 exports.ping = async (req, res) => {
   try {
@@ -730,12 +732,19 @@ exports.viewVids = async (req, res) => {
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Camera.findAll({
       where: {
-        id_branch: decoded.id_branch,
+        id_branch: decoded.id_account,
         stored_vid: 'Yes'
       },
-      attributes: ['name', 'id', 'createdAt', 'updatedAt', 'rtsp_in', 'stored_vid']
+      attributes: ['name', 'id', 'createdAt', 'updatedAt', 'rtsp_in', 'stored_vid', 'summarization_status']
     })
-      .then(cameras => {
+      .then(async (cameras) => {
+        const inProgressVideos = cameras.filter(camera => camera.summarization_status === summarizationStatus.IN_PROGRESS)
+
+        if (inProgressVideos.length > 0) {
+          const response = await summarizationService.getProgressData(decoded.id_account)
+          console.log('Response data ========: ' + JSON.stringify(response.data))
+        }
+
         res.status(200).send({
           success: true,
           data: cameras

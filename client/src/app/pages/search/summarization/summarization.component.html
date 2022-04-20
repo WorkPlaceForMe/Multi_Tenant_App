@@ -10,7 +10,7 @@
             <label><b>Summarization Video File</b></label>
           </div>
           <div class="col-md-4">
-            <nb-select style="width:100%;" placeholder="Choose a Video file" formControlName="inputFileName" id="inputFileName">
+            <nb-select style="width:100%;" [(selected)]="selectedVideo" placeholder="Choose a Video file" formControlName="inputFileName" id="inputFileName">
               <nb-option *ngFor="let file of videoFiles" [value]="file.path">{{ file.name }}</nb-option>
             </nb-select>
           </div>
@@ -90,6 +90,7 @@
           </div>
         </div>
       </div>
+      <button *ngIf="selectedVideo" [routerLink]="['/pages/search/list']" class="btn-block" nbButton [status]="'primary'"><i class="fas fa-arrow-circle-left"></i>&nbsp;Go Back</button>
     </nb-card-body>
   </nb-card>
 </form>

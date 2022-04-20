@@ -6,6 +6,7 @@ import {
   ValidationErrors,
   Validators,
 } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
 import moment = require("moment");
 import { FacesService } from "../../../services/faces.service";
 import { VideoService } from "../../../services/video.service";
@@ -22,21 +23,29 @@ export class SummarizationComponent implements OnInit {
   serverSuccessMessage = null;
   serverErrorMessage = null;
   videoFiles = [];
+  selectedVideo;
 
-  constructor(private fb: FormBuilder, private videoService: VideoService, private facesService: FacesService) {}
+  constructor(private fb: FormBuilder, private videoService: VideoService,
+     private facesService: FacesService,
+     private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
+    const params = this.activatedRoute.snapshot.params;
+    this.formInitialization();
     this.facesService.viewVids().subscribe(
       (res: any) => {
-        res.data?.forEach( (item : any) => {
+        res.data?.forEach( (item : any) => {       
+          if (params.id && params.id == item.id) {
+            this.selectedVideo = item.rtsp_in;
+            this.processForm.controls['inputFileName'].setValue(item.rtsp_in);
+          }
           this.videoFiles.push({ name:  item.name, path: item.rtsp_in });
         });
       },
       err => {
         console.log(err)
       }
-    )
-    this.formInitialization();
+    )   
   }
 
   formInitialization() {

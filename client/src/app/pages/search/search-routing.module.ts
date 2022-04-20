@@ -18,6 +18,11 @@ const routes: Routes = [
         canActivate: [OtherGuard]
       },
       {
+        path: 'summarization/:id',
+        component: SummarizationComponent,
+        canActivate: [OtherGuard]
+      },
+      {
         path: 'summarization',
         component: SummarizationComponent,
         canActivate: [OtherGuard]
