@@ -18,7 +18,7 @@ services:
       - /home/alex/Desktop/office/Multi_Tenant_App/configDocker.env:/usr/src/config.env
 
   multi-tenant-ui:
-    image: graymatics1/multi-tenant-ui:1.0.9
+    image: graymatics1/multi-tenant-ui:1.0.11
     # networks:
     #   - dev
     restart: always
