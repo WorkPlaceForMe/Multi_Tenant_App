@@ -12,7 +12,7 @@ exports.getProgressData = async (clientId, inputFilePath) => {
   }
 
   if (inputFilePath) {
-    queryString += 'inputFilePath=' + inputFilePath + '&'
+    queryString += 'inputFileName=' + inputFilePath + '&'
   }
 
   if (queryString) {

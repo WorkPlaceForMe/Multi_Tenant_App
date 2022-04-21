@@ -18,6 +18,8 @@ module.exports = function (app) {
 
   app.get('/api/elastic/video/list', [authJwt.verifyToken], controller.viewVids)
 
+  app.post('/api/elastic/video/status', [authJwt.verifyToken], controller.viewAndUpdateSummarizationStatus)
+
   app.get('/api/elastic/demo', [], controller.some)
 
   app.get('/api/elastic/demo2', [], controller.loit)

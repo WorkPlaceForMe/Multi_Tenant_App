@@ -735,14 +735,35 @@ exports.viewVids = async (req, res) => {
         id_branch: decoded.id_account,
         stored_vid: 'Yes'
       },
-      attributes: ['name', 'id', 'createdAt', 'updatedAt', 'rtsp_in', 'stored_vid', 'summarization_status']
+      attributes: ['id_account', 'name', 'id', 'createdAt', 'updatedAt', 'rtsp_in', 'stored_vid', 'summarization_status']
     })
       .then(async (cameras) => {
-        const inProgressVideos = cameras.filter(camera => camera.summarization_status === summarizationStatus.IN_PROGRESS)
+        const isAnyProgressVideos = cameras.some(camera => camera.summarization_status === summarizationStatus.IN_PROGRESS)
 
-        if (inProgressVideos.length > 0) {
+        if (isAnyProgressVideos) {
           const response = await summarizationService.getProgressData(decoded.id_account)
-          console.log('Response data ========: ' + JSON.stringify(response.data))
+          const progressListResponse = response.data
+
+          if (progressListResponse.success && progressListResponse.data) {
+            cameras.forEach(camera => {
+              if (camera.summarization_status === summarizationStatus.IN_PROGRESS) {
+                const inputFilePath = camera.rtsp_in.replace(/\\/g, '/')
+                const reponseProgressData = progressListResponse.data.find(element => element.input_file_path === inputFilePath)
+
+                if (reponseProgressData) {
+                  camera.summarization_status = reponseProgressData.progress_value
+                  Camera.update(
+                    {
+                      summarization_status: reponseProgressData.progress_value
+                    },
+                    {
+                      where: { id: camera.id }
+                    }
+                  ).then()
+                }
+              }
+            })
+          }
         }
 
         res.status(200).send({
@@ -814,6 +835,58 @@ exports.editVid = (req, res) => {
         res.status(500).send({ success: false, message: err.message })
       })
   })
+}
+
+exports.viewAndUpdateSummarizationStatus = async (req, res) => {
+  const token = req.headers['x-access-token']
+  let progressValue = summarizationStatus.IN_PROGRESS
+
+  jwt.verify(token, process.env.secret, async (_err, decoded) => {
+    if (req.body.update && req.body.id) {
+      Camera.update(
+        {
+          summarization_status: summarizationStatus.IN_PROGRESS
+        },
+        {
+          where: { id: req.body.id }
+        }
+      ).then()
+    } else if (req.body.id && req.body.inputFilePath) {
+      const response = await summarizationService.getProgressData(decoded.id_account, req.body.inputFilePath)
+      const progressListResponse = response.data
+
+      console.log('List Data: ====== ', JSON.stringify(progressListResponse))
+
+      if (progressListResponse.success && progressListResponse.data) {
+        const progessData = progressListResponse.data[0]
+        console.log('Data: ====== ', JSON.stringify(progessData))
+
+        if (progessData.progress_value !== summarizationStatus.IN_PROGRESS) {
+          progressValue = progessData.progress_value
+
+          Camera.update(
+            {
+              summarization_status: progessData.progress_value
+            },
+            {
+              where: { id: req.body.id }
+            }
+          ).then()
+        }
+      }
+    }
+
+    res.status(200).send({
+      success: true,
+      data: progressValue
+    })
+  })
+    .catch(err => {
+      res.status(500).send({
+        success: false,
+        message: err.message
+      })
+    })
 }
 
 exports.some = async (req, res) => {

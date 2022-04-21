@@ -222,8 +222,13 @@ export class FacesService {
   viewVids() {
     return this.http.get(`${this.API_URI}/elastic/video/list`);
   }
+  
   delVid(data) {
     return this.http.post(`${this.API_URI}/elastic/video/delete/`, data);
+  }
+
+  viewAndUpdateSummarizationStatus(data) {
+    return this.http.post(`${this.API_URI}/elastic/video/status/`, data);
   }
 
   manualTrigger(data: any) {

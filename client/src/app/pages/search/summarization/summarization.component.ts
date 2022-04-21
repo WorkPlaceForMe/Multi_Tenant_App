@@ -25,27 +25,35 @@ export class SummarizationComponent implements OnInit {
   videoFiles = [];
   selectedVideo;
 
-  constructor(private fb: FormBuilder, private videoService: VideoService,
-     private facesService: FacesService,
-     private activatedRoute: ActivatedRoute) {}
+  constructor(
+    private fb: FormBuilder,
+    private videoService: VideoService,
+    private facesService: FacesService,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     const params = this.activatedRoute.snapshot.params;
     this.formInitialization();
     this.facesService.viewVids().subscribe(
       (res: any) => {
-        res.data?.forEach( (item : any) => {       
+        res.data?.forEach((item: any) => {
           if (params.id && params.id == item.id) {
             this.selectedVideo = item.rtsp_in;
-            this.processForm.controls['inputFileName'].setValue(item.rtsp_in);
+            this.processForm.controls["inputFileName"].setValue(item.rtsp_in);
           }
-          this.videoFiles.push({ name:  item.name, path: item.rtsp_in });
+          this.videoFiles.push({
+            clientId: item.id_account,
+            id: item.id,
+            name: item.name,
+            path: item.rtsp_in,
+          });
         });
       },
-      err => {
-        console.log(err)
+      (err) => {
+        console.log(err);
       }
-    )   
+    );
   }
 
   formInitialization() {
@@ -82,11 +90,22 @@ export class SummarizationComponent implements OnInit {
         ? moment(this.processForm.value.endTime).format(timeFormat)
         : "",
       duration: this.processForm.value.duration,
+      clientId: this.videoFiles.find(
+        (element) => element.path === this.processForm.value.inputFileName
+      ).clientId
     };
 
     this.videoService.processVideo(data).subscribe(
       (res: any) => {
         this.serverSuccessMessage = res.message;
+        this.facesService
+          .viewAndUpdateSummarizationStatus({
+            id: this.videoFiles.find(
+              (element) => element.path === data.inputFileName
+            )?.id,
+            update: true
+          })
+          .subscribe();
       },
       (error) => {
         this.serverErrorMessage = error.error.message;

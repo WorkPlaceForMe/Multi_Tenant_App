@@ -112,7 +112,7 @@ export class LiveComponent implements OnInit {
           ? environment.summarizationURL + "/api/video/videoChunk?clientId=" +
           res["data"]["id_account"] +
             "&inputFileName=" +
-            res["data"]["rtsp_in"].replaceAll("\\", "/")
+            res["data"]["rtsp_in"].replace(/\\/g, '/')
           : res["data"]["http_in"];
 
         if (!rtspIn) {
