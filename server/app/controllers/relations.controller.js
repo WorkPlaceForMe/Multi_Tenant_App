@@ -265,6 +265,41 @@ const tables = {
     id: 51,
     alert: true,
     table: 'none'
+  },
+  Transpassing: {
+    id: 51,
+    alert: true,
+    table: 'transpassing'
+  },
+  'Camera Defocused': {
+    id: 52,
+    alert: true,
+    table: 'cameraDefocused'
+  },
+  'Camera Blinded': {
+    id: 53,
+    alert: true,
+    table: 'cameraBlinded'
+  },
+  'Scene Change': {
+    id: 54,
+    alert: true,
+    table: 'sceneChange'
+  },
+  'Object Removal': {
+    id: 55,
+    alert: true,
+    table: 'objectRemoval'
+  },
+  'Smoke Detection': {
+    id: 56,
+    alert: true,
+    table: 'smokeDetection'
+  },
+  Volocity: {
+    id: 57,
+    alert: true,
+    table: 'velocity'
   }
 }
 

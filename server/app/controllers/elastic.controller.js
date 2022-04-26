@@ -607,7 +607,6 @@ exports.uploadZip = (req, res) => {
             () => {
               let count = 0
               fs.readdirSync(refactoredPath).forEach(folder => {
-                console.log(folder)
                 const stats = fs.statSync(refactoredPath + '/' + folder)
                 console.log('directory found', stats.isDirectory())
                 if (stats.isDirectory()) {
