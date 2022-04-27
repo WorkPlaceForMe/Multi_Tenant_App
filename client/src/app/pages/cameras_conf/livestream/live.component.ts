@@ -117,6 +117,8 @@ export class LiveComponent implements OnInit {
             res["data"]["rtsp_in"].replace(/\\/g, '/')
           : res["data"]["http_in"];
 
+          console.log('Video play url: ', rtspIn)
+
         if (!rtspIn) {
           this.unZippedVideoMessage = "Video not found";
           return;

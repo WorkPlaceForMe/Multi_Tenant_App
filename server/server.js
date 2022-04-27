@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === 'production') {
     ]
   }
   app.use(cors(corsOptions))
-  console.log(`Running on Production for http://${process.env.my_ip}:4200`)
+  console.log(`Running on Production for http://${process.env.app_url}`)
 } else {
   const corsOptions = {
     origin: [
