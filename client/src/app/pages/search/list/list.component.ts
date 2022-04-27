@@ -71,19 +71,17 @@ export class ListComponent implements OnInit {
     );
   }
 
-  refreshStatus(id: string, inputFilePath: string) {
+  refreshStatus(id: string) {
     this.face
-      .viewAndUpdateSummarizationStatus({
-        id: id,
-        inputFilePath: inputFilePath.replace(/\\/g, '/')
-      })
+      .getCamera(id)
       .subscribe(
         (res: any) => {
           if(res?.success){
-            const video = this.videos.find( video => video.id == id );
-            video.summarization_status = res.data;
+            const currentVideo = this.videos.find( video => video.id == id );
+            currentVideo.last_summarization_status = res.data.last_summarization_status;
+            currentVideo.any_successful_summarization = res.data.any_successful_summarization
                         
-            switch(res.data) {
+            switch(res.data.last_summarization_status) {
               case status.SUMMARIZATION_STATUS_IN_PROGRESS:
                 this.summarizationMessage = 'Keep patience, summarization is in progress....';
                 this.summarizationMessageColor = "amber";

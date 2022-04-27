@@ -227,10 +227,6 @@ export class FacesService {
     return this.http.post(`${this.API_URI}/elastic/video/delete/`, data);
   }
 
-  viewAndUpdateSummarizationStatus(data) {
-    return this.http.post(`${this.API_URI}/elastic/video/status/`, data);
-  }
-
   manualTrigger(data: any) {
     return this.http.post(`${this.API_URI}/manualTrigger/create`, data);
   }

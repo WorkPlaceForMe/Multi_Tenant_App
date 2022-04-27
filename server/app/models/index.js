@@ -2,16 +2,10 @@ require('dotenv').config({ path: '../../../config.env' })
 const Sequelize = require('sequelize')
 const sequelize = new Sequelize(process.env.DB, process.env.USERM, process.env.PASSWORD, {
   host: process.env.HOST,
+  port: process.env.DB_PORT,
   dialect: process.env.DIALECT,
   operatorsAliases: 0,
   logging: false
-
-  // pool: {
-  //   max: config.pool.max,
-  //   min: config.pool.min,
-  //   acquire: config.pool.acquire,
-  //   idle: config.pool.idle
-  // }
 })
 
 const db = {}
@@ -29,6 +23,7 @@ db.reply = require('../models/reply.model.js')(sequelize, Sequelize)
 db.incidentLog = require('../models/incidentLog.model.js')(sequelize, Sequelize)
 db.manualTrigger = require('../models/manualTrigger.model.js')(sequelize, Sequelize)
 db.aa = require('../models/account_algorithm.model.js')(sequelize, Sequelize)
+db.progress = require('../models/progress.model.js')(sequelize, Sequelize)
 
 db.algorithm.belongsToMany(db.user, {
   through: 'account_algorithm',
@@ -70,6 +65,10 @@ db.helpdesk.belongsTo(db.user, { foreignKey: 'user_id' })
 
 db.user.hasMany(db.helpdesk, {
   foreignKey: 'user_id'
+})
+
+db.camera.hasMany(db.progress, {
+  foreignKey: 'video_id'
 })
 
 db.incidentLog.belongsTo(db.user, { foreignKey: 'user_id' })

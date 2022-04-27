@@ -10,5 +10,5 @@
 
 export const environment = {
   production: false,
-  summarizationURL: 'http://13.76.172.134'
+  summarizationURL: 'http://127.0.0.1:3300'
 };

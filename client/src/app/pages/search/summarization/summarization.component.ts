@@ -81,6 +81,9 @@ export class SummarizationComponent implements OnInit {
   }
 
   onProcessVideoSubmit() {
+    const videoData = this.videoFiles.find(
+      (element) => element.path === this.processForm.value.inputFileName
+    );
     const data = {
       inputFileName: this.processForm.value.inputFileName,
       startTime: this.processForm.value.startTime
@@ -90,22 +93,13 @@ export class SummarizationComponent implements OnInit {
         ? moment(this.processForm.value.endTime).format(timeFormat)
         : "",
       duration: this.processForm.value.duration,
-      clientId: this.videoFiles.find(
-        (element) => element.path === this.processForm.value.inputFileName
-      ).clientId
+      clientId: videoData.clientId,
+      videoId: videoData.id
     };
 
     this.videoService.processVideo(data).subscribe(
       (res: any) => {
         this.serverSuccessMessage = res.message;
-        this.facesService
-          .viewAndUpdateSummarizationStatus({
-            id: this.videoFiles.find(
-              (element) => element.path === data.inputFileName
-            )?.id,
-            update: true
-          })
-          .subscribe();
       },
       (error) => {
         this.serverErrorMessage = error.error.message;

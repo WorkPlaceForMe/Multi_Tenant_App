@@ -21,6 +21,7 @@
     "dotenv": "^8.2.0",
     "exif": "^0.6.0",
     "express": "^4.17.1",
+    "get-video-duration": "^4.0.0",
     "glob-parent": "^5.1.2",
     "hosted-git-info": "^2.8.9",
     "js-yaml": "^4.0.0",
@@ -39,7 +40,7 @@
     "swagger-ui-express": "^4.3.0",
     "tinymce": "^5.10.0",
     "unzipper": "^0.10.11",
-    "uuid": "^8.3.0",
+    "uuid": "^8.3.2",
     "validator": "^13.7.0",
     "ws": "^7.4.6"
   },

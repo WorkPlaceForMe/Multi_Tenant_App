@@ -1,14 +1,27 @@
-FROM node
-WORKDIR /usr/src/app
-COPY package*.json ./
-RUN npm ci --only=production
+FROM yt/vs:v1
+
 RUN apt-get update
-RUN apt-get -y install python3 python3-dev
-RUN apt-get -y install python3-pip
-RUN pip install opencv-python==4.5.5.64
-RUN pip install mysqlclient
-RUN apt-get install -y software-properties-common && add-apt-repository ppa:mc3man/trusty-media -y || true  && pt-get update -y || true && apt-get install -y ffmpeg
-RUN pip install python-dotenv
-COPY . .
+
+RUN apt-get install curl -y
+
+WORKDIR /home/node
+
+RUN curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh
+
+RUN bash nodesource_setup.sh
+
+RUN apt-get install -y nodejs
+
+RUN node -v
+
+WORKDIR /usr/src/app
+
+COPY server/package*.json ./
+
+RUN npm install
+
+COPY server/ .
+
 EXPOSE 3300
+
 CMD [ "npm", "start" ]

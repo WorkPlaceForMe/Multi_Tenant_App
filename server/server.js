@@ -99,23 +99,13 @@ if (process.env.INSTALL === 'true') {
     .createConnection({
       user: process.env.USERM,
       password: process.env.PASSWORD,
-      host: process.env.HOST
-    })
-    .then(async connection => {
-      console.log('Connected to MySQL...')
-      connection.query('CREATE DATABASE IF NOT EXISTS ' + process.env.DB + ';').then(async () => {
-        db.sequelize.sync({ force: false, alter: true }).then(async () => {
-          console.log('Drop and Resync Db...')
-          await init.initial()
-          connection.query(
-            'CREATE TABLE IF NOT EXISTS `' +
-              process.env.DB +
-              '`.tickets (`id` varchar(45) NOT NULL,`type` varchar(45) NOT NULL,`createdAt`datetime NOT NULL, `updatedAt` datetime NOT NULL, `assigned` varchar(45) DEFAULT NULL, `id_account` varchar(45) NOT NULL, `id_branch` varchar(45) NOT NULL, `level` int(10) NOT NULL,`reviewed` varchar(45) DEFAULT NULL, `assignedBy` varchar(45) DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `id_UNIQUE` (`id`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;'
-          )
-          connection.query('CREATE TABLE IF NOT EXISTS `' +
-          process.env.DB +
-          '`.alerts (`id` VARCHAR(45) NOT NULL,`time` DATETIME NULL,`alert` VARCHAR(45) NULL,`cam_name` VARCHAR(45) NULL,`cam_id` VARCHAR(45) NULL,`trackid` INT NULL,`alert_type` INT NULL,`id_account` VARCHAR(45) NULL,`id_branch` VARCHAR(45) NULL, PRIMARY KEY (`id`));')
-          console.log('Installed DB')
+      host: process.env.HOST,
+      port: process.env.DB_PORT
+    }).then(connection => {
+      connection.query(`CREATE DATABASE IF NOT EXISTS ${process.env.DB}`).then(() => {
+        db.sequelize.sync({ force: true }).then(() => {
+          console.log('Drop and Resync Db')
+          init.initial().then()
         })
       })
     })
@@ -196,6 +186,7 @@ require('./app/routes/helpdesk.routes')(app)
 require('./app/routes/reply.routes')(app)
 require('./app/routes/incident.routes')(app)
 require('./app/routes/manualTrigger.routes')(app)
+require('./app/routes/summarization.routes')(app)
 
 // resources being served
 app.use('/api/pictures', express.static(resourcesFolderPath))

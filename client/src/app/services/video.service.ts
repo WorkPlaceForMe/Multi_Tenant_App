@@ -7,10 +7,6 @@ import { HttpClient } from "@angular/common/http";
 export class VideoService {
   constructor(private http: HttpClient) {}
 
-  checkOutputVideo(data: any) {
-    return this.http.post(`/api/video/check`, data);
-  }
-
   processVideo(data: any) {
     return this.http.post(`/api/video/process`, data);
   }

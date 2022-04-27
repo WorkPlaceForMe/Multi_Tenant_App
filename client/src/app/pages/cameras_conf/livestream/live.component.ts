@@ -13,6 +13,7 @@ import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TrustedUrlPipe } from "../../../pipes/trusted-url.pipe";
 import JSMpeg from "@cycjimmy/jsmpeg-player";
 import { environment } from "../../../../environments/environment";
+import { AuthService } from "../../../services/auth.service";
 
 @Component({
   selector: "app-live",
@@ -48,7 +49,8 @@ export class LiveComponent implements OnInit {
     private facesService: FacesService,
     private activatedRoute: ActivatedRoute,
     sanitizer: DomSanitizer,
-    private face: FacesService
+    private face: FacesService,
+    private authService: AuthService
   ) {
     this.sanitizer = sanitizer;
     this.link = sanitizer.bypassSecurityTrustResourceUrl(this.live.rtsp_out);
@@ -109,7 +111,7 @@ export class LiveComponent implements OnInit {
     this.facesService.getCamera(camId).subscribe(
       (res: any) => {
         const rtspIn = summarizedVideo == 1
-          ? environment.summarizationURL + "/api/video/videoChunk?clientId=" +
+          ? environment.summarizationURL + "/api/video/videoChunk?x-access-token=" + this.authService.getToken() + "&clientId=" +
           res["data"]["id_account"] +
             "&inputFileName=" +
             res["data"]["rtsp_in"].replace(/\\/g, '/')
