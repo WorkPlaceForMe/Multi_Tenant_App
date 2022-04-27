@@ -32,7 +32,7 @@ services:
     volumes:
       - /home/ubuntu/Multi_Tenant_App/video-summarization/Video_Summarization:/home/Video_Summarization
       - /home/ubuntu/Multi_Tenant_App/resources:/home/Multi_Tenant_App/resources
-      - /home/ubuntu/Multi_Tenant_App/config.env:/usr/src/app/config.env
+      - /home/ubuntu/Multi_Tenant_App/config.env:/usr/src/config.env
 
   multi-tenant-ui:
     build:
