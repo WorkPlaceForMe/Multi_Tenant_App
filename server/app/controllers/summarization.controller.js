@@ -159,11 +159,11 @@ exports.processVideo = async (req, res) => {
                   cwd: `${environment.VIDEO_CONVERTER_PYTHON_SCRIPT_HOME_PATH}`
                 },
                 (err, stdout, stderr) => {
-                  if (err) {
+                  if (err || stderr) {
                     summarizationDBService
                       .updateProgressData(progress.id, summarizationStatus.ERROR)
                       .then(() => {
-                        //cameraDBService.updateSummarizationStatus(reqBody.videoId, summarizationStatus.ERROR).then()
+                        cameraDBService.updateSummarizationStatus(reqBody.videoId, summarizationStatus.ERROR).then()
                       })
                     console.log('======= Video Processing failed =======')
                     console.log(`error: ${err}`)
