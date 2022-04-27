@@ -24,6 +24,8 @@ db.incidentLog = require('../models/incidentLog.model.js')(sequelize, Sequelize)
 db.manualTrigger = require('../models/manualTrigger.model.js')(sequelize, Sequelize)
 db.aa = require('../models/account_algorithm.model.js')(sequelize, Sequelize)
 db.progress = require('../models/progress.model.js')(sequelize, Sequelize)
+db.alert = require('../models/alert.model.js')(sequelize, Sequelize)
+db.ticket = require('../models/ticket.model.js')(sequelize, Sequelize)
 
 db.algorithm.belongsToMany(db.user, {
   through: 'account_algorithm',

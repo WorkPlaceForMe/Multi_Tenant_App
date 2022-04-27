@@ -10,12 +10,12 @@
       <table class="table table-hover" id="myTable">
         <thead align='center'>
           <tr>
-            <th scope="col"><h5>Summarization Status</h5></th>
+            <th scope="col"><h5>Status</h5></th>
             <th scope="col"><h5>Name</h5></th>
-            <th scope="col"><h5>Play Original</h5></th>
-            <th scope="col"><h5>Play Summarized</h5></th>
+            <th scope="col"><h5>Original</h5></th>
+            <th scope="col"><h5>Summarized</h5></th>
             <th scope="col" ><h5><i class="far fa-dot-circle"></i>&nbsp;Algorithms</h5></th>
-            <th scope="col" ><h5>Perform Summarization</h5></th>
+            <th scope="col" ><h5>Action</h5></th>
             <th scope="col"><h5>Delete</h5></th>
           </tr>
         </thead>
@@ -44,7 +44,7 @@
             <td><button [routerLink]="['/pages/cameras/algorithms', camera.id]" class='btn-block' nbButton [status]="'info'">
               Algorithms
             </button></td>
-            <td><button [routerLink]="['/pages/search/summarization', camera.id]" class='btn-block' nbButton [status]="'success'">
+            <td><button [disabled]="camera['last_summarization_status'] === 0 || camera['last_summarization_status'] === 1" [routerLink]="['/pages/search/summarization', camera.id]" class='btn-block' nbButton [status]="'success'">
               Summarize
             </button></td>
             <td><button  class='btn-block' nbButton [status]="'danger'" (click)="deleteVideo(camera.rtsp_in, camera.id, camera.stored_vid)">

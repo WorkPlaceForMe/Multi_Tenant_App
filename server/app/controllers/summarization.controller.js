@@ -95,15 +95,12 @@ exports.processVideo = async (req, res) => {
         reqBody.endTime = moment.utc(moment.duration(duration, 'seconds').as('milliseconds')).format(format)
       }
 
-      const data = await summarizationDBService.findProgressDataList(inputVideoFile, reqBody.clientId,
-        reqBody.startTime,
-        reqBody.endTime,
-        reqBody.duration)
+      const data = await summarizationDBService.findProgressDataList(inputVideoFile, reqBody.clientId)
 
-      if (data && data.length > 0) {
+      if (data && data.length > 0 && data[0].progress_value !== summarizationStatus.ERROR) {
         return res.status(400).json({
           success: false,
-          message: 'This video file already processed/processing with same input parameters'
+          message: 'This video file already processed/processing'
         })
       } else {
         res.status(200).send({
@@ -167,6 +164,7 @@ exports.processVideo = async (req, res) => {
                       })
                     console.log('======= Video Processing failed =======')
                     console.log(`error: ${err}`)
+                    console.log(`stderr: ${stderr}`)
                   } else {
                     console.log('======= Video Processing succeeded =======')
                     summarizationDBService
