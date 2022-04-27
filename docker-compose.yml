@@ -53,5 +53,5 @@ services:
       - 3330:3330
     volumes:
       - /home/ubuntu/Multi_Tenant_App/resources:/home/Multi_Tenant_App/resources
-      - /home/ubuntu/Multi_Tenant_App/config.env:/usr/app/config.env
+      - /home/ubuntu/Multi_Tenant_App/config.env:/usr/src/config.env
       
