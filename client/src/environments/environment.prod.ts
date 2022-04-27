@@ -5,5 +5,5 @@
  */
 export const environment = {
   production: true,
-  summarizationURL: ''
+  summarizationURL: 'http://13.76.172.134:3300'
 };
