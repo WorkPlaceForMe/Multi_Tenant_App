@@ -156,7 +156,7 @@ exports.processVideo = async (req, res) => {
                   cwd: `${environment.VIDEO_CONVERTER_PYTHON_SCRIPT_HOME_PATH}`
                 },
                 (err, stdout, stderr) => {
-                  if (err || stderr) {
+                  if (err) {
                     summarizationDBService
                       .updateProgressData(progress.id, summarizationStatus.ERROR)
                       .then(() => {
