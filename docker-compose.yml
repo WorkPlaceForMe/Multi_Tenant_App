@@ -12,7 +12,7 @@ services:
       MYSQL_ROOT_PASSWORD: graymatics
       MYSQL_DATABASE: multi_tenantRel
       MYSQL_USER: graymatics
-      MYSQL_PASSWORD: graymatics12
+      MYSQL_PASSWORD: graymatics
 
   multi-tenant-server:
     build:
