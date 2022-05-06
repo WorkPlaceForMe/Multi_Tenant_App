@@ -267,39 +267,49 @@ const tables = {
     table: 'none'
   },
   Transpassing: {
-    id: 51,
+    id: 52,
     alert: true,
     table: 'transpassing'
   },
   'Camera Defocused': {
-    id: 52,
+    id: 53,
     alert: true,
     table: 'cameraDefocused'
   },
   'Camera Blinded': {
-    id: 53,
+    id: 54,
     alert: true,
     table: 'cameraBlinded'
   },
   'Scene Change': {
-    id: 54,
+    id: 55,
     alert: true,
     table: 'sceneChange'
   },
   'Object Removal': {
-    id: 55,
+    id: 56,
     alert: true,
     table: 'objectRemoval'
   },
   'Smoke Detection': {
-    id: 56,
+    id: 57,
     alert: true,
     table: 'smokeDetection'
   },
-  Volocity: {
-    id: 57,
+  Velocity: {
+    id: 58,
     alert: true,
     table: 'velocity'
+  },
+  'Enter / Exit': {
+    id: 59,
+    alert: true,
+    table: 'enterExit'
+  },
+  'No Exit': {
+    id: 60,
+    alert: true,
+    table: 'exit'
   }
 }
 
