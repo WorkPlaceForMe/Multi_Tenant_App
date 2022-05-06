@@ -48,7 +48,7 @@ export class CollapseComponent implements OnInit, OnDestroy {
   algorithms: any;
   loading: boolean = false;
   loadingTakeScreenShot: boolean = false;
-  algoId = 45;
+  algoId = 38;
 
   constructor(
     private serv: AnalyticsService,
@@ -182,7 +182,7 @@ export class CollapseComponent implements OnInit, OnDestroy {
             }
           }
         }
-        // this.source = this.collapse.raw
+        this.source = this.collapse.raw
         //   .slice()
         //   .sort((a, b) => +new Date(b.time) - +new Date(a.time));
         let labels = [];
@@ -609,31 +609,7 @@ export class CollapseComponent implements OnInit, OnDestroy {
         title: "CAM",
         type: "string",
         filter: false,
-      },
-      severity: {
-        title: "SEVERITY",
-        type: "string",
-        filter: false,
-      },
-      actions: {
-        title: "ACTIONS",
-        type: "string",
-        filter: false,
-      },
-      status: {
-        title: "STATUS",
-        type: "string",
-        filter: false,
-      },
-      button: {
-        title: "IMAGE",
-        type: "custom",
-        valuePrepareFunction: (value, row, cell) => {
-          return row;
-        },
-        renderComponent: ViewManualTriggerComponent,
-        filter: false,
-      },
+      }
     },
   };
 }
