@@ -182,7 +182,7 @@ export class CrowdComponent implements OnInit, OnDestroy {
             }
           }
         }
-        // this.source = this.crowd.raw
+        this.source = this.crowd.raw
         //   .slice()
         //   .sort((a, b) => +new Date(b.time) - +new Date(a.time));
         let labels = [];
@@ -605,13 +605,8 @@ export class CrowdComponent implements OnInit, OnDestroy {
         type: "string",
         filter: false,
       },
-      camera_name: {
+      cam_name: {
         title: "CAM",
-        type: "string",
-        filter: false,
-      },
-      severity: {
-        title: "SEVERITY",
         type: "string",
         filter: false,
       },
