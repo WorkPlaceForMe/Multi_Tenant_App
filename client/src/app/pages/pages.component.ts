@@ -34,7 +34,7 @@ export class PagesComponent {
   }
 
   constructor( public authService: AuthService, private router: Router, private service: FacesService) {
-    if(authService.isLoggedIn){
+    if(authService.isLoggedIn && !authService.isAdmin){
       this.service.getDashboard().subscribe(
         res => {
           for(const alg of res['data']['analyticsT']){

@@ -147,13 +147,7 @@ export class CarmakeComponent implements OnInit, OnDestroy {
   }
   settings = {
     mode: 'external',
-    actions: {
-      position: 'right',
-      columnTitle: 'ACTIONS',
-      add: false,
-      edit: true,
-      delete: false,
-    },
+    actions: false,
     edit: {
       editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
@@ -189,6 +183,11 @@ export class CarmakeComponent implements OnInit, OnDestroy {
       },
       car_type: {
         title: 'CAR TYPE',
+        type: 'string',
+        filter: false,
+      },
+      color: {
+        title: 'COLOR',
         type: 'string',
         filter: false,
       },

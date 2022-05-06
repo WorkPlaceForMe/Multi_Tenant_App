@@ -76,7 +76,6 @@ export class SetUpComponent implements OnInit {
       .subscribe(
         res => {
           this.user = res['data'];
-          console.log(this.user)
           this.registerForm.controls['username'].setValue(this.user.username);
           this.registerForm.controls['email'].setValue(this.user.email);
           this.registerForm.controls['analytics'].setValue(this.user.analytics);
