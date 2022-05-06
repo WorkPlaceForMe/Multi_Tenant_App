@@ -180,5 +180,11 @@ export class AnalyticsService {
   velocity(id: string, dates){
     return this.http.post(`${this.API_URL}velocity/${id}`, dates);
   }
+  exit(id: string, dates){
+    return this.http.post(`${this.API_URL}exit/${id}`, dates);
+  }
+  enterExit(id: string, dates){
+    return this.http.post(`${this.API_URL}enterExit/${id}`, dates);
+  }
   constructor(private http: HttpClient) { }
 }

@@ -156,6 +156,8 @@ import { SceneChangeComponent } from './online/graphs/scene-change/scene-change.
 import { ObjectRemovalComponent } from './online/graphs/object-removal/object-removal.component';
 import { SmokeDetectionComponent } from './online/graphs/smoke-detection/smoke-detection.component';
 import { VelocityComponent } from './online/graphs/velocity/velocity.component';
+import { EnterExitComponent } from './online/graphs/enter-exit/enter-exit.component';
+import { NoExitComponent } from './online/graphs/no-exit/no-exit.component';
 
 @NgModule({
   imports: [
@@ -320,6 +322,8 @@ import { VelocityComponent } from './online/graphs/velocity/velocity.component';
     ObjectRemovalComponent,
     SmokeDetectionComponent,
     VelocityComponent,
+    EnterExitComponent,
+    NoExitComponent,
   ],
   providers: [
     FacesService,

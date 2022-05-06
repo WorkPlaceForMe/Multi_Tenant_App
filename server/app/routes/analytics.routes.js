@@ -2817,4 +2817,8 @@ module.exports = function (app) {
   app.post('/api/analytics/smokeDetection/:id', [authJwt.verifyToken], controller.smokeDetection)
 
   app.post('/api/analytics/velocity/:id', [authJwt.verifyToken], controller.velocity)
+
+  app.post('/api/analytics/exit/:id', [authJwt.verifyToken], controller.exit)
+
+  app.post('/api/analytics/enterExit/:id', [authJwt.verifyToken], controller.enterExit)
 }
