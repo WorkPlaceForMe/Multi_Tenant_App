@@ -783,7 +783,6 @@ exports.aod = async (req, res) => {
         camera_id: req.params.id
       }
     }).then(async rel => {
-      console.log(rel)
       await db
         .con()
         .query(
@@ -5944,7 +5943,7 @@ exports.crowd = async (req, res) => {
   jwt.verify(token, process.env.secret, async (err, decoded) => {
     Relation.findOne({
       where: {
-        algo_id: 39,
+        algo_id: 43,
         camera_id: req.params.id
       }
     }).then(async rel => {

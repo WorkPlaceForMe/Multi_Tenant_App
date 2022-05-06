@@ -162,7 +162,7 @@ const tables = {
     table: 'axle',
     alert: true
   },
-  'Car make Classification': {
+  'Carmake': {
     id: 31,
     table: 'carmake',
     alert: true
