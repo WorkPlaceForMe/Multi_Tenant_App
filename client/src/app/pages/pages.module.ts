@@ -2,8 +2,7 @@ import { NgModule } from "@angular/core";
 import {
   NbMenuModule,
   NbPopoverModule,
-  NbTimepickerModule,
-  NbWindowModule,
+  NbTimepickerModule
 } from "@nebular/theme";
 
 import { ThemeModule } from "../@theme/theme.module";

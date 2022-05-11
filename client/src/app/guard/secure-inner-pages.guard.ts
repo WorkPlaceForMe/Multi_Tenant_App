@@ -20,7 +20,7 @@ export class SecureInnerPagesGuard implements CanActivate {
         if(this.authService.isAdmin){
           return this.router.navigate(['/pages/accounts'])
         }
-        return this.router.navigate(['/pages/graphs'])
+        return this.router.navigate(['/pages/dashboards'])
     }
     return true;
   }

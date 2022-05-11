@@ -52,7 +52,7 @@ export class PagesComponent {
     }
     router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
-        if(val.url == '/pages/graphs'){
+        if(val.url == '/pages/dashnboards'){
           this.showHeader = false;
           this.state = "collapsed";
         }else{

@@ -10,7 +10,7 @@ export const MENU_ITEMSBRANCH: NbMenuItem[] = [
   {
     title: "Start",
     icon: "home-outline",
-    link: "/dashboard",
+    link: "dashboards",
     hidden: true,
     home: true,
   },
@@ -50,7 +50,7 @@ export const MENU_ITEMSBRANCH: NbMenuItem[] = [
   {
     title: "Dashboards",
     icon: "bar-chart-outline",
-    link: "graphs",
+    link: "dashboards",
   },
   {
     title: "Tickets",
@@ -100,7 +100,7 @@ export const MENU_ITEMSADMIN: NbMenuItem[] = [
   {
     title: "Start",
     icon: "home-outline",
-    link: "/dashboard",
+    link: "dashboards",
     hidden: true,
     home: true,
   },
@@ -119,7 +119,7 @@ export const MENU_ITEMSCLIENT: NbMenuItem[] = [
   {
     title: "Start",
     icon: "home-outline",
-    link: "/dashboard",
+    link: "dashboards",
     hidden: true,
     home: true,
   },
@@ -202,7 +202,7 @@ export const MENU_ITEMSUSER: NbMenuItem[] = [
   {
     title: "Dashboards",
     icon: "bar-chart-outline",
-    link: "graphs",
+    link: "dashboards",
   },
   {
     title: "Tickets",

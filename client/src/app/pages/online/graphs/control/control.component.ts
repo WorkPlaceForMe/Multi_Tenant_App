@@ -1,20 +1,21 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { NbCalendarRange, NbComponentStatus, NbDateService, NbGlobalPhysicalPosition, NbGlobalPosition, NbToastrService } from '@nebular/theme';
 import { Account } from '../../../../models/Account';
 import { NbPopoverDirective } from '@nebular/theme';
 import { AuthService } from '../../../../services/auth.service';
+import { FacesService } from '../../../../services/faces.service';
 
 @Component({
   selector: 'ngx-control',
   templateUrl: './control.component.html',
   styleUrls: ['./control.component.scss'],
 })
-export class ControlComponent implements OnInit, OnDestroy {
+export class ControlComponent implements OnInit, OnDestroy, OnChanges {
 
   @ViewChild(NbPopoverDirective) rangeSelector: NbPopoverDirective;
 
   @Input() analytic;
-  @Input() cameras;
+  @Input() cameraId;
   @Input() rel;
   max: Date;
   fin: Date;
@@ -37,67 +38,14 @@ export class ControlComponent implements OnInit, OnDestroy {
   lastMonths: Date[] = [];
 
   currentSelection: string  = 'Date';
-  items = [
-    {
-      title: 'Cameras',
-      icon: 'video-outline',
-      link:  '/pages/camerasList',
-      children: [
-        {
-          title: 'Add Camera',
-          link: '/pages/cameras/add_camera',
-          home: true,
-        },
-        {
-          title: 'Cameras List',
-          link: '/pages/camerasList',
-          home: true,
-        },
-      ],
-    },
-    {
-      title: 'Tickets',
-      icon: 'done-all-outline',
-      link: '/pages/tickets',
-    },
-    {
-      title: 'Stored Videos',
-      icon: 'film-outline',
-      link: '/pages/search/list',
-      children: [
-        {
-          title: 'Video List',
-          link: '/pages/search/list',
-        },
-        {
-          title: 'Add Video',
-          link: '/pages/search/upload',
-        },
-        {
-          title: 'Summarization',
-          link: '/pages/search/summarization',
-        },
-      ],
-    },
-  ];
-
-
+  relations: any;
+  
   constructor(
     private toastrService: NbToastrService,
     protected dateService: NbDateService<Date>,
     private authService: AuthService,
+    private facesService: FacesService
   ) {
-    if (authService.isAdmin){
-        this.items = [
-          {
-            title: 'Accounts',
-            icon: 'people-outline',
-            link: '/pages/accounts',
-          },
-        ];
-    }
-
-
   }
 
   signOff(){
@@ -143,7 +91,6 @@ export class ControlComponent implements OnInit, OnDestroy {
         start: new Date(start),
         end: new Date(end),
       };
-      this.cam(this.camera);
       this.showRangeSelector(false);
     }
   }
@@ -158,7 +105,6 @@ export class ControlComponent implements OnInit, OnDestroy {
         start: new Date(start),
         end: new Date(end),
       };
-      this.cam(this.camera);
       this.showRangeSelector(false);
 
     }
@@ -175,65 +121,16 @@ export class ControlComponent implements OnInit, OnDestroy {
         start: new Date(event.start),
         end: new Date(event.end),
       };
-      this.cam(this.camera);
       this.showRangeSelector(false);
     }else{
       this.showRange = true;
     }
   }
 
-  set(event){
-    if (this.renew){
-      clearInterval(this.renew);
-    }
-    this.refresh = event * 1000;
-    if (event !== 0){
-      this.cam(this.camera);
-      this.renew = setInterval(() => {
-        this.cam(this.camera);
-      }, this.refresh);
-    }
-  }
   info: any;
-  cam(event){
-    this.cameraSel.emit(event);
-    setTimeout(() => {
-      if (this.rel !== false){
-        if (event === ''){
-          if (this.camera === ''){
-            return this.showToast('Please choose a camera.', 'info');
-          }
-        }else{
-          if (this.range.end === undefined){
-            return;
-          }
-          for(const cam of this.cameras){
-            if(cam.id == event){
-              this.info = cam
-            }
-          }
-          const algo_id = this.analytic.algo_id;
-          this.analytic.algo_id = -1;
-          setTimeout(() => {
-            this.camera = event;    
-            this.analytic.algo_id = algo_id;
-          }, 50);
-        }
-      }
-    }, 50);
-  }
 
-  reload(){
-    this.cam(this.camera);
-  }
 
   paths:Number = -1
-
-  reloadPath(num){
-    this.paths = num
-    this.cam(this.camera);
-  }
-
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'));
@@ -252,6 +149,7 @@ export class ControlComponent implements OnInit, OnDestroy {
     };
     this.initMonths();
     this.selectedDate =  this.dateService.addDay(this.dateService.today(), 0);
+
   }
 
   initMonths(){
@@ -275,6 +173,16 @@ export class ControlComponent implements OnInit, OnDestroy {
     if (this.renew){
       clearInterval(this.renew);
     }
+  }
+
+  ngOnChanges(){
+    this.facesService.getRelations(this.cameraId).subscribe(
+      res => {
+        console.log(res);
+        this.relations = res['data'];
+      },
+      err => console.error(err)
+    );
   }
 
 

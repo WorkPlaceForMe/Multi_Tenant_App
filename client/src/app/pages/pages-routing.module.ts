@@ -125,6 +125,16 @@ const routes: Routes = [
         canActivate: [OtherGuard],
       },
       {
+        path: 'dashboards/:id',
+        component: CenterComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: "dashboards",
+        component: CenterComponent,
+        canActivate: [AuthGuard],
+      },
+      {
         path: "tickets",
         component: TicketComponent,
         canActivate: [AuthGuard],
