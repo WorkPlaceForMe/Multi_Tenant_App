@@ -178,7 +178,7 @@ export class HarassmentComponent implements OnInit , OnDestroy {
               {
                 label: "Hands Over Time",
                 backgroundColor: NbColorHelper.hexToRgbA(colors.primary, 0.3),
-                data: Object.values(this.abduction.over),
+                data: Object.values(this.harrasment.over),
                 borderColor: colors.primary,
               },
             ],

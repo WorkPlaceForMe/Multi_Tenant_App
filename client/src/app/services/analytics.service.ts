@@ -186,5 +186,14 @@ export class AnalyticsService {
   enterExit(id: string, dates){
     return this.http.post(`${this.API_URL}enterExit/${id}`, dates);
   }
+  harrasment(id: string, dates){
+    return this.http.post(`${this.API_URL}harrasment/${id}`, dates);
+  }
+  abduction(id: string, dates){
+    return this.http.post(`${this.API_URL}abduction/${id}`, dates);
+  }
+  dir(id: string, dates){
+    return this.http.post(`${this.API_URL}dir/${id}`, dates);
+  }
   constructor(private http: HttpClient) { }
 }
