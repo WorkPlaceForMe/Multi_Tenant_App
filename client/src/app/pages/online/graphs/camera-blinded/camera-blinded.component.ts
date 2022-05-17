@@ -55,9 +55,6 @@ export class CameraBlindedComponent implements OnInit, OnDestroy {
     public datepipe: DatePipe,
     private theme: NbThemeService,
     private route: Router,
-    private dialogService: NbDialogService,
-    private rd: Renderer2,
-    private fb: FormBuilder
   ) {}
   single: any;
   colorScheme: any;
@@ -165,6 +162,7 @@ export class CameraBlindedComponent implements OnInit, OnDestroy {
             }
           }
         }
+        this.source = this.cameraBlinded.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
         let labels = [];
         for (var o of Object.keys(this.cameraBlinded.over)) {
           o = o + ":00:00";

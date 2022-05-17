@@ -2821,4 +2821,10 @@ module.exports = function (app) {
   app.post('/api/analytics/exit/:id', [authJwt.verifyToken], controller.exit)
 
   app.post('/api/analytics/enterExit/:id', [authJwt.verifyToken], controller.enterExit)
+
+  app.post('/api/analytics/harrasment/:id', [authJwt.verifyToken], controller.harrasment)
+
+  app.post('/api/analytics/abduction/:id', [authJwt.verifyToken], controller.abduction)
+
+  app.post('/api/analytics/direction/:id', [authJwt.verifyToken], controller.direction)
 }
