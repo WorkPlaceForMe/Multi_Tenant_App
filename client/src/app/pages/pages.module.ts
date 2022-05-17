@@ -158,6 +158,9 @@ import { SmokeDetectionComponent } from './online/graphs/smoke-detection/smoke-d
 import { VelocityComponent } from './online/graphs/velocity/velocity.component';
 import { EnterExitComponent } from './online/graphs/enter-exit/enter-exit.component';
 import { NoExitComponent } from './online/graphs/no-exit/no-exit.component';
+import { HarassmentComponent } from './online/graphs/harassment/harassment.component';
+import { AbductionComponent } from './online/graphs/abduction/abduction.component';
+import { DirectionComponent } from './online/graphs/direction/direction.component';
 
 @NgModule({
   imports: [
@@ -324,6 +327,9 @@ import { NoExitComponent } from './online/graphs/no-exit/no-exit.component';
     VelocityComponent,
     EnterExitComponent,
     NoExitComponent,
+    HarassmentComponent,
+    AbductionComponent,
+    DirectionComponent,
   ],
   providers: [
     FacesService,

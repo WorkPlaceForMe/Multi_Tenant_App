@@ -22,14 +22,14 @@ import { NbDialogRef, NbDialogService } from "@nebular/theme";
 import { FormBuilder, FormGroup } from "@angular/forms";
 
 @Component({
-  selector: 'ngx-camera-blinded',
-  templateUrl: './camera-blinded.component.html',
-  styleUrls: ['./camera-blinded.component.scss']
+  selector: 'ngx-direction',
+  templateUrl: './direction.component.html',
+  styleUrls: ['./direction.component.scss']
 })
-export class CameraBlindedComponent implements OnInit, OnDestroy {
+export class DirectionComponent implements OnInit, OnDestroy {
   @Input() range: NbCalendarRange<Date>;
   @Input() camera;
-  cameraBlinded: any = [];
+  dir: any = [];
   player: any;
   timezone: any;
   now_user: Account;
@@ -45,7 +45,7 @@ export class CameraBlindedComponent implements OnInit, OnDestroy {
   algorithms: any;
   loading: boolean = false;
   loadingTakeScreenShot: boolean = false;
-  algoId = 54;
+  algoId = 63;
 
   constructor(
     private serv: AnalyticsService,
@@ -120,17 +120,17 @@ export class CameraBlindedComponent implements OnInit, OnDestroy {
       },
       (err) => console.error(err)
     );
-    this.serv.cameraBlinded(this.camera, l).subscribe(
+    this.serv.dir(this.camera, l).subscribe(
       (res) => {
-        this.cameraBlinded = res["data"];
-        for (var m of this.cameraBlinded.raw) {
+        this.dir = res["data"];
+        for (var m of this.dir.raw) {
           m["picture"] = this.sanitizer.bypassSecurityTrustUrl(
             api +
               "/pictures/" +
               this.now_user["id_account"] +
               "/" +
               m["id_branch"] +
-              "/cameraBlinded/" +
+              "/dir/" +
               m["cam_id"] +
               "/" +
               m["picture"]
@@ -141,7 +141,7 @@ export class CameraBlindedComponent implements OnInit, OnDestroy {
             this.now_user["id_account"] +
             "/" +
             m["id_branch"] +
-            "/cameraBlinded/" +
+            "/dir/" +
             m["cam_id"] +
             "/" +
             m["clip_path"];
@@ -161,9 +161,9 @@ export class CameraBlindedComponent implements OnInit, OnDestroy {
             }
           }
         }
-        this.source = this.cameraBlinded.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+        this.source = this.dir.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
         let labels = [];
-        for (var o of Object.keys(this.cameraBlinded.over)) {
+        for (var o of Object.keys(this.dir.over)) {
           o = o + ":00:00";
           labels.push(this.datepipe.transform(o, "yyyy-M-dd HH:mm"));
         }
@@ -178,7 +178,7 @@ export class CameraBlindedComponent implements OnInit, OnDestroy {
               {
                 label: "Hands Over Time",
                 backgroundColor: NbColorHelper.hexToRgbA(colors.primary, 0.3),
-                data: Object.values(this.cameraBlinded.over),
+                data: Object.values(this.dir.over),
                 borderColor: colors.primary,
               },
             ],
@@ -285,6 +285,11 @@ export class CameraBlindedComponent implements OnInit, OnDestroy {
       },
       camera_name: {
         title: "CAM",
+        type: "string",
+        filter: false,
+      },
+      direction: {
+        title: "DIRECTION",
         type: "string",
         filter: false,
       },
