@@ -182,9 +182,9 @@ export class PushingComponent implements OnInit, OnDestroy {
             }
           }
         }
-        // this.source = this.pushing.raw
-        //   .slice()
-        //   .sort((a, b) => +new Date(b.time) - +new Date(a.time));
+        this.source = this.pushing.raw
+          .slice()
+          .sort((a, b) => +new Date(b.time) - +new Date(a.time));
         let labels = [];
         for (var o of Object.keys(this.pushing.over)) {
           o = o + ":00:00";

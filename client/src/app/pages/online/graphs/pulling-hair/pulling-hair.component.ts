@@ -182,9 +182,9 @@ export class PullingHairComponent implements OnInit, OnDestroy {
             }
           }
         }
-        // this.source = this.pullingHair.raw
-        //   .slice()
-        //   .sort((a, b) => +new Date(b.time) - +new Date(a.time));
+        this.source = this.pullingHair.raw
+          .slice()
+          .sort((a, b) => +new Date(b.time) - +new Date(a.time));
         let labels = [];
         for (var o of Object.keys(this.pullingHair.over)) {
           o = o + ":00:00";

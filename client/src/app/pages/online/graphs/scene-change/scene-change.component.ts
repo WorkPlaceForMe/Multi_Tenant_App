@@ -165,6 +165,8 @@ export class SceneChangeComponent implements OnInit, OnDestroy {
             }
           }
         }
+        this.source = this.sceneChange.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+
         let labels = [];
         for (var o of Object.keys(this.sceneChange.over)) {
           o = o + ":00:00";

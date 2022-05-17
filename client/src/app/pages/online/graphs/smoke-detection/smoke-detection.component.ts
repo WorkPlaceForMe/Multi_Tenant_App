@@ -168,6 +168,8 @@ export class SmokeDetectionComponent implements OnInit, OnDestroy {
             }
           }
         }
+        this.source = this.smokeDetection.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+
         let labels = [];
         for (var o of Object.keys(this.smokeDetection.over)) {
           o = o + ":00:00";

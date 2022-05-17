@@ -182,9 +182,9 @@ export class PurseSnatchingComponent implements OnInit, OnDestroy {
             }
           }
         }
-        // this.source = this.purse.raw
-        //   .slice()
-        //   .sort((a, b) => +new Date(b.time) - +new Date(a.time));
+        this.source = this.purse.raw
+          .slice()
+          .sort((a, b) => +new Date(b.time) - +new Date(a.time));
         let labels = [];
         for (var o of Object.keys(this.purse.over)) {
           o = o + ":00:00";

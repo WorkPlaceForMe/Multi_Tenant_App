@@ -167,6 +167,7 @@ export class TranspassingComponent implements OnInit, OnDestroy {
             }
           }
         }
+        this.source = this.transpassing.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
         let labels = [];
         for (var o of Object.keys(this.transpassing.over)) {
           o = o + ":00:00";
