@@ -2,6 +2,7 @@ client/node_modules/
 server/node_modules/
 server/access.log
 server/resources/**
+!server/resources/logs/
 !server/resources/logs/test.log
 !server/resources/graymaticsLogo.png
 !server/resources/Microsoft_logo.svg.png
@@ -28,3 +29,6 @@ pythonServer/configPythonDocker.env
 pythonServer/app.log
 pythonServer/resources/logs/pythonAccess.log
 pythonServer/app/__pycache__/**
+wsServer/resources/**
+!wsServer/resources/logs/
+!wsServer/resources/logs/test.log

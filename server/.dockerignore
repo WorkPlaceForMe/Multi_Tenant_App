@@ -1,6 +1,11 @@
 node_modules/**
 npm-debug.log
 resources/**
+!resources/logs/
+!resources/logs/test.log
+!resources/graymaticsLogo.png
+!resources/Microsoft_logo.svg.png
+!resources/googleLogo.png
 config.env
 configDocker.env
 access.log
