@@ -11,7 +11,7 @@ services:
     # ports:
     #   - "3300:3300"
     network_mode: host
-    image: graymatics1/multi-tenant-server:1.0.15
+    image: graymatics1/multi-tenant-server:1.0.16
     restart: always
     volumes:
       - /home/alex/Desktop/office/Multi_Tenant_App/server/resources:/usr/src/app/resources
