@@ -15,7 +15,6 @@ exports.ws =  (ws ,req) => {
         return ws.close()
     }
 
-
     try{
         const mess = `connection from: ${id} in ${req._remoteAddress} at ${req._startTime}.`
         const line = '\n'
@@ -26,18 +25,29 @@ exports.ws =  (ws ,req) => {
         let writer = fs.createWriteStream(file, { flags: 'a' }) 
         writer.write(initialMess + line);
 
-        ws.send('Connected at: ' + new Date())
-
-        connections.push(ws)
+        const connectionMessage = {
+            success: true,
+            time: new Date()
+        }
+        ws.send(JSON.stringify(connectionMessage))
+        
         if(id === 'algorithm'){
+            ws.id = 'algorithm'
+            connections.push(ws)
             ws.on('message', function incoming(message) {
                 console.log(`${id} said: ${message}`);
                 broadcast(message, ws)
             });
         }else if (id === 'client'){
+            ws.id = 'client'
+            connections.push(ws)
             ws.on('message', function incoming(message) {
                 console.log(`${id} said: ${message}`);
-                ws.send("Message can't be send");
+                const messa = {
+                    success: false,
+                    error: "Message can't be sent"
+                }
+                ws.send(JSON.stringify(messa));
             });
         }
     
@@ -53,9 +63,9 @@ exports.ws =  (ws ,req) => {
 
 }
 
-function broadcast(message, wsc){
+function broadcast(message){
     connections.forEach( (ws) => {
-        if(ws === wsc){
+        if(ws.id === 'algorithm'){
             return;
         }
         ws.send(message)
