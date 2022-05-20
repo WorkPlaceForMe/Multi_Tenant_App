@@ -32,3 +32,4 @@ pythonServer/app/__pycache__/**
 wsServer/resources/**
 !wsServer/resources/logs/
 !wsServer/resources/logs/test.log
+config.env
