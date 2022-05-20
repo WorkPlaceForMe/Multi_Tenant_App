@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === 'production') {
     ]
   }
   app.use(cors(corsOptions))
-  console.log(`Running on Production for http://${process.env.my_ip}:4200`)
+  console.log(`Running on Production for http://${process.env.my_ip}:${process.env.PORTWS}`)
 } else {
   const corsOptions = {
     origin: [
@@ -56,7 +56,6 @@ app.use(
     }
   )
 )
-
 
 function customHeaders (req, res, next) {
   app.disable('X-Powered-By')
