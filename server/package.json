@@ -8,7 +8,7 @@
     "dev": "nodemon ./bin/www"
   },
   "author": "Alex Kaiser",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@elastic/elasticsearch": "^7.11.0",
     "aws-sdk": "^2.1099.0",
