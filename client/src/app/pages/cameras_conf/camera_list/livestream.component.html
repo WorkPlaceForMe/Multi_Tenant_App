@@ -1,48 +1,97 @@
 
-  <nb-card>
+  <nb-card style="background-color: #545454; width: 80%">
     <nb-card-header>
-      <div class='col-md-6 offset-md-3'>
-        <!-- <h4 align="left">
-          {{ dateMessage }}
-        </h4> -->
+      <div class="row" style="">
+        <div class="col-md-4">
+          <button class='btn-block'>
+            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1024 1024"><path fill="currentColor" d="M368 724H252V608c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v116H72c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h116v116c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V788h116c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8z"/><path fill="currentColor" d="M912 302.3L784 376V224c0-35.3-28.7-64-64-64H128c-35.3 0-64 28.7-64 64v352h72V232h576v560H448v72h272c35.3 0 64-28.7 64-64V648l128 73.7c21.3 12.3 48-3.1 48-27.6V330c0-24.6-26.7-40-48-27.7zM888 625l-104-59.8V458.9L888 399v226z"/><path fill="currentColor" d="M320 360c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8H208c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h112z"/></svg>
+            &nbsp;<span style="letter-spacing: -0.5px; font-size:15px; font-weight: bold">Add new video</span>
+          </button>
+        </div>
+        <div class="col-md-7" id="search-input">
+          <input id="search" type="text">
+        </div>
+      </div>
+      <!--<div class='col-md-6 offset-md-3'>
+        <h4 align="left">
+         {{ dateMessage }}
+       </h4>
         <label *ngIf='now_user.role != "user"' align='right' for="noth" class="label">Remaining Cameras:&nbsp;</label>
         <strong  *ngIf='now_user.role != "user"'>{{remaining.cameras}}</strong>
-        </div>
+      </div> -->
     </nb-card-header>
-  
     <nb-card-body>
 
-      <table class="table table-hover" id="myTable">
+      <table  class="table table-hover" style="border: #545454 solid;">
         <thead align='center'>
           <tr>
-            <th scope="col"><h5>Name</h5></th>
-            <th scope="col"><h5>Play</h5></th>
-            <th scope="col"  *ngIf='now_user.role != "user"'><h5>Edit</h5></th>
-            <th scope="col"  *ngIf='now_user.role != "user"'><h5><i class="far fa-dot-circle"></i>&nbsp;Algorithms</h5></th>
-            <th scope="col" *ngIf='heatmap == true'><h5><i class="far fa-map"></i> &nbsp;Heatmap</h5></th>
-            <th scope="col" *ngIf='now_user.role != "user"'><h5>Delete</h5></th>
+            <th><h5>NAME</h5></th>
+            <th><h5>BRANCH</h5></th>
+            <th colspan="2"><h5>DETAILS</h5></th>
+            <th colspan="2"><h5>ANALYTICS</h5></th>
+            <th colspan="2"><h5>ISSUE DATE</h5></th>
+<!--            <th scope="col"><h5>Play</h5></th>-->
+<!--            <th scope="col"  *ngIf='now_user.role != "user"'><h5>Edit</h5></th>-->
+<!--            <th scope="col"  *ngIf='now_user.role != "user"'><h5><i class="far fa-dot-circle"></i>&nbsp;Algorithms</h5></th>-->
+<!--            <th scope="col" *ngIf='heatmap == true'><h5><i class="far fa-map"></i> &nbsp;Heatmap</h5></th>-->
+<!--            <th scope="col" *ngIf='now_user.role != "user"'><h5>Delete</h5></th>-->
           </tr>
         </thead>
         <tr *ngFor = "let camera of cams">
-            <td scope="row"><h6 align='center' style='word-wrap: break-word;'>{{camera.name}}</h6></td>
-            <td><button [routerLink]="['/pages/cameras/live/', camera.id]" class='btn-block' nbButton [status]="'warning'">
-                <i class="fas fa-play"></i>
-            </button></td>
-            <td *ngIf='now_user.role != "user"'><button [routerLink]="['/pages/cameras/edit', camera.id]" class='btn-block' nbButton [status]="'info'">
-            Edit
-            </button></td>
-            <td *ngIf='now_user.role != "user"'><button [routerLink]="['/pages/cameras/algorithms', camera.id]" class='btn-block' nbButton [status]="'info'">
-              Algorithms
-            </button></td>
-              <td *ngIf='heatmap == true'><button [routerLink]="['/pages/cameras/heatmap', camera.id]" class='btn-block' nbButton [status]="'info'" [disabled]= 'camera.hm == undefined'>
-                Heatmap
-              </button></td>
-            <td *ngIf='now_user.role != "user"'><button  class='btn-block' nbButton [status]="'danger'" (click)="deleteCamera(camera.id)">
-              <i class="far fa-trash-alt"></i>
-            </button></td>
+          <td><h6 align='center' style='word-wrap: break-word;'>{{camera.name}}</h6></td>
+          <td><h6 align='center' style='word-wrap: break-word;'>Branch1</h6></td>
+          <td style="text-align: right">
+            <button [routerLink]="['/pages/cameras/live/', camera.id]" style="border: none; background-color: #545454">
+              <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" fill="white" class="bi bi-play-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
+              </svg>
+              </button>
+          </td>
+          <td style="text-align: left">
+            <button [routerLink]="['/pages/cameras/edit', camera.id]" style="border: none; background-color: #545454">
+              <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" fill="white" class="bi bi-card-text" viewBox="0 0 16 16">
+                <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+                <path d="M3 5.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 8zm0 2.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5z"/>
+              </svg>
+            </button>
+          </td>
+          <td style="text-align: right">
+            <button [routerLink]="['/pages/cameras/algorithms', camera.id]" style="border: none; background-color: #545454">
+              <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 20 20"><path fill="white" d="M6.13 2.793A3.91 3.91 0 0 1 8.5 2a1.757 1.757 0 0 1 1.5.78A1.757 1.757 0 0 1 11.5 2a3.91 3.91 0 0 1 2.37.793c.525.408.93.973 1.073 1.656c.328.025.628.161.88.366c.382.31.66.775.835 1.267c.274.765.348 1.74.064 2.57c.072.034.143.074.212.12c.275.183.484.445.638.754c.303.605.428 1.449.428 2.474c0 1.141-.435 1.907-.987 2.38a2.68 2.68 0 0 1-1.054.555c-.1.558-.38 1.204-.819 1.752c-.57.715-1.454 1.313-2.64 1.313c-.94 0-1.688-.52-2.174-1.03a4.252 4.252 0 0 1-.326-.385a4.245 4.245 0 0 1-.326.385C9.188 17.48 8.441 18 7.5 18c-1.186 0-2.069-.598-2.64-1.313a4.057 4.057 0 0 1-.819-1.752a2.68 2.68 0 0 1-1.054-.555C2.435 13.907 2 13.14 2 12c0-1.025.126-1.87.428-2.474a1.92 1.92 0 0 1 .638-.755a1.58 1.58 0 0 1 .212-.118c-.284-.832-.21-1.806.064-2.571c.175-.492.453-.957.835-1.267c.252-.205.552-.34.88-.366c.144-.683.549-1.248 1.074-1.656ZM9.5 4.5v-.01l-.002-.05a2.744 2.744 0 0 0-.154-.764a1.222 1.222 0 0 0-.309-.49A.76.76 0 0 0 8.5 3a2.91 2.91 0 0 0-1.756.582C6.28 3.943 6 4.432 6 5a.5.5 0 0 1-.658.474c-.188-.062-.356-.027-.535.117c-.196.16-.387.444-.524.827c-.279.782-.25 1.729.133 2.305A.5.5 0 0 1 4.5 9h.75a2.25 2.25 0 0 1 2.25 2.25v.335a1.5 1.5 0 1 1-1 0v-.335c0-.69-.56-1.25-1.25-1.25H3.5a.499.499 0 0 1-.175-.032l-.003.006C3.124 10.369 3 11.025 3 12c0 .859.315 1.343.638 1.62c.347.298.732.38.862.38a.5.5 0 0 1 .5.5c0 .368.2 1.011.64 1.563c.429.535 1.046.937 1.86.937c.56 0 1.062-.313 1.45-.72c.191-.2.34-.407.437-.577a1.573 1.573 0 0 0 .113-.236V7.5H8.415a1.5 1.5 0 1 1 0-1H9.5v-2Zm1 9.999v.967a1.575 1.575 0 0 0 .113.236c.098.17.246.377.436.577c.389.407.892.72 1.451.72c.814 0 1.431-.402 1.86-.937c.44-.552.64-1.195.64-1.563a.5.5 0 0 1 .5-.5c.13 0 .515-.082.862-.38c.323-.277.638-.761.638-1.62c0-.975-.125-1.63-.322-2.026a.923.923 0 0 0-.3-.37A.657.657 0 0 0 16 9.5a.5.5 0 0 1-.416-.777c.384-.576.412-1.523.133-2.305c-.137-.383-.328-.668-.524-.827c-.179-.144-.347-.18-.535-.117A.5.5 0 0 1 14 5c0-.568-.28-1.057-.745-1.418A2.91 2.91 0 0 0 11.5 3a.76.76 0 0 0-.535.186a1.22 1.22 0 0 0-.31.49a2.579 2.579 0 0 0-.155.814v9.01h.75c.69 0 1.25-.56 1.25-1.25v-1.835a1.5 1.5 0 1 1 1 0v1.835a2.25 2.25 0 0 1-2.25 2.25h-.75ZM6.5 7a.5.5 0 1 0 1 0a.5.5 0 0 0-1 0ZM13 9.5a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1Zm-6 3a.5.5 0 1 0 0 1a.5.5 0 0 0 0-1Z"/></svg>
+            </button>
+          </td>
+          <td style="padding-right: 50px; padding-top: 17px">
+            <button style="background-color: #F0DF42; border: none; width: 20px; height: 20px">
+              <span style="color: black; font-size: 15px; font-weight: bold">1</span>
+            </button>
+          </td>
+          <td style="text-align: right; padding-top: 15px">
+            <span style="color: white; font-size: 15px; font-weight: bold">April 12 22</span>
+          </td>
+          <td style="text-align: left">
+            <button (click)="deleteCamera(camera.id)" style="border: none; background-color: #545454;">
+              <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16"><g fill="white"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></g></svg>
+            </button>
+          </td>
+          <!--            <td scope="row"><h6 align='center' style='word-wrap: break-word;'>{{camera.name}}</h6></td>-->
+<!--            <td><button [routerLink]="['/pages/cameras/live/', camera.id]" class='btn-block' nbButton [status]="'warning'">-->
+<!--                <i class="fas fa-play"></i>-->
+<!--            </button></td>-->
+<!--            <td *ngIf='now_user.role != "user"'><button [routerLink]="['/pages/cameras/edit', camera.id]" class='btn-block' nbButton [status]="'info'">-->
+<!--            Edit-->
+<!--            </button></td>-->
+<!--            <td *ngIf='now_user.role != "user"'><button [routerLink]="['/pages/cameras/algorithms', camera.id]" class='btn-block' nbButton [status]="'info'">-->
+<!--              Algorithms-->
+<!--            </button></td>-->
+<!--              <td *ngIf='heatmap == true'><button [routerLink]="['/pages/cameras/heatmap', camera.id]" class='btn-block' nbButton [status]="'info'" [disabled]= 'camera.hm == undefined'>-->
+<!--                Heatmap-->
+<!--              </button></td>-->
+<!--            <td *ngIf='now_user.role != "user"'><button  class='btn-block' nbButton [status]="'danger'" (click)="deleteCamera(camera.id)">-->
+<!--              <i class="far fa-trash-alt"></i>-->
+<!--            </button></td>-->
         </tr>
         </table>
-      
+
       </nb-card-body>
     </nb-card>
-  
