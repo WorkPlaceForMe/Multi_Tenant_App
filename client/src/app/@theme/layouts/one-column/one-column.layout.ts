@@ -15,7 +15,7 @@ import { AuthService } from "../../../services/auth.service";
         <ng-content select="nb-menu"></ng-content>
       </nb-sidebar>
 
-      <nb-layout-column  [ngClass]="{'no-padding': !showHeader}" >
+      <nb-layout-column  [ngClass]="{'no-padding': !showHeader}" style="background-color: #545454;">
         <ng-content select="router-outlet"></ng-content>
       </nb-layout-column>xx
     </nb-layout>
