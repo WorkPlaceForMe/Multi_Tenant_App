@@ -144,6 +144,16 @@ const isClientOrUserOrBranch = (req, res, next) => {
   })
 }
 
+const isAvailable = (req, res, next) => {
+  const id = req.params.id
+
+  if (id === 'none') {
+    res.status(202).send({
+      message: 'Exists'
+    })
+  }
+}
+
 const authJwt = {
   verifyToken: verifyToken,
   isAdmin: isAdmin,
@@ -152,6 +162,7 @@ const authJwt = {
   isClientOrBranch: isClientOrBranch,
   isClientOrBranchOrAdmin: isClientOrBranchOrAdmin,
   isUserOrBranch: isUserOrBranch,
-  isClientOrUserOrBranch: isClientOrUserOrBranch
+  isClientOrUserOrBranch: isClientOrUserOrBranch,
+  isAvailable: isAvailable
 }
 module.exports = authJwt

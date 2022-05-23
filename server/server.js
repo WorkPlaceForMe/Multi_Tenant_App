@@ -203,8 +203,8 @@ require('./app/routes/info.routes')(app)
 // resources being served
 app.use('/api/pictures', express.static(picResourceFolderPath))
 
-app.use((req, res, next) => {
-  res.sendFile('/app/views/error.html', { root: __dirname })
-})
+// app.use((req, res, next) => {
+//   res.sendFile('/app/views/error.html', { root: __dirname })
+// })
 
 module.exports = app
