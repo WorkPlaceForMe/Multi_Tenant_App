@@ -30,6 +30,9 @@ export class LivestreamComponent implements OnInit, OnDestroy {
     cameras: 0
   }
   now_user: Account;
+  monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
   constructor(private facesService: FacesService, private AccountService:AccountService) {}
 
     ngOnDestroy(){
@@ -57,7 +60,6 @@ export class LivestreamComponent implements OnInit, OnDestroy {
     //   this.dateMessage = currentDate.toDateString() + ' ' + currentDate.toLocaleTimeString('en-US',{ hour12: true });
     // }, 1000);
     this.remain()
-
       this.facesService.getLiveCameras().subscribe(
         res => {
           this.cams = res['data'];
@@ -72,6 +74,8 @@ export class LivestreamComponent implements OnInit, OnDestroy {
                       this.heatmap = true;
                     }
                   }
+                  //add date
+                  this.date = new Date();
                   for(let u = 0; u < this.algos.length; u++){
                     for(let i = 0; i < this.cams.length; i++){
                       for(let e = 0; e < this.relations.length; e++){
@@ -89,7 +93,7 @@ export class LivestreamComponent implements OnInit, OnDestroy {
           );
         },
         err => console.error(err)
-      );             
+      );
   }
 
   getCameras(){
@@ -114,7 +118,7 @@ export class LivestreamComponent implements OnInit, OnDestroy {
               this.remain();
             },
             err => console.error(err)          )
-          
+
         },
         err => console.log(err)
       )

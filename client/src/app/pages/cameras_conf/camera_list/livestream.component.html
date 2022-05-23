@@ -1,7 +1,7 @@
 
-  <nb-card style="background-color: #545454; width: 80%">
+  <nb-card style="background-color: #545454; width: 80%; border: #545454 solid;">
     <nb-card-header>
-      <div class="row" style="">
+      <div class="row">
         <div class="col-md-4">
           <button class='btn-block'>
             <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1024 1024"><path fill="currentColor" d="M368 724H252V608c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v116H72c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h116v116c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V788h116c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8z"/><path fill="currentColor" d="M912 302.3L784 376V224c0-35.3-28.7-64-64-64H128c-35.3 0-64 28.7-64 64v352h72V232h576v560H448v72h272c35.3 0 64-28.7 64-64V648l128 73.7c21.3 12.3 48-3.1 48-27.6V330c0-24.6-26.7-40-48-27.7zM888 625l-104-59.8V458.9L888 399v226z"/><path fill="currentColor" d="M320 360c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8H208c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h112z"/></svg>
@@ -39,7 +39,7 @@
         </thead>
         <tr *ngFor = "let camera of cams">
           <td><h6 align='center' style='word-wrap: break-word;'>{{camera.name}}</h6></td>
-          <td><h6 align='center' style='word-wrap: break-word;'>Branch1</h6></td>
+          <td><h6 align='center' style='word-wrap: break-word;'>{{camera.branches}}Branch1</h6></td>
           <td style="text-align: right">
             <button [routerLink]="['/pages/cameras/live/', camera.id]" style="border: none; background-color: #545454">
               <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" fill="white" class="bi bi-play-circle" viewBox="0 0 16 16">
@@ -67,7 +67,7 @@
             </button>
           </td>
           <td style="text-align: right; padding-top: 15px">
-            <span style="color: white; font-size: 15px; font-weight: bold">April 12 22</span>
+            <span style="color: white; font-size: 15px; font-weight: bold">{{monthNames[date.getMonth()]}}&nbsp;{{date | date:'dd yy'}}</span>
           </td>
           <td style="text-align: left">
             <button (click)="deleteCamera(camera.id)" style="border: none; background-color: #545454;">
