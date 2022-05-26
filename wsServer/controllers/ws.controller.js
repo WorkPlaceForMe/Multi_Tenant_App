@@ -36,7 +36,16 @@ exports.ws =  (ws ,req) => {
             connections.push(ws)
             ws.on('message', function incoming(message) {
                 console.log(`${id} said: ${message}`);
-                broadcast(message, ws)
+                const value = checkStructure(message)
+                if(value.result === false){
+                    const messa = {
+                        success: false,
+                        error: value.reason
+                    }
+                    ws.send(JSON.stringify(messa));
+                }else{
+                    broadcast(message, ws)
+                }
             });
         }else if (id === 'client'){
             ws.id = 'client'
@@ -70,4 +79,42 @@ function broadcast(message){
         }
         ws.send(message)
     })
+}
+
+function checkStructure(message){
+    let result = {
+        result: false,
+        reason: ''
+    }
+
+    const type = {
+        id: 'string',
+        TimeStamp: 'number',
+        Analytic: 'string',
+        CameraId: 'string',
+        Parameters: 'object',
+        Detail: 'string',
+        UrlImage: 'string'
+    }
+
+    try{
+        message = JSON.parse(message)
+        for(const ty in type){
+            if(message[ty] === undefined){
+                result.reason = `${ty} needs to exist and be ${type[ty]} type.`
+                return result
+            }
+            if(typeof(message[ty]) !== type[ty]){
+                result.reason = `${ty} needs to be ${type[ty]} type.`
+                return result
+            }
+        }
+        delete result.reason
+        result.result = true
+        return result
+    }catch(err){
+        console.log(err)
+        result.reason = 'Message needs to be JSON type.'
+        return result
+    }
 }
