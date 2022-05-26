@@ -31,5 +31,7 @@ pythonServer/resources/logs/pythonAccess.log
 pythonServer/app/__pycache__/**
 wsServer/resources/**
 !wsServer/resources/logs/
+!wsServer/resources/pictures/
+!wsServer/resources/pictures/graymaticsLogo.png
 !wsServer/resources/logs/test.log
 config.env
