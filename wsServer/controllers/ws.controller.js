@@ -3,7 +3,7 @@ require('dotenv').config({ path: '../../config.env' })
 const check = require('../helpers/structure').checkStructure
 const file = './resources/logs/wsAccess.log'
 const line = '\n'
-let connections = []
+const connections = []
 
 exports.ws =  (ws ,req) => {
     const id = req.params.id
