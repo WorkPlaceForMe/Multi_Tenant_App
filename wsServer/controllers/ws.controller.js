@@ -1,9 +1,15 @@
 const fs = require('fs')
+require('dotenv').config({ path: '../../config.env' })
 
 let connections = []
 
 exports.ws =  (ws ,req) => {
     const id = req.params.id
+
+    let dev = true
+    if(process.env.NODE_ENV === 'production'){
+        dev = false
+    }
 
     if (!id) {
         ws.send('No id provided')
@@ -20,7 +26,8 @@ exports.ws =  (ws ,req) => {
         const line = '\n'
         const initialMess =`Started ${mess}`
         const file = './resources/logs/wsAccess.log'
-        console.log(initialMess)
+
+        if(dev === true) console.log(initialMess)
 
         let writer = fs.createWriteStream(file, { flags: 'a' }) 
         writer.write(initialMess + line);
@@ -35,7 +42,7 @@ exports.ws =  (ws ,req) => {
             ws.id = 'algorithm'
             connections.push(ws)
             ws.on('message', function incoming(message) {
-                console.log(`${id} said: ${message}`);
+                if(dev === true) console.log(`${id} said: ${message}`);
                 const value = checkStructure(message)
                 if(value.result === false){
                     const messa = {
@@ -51,7 +58,7 @@ exports.ws =  (ws ,req) => {
             ws.id = 'client'
             connections.push(ws)
             ws.on('message', function incoming(message) {
-                console.log(`${id} said: ${message}`);
+                if(dev === true) console.log(`${id} said: ${message}`);
                 const messa = {
                     success: false,
                     error: "Message can't be sent"
@@ -64,10 +71,10 @@ exports.ws =  (ws ,req) => {
             const finalMess = `Stopped ${mess}`
             let writer = fs.createWriteStream(file, { flags: 'a' }) 
             writer.write(finalMess + line);
-            console.log(finalMess)
+            if(dev === true) console.log(finalMess)
         })
     }catch(err){
-        console.log(err)
+        if(dev === true) console.log(err)
     }
 
 }
@@ -88,13 +95,13 @@ function checkStructure(message){
     }
 
     const type = {
-        id: 'string',
-        TimeStamp: 'number',
-        Analytic: 'string',
-        CameraId: 'string',
-        Parameters: 'object',
-        Detail: 'string',
-        UrlImage: 'string'
+        id: "string",
+        TimeStamp: "number",
+        Analytic: "string",
+        CameraId: "string",
+        Parameters: "object",
+        Detail: "string",
+        UrlImage: "string"
     }
 
     try{

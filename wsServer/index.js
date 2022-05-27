@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === 'production') {
     ]
   }
   app.use(cors(corsOptions))
-  console.log(`Running on Production for http://${process.env.my_ip}:${process.env.PORTWS}`)
+  console.log(`Running on Production on http://${process.env.my_ip}:${process.env.PORTWS}`)
 } else {
   const corsOptions = {
     origin: [
