@@ -1,6 +1,8 @@
 const fs = require('fs')
 require('dotenv').config({ path: '../../config.env' })
-
+const check = require('../helpers/structure').checkStructure
+const file = './resources/logs/wsAccess.log'
+const line = '\n'
 let connections = []
 
 exports.ws =  (ws ,req) => {
@@ -10,26 +12,26 @@ exports.ws =  (ws ,req) => {
     if(process.env.NODE_ENV === 'production'){
         dev = false
     }
-
-    if (!id) {
-        ws.send('No id provided')
-        return ws.close()
-    }
+    let writer = fs.createWriteStream(file, { flags: 'a' }) 
 
     if (id !== 'client' && id !== 'algorithm'){
-        ws.send('Unauthorized')
+        const messa = {
+            success: false,
+            error: "Unauthorized"
+        }
+        ws.send(JSON.stringify(messa));
+        const mess = `Tried to connect ${req._remoteAddress} using id: ${id} at ${req._startTime}.`
+        writer.write(mess + line);
+        if(dev === true) console.log(mess);
         return ws.close()
     }
 
     try{
         const mess = `connection from: ${id} in ${req._remoteAddress} at ${req._startTime}.`
-        const line = '\n'
         const initialMess =`Started ${mess}`
-        const file = './resources/logs/wsAccess.log'
 
         if(dev === true) console.log(initialMess)
 
-        let writer = fs.createWriteStream(file, { flags: 'a' }) 
         writer.write(initialMess + line);
 
         const connectionMessage = {
@@ -43,7 +45,7 @@ exports.ws =  (ws ,req) => {
             connections.push(ws)
             ws.on('message', function incoming(message) {
                 if(dev === true) console.log(`${id} said: ${message}`);
-                const value = checkStructure(message)
+                const value = check(message)
                 if(value.result === false){
                     const messa = {
                         success: false,
@@ -86,42 +88,4 @@ function broadcast(message){
         }
         ws.send(message)
     })
-}
-
-function checkStructure(message){
-    let result = {
-        result: false,
-        reason: ''
-    }
-
-    const type = {
-        id: "string",
-        TimeStamp: "number",
-        Analytic: "string",
-        CameraId: "string",
-        Parameters: "object",
-        Detail: "string",
-        UrlImage: "string"
-    }
-
-    try{
-        message = JSON.parse(message)
-        for(const ty in type){
-            if(message[ty] === undefined){
-                result.reason = `${ty} needs to exist and be ${type[ty]} type.`
-                return result
-            }
-            if(typeof(message[ty]) !== type[ty]){
-                result.reason = `${ty} needs to be ${type[ty]} type.`
-                return result
-            }
-        }
-        delete result.reason
-        result.result = true
-        return result
-    }catch(err){
-        console.log(err)
-        result.reason = 'Message needs to be JSON type.'
-        return result
-    }
 }
