@@ -5,3 +5,4 @@ access.log
 .dockerignore
 Dockerfile
 resources/**
+test

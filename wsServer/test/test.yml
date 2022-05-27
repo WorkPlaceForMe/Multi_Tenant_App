@@ -1,0 +1,9 @@
+config:
+  target: 'https://localhost:3301/'
+  phases:
+    - duration: 60
+      arrivalRate: 100
+scenarios:
+  - flow:
+    - get:
+        url: "/api/info"
