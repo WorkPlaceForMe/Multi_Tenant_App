@@ -152,6 +152,7 @@ const isAvailable = (req, res, next) => {
       message: 'Exists'
     })
   }
+  next()
 }
 
 const authJwt = {
