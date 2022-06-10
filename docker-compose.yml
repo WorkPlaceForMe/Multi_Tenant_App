@@ -45,7 +45,7 @@ services:
     #   - "3301:3301"
     # networks:
     #   - dev
-    image: graymatics1/multi-tenant-ws:1.0.2
+    image: graymatics1/multi-tenant-ws:1.0.3
     restart: always
     volumes:
       - /home/alex/Desktop/office/Multi_Tenant_App/configDocker.env:/usr/src/config.env
