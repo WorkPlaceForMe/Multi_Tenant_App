@@ -28,7 +28,8 @@ exports.signupClient = (req, res) => {
     cameras: req.body.cameras,
     analytics: req.body.analytics,
     role: 'client',
-    disabled: '0'
+    disabled: '0',
+    vms: req.body.vms
   })
     .then(user => {
       if (req.body.algorithm) {
@@ -76,7 +77,8 @@ exports.signupBranch = (req, res) => {
       cameras: req.body.cameras,
       analytics: req.body.analytics,
       role: 'branch',
-      disabled: '0'
+      disabled: '0',
+      vms: req.body.vms
     })
       .then(user => {
         const pathPic = `${path}${user.id_account}/${user.id_branch}`

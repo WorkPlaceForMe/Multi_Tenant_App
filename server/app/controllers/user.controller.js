@@ -297,7 +297,8 @@ exports.viewOneAd = (req, res) => {
       'updatedAt',
       'disabled',
       'cameras',
-      'analytics'
+      'analytics',
+      'vms'
     ]
   })
     .then(user => {
@@ -331,7 +332,8 @@ exports.viewOne = (req, res) => {
       'role',
       'id',
       'updatedAt',
-      'disabled'
+      'disabled',
+      'vms'
     ]
   })
     .then(user => {

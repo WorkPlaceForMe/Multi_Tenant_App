@@ -30,6 +30,9 @@ module.exports = (sequelize, Sequelize) => {
     },
     disabled: {
       type: Sequelize.INTEGER
+    },
+    vms: {
+      type: Sequelize.STRING
     }
   })
 
