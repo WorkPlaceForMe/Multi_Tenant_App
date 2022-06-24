@@ -8,7 +8,7 @@ import { FacesService } from '../../../../services/faces.service';
 @Component({
   selector: 'ngx-control',
   templateUrl: './control.component.html',
-  styleUrls: ['./control.component.scss'],
+  styleUrls: ['./control.component.scss', '/control.component.css'],
 })
 export class ControlComponent implements OnInit, OnDestroy, OnChanges {
 
@@ -175,11 +175,17 @@ export class ControlComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  analysis = [];
   ngOnChanges(){
     this.facesService.getRelations(this.cameraId).subscribe(
       res => {
         console.log(res);
         this.relations = res['data'];
+        console.log(JSON.parse(this.relations[0].atributes)[0]["save"])
+        for(let item of this.relations) {
+          this.analysis.push(JSON.parse(item.atributes)[0])
+        }
+        console.log(this.analysis)
       },
       err => console.error(err)
     );

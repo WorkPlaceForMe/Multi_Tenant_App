@@ -33,7 +33,7 @@ export class PagesComponent {
     link: 'management'
   }
 
-  constructor( public authService: AuthService, private router: Router, private service: FacesService) {
+  constructor(public authService: AuthService, private router: Router, private service: FacesService) {
     if(authService.isLoggedIn){
       this.service.getDashboard().subscribe(
         res => {
@@ -52,9 +52,10 @@ export class PagesComponent {
     }
     router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
-        if(val.url == '/pages/dashnboards'){
-          this.showHeader = false;
-          this.state = "collapsed";
+        if(val.url == '/pages/dashboards'){
+          this.showHeader = true;
+          this.state = "compacted";
+          this.show = true;
         }else{
           this.show = true
           this.showHeader = true;
