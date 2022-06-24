@@ -13,5 +13,6 @@ export interface Account {
     disabled?:number;
     createdAt?:Date;
     updatedAt?:Date;
+    vms?:string;
   }
   

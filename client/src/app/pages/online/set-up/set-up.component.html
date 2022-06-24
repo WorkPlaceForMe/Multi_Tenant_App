@@ -22,6 +22,15 @@
                   <div *ngIf="f.email.errors.cantMatch">Email already in use</div>
               </div>
               </div>
+              <div class="form-group">
+                <label class="label">VMS</label>
+                <nb-select fullWidth formControlName="vms" placeholder="Choose a VMS" [ngClass]="{ 'is-invalid': submitted && f.vms.errors }" [status]='values.vms' id="vms">
+                  <nb-option value="" disabled>Choose:</nb-option>
+                  <nb-option value="Pelco">Pelco</nb-option>
+                  <nb-option value="Honeywell Maxpro">Honeywell Maxpro</nb-option>
+                  <nb-option value="Cognyte">Cognyte</nb-option>
+                </nb-select>
+              </div>
 
               <div class="form-group" *ngIf='now_user.role === "admin"'>
                 <label class="label">Type</label>

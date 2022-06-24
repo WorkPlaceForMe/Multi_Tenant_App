@@ -32,6 +32,7 @@ export class SetUpComponent implements OnInit {
     password: 'primary',
     confirmPassword: 'primary',
     algorithm: 'primary',
+    vms: 'primary'
   };
 
   allAct: boolean = false;
@@ -62,6 +63,7 @@ export class SetUpComponent implements OnInit {
       cameras: [10],
       analytics: [10],
       disabled: [false],
+      vms: ['']
   }, {
     validators: [
       MustMatch('password', 'confirmPassword'),
@@ -80,6 +82,7 @@ export class SetUpComponent implements OnInit {
           this.registerForm.controls['email'].setValue(this.user.email);
           this.registerForm.controls['analytics'].setValue(this.user.analytics);
           this.registerForm.controls['cameras'].setValue(this.user.cameras);
+          this.registerForm.controls['vms'].setValue(this.user.vms);
           this.type = this.user.role;
           if (this.user.disabled === 0){
             this.registerForm.controls['disabled'].setValue(false);
@@ -145,6 +148,7 @@ export class SetUpComponent implements OnInit {
       password: 'primary',
       confirmPassword: 'primary',
       algorithm: 'primary',
+      vms: 'primary'
     };
     // stop here if form is invalid
     this.registerForm.controls['algorithm'].setErrors(null);
