@@ -34,6 +34,7 @@ export class SetUpComponent implements OnInit {
     algorithm: 'primary',
     vms: 'primary'
   };
+  vmsList: Array<string> = ['Pelco','Honeywell Maxpro','Cognyte'];
 
   allAct: boolean = false;
   changeAll(){
