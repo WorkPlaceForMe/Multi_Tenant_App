@@ -270,4 +270,15 @@ getAlgos(){
   );
 }
 
+
+// This function is for further use when getVMS() method is available in Account Service
+// getVMSystems() {
+//   this.accountserv.getVMS().subscribe(
+//     res => {
+//       this.vmsList = res['data'];
+//     },
+//     err => console.log(err),
+//   );
+// }
+
 }
