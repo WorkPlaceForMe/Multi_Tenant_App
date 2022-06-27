@@ -20,7 +20,7 @@
   "author": "Alex Ignacio Kaiser",
   "license": "MIT",
   "devDependencies": {
-    "nodemon": "^2.0.15",
+    "nodemon": "^1.3.3",
     "util": "^0.12.4"
   }
 }
