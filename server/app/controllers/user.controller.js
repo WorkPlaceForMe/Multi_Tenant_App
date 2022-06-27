@@ -270,7 +270,7 @@ exports.deleteClient = (req, res) => {
 
 exports.changePass = (req, res) => {
   const updt = req.body
-  ;(updt.password = bcrypt.hashSync(updt.password, 12)),
+  updt.password = bcrypt.hashSync(updt.password, 12)
   User.update(updt, {
     where: { id: req.params.uuid }
   })
