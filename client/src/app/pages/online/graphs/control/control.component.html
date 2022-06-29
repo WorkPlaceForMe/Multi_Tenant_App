@@ -18,7 +18,7 @@
                         <ng-template #elseBlock><span class="mat-cell" >0%</span></ng-template>
                         <span class="mat-cell" *ngIf="analysis[i]['save']; else elseBlock2">{{analysis[i]["time"]}}s</span>
                         <ng-template #elseBlock2><span class="mat-cell">0s</span></ng-template>
-                        <span class="mat-cell"><button class="btn btn-primary">Details</button></span>
+                        <span class="mat-cell"><button class="btn btn-primary" (click)="passAlgoId(item.algo_id)">Details</button></span>
                     </div>
                 </nb-accordion-item-body>
             </nb-accordion-item>

@@ -215,4 +215,10 @@ private showToast( body: string, status: NbComponentStatus) {
     config);
 }
 
+@Output() displayEvent = new EventEmitter();
+passAlgoId(id: number) {
+  this.displayEvent.emit(id);
+  console.log(id);
+}
+
 }
