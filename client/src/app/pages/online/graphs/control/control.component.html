@@ -22,8 +22,6 @@
                     </div>
                     <div class="mat-row mat-cell">
                             <div class='col-md-12 no-padding' style="margin-top: 5px;" [ngSwitch]='item.algo_id'>
-                                <nb-card *ngSwitchCase='-1' [nbSpinner]="'primary'" nbSpinnerSize="medium" nbSpinnerStatus="primary" fullWdith><nb-card-body>&nbsp;</nb-card-body></nb-card>
-                                <nb-card *ngSwitchCase='-2'><nb-card-body>&nbsp;</nb-card-body></nb-card>
                                 <!-- <ngx-dash *ngSwitchCase='-3' [range]='range' [camera]='camera'></ngx-dash> -->
                                 <ngx-pc *ngSwitchCase='12' [range]='range' [camera]='camera'></ngx-pc>
                                 <ngx-loit *ngSwitchCase='2' [range]='range' [camera]='camera'></ngx-loit>
@@ -83,7 +81,6 @@
                                 <ngx-harrasment *ngSwitchCase='61' [range]='range' [camera]='camera'></ngx-harrasment>
                                 <ngx-abduction *ngSwitchCase='62' [range]='range' [camera]='camera'></ngx-abduction>
                                 <ngx-direction *ngSwitchCase='63' [range]='range' [camera]='camera'></ngx-direction>
-                                <app-live *ngSwitchCase='-4' [camera]='camera'></app-live>
                             </div>               
                     </div>
                 </nb-accordion-item-body>
