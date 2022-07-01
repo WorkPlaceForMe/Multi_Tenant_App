@@ -181,7 +181,7 @@ export class ControlComponent implements OnInit, OnDestroy, OnChanges {
       res => {
         console.log(res);
         this.relations = res['data'];
-        console.log(JSON.parse(this.relations[0].atributes)[0]["save"])
+        console.log(this.relations)
         for(let item of this.relations) {
           this.analysis.push(JSON.parse(item.atributes)[0])
         }
@@ -215,10 +215,5 @@ private showToast( body: string, status: NbComponentStatus) {
     config);
 }
 
-@Output() displayEvent = new EventEmitter();
-passAlgoId(id: number) {
-  this.displayEvent.emit(id);
-  console.log(id);
-}
 
 }

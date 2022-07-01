@@ -63,16 +63,15 @@
       content: '';
     }
   
-  
+  .mat-row:last-child{
+    flex:3;
+  }
   .mat-cell {
     padding: 4px;
     flex: 1;
     overflow: hidden;
     word-wrap: break-word;
     text-align: center;
-  }
-  .mat-cell:last-child {
-    flex:3;
   }
 
   .mat-header-cell {
@@ -86,9 +85,6 @@
     flex: 1;
     overflow: hidden;
     word-wrap: break-word;
-  }
-  .mat-header-cell:last-child {
-    flex:3;
   }
 
   .alfonsTitle{
