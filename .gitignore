@@ -4,6 +4,7 @@ server/access.log
 server/resources/**
 !server/resources/logs/
 !server/resources/logs/test.log
+!server/resources/swagger.css
 !server/resources/graymaticsLogo.png
 !server/resources/Microsoft_logo.svg.png
 !server/resources/googleLogo.png

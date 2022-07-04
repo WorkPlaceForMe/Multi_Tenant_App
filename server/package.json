@@ -1,7 +1,7 @@
 {
   "name": "serv",
-  "version": "3.0.1",
-  "description": "Node server",
+  "version": "5.2.1",
+  "description": "Node server api",
   "main": "server.js",
   "scripts": {
     "start": "node ./bin/www",

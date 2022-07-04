@@ -128,12 +128,12 @@ const opt = {
     openapi: '3.0.0',
     info: {
       title: 'Graymatics API',
-      version: '5.0.2',
+      version: '5.2.1',
       description: 'Graymatics API Information',
-      // license: {
-      //   name: "MIT",
-      //   url: "https://spdx.org/licenses/MIT.html",
-      // },
+      license: {
+        name: 'MIT',
+        url: 'https://spdx.org/licenses/MIT.html'
+      },
       contact: {
         name: 'Graymatics',
         url: 'https://www.graymatics.com',
@@ -147,7 +147,7 @@ const opt = {
       },
       {
         url: 'localhost:3311',
-        description: 'Other'
+        description: 'Local'
       }
     ]
   },
@@ -161,9 +161,9 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(swaggerDocs, {
     explorer: true,
-    customCss: `img[alt='Swagger UI'] { content:url(${process.env.app_url}/api/pictures/graymaticsLogo.png);}`,
+    customCssUrl: '/api/pictures/swagger.css',
     customSiteTitle: 'Graymatics API Manual',
-    customfavIcon: `${process.env.app_url}/api/pictures/favicon1.ico`,
+    customfavIcon: '/api/pictures/favicon1.ico',
     swaggerOptions: {
       url: `${process.env.app_url}/api/pictures/swagger.json`,
       docExpansion: 'none',
