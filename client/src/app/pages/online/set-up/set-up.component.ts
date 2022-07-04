@@ -34,6 +34,7 @@ export class SetUpComponent implements OnInit {
     algorithm: 'primary',
     vms: 'primary'
   };
+  vmsList: Array<string> = ['Pelco','Honeywell Maxpro','Cognyte'];
 
   allAct: boolean = false;
   changeAll(){
@@ -268,5 +269,16 @@ getAlgos(){
     err => console.log(err),
   );
 }
+
+
+// This function is for further use when getVMS() method is available in Account Service
+// getVMSystems() {
+//   this.accountserv.getVMS().subscribe(
+//     res => {
+//       this.vmsList = res['data'];
+//     },
+//     err => console.log(err),
+//   );
+// }
 
 }
