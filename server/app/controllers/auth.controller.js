@@ -40,16 +40,16 @@ exports.signupClient = (req, res) => {
             }
           }
         }).then(roles => {
-          user.setAlgorithms(roles).then(() => {
+          user.setAlgorithms(roles).then(async () => {
             const pathPic = `${path}${user.id_account}`
             if (!fs.existsSync(pathPic)) {
-              fs.mkdirSync(pathPic)
+              await fs.promises.mkdir(pathPic)
             }
             if (req.body.unique === true) {
               const pathBranch = `${pathPic}/${branch}`
-              fs.mkdirSync(pathBranch)
-              fs.mkdirSync(`${pathBranch}/pictures`)
-              fs.mkdirSync(`${pathBranch}/heatmap_pics`)
+              await fs.promises.mkdir(pathBranch)
+              await fs.promises.mkdir(`${pathBranch}/pictures`)
+              await fs.promises.mkdir(`${pathBranch}/heatmap_pics`)
             }
             res.status(201).send({ message: 'User was registered successfully!' })
           })
@@ -80,12 +80,12 @@ exports.signupBranch = (req, res) => {
       disabled: '0',
       vms: req.body.vms
     })
-      .then(user => {
+      .then(async user => {
         const pathPic = `${path}${user.id_account}/${user.id_branch}`
         if (!fs.existsSync(pathPic)) {
-          fs.mkdirSync(pathPic)
-          fs.mkdirSync(`${pathPic}/pictures`)
-          fs.mkdirSync(`${pathPic}/heatmap_pics`)
+          await fs.promises.mkdir(pathPic)
+          await fs.promises.mkdir(`${pathPic}/pictures`)
+          await fs.promises.mkdir(`${pathPic}/heatmap_pics`)
         }
         res.status(201).send({ message: 'User was registered successfully!' })
       })

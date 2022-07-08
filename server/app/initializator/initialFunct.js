@@ -289,11 +289,11 @@ exports.initial = async function () {
   })
   const pathPic = `${path}3333-666666-cccccc-nnnnnn`
   if (!fs.existsSync(pathPic)) {
-    fs.mkdirSync(pathPic)
+    await fs.promises.mkdir(pathPic)
     const pathBranch = `${pathPic}/3333-666666-cccccc-nnnnnn`
-    fs.mkdirSync(pathBranch)
-    fs.mkdirSync(`${pathBranch}/pictures`)
-    fs.mkdirSync(`${pathBranch}/heatmap_pics`)
+    await fs.promises.mkdir(pathBranch)
+    await fs.promises.mkdir(`${pathBranch}/pictures`)
+    await fs.promises.mkdir(`${pathBranch}/heatmap_pics`)
   }
   for (let i = 0; i <= lastId; i++) {
     aa.create({
