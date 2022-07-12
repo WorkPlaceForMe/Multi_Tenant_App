@@ -4,11 +4,7 @@ const db = require('../models')
 const User = db.user
 
 const verifyToken = (req, res, next) => {
-  let token = req.headers['x-access-token']
-
-  if (!token) {
-    token = req.query['x-access-token']
-  }
+  const token = req.headers['x-access-token']
 
   if (!token) {
     return res.status(403).send({
@@ -148,6 +144,17 @@ const isClientOrUserOrBranch = (req, res, next) => {
   })
 }
 
+const isAvailable = (req, res, next) => {
+  const id = req.params.id
+
+  if (id === 'none') {
+    res.status(202).send({
+      message: 'Exists'
+    })
+  }
+  next()
+}
+
 const authJwt = {
   verifyToken: verifyToken,
   isAdmin: isAdmin,
@@ -156,6 +163,7 @@ const authJwt = {
   isClientOrBranch: isClientOrBranch,
   isClientOrBranchOrAdmin: isClientOrBranchOrAdmin,
   isUserOrBranch: isUserOrBranch,
-  isClientOrUserOrBranch: isClientOrUserOrBranch
+  isClientOrUserOrBranch: isClientOrUserOrBranch,
+  isAvailable: isAvailable
 }
 module.exports = authJwt

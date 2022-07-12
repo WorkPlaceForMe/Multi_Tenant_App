@@ -8,6 +8,7 @@ const bcrypt = require('bcryptjs')
 const fs = require('fs')
 const path = process.env.resourcePath
 
+// process.env.home + process.env.username + process.env.pathDocker + process.env.resources
 const Op = db.Sequelize.Op
 
 exports.signupClient = (req, res) => {
