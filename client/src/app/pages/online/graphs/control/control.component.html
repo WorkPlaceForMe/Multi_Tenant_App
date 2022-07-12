@@ -21,65 +21,65 @@
                         <nb-card *ngSwitchCase='-1' [nbSpinner]="'primary'" nbSpinnerSize="medium" nbSpinnerStatus="primary" fullWdith><nb-card-body>&nbsp;</nb-card-body></nb-card>
                         <nb-card *ngSwitchCase='-2'><nb-card-body>&nbsp;</nb-card-body></nb-card>
                         <!-- <ngx-dash *ngSwitchCase='-3' [range]='range' [camera]='camera'></ngx-dash> -->
-                        <ngx-pc *ngSwitchCase='12' [range]='range' [camera]='camera'></ngx-pc>
-                        <ngx-loit *ngSwitchCase='2' [range]='range' [camera]='camera'></ngx-loit>
-                        <ngx-intr *ngSwitchCase='17' [range]='range' [camera]='camera'></ngx-intr>
-                        <ngx-viol *ngSwitchCase='19' [range]='range' [camera]='camera'></ngx-viol>
-                        <ngx-aod *ngSwitchCase='16' [range]='range' [camera]='camera'></ngx-aod>
-                        <ngx-c-face *ngSwitchCase='20' [range]='range' [camera]='camera'></ngx-c-face>
-                        <ngx-social *ngSwitchCase='21' [range]='range' [camera]='camera'></ngx-social>
-                        <ngx-queue *ngSwitchCase='22' [range]='range' [camera]='camera'></ngx-queue>
-                        <ngx-helm *ngSwitchCase='23' [range]='range' [camera]='camera'></ngx-helm>
-                        <ngx-vault *ngSwitchCase='24' [range]='range' [camera]='camera'></ngx-vault>
-                       <!--  <ngx-parking *ngSwitchCase='4' [range]='range' [camera]='camera'></ngx-parking> -->
-                        <ngx-anpr *ngSwitchCase='13' [range]='range' [camera]='camera'></ngx-anpr>
-                        <ngx-barrier *ngSwitchCase='25' [range]='range' [camera]='camera'></ngx-barrier>
-                        <!-- <ngx-vehicle *ngSwitchCase='26' [range]='range' [camera]='camera'></ngx-vehicle> -->
-                        <ngx-tamper *ngSwitchCase='27' [range]='range' [camera]='camera'></ngx-tamper>
-                        <ngx-animals-on-road *ngSwitchCase='28' [range]='range' [camera]='camera'></ngx-animals-on-road>
-                        <ngx-accident *ngSwitchCase='29' [range]='range' [camera]='camera'></ngx-accident>
-                        <ngx-axle *ngSwitchCase='30' [range]='range' [camera]='camera'></ngx-axle>
-                        <ngx-carmake *ngSwitchCase='31' [range]='range' [camera]='camera'></ngx-carmake>
-                        <ngx-illegal-parking *ngSwitchCase='4' [range]='range' [camera]='camera'></ngx-illegal-parking>
-                        <ngx-vehicle-count *ngSwitchCase='26' [range]='range' [camera]='camera'></ngx-vehicle-count>
-                        <ngx-wrong-turn *ngSwitchCase='8' [range]='range' [camera]='camera'></ngx-wrong-turn>
-                        <ngx-speeding *ngSwitchCase='5' [range]='range' [camera]='camera'></ngx-speeding>
-                        <ngx-cloth *ngSwitchCase='32' [range]='range' [camera]='camera'></ngx-cloth>
-                        <ngx-fr *ngSwitchCase='0' [range]='range' [camera]='camera'></ngx-fr>
-                        <ngx-fr *ngSwitchCase='15' [range]='range' [camera]='camera'></ngx-fr>
-                        <ngx-pc-camera *ngSwitchCase='33' [range]='range' [camera]='camera'></ngx-pc-camera>
-                        <ngx-brand-car *ngSwitchCase='34' [range]='range' [camera]='camera'></ngx-brand-car>
-                        <ngx-path *ngSwitchCase='37' [range]='range' [camera]='camera' (refresh)="reloadPath($event)" [paths]='paths'></ngx-path>
+                        <ngx-pc *ngSwitchCase='12' [range]='range' [camera]='cameraId'></ngx-pc>
+                        <ngx-loit *ngSwitchCase='2' [range]='range' [camera]='cameraId'></ngx-loit>
+                        <ngx-intr *ngSwitchCase='17' [range]='range' [camera]='cameraId'></ngx-intr>
+                        <ngx-viol *ngSwitchCase='19' [range]='range' [camera]='cameraId'></ngx-viol>
+                        <ngx-aod *ngSwitchCase='16' [range]='range' [camera]='cameraId'></ngx-aod>
+                        <ngx-c-face *ngSwitchCase='20' [range]='range' [camera]='cameraId'></ngx-c-face>
+                        <ngx-social *ngSwitchCase='21' [range]='range' [camera]='cameraId'></ngx-social>
+                        <ngx-queue *ngSwitchCase='22' [range]='range' [camera]='cameraId'></ngx-queue>
+                        <ngx-helm *ngSwitchCase='23' [range]='range' [camera]='cameraId'></ngx-helm>
+                        <ngx-vault *ngSwitchCase='24' [range]='range' [camera]='cameraId'></ngx-vault>
+                       <!--  <ngx-parking *ngSwitchCase='4' [range]='range' [camera]='cameraId'></ngx-parking> -->
+                        <ngx-anpr *ngSwitchCase='13' [range]='range' [camera]='cameraId'></ngx-anpr>
+                        <ngx-barrier *ngSwitchCase='25' [range]='range' [camera]='cameraId'></ngx-barrier>
+                        <!-- <ngx-vehicle *ngSwitchCase='26' [range]='range' [camera]='cameraId'></ngx-vehicle> -->
+                        <ngx-tamper *ngSwitchCase='27' [range]='range' [camera]='cameraId'></ngx-tamper>
+                        <ngx-animals-on-road *ngSwitchCase='28' [range]='range' [camera]='cameraId'></ngx-animals-on-road>
+                        <ngx-accident *ngSwitchCase='29' [range]='range' [camera]='cameraId'></ngx-accident>
+                        <ngx-axle *ngSwitchCase='30' [range]='range' [camera]='cameraId'></ngx-axle>
+                        <ngx-carmake *ngSwitchCase='31' [range]='range' [camera]='cameraId'></ngx-carmake>
+                        <ngx-illegal-parking *ngSwitchCase='4' [range]='range' [camera]='cameraId'></ngx-illegal-parking>
+                        <ngx-vehicle-count *ngSwitchCase='26' [range]='range' [camera]='cameraId'></ngx-vehicle-count>
+                        <ngx-wrong-turn *ngSwitchCase='8' [range]='range' [camera]='cameraId'></ngx-wrong-turn>
+                        <ngx-speeding *ngSwitchCase='5' [range]='range' [camera]='cameraId'></ngx-speeding>
+                        <ngx-cloth *ngSwitchCase='32' [range]='range' [camera]='cameraId'></ngx-cloth>
+                        <ngx-fr *ngSwitchCase='0' [range]='range' [camera]='cameraId'></ngx-fr>
+                        <ngx-fr *ngSwitchCase='15' [range]='range' [camera]='cameraId'></ngx-fr>
+                        <ngx-pc-camera *ngSwitchCase='33' [range]='range' [camera]='cameraId'></ngx-pc-camera>
+                        <ngx-brand-car *ngSwitchCase='34' [range]='range' [camera]='cameraId'></ngx-brand-car>
+                        <ngx-path *ngSwitchCase='37' [range]='range' [camera]='cameraId' (refresh)="reloadPath($event)" [paths]='paths'></ngx-path>
                         <!-- <ngx-heatmap *ngSwitchCase='14' [range]='range' [camera]='camera' [info]='info'></ngx-heatmap> -->
-                        <ngx-collapse *ngSwitchCase='38' [range]='range' [camera]='camera'></ngx-collapse>
-                        <ngx-fire *ngSwitchCase='39' [range]='range' [camera]='camera'></ngx-fire>
-                        <ngx-bottle *ngSwitchCase='36' [range]='range' [camera]='camera'></ngx-bottle>
-                        <ngx-weapon *ngSwitchCase='35' [range]='range' [camera]='camera'></ngx-weapon>
-                        <ngx-following *ngSwitchCase='49' [range]='range' [camera]='camera'></ngx-following>
-                        <ngx-pulling-hair *ngSwitchCase='40' [range]='range' [camera]='camera'></ngx-pulling-hair>
-                        <ngx-purse-snatching *ngSwitchCase='48' [range]='range' [camera]='camera'></ngx-purse-snatching>
-                        <ngx-pushing *ngSwitchCase='50' [range]='range' [camera]='camera'></ngx-pushing>
-                        <ngx-running *ngSwitchCase='46' [range]='range' [camera]='camera'></ngx-running>
-                        <ngx-slapping *ngSwitchCase='44' [range]='range' [camera]='camera'></ngx-slapping>
-                        <ngx-smoking *ngSwitchCase='42' [range]='range' [camera]='camera'></ngx-smoking>
-                        <ngx-waving-hands *ngSwitchCase='41' [range]='range' [camera]='camera'></ngx-waving-hands>
-                        <ngx-disrobing *ngSwitchCase='47' [range]='range' [camera]='camera'></ngx-disrobing>
-                        <ngx-crowd *ngSwitchCase='43' [range]='range' [camera]='camera'></ngx-crowd>
-                        <ngx-blocking *ngSwitchCase='45' [range]='range' [camera]='camera'></ngx-blocking>
-                        <ngx-people-tracking *ngSwitchCase='51' [range]='range' [camera]='camera'></ngx-people-tracking>
-                        <ngx-transpassing *ngSwitchCase='52' [range]='range' [camera]='camera'></ngx-transpassing>
-                        <ngx-camera-defocused *ngSwitchCase='53' [range]='range' [camera]='camera'></ngx-camera-defocused>
-                        <ngx-camera-blinded *ngSwitchCase='54' [range]='range' [camera]='camera'></ngx-camera-blinded>
-                        <ngx-scene-change *ngSwitchCase='55' [range]='range' [camera]='camera'></ngx-scene-change>
-                        <ngx-object-removal *ngSwitchCase='56' [range]='range' [camera]='camera'></ngx-object-removal>
-                        <ngx-smoke-detection *ngSwitchCase='57' [range]='range' [camera]='camera'></ngx-smoke-detection>
-                        <ngx-velocity *ngSwitchCase='58' [range]='range' [camera]='camera'></ngx-velocity>
-                        <ngx-enter-exit *ngSwitchCase='59' [range]='range' [camera]='camera'></ngx-enter-exit>
-                        <ngx-no-exit *ngSwitchCase='60' [range]='range' [camera]='camera'></ngx-no-exit>
-                        <ngx-harrasment *ngSwitchCase='61' [range]='range' [camera]='camera'></ngx-harrasment>
-                        <ngx-abduction *ngSwitchCase='62' [range]='range' [camera]='camera'></ngx-abduction>
-                        <ngx-direction *ngSwitchCase='63' [range]='range' [camera]='camera'></ngx-direction>
-                        <app-live *ngSwitchCase='-4' [camera]='camera'></app-live>
+                        <ngx-collapse *ngSwitchCase='38' [range]='range' [camera]='cameraId'></ngx-collapse>
+                        <ngx-fire *ngSwitchCase='39' [range]='range' [camera]='cameraId'></ngx-fire>
+                        <ngx-bottle *ngSwitchCase='36' [range]='range' [camera]='cameraId'></ngx-bottle>
+                        <ngx-weapon *ngSwitchCase='35' [range]='range' [camera]='cameraId'></ngx-weapon>
+                        <ngx-following *ngSwitchCase='49' [range]='range' [camera]='cameraId'></ngx-following>
+                        <ngx-pulling-hair *ngSwitchCase='40' [range]='range' [camera]='cameraId'></ngx-pulling-hair>
+                        <ngx-purse-snatching *ngSwitchCase='48' [range]='range' [camera]='cameraId'></ngx-purse-snatching>
+                        <ngx-pushing *ngSwitchCase='50' [range]='range' [camera]='cameraId'></ngx-pushing>
+                        <ngx-running *ngSwitchCase='46' [range]='range' [camera]='cameraId'></ngx-running>
+                        <ngx-slapping *ngSwitchCase='44' [range]='range' [camera]='cameraId'></ngx-slapping>
+                        <ngx-smoking *ngSwitchCase='42' [range]='range' [camera]='cameraId'></ngx-smoking>
+                        <ngx-waving-hands *ngSwitchCase='41' [range]='range' [camera]='cameraId'></ngx-waving-hands>
+                        <ngx-disrobing *ngSwitchCase='47' [range]='range' [camera]='cameraId'></ngx-disrobing>
+                        <ngx-crowd *ngSwitchCase='43' [range]='range' [camera]='cameraId'></ngx-crowd>
+                        <ngx-blocking *ngSwitchCase='45' [range]='range' [camera]='cameraId'></ngx-blocking>
+                        <ngx-people-tracking *ngSwitchCase='51' [range]='range' [camera]='cameraId'></ngx-people-tracking>
+                        <ngx-transpassing *ngSwitchCase='52' [range]='range' [camera]='cameraId'></ngx-transpassing>
+                        <ngx-camera-defocused *ngSwitchCase='53' [range]='range' [camera]='cameraId'></ngx-camera-defocused>
+                        <ngx-camera-blinded *ngSwitchCase='54' [range]='range' [camera]='cameraId'></ngx-camera-blinded>
+                        <ngx-scene-change *ngSwitchCase='55' [range]='range' [camera]='cameraId'></ngx-scene-change>
+                        <ngx-object-removal *ngSwitchCase='56' [range]='range' [camera]='cameraId'></ngx-object-removal>
+                        <ngx-smoke-detection *ngSwitchCase='57' [range]='range' [camera]='cameraId'></ngx-smoke-detection>
+                        <ngx-velocity *ngSwitchCase='58' [range]='range' [camera]='cameraId'></ngx-velocity>
+                        <ngx-enter-exit *ngSwitchCase='59' [range]='range' [camera]='cameraId'></ngx-enter-exit>
+                        <ngx-no-exit *ngSwitchCase='60' [range]='range' [camera]='cameraId'></ngx-no-exit>
+                        <ngx-harrasment *ngSwitchCase='61' [range]='range' [camera]='cameraId'></ngx-harrasment>
+                        <ngx-abduction *ngSwitchCase='62' [range]='range' [camera]='cameraId'></ngx-abduction>
+                        <ngx-direction *ngSwitchCase='63' [range]='range' [camera]='cameraId'></ngx-direction>
+                        <app-live *ngSwitchCase='-4' [camera]='cameraId'></app-live>
                     </div>
                 </nb-accordion-item-body>
             </nb-accordion-item>
