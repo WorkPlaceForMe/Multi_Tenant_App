@@ -14,7 +14,7 @@ const swaggerUi = require('swagger-ui-express')
 
 // const resourcesFolderPath =
 //  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
-const resourcesFolderPath = path.resolve(__dirname, './resources/')
+const resourcesFolderPath = path.resolve(process.env.resourcePath)
 const picResourceFolderPath = path.join(resourcesFolderPath)
 
 app.use(compression())
@@ -79,7 +79,7 @@ app.use(
   morgan(
     'Date: :date[web] // Url: :remote-addr // Method: :method:url // Status::status // User-agent: :user-agent',
     {
-      stream: fs.createWriteStream('./resources/logs/access.log', { flags: 'a' })
+      stream: fs.createWriteStream(`${resourcesFolderPath}/logs/access.log`, { flags: 'a' })
     }
   )
 )

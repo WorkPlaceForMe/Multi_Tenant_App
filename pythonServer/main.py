@@ -9,9 +9,7 @@ import traceback
 from flask import request
 
 MODE = os.environ.get('NODE_ENV')
-log = './resources/logs/pythonAccess.log'
-if not os.path.exists('./resources/logs'):
-    os.mkdir('./resources/logs')
+log = ('{}/logs/pythonAccess.log').format(os.environ.get('resourcePath'))
 
 @app.after_request
 def after_request(response):
