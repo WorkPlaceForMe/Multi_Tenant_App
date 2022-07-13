@@ -36,3 +36,4 @@ wsServer/resources/**
 !wsServer/resources/pictures/graymaticsLogo.png
 !wsServer/resources/logs/test.log
 config.env
+configShare.env

@@ -288,7 +288,7 @@ export class VelocityComponent implements OnInit, OnDestroy {
         type: "string",
         filter: false,
       },
-      camera_name: {
+      cam_name: {
         title: "CAM",
         type: "string",
         filter: false,
