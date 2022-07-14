@@ -1,7 +1,7 @@
 const fs = require('fs')
 require('dotenv').config({ path: '../../config.env' })
 const check = require('../helpers/structure').checkStructure
-const file = './resources/logs/wsAccess.log'
+const file = `${process.env.resourcePath}logs/wsAccess.log`
 const line = '\n'
 const { v4: uuidv4 } = require('uuid')
 const connections = []
@@ -72,7 +72,6 @@ exports.ws =  (ws ,req) => {
     
         ws.on('close', () => {
             const finalMess = `Stopped ${mess}`
-            let writer = fs.createWriteStream(file, { flags: 'a' }) 
             writer.write(finalMess + line);
             rem(ws.uuid)
             if(dev === true) console.log(finalMess)
