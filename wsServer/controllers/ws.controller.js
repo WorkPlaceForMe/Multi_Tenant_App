@@ -42,7 +42,6 @@ exports.ws =  (ws ,req) => {
         ws.send(JSON.stringify(connectionMessage))
         
         if(id === 'algorithm'){
-            console.log()
             ws.id = 'algorithm'
             connections.push(ws)
             ws.on('message', function incoming(message) {
