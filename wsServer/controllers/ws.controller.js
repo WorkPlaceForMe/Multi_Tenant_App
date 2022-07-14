@@ -3,11 +3,11 @@ require('dotenv').config({ path: '../../config.env' })
 const check = require('../helpers/structure').checkStructure
 const file = './resources/logs/wsAccess.log'
 const line = '\n'
+const { v4: uuidv4 } = require('uuid')
 const connections = []
 
 exports.ws =  (ws ,req) => {
     const id = req.params.id
-
     let dev = true
     if(process.env.NODE_ENV === 'production'){
         dev = false
@@ -29,6 +29,7 @@ exports.ws =  (ws ,req) => {
     try{
         const mess = `connection from: ${id} in ${req._remoteAddress} at ${req._startTime}.`
         const initialMess =`Started ${mess}`
+        ws.uuid = uuidv4()
 
         if(dev === true) console.log(initialMess)
 
@@ -41,6 +42,7 @@ exports.ws =  (ws ,req) => {
         ws.send(JSON.stringify(connectionMessage))
         
         if(id === 'algorithm'){
+            console.log()
             ws.id = 'algorithm'
             connections.push(ws)
             ws.on('message', function incoming(message) {
@@ -73,12 +75,21 @@ exports.ws =  (ws ,req) => {
             const finalMess = `Stopped ${mess}`
             let writer = fs.createWriteStream(file, { flags: 'a' }) 
             writer.write(finalMess + line);
+            rem(ws.uuid)
             if(dev === true) console.log(finalMess)
         })
     }catch(err){
         if(dev === true) console.log(err)
     }
 
+}
+
+function rem(uuid){
+    for(let i = 0; i < connections.length; i++){
+        if(connections[i].uuid === uuid){
+            connections.splice(i, 1)
+        }
+    }
 }
 
 function broadcast(message){
