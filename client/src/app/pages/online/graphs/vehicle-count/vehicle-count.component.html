@@ -11,7 +11,7 @@
                   <!-- <div *ngIf="vcount.totalMotorbikesEn; else totalMotorbikesEnNone">{{vcount.totalMotorbikesEn}}</div>
                   <ng-template #totalMotorbikesEnNone>None</ng-template> -->
                   {{
-                    vcount.totalMotorbikesEn == undefined
+                    vcount?.totalMotorbikesEn == undefined
                       ? "None"
                       : vcount.totalMotorbikesEn
                   }}
@@ -23,7 +23,7 @@
                   <!-- <div *ngIf="vcount.totalCarsEn; else totalCarsEnNone">{{vcount.totalCarsEn}}</div>
                   <ng-template #totalCarsEnNone>None</ng-template> -->
                   {{
-                    vcount.totalCarsEn == undefined
+                    vcount?.totalCarsEn == undefined
                       ? "None"
                       : vcount.totalCarsEn
                   }}
@@ -35,7 +35,7 @@
                   <!-- <div *ngIf="vcount.totalTrucksEn; else totalTrucksEnNone">{{vcount.totalTrucksEn}}</div>
                   <ng-template #totalTrucksEnNone>None</ng-template> -->
                   {{
-                    vcount.totalTrucksEn == undefined
+                    vcount?.totalTrucksEn == undefined
                       ? "None"
                       : vcount.totalTrucksEn
                   }}
@@ -47,7 +47,7 @@
                   <!-- <div *ngIf="vcount.totalBusesEn; else totalBusesEnNone">{{vcount.totalBusesEn}}</div>
                   <ng-template #totalBusesEnNone>None</ng-template> -->
                   {{
-                    vcount.totalBusesEn == undefined
+                    vcount?.totalBusesEn == undefined
                       ? "None"
                       : vcount.totalBusesEn
                   }}
