@@ -9,6 +9,7 @@ const fs = require('fs')
 const path = require('path')
 const resourcesFolderPath = path.resolve(__dirname, './resources/pictures')
 const picResourceFolderPath = path.join(resourcesFolderPath)
+const sendTest = require('./helpers/sender').sender
 
 //init Express
 const app = express();
@@ -77,5 +78,13 @@ require('./routes/info.route')(app)
 require('./routes/ws.route')(app)
 
 app.use('/api/pictures', express.static(picResourceFolderPath))
+
+if(process.env.TESTWS === 'true'){
+  try{
+    sendTest()
+  }catch(err){
+    console.error(err)
+  }
+}
 
 app.listen(port)
