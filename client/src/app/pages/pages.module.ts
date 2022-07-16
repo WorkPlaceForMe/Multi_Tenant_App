@@ -148,6 +148,7 @@ import { DisrobingComponent } from "./online/graphs/disrobing/disrobing.componen
 import { PurseSnatchingComponent } from "./online/graphs/purse-snatching/purse-snatching.component";
 import { ViewManualTriggerComponent } from "./online/graphs/view-manual-trigger/view-manual-trigger.component";
 import { PeopleTrackingComponent } from './online/graphs/people-tracking/people-tracking.component';
+import { TestingDataService } from "../services/testing-data.service";
 
 @NgModule({
   imports: [
@@ -313,6 +314,7 @@ import { PeopleTrackingComponent } from './online/graphs/people-tracking/people-
     StrService,
     AnnotationsService,
     authInterceptorProviders,
+    TestingDataService,
     {
       provide: "SocialAuthServiceConfig",
       useValue: {

@@ -25,6 +25,7 @@ import {
   NbCardModule,
 } from "@nebular/theme";
 import { authInterceptorProviders } from "./_helpers/auth.interceptor";
+import { TestingDataService } from "./services/testing-data.service";
 
 @NgModule({
   declarations: [AppComponent],
@@ -57,6 +58,7 @@ import { authInterceptorProviders } from "./_helpers/auth.interceptor";
     StrService,
     AnnotationsService,
     authInterceptorProviders,
+    TestingDataService
   ],
   bootstrap: [AppComponent],
 })

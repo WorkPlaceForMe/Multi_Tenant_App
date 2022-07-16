@@ -4,6 +4,8 @@ import { Account } from '../../../../models/Account';
 import { NbPopoverDirective } from '@nebular/theme';
 import { AuthService } from '../../../../services/auth.service';
 import { FacesService } from '../../../../services/faces.service';
+import { TestingDataService } from '../../../../services/testing-data.service';
+import { map, catchError, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'ngx-control',
@@ -44,9 +46,16 @@ export class ControlComponent implements OnInit, OnDestroy, OnChanges {
     private toastrService: NbToastrService,
     protected dateService: NbDateService<Date>,
     private authService: AuthService,
-    private facesService: FacesService
+    private facesService: FacesService,
+    private testingDataService: TestingDataService
   ) {
+    this.testingDataService.messages.subscribe(msg => {
+      console.log(msg);
+      console.log("WebSocket Worked");
+    });
   }
+  
+  
 
   signOff(){
    const us = JSON.parse(localStorage.getItem('now_user'))['username']
