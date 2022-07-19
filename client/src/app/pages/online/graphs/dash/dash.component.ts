@@ -97,7 +97,7 @@ export class DashComponent implements OnInit , OnDestroy {
     this.fin = new Date(b.setHours(b.getHours() + 23));
     this.fin = new Date(this.fin.setMinutes(this.fin.getMinutes() + 58));
     this.fin = new Date(this.fin.setSeconds(this.fin.getSeconds() + 59));
-    console.log(a)
+    
     if(this.range.end.getTime() === this.fin.getTime() && this.range.start.getTime() === this.max.getTime() && this.camera === ''){
       this.source = this.serv.tickets(a)
     }else if(this.range.end.getTime() === this.fin.getTime() && this.range.start.getTime() === this.max.getTime()){
@@ -378,10 +378,13 @@ export class DashComponent implements OnInit , OnDestroy {
   got(id){
     this.route.navigate([`/pages/tickets`])
   }
-
+  
   settings = {
     mode: 'external',
     actions: false,
+    pager: {
+      perPage: 9999999999999
+    },
     edit: {
       editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
