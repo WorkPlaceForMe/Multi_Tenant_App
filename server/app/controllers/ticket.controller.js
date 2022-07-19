@@ -16,6 +16,7 @@ const count = {
 
 exports.getAll = (req, res) => {
   const data = req.query
+  console.log(data)
   const token = req.headers['x-access-token']
   const id = Array.isArray(data.id) ? data.id[data.id.length - 1] : data.id
   const type = Array.isArray(data.type) ? data.type[data.type.length - 1] : data.type
@@ -32,7 +33,7 @@ exports.getAll = (req, res) => {
       })
     })
     const promise2 = new Promise((resolve, reject) => {
-      db.con().query(`SELECT type, createdAt, updatedAt, assigned, level, reviewed, assignedBy FROM tickets WHERE BINARY ${type} = '${id}' ORDER BY ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, (err, resp) => {
+      db.con().query(`SELECT type, createdAt, updatedAt, assigned, level, reviewed, assignedBy, cam_name FROM tickets WHERE BINARY ${type} = '${id}' ORDER BY ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, (err, resp) => {
         resolve(resp)
       })
     })
@@ -55,6 +56,10 @@ exports.getAll = (req, res) => {
             }
             case 'aod': {
               element.type = 'Abandoned Object Detection'
+              break
+            }
+            case 'fr': {
+              element.type = 'Facial Recognition'
               break
             }
           }
