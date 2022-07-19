@@ -240,7 +240,7 @@ export class ControlComponent implements OnInit, OnDestroy {
     this.max = this.dateService.addDay(this.dateService.today(), 0);
     const a = this.dateService.addDay(this.dateService.today(), 0);
     this.fin = new Date(a.setHours(a.getHours() + 23));
-    this.fin = new Date(this.fin.setMinutes(this.fin.getMinutes() + 59));
+    this.fin = new Date(this.fin.setMinutes(this.fin.getMinutes() + 58));
     this.fin = new Date(this.fin.setSeconds(this.fin.getSeconds() + 59));
     this.range = {
       start: new Date(this.max),
