@@ -18,7 +18,7 @@ exports.sender = function(){
                 "CameraId": "bffdb3cf-8cf3-4454-9474-3a47cf99ef10",
                 "Parameters": {
                     camera_name: "test House",
-                    dwell: 35,
+                    dwell: dwell,
                     track_id: 1
                 },
                 "Detail": "string",
