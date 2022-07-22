@@ -86,11 +86,9 @@ exports.loitering = async (req, res) => {
                   ':' +
                   se
                 v.picture = `${d}_${v.track_id}.jpg`
+                v.movie = `${d}_${v.track_id}_video.mp4`
+                v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/loitering/${req.params.id}/${v.movie}`
                 v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/loitering/${req.params.id}/${v.picture}`
-                if (rel.atributes[0].time > 0) {
-                  v.clip_path = `${d}_${v.track_id}.mp4`
-                  v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/loitering/${req.params.id}/${v.clip_path}`
-                }
                 let l = v.dwell / rel.atributes[1].time - 1
                 if (l >= 2) {
                   l = 2
@@ -434,10 +432,8 @@ exports.intrude = async (req, res) => {
                   se
                 v['picture'] = `${d}_${v.track_id}_zone${v.zone}.jpg`
                 v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/intrude/${req.params.id}/${v.picture}`
-                if (rel.atributes[0].time > 0) {
-                  v.clip_path = `${d}_${v.track_id}_zone${v.zone}.mp4`
-                  v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/intrude/${req.params.id}/${v.clip_path}`
-                }
+                v.movie = `${d}_${v.track_id}_video.mp4`
+                v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/intrude/${req.params.id}/${v.movie}`
               })
               let lo = []
               for (var l of Object.keys(ress)) {
@@ -906,10 +902,8 @@ exports.aod = async (req, res) => {
                 se
               v['picture'] = `${d}_${v.track_id}.jpg`
               v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/aod/${req.params.id}/${v.picture}`
-              if (rel.atributes[0].time > 0) {
-                v.clip_path = `${d}_${v.track_id}.mp4`
-                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/aod/${req.params.id}/${v.clip_path}`
-              }
+              v.movie = `${d}_${v.track_id}_video.mp4`
+              v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/aod/${req.params.id}/${v.movie}`
             }
             const a = {
               total: result.length,
@@ -2521,10 +2515,8 @@ exports.parking = async (req, res) => {
                 se
               v.picture = `${d}_${v.track_id}.jpg`
               v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/parking/${req.params.id}/${v.picture}`
-              if (rel.atributes[0].time > 0) {
-                v.clip_path = `${d}_${v.track_id}.mp4`
-                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/parking/${req.params.id}/${v.clip_path}`
-              }
+              v.movie = `${d}_${v.track_id}_video.mp4`
+              v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/parking/${req.params.id}/${v.movie}`
             }
             const a = {
               total: result.length,
@@ -3320,10 +3312,8 @@ exports.fr = async (req, res) => {
                   se
                 v.picture = `${d}.jpg`
                 v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/demographic/${req.params.id}/${v.picture}`
-                if (rel.atributes[0].time > 0) {
-                  v.clip_path = `${d}.mp4`
-                  v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/demographic/${req.params.id}/${v.clip_path}`
-                }
+                v.movie = `${d}_${v.track_id}_video.mp4`
+                v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/demographic/${req.params.id}/${v.movie}`
               }
               const a = {
                 total: result.length,
@@ -4098,11 +4088,9 @@ exports.fire = async (req, res) => {
                 ':' +
                 se
               v.picture = `${d}_${v.track_id}.jpg`
-              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/speed/${req.params.id}/${v.picture}`
-              if (rel.atributes[0].time > 0) {
-                v.clip_path = `${d}_${v.track_id}.mp4`
-                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/speed/${req.params.id}/${v.clip_path}`
-              }
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/fire/${req.params.id}/${v.picture}`
+              v.movie = `${d}_${v.track_id}_video.mp4`
+              v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/fire/${req.params.id}/${v.movie}`
             }
             const a = {
               total: result.length,
@@ -6576,10 +6564,8 @@ exports.cameraDefocused = async (req, res) => {
                 se
               v.picture = `${d}_${v.track_id}.jpg`
               v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/cameraDefocused/${req.params.id}/${v.picture}`
-              if (rel.atributes[0].time > 0) {
-                v.clip_path = `${d}_${v.track_id}.mp4`
-                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/cameraDefocused/${req.params.id}/${v.clip_path}`
-              }
+              v.movie = `${d}_${v.track_id}_video.mp4`
+              v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/cameraDefocused/${req.params.id}/${v.movie}`
             }
             const a = {
               total: result.length,
@@ -6741,10 +6727,8 @@ exports.cameraBlinded = async (req, res) => {
                 se
               v.picture = `${d}_${v.track_id}.jpg`
               v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/cameraBlinded/${req.params.id}/${v.picture}`
-              if (rel.atributes[0].time > 0) {
-                v.clip_path = `${d}_${v.track_id}.mp4`
-                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/cameraBlinded/${req.params.id}/${v.clip_path}`
-              }
+              v.movie = `${d}_${v.track_id}_video.mp4`
+              v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/cameraBlinded/${req.params.id}/${v.movie}`
             }
             const a = {
               total: result.length,
@@ -6906,10 +6890,8 @@ exports.sceneChange = async (req, res) => {
                 se
               v.picture = `${d}_${v.track_id}.jpg`
               v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/sceneChange/${req.params.id}/${v.picture}`
-              if (rel.atributes[0].time > 0) {
-                v.clip_path = `${d}_${v.track_id}.mp4`
-                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/sceneChange/${req.params.id}/${v.clip_path}`
-              }
+              v.movie = `${d}_${v.track_id}_video.mp4`
+              v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/loitering/${req.params.id}/${v.movie}`
             }
             const a = {
               total: result.length,
@@ -7071,10 +7053,8 @@ exports.objectRemoval = async (req, res) => {
                 se
               v.picture = `${d}_${v.track_id}.jpg`
               v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/objectRemoval/${req.params.id}/${v.picture}`
-              if (rel.atributes[0].time > 0) {
-                v.clip_path = `${d}_${v.track_id}.mp4`
-                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/objectRemoval/${req.params.id}/${v.clip_path}`
-              }
+              v.movie = `${d}_${v.track_id}_video.mp4`
+              v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/objectRemoval/${req.params.id}/${v.movie}`
             }
             const a = {
               total: result.length,
@@ -7566,10 +7546,8 @@ exports.enterExit = async (req, res) => {
                 se
               v.picture = `${d}_${v.track_id}.jpg`
               v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/enterExit/${req.params.id}/${v.picture}`
-              if (rel.atributes[0].time > 0) {
-                v.clip_path = `${d}_${v.track_id}.mp4`
-                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/enterExit/${req.params.id}/${v.clip_path}`
-              }
+              v.movie = `${d}_${v.track_id}_video.mp4`
+              v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/enterExit/${req.params.id}/${v.movie}`
             }
             const a = {
               total: result.length,
@@ -8230,6 +8208,169 @@ exports.dir = async (req, res) => {
                 v.clip_path = `${d}_${v.track_id}.mp4`
                 v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/dir/${req.params.id}/${v.clip_path}`
               }
+            }
+            const a = {
+              total: result.length,
+              raw: result,
+              rel: rel,
+              over: ress
+            }
+            res.status(200).json({
+              success: true,
+              data: a
+            })
+          }
+        )
+    })
+  })
+}
+
+exports.signalLost = async (req, res) => {
+  const token = req.headers['x-access-token']
+  const data = req.body
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 64,
+        camera_id: req.params.id
+      }
+    }).then(async rel => {
+      await db
+        .con()
+        .query(
+          `SELECT * from signalLost WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          function (err, result) {
+            if (err) {
+              return res.status(500).json({
+                success: false,
+                message: err
+              })
+            }
+            const ress = {}
+            let cache = ''
+            for (const v of result) {
+              if (cache == '') {
+                cache =
+                  v.time.getFullYear() +
+                  '-' +
+                  (v.time.getMonth() + 1) +
+                  '-' +
+                  v.time.getDate() +
+                  ' ' +
+                  v.time.getHours()
+              }
+
+              if (
+                cache !=
+                v.time.getFullYear() +
+                  '-' +
+                  (v.time.getMonth() + 1) +
+                  '-' +
+                  v.time.getDate() +
+                  ' ' +
+                  v.time.getHours()
+              ) {
+                while (
+                  cache !=
+                  v.time.getFullYear() +
+                    '-' +
+                    (v.time.getMonth() + 1) +
+                    '-' +
+                    v.time.getDate() +
+                    ' ' +
+                    v.time.getHours()
+                ) {
+                  let t = new Date(cache + ':00:00').getTime()
+                  // Add one hours to date
+                  t += 60 * 60 * 1000
+                  cache = new Date(t)
+                  ress[
+                    cache.getFullYear() +
+                      '-' +
+                      (cache.getMonth() + 1) +
+                      '-' +
+                      cache.getDate() +
+                      ' ' +
+                      cache.getHours()
+                  ] =
+                    ress[
+                      v.time.getFullYear() +
+                        '-' +
+                        (v.time.getMonth() + 1) +
+                        '-' +
+                        v.time.getDate() +
+                        ' ' +
+                        v.time.getHours()
+                    ] + 1 || 1
+
+                  cache =
+                    cache.getFullYear() +
+                    '-' +
+                    (cache.getMonth() + 1) +
+                    '-' +
+                    cache.getDate() +
+                    ' ' +
+                    cache.getHours()
+                }
+              }
+              if (
+                cache ==
+                v.time.getFullYear() +
+                  '-' +
+                  (v.time.getMonth() + 1) +
+                  '-' +
+                  v.time.getDate() +
+                  ' ' +
+                  v.time.getHours()
+              ) {
+                ress[
+                  v.time.getFullYear() +
+                    '-' +
+                    (v.time.getMonth() + 1) +
+                    '-' +
+                    v.time.getDate() +
+                    ' ' +
+                    v.time.getHours()
+                ] =
+                  ress[
+                    v.time.getFullYear() +
+                      '-' +
+                      (v.time.getMonth() + 1) +
+                      '-' +
+                      v.time.getDate() +
+                      ' ' +
+                      v.time.getHours()
+                  ] + 1 || 1
+              }
+              let d = v.time
+              let se = d.getSeconds()
+              let mi = d.getMinutes()
+              let ho = d.getHours()
+              if (se < 10) {
+                se = '0' + se
+              }
+              if (mi < 10) {
+                mi = '0' + mi
+              }
+              if (ho < 10) {
+                ho = '0' + ho
+              }
+              d =
+                d.getFullYear() +
+                '-' +
+                (d.getMonth() + 1) +
+                '-' +
+                d.getDate() +
+                '_' +
+                ho +
+                ':' +
+                mi +
+                ':' +
+                se
+              v.picture = `${d}_${v.track_id}.jpg`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/signalLost/${req.params.id}/${v.picture}`
+              v.movie = `${d}_${v.track_id}_video.mp4`
+              v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/signalLost/${req.params.id}/${v.movie}`
             }
             const a = {
               total: result.length,

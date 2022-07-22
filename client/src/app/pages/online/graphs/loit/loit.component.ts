@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { NbCalendarRange, NbThemeService } from '@nebular/theme';
+import { NbCalendarRange, NbThemeService, NbWindowService } from '@nebular/theme';
 import { LocalDataSource, ViewCell } from 'ng2-smart-table';
 import { api } from '../../../../models/API';
 import { Account } from '../../../../models/Account';
@@ -9,6 +9,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { FacesService } from '../../../../services/faces.service';
 import { Router } from '@angular/router';
+import { VideoComponent } from '../video/video.component';
+import { WindowOpenerComponent } from '../window-opener/window-opener.component';
 
 @Component({
   selector: 'ngx-loit',
@@ -286,6 +288,17 @@ export class LoitComponent implements OnInit, OnDestroy {
         onComponentInitFunction: (instance) => {
           instance.save.subscribe((row: string)  => {
             this.pass(row);
+          });
+        },
+      },
+      movie: {
+        title: 'VIDEO',
+        type: 'custom',
+        filter: false,
+        renderComponent: WindowOpenerComponent,
+        onComponentInitFunction(instance) {
+          instance.save.subscribe(row => {
+            alert(`${row.name} saved!`);
           });
         },
       },

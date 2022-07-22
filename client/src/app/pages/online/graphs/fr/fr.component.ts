@@ -8,6 +8,7 @@ import { AnalyticsService } from '../../../../services/analytics.service';
 import { FacesService } from '../../../../services/faces.service';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
+import { WindowOpenerComponent } from '../window-opener/window-opener.component';
 
 @Component({
   selector: 'ngx-fr',
@@ -163,6 +164,17 @@ export class FrComponent implements OnInit , OnDestroy {
         type: 'custom',
         filter: false,
         renderComponent: ButtonViewComponent,
+        onComponentInitFunction(instance) {
+          instance.save.subscribe(row => {
+            alert(`${row.name} saved!`);
+          });
+        },
+      },
+      movie: {
+        title: 'VIDEO',
+        type: 'custom',
+        filter: false,
+        renderComponent: WindowOpenerComponent,
         onComponentInitFunction(instance) {
           instance.save.subscribe(row => {
             alert(`${row.name} saved!`);

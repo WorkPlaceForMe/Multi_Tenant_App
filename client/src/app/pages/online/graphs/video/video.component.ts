@@ -10,14 +10,13 @@ export class VideoComponent implements OnInit {
   constructor() { }
 
   @Input() path: any;
+  @Input() data: any;
   @ViewChild('videoPlayer') videoplayer: any;
 
   ngOnInit(): void {
-    console.log(this.path)
   }
 
   playVideo(event) {
-    console.log(event)
     event.toElement.play()
  }
 

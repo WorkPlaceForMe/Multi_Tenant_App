@@ -195,5 +195,8 @@ export class AnalyticsService {
   dir(id: string, dates){
     return this.http.post(`${this.API_URL}63/${id}`, dates);
   }
+  signalLost(id: string, dates){
+    return this.http.post(`${this.API_URL}64/${id}`, dates);
+  }
   constructor(private http: HttpClient) { }
 }

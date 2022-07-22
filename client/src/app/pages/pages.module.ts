@@ -161,6 +161,8 @@ import { NoExitComponent } from './online/graphs/no-exit/no-exit.component';
 import { HarassmentComponent } from './online/graphs/harassment/harassment.component';
 import { AbductionComponent } from './online/graphs/abduction/abduction.component';
 import { DirectionComponent } from './online/graphs/direction/direction.component';
+import { WindowOpenerComponent } from './online/graphs/window-opener/window-opener.component';
+import { SignalLostComponent } from './online/graphs/signal-lost/signal-lost.component';
 
 @NgModule({
   imports: [
@@ -330,6 +332,8 @@ import { DirectionComponent } from './online/graphs/direction/direction.componen
     HarassmentComponent,
     AbductionComponent,
     DirectionComponent,
+    WindowOpenerComponent,
+    SignalLostComponent,
   ],
   providers: [
     FacesService,

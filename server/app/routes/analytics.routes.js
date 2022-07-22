@@ -2827,4 +2827,6 @@ module.exports = function (app) {
   app.post('/api/analytics/62/:id', [authJwt.isAvailable, authJwt.verifyToken], controller.abduction)
 
   app.post('/api/analytics/63/:id', [authJwt.isAvailable, authJwt.verifyToken], controller.direction)
+
+  app.post('/api/analytics/64/:id', [authJwt.isAvailable, authJwt.verifyToken], controller.signalLost)
 }
