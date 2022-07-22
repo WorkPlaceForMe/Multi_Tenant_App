@@ -50,4 +50,4 @@ services:
     volumes:
       - ../configDocker.env:/usr/src/config.env
       - ./resources:/usr/src/app/resources
-      
+    
