@@ -383,7 +383,7 @@ export class DashComponent implements OnInit , OnDestroy {
     mode: 'external',
     actions: false,
     pager: {
-      perPage: 9999999999999
+      perPage: 50
     },
     edit: {
       editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
