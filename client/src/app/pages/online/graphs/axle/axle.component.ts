@@ -131,6 +131,7 @@ export class AxleComponent implements OnInit, OnDestroy {
         for (const m of this.axle.raw) {
           m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/axle/' + m['cam_id'] + '/' + m['picture']);
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss');
+          m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/axle/' + m['cam_id'] + '/' + m['movie']);
           count = count + m['axle_count'];
         }
         this.axleCount = count;

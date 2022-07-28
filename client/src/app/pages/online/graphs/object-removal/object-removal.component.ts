@@ -150,6 +150,7 @@ export class ObjectRemovalComponent implements OnInit , OnDestroy {
             m["cam_id"] +
             "/" +
             m["clip_path"];
+            m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/objectRemoval/' + m['cam_id'] + '/' + m['movie']);
           m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss");
           switch (m["severity"]) {
             case "0": {

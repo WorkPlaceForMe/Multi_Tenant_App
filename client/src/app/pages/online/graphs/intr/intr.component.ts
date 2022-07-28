@@ -118,6 +118,7 @@ export class IntrComponent implements OnInit, OnDestroy {
             m['clip_path']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/intrusion/' + m['cam_id'] + '/' + m['clip_path'];
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/intrusion/' + m['cam_id'] + '/' + m['picture']);
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss');
+            m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/intrusion/' + m['cam_id'] + '/' + m['movie']);
           }
           this.source = this.intrude.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
           if (this.intrude.donut.length !== 0){

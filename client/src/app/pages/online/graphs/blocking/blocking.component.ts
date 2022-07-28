@@ -167,6 +167,7 @@ export class BlockingComponent implements OnInit, OnDestroy {
             "/" +
             m["clip_path"];
           m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss");
+          m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/blocking/' + m['cam_id'] + '/' + m['movie']);
           switch (m["severity"]) {
             case "0": {
               m["severity"] = "Low";

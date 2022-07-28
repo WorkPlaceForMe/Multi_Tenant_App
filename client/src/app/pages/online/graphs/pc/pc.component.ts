@@ -140,6 +140,7 @@ export class PcComponent implements OnInit, OnDestroy {
               "/" +
               m["picture"]
           );
+          m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/pc/' + m['cam_id'] + '/' + m['movie']);
           m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss");
         }
         let labels = [];

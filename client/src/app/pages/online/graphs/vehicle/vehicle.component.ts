@@ -91,6 +91,7 @@ export class VehicleComponent implements OnInit {
         for(var m of this.vehicle.raw){
           m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + this.now_user['id_branch']+'/vehicle/' + this.camera+ '/' + m['picture'])
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss')
+          m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/vehicle/' + m['cam_id'] + '/' + m['movie']);
         }
         if(Object.keys(this.vehicle.histogramEn).length != 0){
           let labels = []

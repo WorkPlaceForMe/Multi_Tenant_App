@@ -156,6 +156,7 @@ export class CollapseComponent implements OnInit, OnDestroy {
               "/" +
               m["picture"]
           );
+          m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/collapse/' + m['cam_id'] + '/' + m['movie']);
           m["clip_path"] =
             api +
             "/pictures/" +

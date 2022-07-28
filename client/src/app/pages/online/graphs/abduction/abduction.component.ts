@@ -124,6 +124,7 @@ export class AbductionComponent implements OnInit , OnDestroy {
       (res) => {
         this.abduction = res["data"];
         for (var m of this.abduction.raw) {
+          m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/abduction/' + m['cam_id'] + '/' + m['movie']);
           m["picture"] = this.sanitizer.bypassSecurityTrustUrl(
             api +
               "/pictures/" +

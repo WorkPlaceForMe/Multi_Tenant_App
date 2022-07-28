@@ -139,6 +139,7 @@ export class EnterExitComponent implements OnInit , OnDestroy {
               "/" +
               m["picture"]
           );
+          m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/enterExit/' + m['cam_id'] + '/' + m['movie']);
           m["clip_path"] =
             api +
             "/pictures/" +

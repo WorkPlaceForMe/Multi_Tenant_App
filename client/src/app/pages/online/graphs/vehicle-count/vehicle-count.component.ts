@@ -182,6 +182,7 @@ export class VehicleCountComponent implements OnInit, OnDestroy {
               m["picture"]
           );
           m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss");
+          m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/vcount/' + m['cam_id'] + '/' + m['movie']);
         }
         // this.source = this.vcount.raw
         //   .slice()

@@ -118,6 +118,7 @@ export class CFaceComponent implements OnInit, OnDestroy {
             m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/covered/' + m['cam_id'] + '/' + m['clip_path']
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/covered/' + m['cam_id'] + '/' + m['picture'])
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss')
+            m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/covered/' + m['cam_id'] + '/' + m['movie']);
             switch(m['alert_type']){
               case '0':{
                 m['alert_type'] = 'Low';

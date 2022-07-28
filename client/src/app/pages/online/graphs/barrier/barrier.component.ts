@@ -94,6 +94,7 @@ export class BarrierComponent implements OnInit {
           for(var m of this.barrier.raw){
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/barrier/' + m['cam_id'] + '/' + m['picture'])
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss')
+            m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/barrier/' + m['cam_id'] + '/' + m['movie']);
           }
           this.source = this.barrier.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
 

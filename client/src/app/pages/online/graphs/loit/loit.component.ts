@@ -116,6 +116,7 @@ export class LoitComponent implements OnInit, OnDestroy {
         for(const m of this.loitering.raw){
           m['clip_path']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/loitering/' + m['cam_id'] + '/' + m['clip_path'];
           m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/loitering/' + m['cam_id'] + '/' + m['picture']);
+          m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/loitering/' + m['cam_id'] + '/' + m['movie']);
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss');
         }
         this.source = this.loitering.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
