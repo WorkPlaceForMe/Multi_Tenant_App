@@ -5,7 +5,8 @@
                 <nb-card class = "top-badges">
                     <nb-card-body>
                         <p class = "badge-txt">People in Queue</p>
-                        <p class = "badge-reading">{{queue == undefined ? 'None' : queue.count}}</p>
+                        <p class = "badge-reading">Total: {{queue == undefined ? 'None' : queue.count}}</p>
+                        <p class = "badge-reading" *ngFor="let qu of queues">Queue {{qu.zone}}: {{qu.amount}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
@@ -25,7 +26,7 @@
                     </nb-card-body>
                 </nb-card>
             </div>
-            <div class="col-md-4 less-padding">
+            <div class="col less-padding">
                 <nb-card class = "top-badges">
                     <nb-card-body>
                         <p class = "badge-txt">Slowest Queue</p>

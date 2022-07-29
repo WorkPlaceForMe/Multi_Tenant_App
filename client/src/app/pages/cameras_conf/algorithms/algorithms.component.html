@@ -43,9 +43,9 @@
                 </span>
                 <span class="mat-cell">{{algorithm.name}}</span>
                 <span class="mat-cell"><button class="btn btn-sm"
-                    [ngClass]="(algorithm.id == 17 || algorithm.id == 12 || algorithm.id == 59) ? 'btn-info' : 'btn-warning'"
+                    [ngClass]="(algorithm.id == 17 || algorithm.id == 12 || algorithm.id == 59 || algorithm.id == 22) ? 'btn-info' : 'btn-warning'"
                     [routerLink]="['/pages/cameras/algorithms/', param, algorithm.id, algorithm.conf + '-' + algorithm.save + '-' + algorithm.time]"
-                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{i == 8 || i == 4  || algorithm.id == 59 ? 'Click here to define the area' : 'Add an specific area'}}</button></span>
+                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{i == 8 || i == 4  || algorithm.id == 59 || algorithm.id == 22 ? 'Click here to define the area' : 'Add an specific area'}}</button></span>
                 <span class="mat-cell"><input type="number" [(ngModel)]='Calgos[i].conf' min="0" max="100" value="95"
                     [disabled]='algorithm.activated==false || algorithm.activated == undefined'>&nbsp;%</span>
                 <span class="mat-cell">

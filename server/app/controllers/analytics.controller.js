@@ -1711,6 +1711,12 @@ exports.queue = async (req, res) => {
         camera_id: req.params.id
       }
     }).then(async rel => {
+      const count = await Relation.count({
+        where: {
+          algo_id: 22,
+          camera_id: req.params.id
+        }
+      });
       await db
         .con()
         .query(
@@ -1722,6 +1728,10 @@ exports.queue = async (req, res) => {
                 message: err
               })
             let countIn = 0
+            let countAll = {}
+            for(let i = 1; i <= count; i++){
+              countAll[i] = 0
+            }
             let avg = 0
             let min = 0
             let max = 0
@@ -1729,6 +1739,7 @@ exports.queue = async (req, res) => {
             let times = []
             for (var v of result) {
               if (v.queuing == 1) {
+                countAll[v.zone] = (countAll[v.zone] || 0) + 1
                 countIn++
               } else {
                 v['wait'] = (v.end_time - v.start_time) / 1000
@@ -1790,6 +1801,7 @@ exports.queue = async (req, res) => {
             let a = {
               raw: result,
               count: countIn,
+              countAll : countAll,
               avg: Math.round((avg / times.length) * 100) / 100,
               min: minQ,
               max: maxQ,

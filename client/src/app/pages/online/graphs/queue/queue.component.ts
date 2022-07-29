@@ -23,6 +23,7 @@ export class QueueComponent implements OnInit, OnDestroy {
   player: any;
   now_user: Account;
   rtspIn: any;
+  queues: Array<any> = [];
 
   @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef; 
 
@@ -105,11 +106,19 @@ export class QueueComponent implements OnInit, OnDestroy {
       this.serv.queue(this.camera,l).subscribe(
         res=>{
           this.queue = res['data']
-          for(var m of this.queue.raw){
+          for(let m of this.queue.raw){
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['picture'])
             m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['clip_path']
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss')
             m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/queue/' + m['cam_id'] + '/' + m['movie']);
+            if(m.queuing === 1){
+              m.inLine = 'Waiting'
+            }else{
+              m.inLine = 'Exit'
+            }
+          }
+          for(const qu in this.queue.countAll){
+            this.queues.push({zone: qu, amount: this.queue.countAll[qu]})
           }
           this.source = this.queue.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
 
@@ -126,13 +135,7 @@ export class QueueComponent implements OnInit, OnDestroy {
   }
   settings = {
     mode: 'external',
-    actions: {
-      position: 'right',
-      columnTitle: 'ACTIONS',
-      add: false,
-      edit: true,
-      delete: false,
-    },
+    actions: false,
     edit: {
       editButtonContent: '<i class="fa fa-ellipsis-h"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
@@ -157,12 +160,22 @@ export class QueueComponent implements OnInit, OnDestroy {
         }
       },
       track_id: {
-        title: 'QUEUE NO.',
+        title: 'CUSTOMER NUMBER',
         type: 'number',
         filter: false
       },
       wait: {
         title: 'WAIT TIME',
+        type: 'string',
+        filter: false
+      },
+      inLine: {
+        title: 'QUEUEING',
+        type: 'string',
+        filter: false
+      },
+      zone: {
+        title: 'QUEUE',
         type: 'string',
         filter: false
       }
