@@ -36,6 +36,7 @@ wsServer/resources/**
 !wsServer/resources/logs/test.log
 config.env
 configShare.env
+configDockerShare.env
 dockerDeployment/resources/**
 !dockerDeployment/resources/logs/
 !dockerDeployment/resources/logs/test.log
