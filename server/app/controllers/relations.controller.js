@@ -310,6 +310,41 @@ const tables = {
     id: 60,
     alert: true,
     table: 'exit'
+  },
+  'Harrasment': {
+    id: 61,
+    alert: true,
+    table: 'harrasment'
+  },
+  'Abduction': {
+    id: 62,
+    alert: true,
+    table: 'abduction'
+  },
+  'Direction of car': {
+    id: 63,
+    alert: true,
+    table: 'dir'
+  },
+  'Video Signal Lost': {
+    id: 64,
+    alert: true,
+    table: 'signalLost'
+  },
+  'Vehicle entered / exited restricted area': {
+    id: 65,
+    alert: true,
+    table: 'enterExit'
+  },
+  'Incipient fire / fire detection': {
+    id: 66,
+    alert: true,
+    table: 'fire'
+  },
+  'People in the tunnel': {
+    id: 67,
+    alert: true,
+    table: 'intrude'
   }
 }
 
