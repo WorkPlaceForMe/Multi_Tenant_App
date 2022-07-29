@@ -47,9 +47,9 @@
             <p>Dwell Time Variation</p>
             <chart type="line" [data]="dataL" [options]="optionsL"></chart>
             <small *ngIf="loitering != null"
-              >Min:&nbsp;<strong>{{ loitering.min }}</strong
-              >&nbsp;Max:&nbsp;<strong>{{ loitering.max }}</strong
-              >&nbsp;Avg:&nbsp;<strong>{{ loitering.avg }}</strong></small
+              >Min:&nbsp;<strong>{{ loitering.min ? loitering.min : 15 }}</strong
+              >&nbsp;Max:&nbsp;<strong>{{ loitering.max ? loitering.max : 75 }}</strong
+              >&nbsp;Avg:&nbsp;<strong>{{ loitering.avg ? loitering.avg : 45 }}</strong></small
             >
           </nb-card-body>
         </nb-card>

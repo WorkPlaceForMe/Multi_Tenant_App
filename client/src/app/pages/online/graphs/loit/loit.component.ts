@@ -9,6 +9,25 @@ import { DomSanitizer } from '@angular/platform-browser';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { FacesService } from '../../../../services/faces.service';
 import { Router } from '@angular/router';
+import { TestingDataService } from '../../../../services/testing-data.service';
+import { rawListeners } from 'process';
+import { Chart } from 'chart.js';
+
+interface RawLoitering {
+    cam_id: string,
+    camera_name: string,
+    clip_path: string,
+    dwell: number,
+    id: string,
+    id_account: string,
+    id_branch: string,
+    pic_path: string,
+    picture: object,
+    severity: object,
+    time: string,
+    track_id: number
+}
+
 
 @Component({
   selector: 'ngx-loit',
@@ -28,6 +47,7 @@ export class LoitComponent implements OnInit, OnDestroy {
     public sanitizer: DomSanitizer,
     private face: FacesService,
     private route: Router,
+    private testingDataService: TestingDataService
   ) {}
 
   themeSubscription: any;
@@ -38,7 +58,6 @@ export class LoitComponent implements OnInit, OnDestroy {
   optionsL: any;
   player: any;
   rtspIn: any;
-
   @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef;
 
   ngOnDestroy(){
@@ -109,8 +128,10 @@ export class LoitComponent implements OnInit, OnDestroy {
       }, err => console.error(err),
     );
     this.serv.loitering(this.camera, l).subscribe(
+      // this.testingDataService.messages.subscribe(
       res => {
         this.loitering = res['data'];
+        console.log(this.loitering);
         for(const m of this.loitering.raw){
           m['clip_path']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/loitering/' + m['cam_id'] + '/' + m['clip_path'];
           m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/loitering/' + m['cam_id'] + '/' + m['picture']);
@@ -126,7 +147,6 @@ export class LoitComponent implements OnInit, OnDestroy {
           for (const q of this.loitering.labelsD){
             times.push(this.datepipe.transform(q, 'yyyy-M-dd HH:mm'));
           }
-
           this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
 
             const colors: any = config.variables;
@@ -142,7 +162,6 @@ export class LoitComponent implements OnInit, OnDestroy {
                 },
               ],
             };
-
             this.optionsH = {
               responsive: true,
               maintainAspectRatio: false,
@@ -248,6 +267,46 @@ export class LoitComponent implements OnInit, OnDestroy {
       },
       err => console.error(err),
     );
+    this.testingDataService.messages.subscribe(
+      res => {
+        if(!res['success']){
+          this.loitering.total += 1;
+          this.loitering.avgH = Math.round((this.loitering.total / 24) * 100) / 100;
+          this.loitering.avgS = Math.round((this.loitering.avgH / 3600) * 100) / 100;
+          const raw: RawLoitering = {
+            cam_id: res.CameraId,
+            camera_name: res.Parameters.camera_name,
+            clip_path: api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/', //clip_path
+            dwell: parseInt(res.Parameters.dwell),
+            id: res.id,
+            id_account: "3333-666666-cccccc-nnnnnn",
+            id_branch: "3333-666666-cccccc-nnnnnn",
+            pic_path: api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/' + res.TimeStamp + '.jpg',
+            picture: this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/'),//picture
+            severity: null,
+            time: this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH:mm:ss'),
+            track_id: res.Parameters.track_id, 
+          }
+          this.loitering.raw.push(raw);
+          this.source = this.loitering.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+          if (new Date(raw.time).getHours() in this.loitering.histogram) {
+            this.loitering.histogram[new Date(raw.time).getHours()] += 1;
+            this.dataH.datasets[0].data[this.dataH.datasets[0].data.length - 1] += 1;
+          } else {
+            this.loitering.histogram[new Date(raw.time).getHours()] = 1;
+            this.dataH.labels.push(JSON.stringify(new Date(raw.time).getHours() + parseInt(aaa)) + ' hrs')
+            this.dataH.datasets[0].data.push(1);
+          }
+          this.dataL.labels.push(raw.time)
+          this.loitering.dwell.push(raw.dwell)
+          this.dataL.datasets[0].data._chartjs.listeners[0].chart.update();
+          this.dataH.datasets[0].data._chartjs.listeners[0].chart.update();
+          console.log(this.loitering.histogram)
+          // console.log(new Date(raw.time).getHours())
+          // this.loitering.dwell._chartjs.listeners[0].chart.update()
+        }   
+      }
+    )
   }
 
   source: any = new LocalDataSource();

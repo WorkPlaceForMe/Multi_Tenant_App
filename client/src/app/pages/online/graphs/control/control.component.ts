@@ -47,12 +47,7 @@ export class ControlComponent implements OnInit, OnDestroy, OnChanges {
     protected dateService: NbDateService<Date>,
     private authService: AuthService,
     private facesService: FacesService,
-    private testingDataService: TestingDataService
   ) {
-    this.testingDataService.messages.subscribe(msg => {
-      console.log(msg);
-      console.log("WebSocket Worked");
-    });
   }
   
   
