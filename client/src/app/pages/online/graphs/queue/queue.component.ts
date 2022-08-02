@@ -1,12 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { NbCalendarRange } from '@nebular/theme';
+import { NbCalendarRange, NbThemeService } from '@nebular/theme';
 import { LocalDataSource, ViewCell } from 'ng2-smart-table';
 import { api } from '../../../../models/API';
 import { AnalyticsService } from '../../../../services/analytics.service';
 import { FacesService } from '../../../../services/faces.service';
-import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
 
@@ -24,10 +23,16 @@ export class QueueComponent implements OnInit, OnDestroy {
   now_user: Account;
   rtspIn: any;
   queues: Array<any> = [];
+  themeSubscription: any;
+  dataL: any;
+  dataM: any;
+  dataH: any;
+  options: any;
 
   @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef; 
 
   constructor(
+    private theme: NbThemeService,
     private serv: AnalyticsService,
     public sanitizer: DomSanitizer,
     private face: FacesService,
@@ -109,7 +114,7 @@ export class QueueComponent implements OnInit, OnDestroy {
           for(let m of this.queue.raw){
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['picture'])
             m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['clip_path']
-            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss')
+            m['start_time'] = this.datepipe.transform(m['start_time'], 'yyyy-M-dd HH:mm:ss')
             m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/queue/' + m['cam_id'] + '/' + m['movie']);
             if(m.queuing === 1){
               m.inLine = 'Waiting'
@@ -121,14 +126,120 @@ export class QueueComponent implements OnInit, OnDestroy {
             this.queues.push({zone: qu, amount: this.queue.countAll[qu]})
           }
           this.source = this.queue.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
-
+          const labels = [];
+          for (let o of Object.keys(this.queue.dataAlertsLow[0])){
+            o = o + ':00';
+            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm'));
+          }
+    
+          this.themeSubscription = this.theme.getJsTheme().subscribe((config) => {
+            const colors: any = config.variables;
+            const cols = {
+              0: colors.primary,
+              1: colors.warning,
+              2: colors.success,
+              3: colors.info,
+              4: colors.danger
+            }
+            const chartjs: any = config.variables.chartjs;
+            const datasetsLow = [], datasetsMed = [], datasetsHigh = []
+            for(let i = 0; i < this.queue.dataAlertsLow.length; i++){
+              datasetsLow.push({
+                label: `Queue: ${i + 1}`,
+                data: Object.values(this.queue.dataAlertsLow[i]),
+                borderColor: cols[i],
+                backgroundColor: cols[i],
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              })
+              datasetsMed.push({
+                label: `Queue: ${i + 1}`,
+                data: Object.values(this.queue.dataAlertsMed[i]),
+                borderColor: cols[i],
+                backgroundColor: cols[i],
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              })
+              datasetsHigh.push({
+                label: `Queue: ${i + 1}`,
+                data: Object.values(this.queue.dataAlertsHigh[i]),
+                borderColor: cols[i],
+                backgroundColor: cols[i],
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              })
+            }
+            this.dataL = {
+              labels: labels,
+              datasets: datasetsLow,
+            };
+            this.dataH = {
+              labels: labels,
+              datasets: datasetsHigh,
+            };
+            this.dataM = {
+              labels: labels,
+              datasets: datasetsMed,
+            };
+        
+            this.options = {
+              responsive: true,
+              maintainAspectRatio: false,
+              legend: {
+                position: "bottom",
+                labels: {
+                  fontColor: chartjs.textColor,
+                },
+              },
+              hover: {
+                mode: "index",
+              },
+              scales: {
+                xAxes: [
+                  {
+                    display: false,
+                    scaleLabel: {
+                      display: false,
+                      labelString: "Month",
+                    },
+                    gridLines: {
+                      display: true,
+                      color: chartjs.axisLineColor,
+                    },
+                    ticks: {
+                      fontColor: chartjs.textColor,
+                    },
+                  },
+                ],
+                yAxes: [
+                  {
+                    display: true,
+                    scaleLabel: {
+                      display: true,
+                      // labelString: 'Value',
+                    },
+                    gridLines: {
+                      display: true,
+                      color: chartjs.axisLineColor,
+                    },
+                    ticks: {
+                      fontColor: chartjs.textColor,
+                    },
+                  },
+                ],
+              },
+            };
+          }
+        )
         },
         err => {
           console.error(err)
           this.queue = undefined;
         }
       )
-
   }
   got(id){
     this.route.navigate([`/pages/tickets`])
@@ -159,6 +270,11 @@ export class QueueComponent implements OnInit, OnDestroy {
           });
         }
       },
+      start_time: {
+        title: 'TIME',
+        type: 'string',
+        filter: false
+      },
       track_id: {
         title: 'CUSTOMER NUMBER',
         type: 'number',
@@ -168,7 +284,7 @@ export class QueueComponent implements OnInit, OnDestroy {
         title: 'WAIT TIME',
         type: 'string',
         filter: false
-      },
+      },      
       inLine: {
         title: 'QUEUEING',
         type: 'string',

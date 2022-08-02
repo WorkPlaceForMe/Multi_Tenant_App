@@ -39,16 +39,36 @@
                 </nb-card>
             </div>
         </div>
-        <!-- <div class="row">
+        <div class="row">
             <div class="col-md-12 less-padding">
                 <nb-card>
                   <nb-card-body class="top-badges">
-                    <p>Alerts over time</p>
-                    <chart type="line" [data]="dataL2" [options]="optionsL2"></chart>
+                    <p>High alerts over time</p>
+                    <chart type="line" [data]="dataH" [options]="options"></chart>
                   </nb-card-body>
                 </nb-card>
               </div>
-        </div> -->
+        </div>
+        <div class="row">
+            <div class="col-md-12 less-padding">
+                <nb-card>
+                  <nb-card-body class="top-badges">
+                    <p>Medium alerts over time</p>
+                    <chart type="line" [data]="dataM" [options]="options"></chart>
+                  </nb-card-body>
+                </nb-card>
+              </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 less-padding">
+                <nb-card>
+                  <nb-card-body class="top-badges">
+                    <p>Low alerts over time</p>
+                    <chart type="line" [data]="dataL" [options]="options"></chart>
+                  </nb-card-body>
+                </nb-card>
+              </div>
+        </div>
         <div class="row">
             <div class="col less-padding">
                 <nb-card>

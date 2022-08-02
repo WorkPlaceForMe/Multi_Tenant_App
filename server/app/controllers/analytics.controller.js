@@ -1721,7 +1721,7 @@ exports.queue = async (req, res) => {
         .con()
         .query(
           `SELECT * from queue_mgt WHERE ${data.type} = '${req.params.id}' and start_time >= '${data.start}' and  start_time <= '${data.end}' order by start_time asc;`,
-          function (err, result) {
+          async function (err, result) {
             if (err)
               return res.status(500).json({
                 success: false,
@@ -1729,15 +1729,21 @@ exports.queue = async (req, res) => {
               })
             let countIn = 0
             let countAll = {}
+            let dataAlertsMed = [], dataAlertsHigh = [], dataAlertsLow = []
             for(let i = 1; i <= count; i++){
               countAll[i] = 0
+              dataAlertsMed.push({})
+              dataAlertsHigh.push({})
+              dataAlertsLow.push({})
             }
+            const label = []
             let avg = 0
             let min = 0
             let max = 0
             let minQ, maxQ
             let times = []
             for (var v of result) {
+              // label.push(v.time)
               if (v.queuing == 1) {
                 countAll[v.zone] = (countAll[v.zone] || 0) + 1
                 countIn++
@@ -1798,19 +1804,102 @@ exports.queue = async (req, res) => {
                 maxQ = e.queue
               }
             }
-            let a = {
-              raw: result,
-              count: countIn,
-              countAll : countAll,
-              avg: Math.round((avg / times.length) * 100) / 100,
-              min: minQ,
-              max: maxQ,
-              rel: rel
-            }
-            res.status(200).json({
-              success: true,
-              data: a
-            })
+            await db
+            .con()
+            .query(
+              `SELECT * from queue_alerts WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+              function (err, result2) {
+                const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
+                let cache = '', range, cou = 0
+                if(diff === 1){
+                  range = 30 * 60 * 1000
+                }else if(diff >= 1 && diff <= 3){
+                  range = 2 * 60 * 60 * 1000
+                }else if(diff >= 3 && diff <= 7){
+                  range = 4 * 60 * 60 * 1000
+                }else if(diff >= 7 && diff <= 14){
+                  range = 8 * 60 * 60 * 1000
+                }else if(diff >= 14 && diff <= 32){
+                  range = 24 * 60 * 60 * 1000
+                }
+                cache = new Date(data.start).getTime()
+                result2.forEach(function (v) {
+                  cou++
+                  if (
+                    cache < v.time.getTime()
+                  ) {
+                    while (
+                      cache < v.time.getTime()
+                    ) {
+                      cache = new Date(cache)
+                      for(let e = 0; e < count; e++){
+                      dataAlertsLow[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                      dataAlertsMed[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                      dataAlertsHigh[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                    }
+                      cache = cache.getTime()
+                      cache += range
+                    }
+                  }
+                  if (
+                    cache >= v.time.getTime()
+                  ) {
+                    let t = cache
+                    t -= range
+                    t = new Date(t)
+                    switch (v.severity) {
+                      case 0: {
+                        dataAlertsLow[v.zone - 1][t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()
+                        ] = (dataAlertsLow[v.zone - 1][ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1
+                        break
+                      }
+                      case 1: {
+                        dataAlertsMed[v.zone - 1][t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()
+                      ] = (dataAlertsMed[v.zone - 1][ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1
+                        break
+                      }
+                      case 2: {
+                        dataAlertsHigh[v.zone - 1][t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()
+                      ] = (dataAlertsHigh[v.zone - 1][ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1
+                        break
+                      }
+                    }
+                  }
+                  label.push(v.time)
+                  if(cou === result2.length){
+                    while (
+                      cache <= new Date(data.end)
+                    ) {
+                      cache = new Date(cache)
+                      for(let e = 0; e < count; e++){
+                      dataAlertsLow[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                      dataAlertsMed[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                      dataAlertsHigh[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                    }
+                      cache = cache.getTime()
+                      cache += range
+                    }
+                  }
+                })
+                let a = {
+                  label: label,
+                  dataAlertsLow: dataAlertsLow,
+                  dataAlertsMed: dataAlertsMed,
+                  dataAlertsHigh: dataAlertsHigh,
+                  raw: result,
+                  count: countIn,
+                  countAll : countAll,
+                  avg: Math.round((avg / times.length) * 100) / 100,
+                  min: minQ,
+                  max: maxQ,
+                  rel: rel
+                }
+                res.status(200).json({
+                  success: true,
+                  data: a
+                })
+              }
+            )
           }
         )
     })
