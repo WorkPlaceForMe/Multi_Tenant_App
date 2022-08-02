@@ -11,14 +11,14 @@ services:
     # ports:
     #   - "3300:3300"
     network_mode: host
-    image: graymatics1/multi-tenant-server:1.1.6
+    image: graymatics1/multi-tenant-server:1.2.1
     restart: always
     volumes:
       - ./resources:/usr/src/app/resources
       - ../configDocker.env:/usr/src/config.env
 
   multi-tenant-ui:
-    image: graymatics1/multi-tenant-ui:1.1.12
+    image: graymatics1/multi-tenant-ui:1.2.1
     # networks:
     #   - dev
     restart: always
