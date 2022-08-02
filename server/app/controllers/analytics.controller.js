@@ -1728,9 +1728,11 @@ exports.queue = async (req, res) => {
                 message: err
               })
             let countIn = 0
-            let countAll = {}
+            let countAll = {}, timesAv = {}, avgs = []
             let dataAlertsMed = [], dataAlertsHigh = [], dataAlertsLow = []
             for(let i = 1; i <= count; i++){
+              avgs[i - 1] = 0
+              timesAv[i] = 0
               countAll[i] = 0
               dataAlertsMed.push({})
               dataAlertsHigh.push({})
@@ -1788,7 +1790,9 @@ exports.queue = async (req, res) => {
               }
             }
             for (var e of times) {
+              avgs[e.queue - 1] = avgs[e.queue - 1] + e.time
               avg = avg + e.time
+              timesAv[e.queue] = (timesAv[e.queue] || 0 ) + 1
               if (min == 0) {
                 min = e.time
                 minQ = e.queue
@@ -1802,6 +1806,12 @@ exports.queue = async (req, res) => {
               } else if (e.time > max) {
                 max = e.time
                 maxQ = e.queue
+              }
+            }
+            for(let t = 0; t < avgs.length; t++){
+              avgs[t] = Math.round((avgs[t] / timesAv[t + 1]) * 100) / 100
+              if(isNaN(avgs[t])){
+                avgs[t] = 0
               }
             }
             await db
@@ -1890,6 +1900,7 @@ exports.queue = async (req, res) => {
                   count: countIn,
                   countAll : countAll,
                   avg: Math.round((avg / times.length) * 100) / 100,
+                  avgs: avgs,
                   min: minQ,
                   max: maxQ,
                   rel: rel
