@@ -12,7 +12,8 @@ export interface Message {
   CameraId: string,
   Parameters: {
     camera_name: string,
-    dwell: string,
+    zone?: string,
+    dwell?: string,
     track_id: number
   },
   Detail: string,
