@@ -9,6 +9,22 @@ import { FacesService } from '../../../../services/faces.service';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
+import { TestingDataService } from '../../../../services/testing-data.service';
+
+interface RawIntrude {
+  cam_id: string,
+  camera_name: string,
+  clip_path: string,
+  zone: number,
+  id: string,
+  id_account: string,
+  id_branch: string,
+  pic_path: string,
+  picture: object,
+  severity: object,
+  time: string,
+  track_id: number
+}
 
 
 @Component({
@@ -39,6 +55,7 @@ export class IntrComponent implements OnInit, OnDestroy {
     private face: FacesService,
     public datepipe: DatePipe,
     private route: Router,
+    private testingDataService: TestingDataService
   ) { }
   single: any;
   colorScheme: any;
@@ -244,6 +261,33 @@ export class IntrComponent implements OnInit, OnDestroy {
         },
         err => console.error(err),
       );
+      // this.testingDataService.messages.subscribe(
+    //   res => {
+    //     if(!res['success'] && res.Analytic == "'16'"){
+    //       this.intrude.total += 1;
+    //       this.intrude.avgH = Math.round((this.intrude.total / 24) * 100) / 100;
+    //       const raw: RawIntrude = {
+    //         cam_id: res.CameraId,
+    //         camera_name: res.Parameters.camera_name,
+    //         clip_path: api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/', //clip_path
+    //         zone: parseInt(res.Parameters.zone),
+    //         id: res.id,
+    //         id_account: "3333-666666-cccccc-nnnnnn",
+    //         id_branch: "3333-666666-cccccc-nnnnnn",
+    //         pic_path: api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/' + res.TimeStamp + '.jpg',
+    //         picture: this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/'),//picture
+    //         severity: null,
+    //         time: this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH:mm:ss'),
+    //         track_id: res.Parameters.track_id, 
+    //       }
+    //       this.intrude.raw.push(raw);
+    //       this.source = this.intrude.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+    //       this.dataL.labels.push(raw.time)
+    //       this.intrude.zone.push(raw.zone) //not this.intrude.zone
+    //       this.dataL.datasets[0].data._chartjs.listeners[0].chart.update();
+    //     }   
+    //   }
+    // )
   }
 
   source: any = new LocalDataSource();

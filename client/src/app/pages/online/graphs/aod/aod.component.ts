@@ -23,6 +23,22 @@ import { NbDialogRef, NbDialogService } from "@nebular/theme";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ip } from "../../../../models/IpServer";
 import { ViewManualTriggerComponent } from "../view-manual-trigger/view-manual-trigger.component";
+import { TestingDataService } from "../../../../services/testing-data.service";
+
+interface RawAOD {
+  cam_id: string,
+  camera_name: string,
+  clip_path: string,
+  zone: number,
+  id: string,
+  id_account: string,
+  id_branch: string,
+  pic_path: string,
+  picture: object,
+  severity: object,
+  time: string,
+  track_id: number
+}
 
 @Component({
   selector: "ngx-aod",
@@ -59,7 +75,8 @@ export class AodComponent implements OnInit, OnDestroy {
     private route: Router,
     private dialogService: NbDialogService,
     private rd: Renderer2,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private testingDataService: TestingDataService
   ) {}
   single: any;
   colorScheme: any;
@@ -144,6 +161,7 @@ export class AodComponent implements OnInit, OnDestroy {
     this.serv.aod(this.camera, l).subscribe(
       (res) => {
         this.aod = res["data"];
+        console.log(this.aod);
         for (var m of this.aod.raw) {
           m["picture"] = this.sanitizer.bypassSecurityTrustUrl(
             api +
@@ -259,6 +277,32 @@ export class AodComponent implements OnInit, OnDestroy {
       },
       (err) => console.error(err)
     );
+    // this.testingDataService.messages.subscribe(
+    //   res => {
+    //     if(!res['success'] && res.Analytic == "'16'"){
+    //       this.aod.total += 1;
+    //       const raw: RawAOD = {
+    //         cam_id: res.CameraId,
+    //         camera_name: res.Parameters.camera_name,
+    //         clip_path: api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/', //clip_path
+    //         zone: parseInt(res.Parameters.zone),
+    //         id: res.id,
+    //         id_account: "3333-666666-cccccc-nnnnnn",
+    //         id_branch: "3333-666666-cccccc-nnnnnn",
+    //         pic_path: api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/' + res.TimeStamp + '.jpg',
+    //         picture: this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/'),//picture
+    //         severity: null,
+    //         time: this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH:mm:ss'),
+    //         track_id: res.Parameters.track_id, 
+    //       }
+    //       this.aod.raw.push(raw);
+    //       this.source = this.aod.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+    //       this.dataL.labels.push(raw.time)
+    //       this.aod.zone.push(raw.zone)
+    //       this.dataL.datasets[0].data._chartjs.listeners[0].chart.update();
+    //     }   
+    //   }
+    // )
   }
 
   getManualTriggers() {

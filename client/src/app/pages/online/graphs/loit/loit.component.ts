@@ -269,7 +269,7 @@ export class LoitComponent implements OnInit, OnDestroy {
     );
     this.testingDataService.messages.subscribe(
       res => {
-        if(!res['success']){
+        if(!res['success'] && res.Analytic == "'2'"){
           this.loitering.total += 1;
           this.loitering.avgH = Math.round((this.loitering.total / 24) * 100) / 100;
           this.loitering.avgS = Math.round((this.loitering.avgH / 3600) * 100) / 100;
