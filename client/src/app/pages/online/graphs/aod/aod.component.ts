@@ -161,7 +161,6 @@ export class AodComponent implements OnInit, OnDestroy {
     this.serv.aod(this.camera, l).subscribe(
       (res) => {
         this.aod = res["data"];
-        console.log(this.aod);
         for (var m of this.aod.raw) {
           m["picture"] = this.sanitizer.bypassSecurityTrustUrl(
             api +

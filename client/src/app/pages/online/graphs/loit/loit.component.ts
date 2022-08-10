@@ -131,7 +131,6 @@ export class LoitComponent implements OnInit, OnDestroy {
       // this.testingDataService.messages.subscribe(
       res => {
         this.loitering = res['data'];
-        console.log(this.loitering);
         for(const m of this.loitering.raw){
           m['clip_path']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/loitering/' + m['cam_id'] + '/' + m['clip_path'];
           m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/loitering/' + m['cam_id'] + '/' + m['picture']);

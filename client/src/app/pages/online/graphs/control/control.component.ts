@@ -183,13 +183,10 @@ export class ControlComponent implements OnInit, OnDestroy, OnChanges {
   ngOnChanges(){
     this.facesService.getRelations(this.cameraId).subscribe(
       res => {
-        console.log(res);
         this.relations = res['data'];
-        console.log(this.relations)
         for(let item of this.relations) {
           this.analysis.push(JSON.parse(item.atributes)[0])
         }
-        console.log(this.analysis)
       },
       err => console.error(err)
     );
