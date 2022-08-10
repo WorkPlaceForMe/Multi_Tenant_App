@@ -15,15 +15,14 @@ interface RawIntrude {
   cam_id: string,
   camera_name: string,
   clip_path: string,
-  zone: number,
   id: string,
   id_account: string,
   id_branch: string,
   pic_path: string,
   picture: object,
-  severity: object,
   time: string,
-  track_id: number
+  track_id: number,
+  zone: number,
 }
 
 
@@ -130,6 +129,7 @@ export class IntrComponent implements OnInit, OnDestroy {
       this.serv.intrude(this.camera, l).subscribe(
         res => {
           this.intrude = res['data'];
+          console.log(this.intrude)
           for (const m of this.intrude.raw){
             m['clip_path']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/intrusion/' + m['cam_id'] + '/' + m['clip_path'];
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/intrusion/' + m['cam_id'] + '/' + m['picture']);
@@ -261,33 +261,57 @@ export class IntrComponent implements OnInit, OnDestroy {
         },
         err => console.error(err),
       );
-      // this.testingDataService.messages.subscribe(
-    //   res => {
-    //     if(!res['success'] && res.Analytic == "'16'"){
-    //       this.intrude.total += 1;
-    //       this.intrude.avgH = Math.round((this.intrude.total / 24) * 100) / 100;
-    //       const raw: RawIntrude = {
-    //         cam_id: res.CameraId,
-    //         camera_name: res.Parameters.camera_name,
-    //         clip_path: api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/', //clip_path
-    //         zone: parseInt(res.Parameters.zone),
-    //         id: res.id,
-    //         id_account: "3333-666666-cccccc-nnnnnn",
-    //         id_branch: "3333-666666-cccccc-nnnnnn",
-    //         pic_path: api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/' + res.TimeStamp + '.jpg',
-    //         picture: this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/'),//picture
-    //         severity: null,
-    //         time: this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH:mm:ss'),
-    //         track_id: res.Parameters.track_id, 
-    //       }
-    //       this.intrude.raw.push(raw);
-    //       this.source = this.intrude.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
-    //       this.dataL.labels.push(raw.time)
-    //       this.intrude.zone.push(raw.zone) //not this.intrude.zone
-    //       this.dataL.datasets[0].data._chartjs.listeners[0].chart.update();
-    //     }   
-    //   }
-    // )
+    this.testingDataService.messages.subscribe(
+      res => {
+        if(!res['success'] && res.Analytic == "'16'"){
+          this.intrude.total += 1;
+          this.intrude.avgH = Math.round((this.intrude.total / 24) * 100) / 100;
+          const raw: RawIntrude = {
+            cam_id: res.CameraId,
+            camera_name: res.Parameters.camera_name,
+            clip_path: api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/', //clip_path
+            id: res.id,
+            id_account: "3333-666666-cccccc-nnnnnn",
+            id_branch: "3333-666666-cccccc-nnnnnn",
+            pic_path: api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/' + res.TimeStamp + '.jpg',
+            picture: this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/'),//picture
+            time: this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH:mm:ss'),
+            track_id: res.Parameters.track_id,
+            zone: parseInt(res.Parameters.zone), 
+          }
+          this.intrude.raw.push(raw);
+          this.source = this.intrude.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+          let checkDonut = [];
+          for (let d of this.intrude.donut) {
+           checkDonut.push(parseInt(d.name));
+          }
+          if (raw.zone in checkDonut) {
+             let foundDonut = this.intrude.donut.find(item => parseInt(item.name) === raw.zone);
+             foundDonut.value++;
+          } else {
+             this.intrude.donut.push({
+               name: raw.zone.toString(),
+               value: 1,
+               perc: JSON.stringify(Math.round((1 / this.intrude.raw.total) * 100)) + '%'
+             })
+          }
+          this.source2 = new LocalDataSource(this.intrude.donut);
+          this.options.series[0].data = this.intrude.donut;
+          if (Object.keys(this.intrude.over).includes(this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH'))) {
+            this.intrude.over[this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH')] += 1;
+            this.dataL.datasets[0].data[this.dataL.datasets[0].data.length - 1] += 1;
+          } else {
+            this.intrude.over[this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH')] = 1;
+            this.dataL.labels.push(this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH') + ":00")
+            this.dataL.datasets[0].data.push(1)
+          }
+          this.dataL.datasets[0].data._chartjs.listeners[0].chart.update();
+          // this.dataL.labels.push(raw.time)
+          // this.intrude.zone.push(raw.zone) //not this.intrude.zone
+          // this.dataL.datasets[0].data._chartjs.listeners[0].chart.update();
+        }   
+      }, err => console.log(err),
+    );
   }
 
   source: any = new LocalDataSource();
