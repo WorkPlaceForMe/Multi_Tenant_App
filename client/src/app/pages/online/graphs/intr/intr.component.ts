@@ -10,6 +10,7 @@ import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
 import { TestingDataService } from '../../../../services/testing-data.service';
+import { ECharts } from 'echarts';
 
 interface RawIntrude {
   cam_id: string,
@@ -296,7 +297,10 @@ export class IntrComponent implements OnInit, OnDestroy {
              })
           }
           this.source2 = new LocalDataSource(this.intrude.donut);
+          let zoneChart= echarts.init(document.getElementById('zoneChart'));
           this.options.series[0].data = this.intrude.donut;
+          zoneChart.setOption(this.options)
+          console.log(this.options.series[0].data)
           if (Object.keys(this.intrude.over).includes(this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH'))) {
             this.intrude.over[this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH')] += 1;
             this.dataL.datasets[0].data[this.dataL.datasets[0].data.length - 1] += 1;
