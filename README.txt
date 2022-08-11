@@ -22,3 +22,8 @@ For docker deployment:
 -Configure credentials of config.env from MySQL and set INSTALL as true.
 -Run docker-compose up.
 -Change INSTALL to false.
+
+To check if the platform is working:
+-Log in the platform using the testing user (user: testing, pass: Graymatics1!)
+-Upload a static video
+-Check if in the algorithms settings of that video the picture is visible
