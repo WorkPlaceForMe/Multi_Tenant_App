@@ -163,6 +163,7 @@ import { AbductionComponent } from './online/graphs/abduction/abduction.componen
 import { DirectionComponent } from './online/graphs/direction/direction.component';
 import { WindowOpenerComponent } from './online/graphs/window-opener/window-opener.component';
 import { SignalLostComponent } from './online/graphs/signal-lost/signal-lost.component';
+import { EnterExitVComponent } from './online/graphs/enter-exit-v/enter-exit-v.component';
 
 @NgModule({
   imports: [
@@ -334,6 +335,7 @@ import { SignalLostComponent } from './online/graphs/signal-lost/signal-lost.com
     DirectionComponent,
     WindowOpenerComponent,
     SignalLostComponent,
+    EnterExitVComponent,
   ],
   providers: [
     FacesService,
