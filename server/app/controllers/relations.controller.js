@@ -334,7 +334,7 @@ const tables = {
   'Vehicle entered / exited restricted area': {
     id: 65,
     alert: true,
-    table: 'enterExit'
+    table: 'enterExitV'
   },
   'Incipient fire / fire detection': {
     id: 66,
@@ -345,7 +345,63 @@ const tables = {
     id: 67,
     alert: true,
     table: 'intrude'
-  }
+  },
+  'Face detection': {
+    id: 0,
+    alert: true,
+    table: 'faces'
+  },
+  'Person Loitering in restricted area': {
+    id: 2,
+    alert: true,
+    table: 'loitering'
+  },
+  'Vehicle parked in restricted area':{
+    id: 4,
+    alert: true,
+    table: 'parking'
+  },
+  'Object left unattended':{
+    id: 16,
+    alert: true,
+    table: 'aod'
+  },
+  'Person trespassing - tripwire':{
+    id: 17,
+    alert: true,
+    table: 'intrude'
+  },
+  'Video based Smoke and Fire detection':{
+    id: 39,
+    alert: true,
+    table: 'fire'
+  },
+  'People converged or crowd gathering': {
+    id: 43,
+    alert: true,
+    table: 'crowd'
+  },
+  'Camera defocused/ blurred': {
+    id: 53,
+    alert: true,
+    table: 'defocused'
+  },
+  'Camera scene changed': {
+    id: 55,
+    alert: true,
+    table: 'sceneChange'
+  },
+  'Object removed/ possible theft' : {
+    id: 56,
+    alert: true,
+    table: 'objectRemoval'
+  },
+  'Person entered / exited restricted area': {
+    id: 59,
+    alert: true,
+    table: 'enterExit'
+  },
+  
 }
 
 exports.getRels = async (req, res) => {
