@@ -27,17 +27,16 @@ import { TestingDataService } from "../../../../services/testing-data.service";
 
 interface RawAOD {
   cam_id: string,
-  camera_name: string,
+  cam_name: string,
   clip_path: string,
-  zone: number,
   id: string,
   id_account: string,
   id_branch: string,
   pic_path: string,
   picture: object,
-  severity: object,
   time: string,
-  track_id: number
+  track_id: string,
+  zone: number,
 }
 
 @Component({
@@ -199,6 +198,7 @@ export class AodComponent implements OnInit, OnDestroy {
             }
           }
         }
+        this.source = this.aod.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
         // this.source = this.aod.raw
         //   .slice()
         //   .sort((a, b) => +new Date(b.time) - +new Date(a.time));
@@ -276,32 +276,37 @@ export class AodComponent implements OnInit, OnDestroy {
       },
       (err) => console.error(err)
     );
-    // this.testingDataService.messages.subscribe(
-    //   res => {
-    //     if(!res['success'] && res.Analytic == "'16'"){
-    //       this.aod.total += 1;
-    //       const raw: RawAOD = {
-    //         cam_id: res.CameraId,
-    //         camera_name: res.Parameters.camera_name,
-    //         clip_path: api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/', //clip_path
-    //         zone: parseInt(res.Parameters.zone),
-    //         id: res.id,
-    //         id_account: "3333-666666-cccccc-nnnnnn",
-    //         id_branch: "3333-666666-cccccc-nnnnnn",
-    //         pic_path: api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/' + res.TimeStamp + '.jpg',
-    //         picture: this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/'),//picture
-    //         severity: null,
-    //         time: this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH:mm:ss'),
-    //         track_id: res.Parameters.track_id, 
-    //       }
-    //       this.aod.raw.push(raw);
-    //       this.source = this.aod.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
-    //       this.dataL.labels.push(raw.time)
-    //       this.aod.zone.push(raw.zone)
-    //       this.dataL.datasets[0].data._chartjs.listeners[0].chart.update();
-    //     }   
-    //   }
-    // )
+    this.testingDataService.messages.subscribe(
+      res => {
+        if(!res['success'] && res.Analytic == "'16'"){
+          this.aod.total += 1;
+          const raw: RawAOD = {
+            cam_id: res.CameraId,
+            cam_name: res.Parameters.camera_name,
+            clip_path: api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/', //clip_path
+            id: res.id,
+            id_account: "3333-666666-cccccc-nnnnnn",
+            id_branch: "3333-666666-cccccc-nnnnnn",
+            pic_path: api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/' + res.TimeStamp + '.jpg',
+            picture: this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + "3333-666666-cccccc-nnnnnn" + '/loitering/' + res.CameraId + '/'),//picture
+            time: this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH:mm:ss'),
+            track_id: res.Parameters.track_id.toString(),
+            zone: parseInt(res.Parameters.zone),  
+          }
+          this.aod.raw.push(raw);
+          this.source = this.aod.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+    if (Object.keys(this.aod.over).includes(this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH'))) {
+      this.aod.over[this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH')] += 1;
+      this.dataL.datasets[0].data[this.dataL.datasets[0].data.length - 1] += 1;
+    } else {
+      this.aod.over[this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH')] = 1;
+      this.dataL.labels.push(this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH') + ":00")
+      this.dataL.datasets[0].data.push(1)
+    }
+          this.dataL.datasets[0].data._chartjs.listeners[0].chart.update();
+        }   
+      }, err => console.log(err)
+    )
   }
 
   getManualTriggers() {
@@ -648,7 +653,7 @@ export class AodComponent implements OnInit, OnDestroy {
         type: "string",
         filter: false,
       },
-      camera_name: {
+      cam_name: {
         title: "CAM",
         type: "string",
         filter: false,

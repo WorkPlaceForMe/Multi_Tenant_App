@@ -130,7 +130,6 @@ export class IntrComponent implements OnInit, OnDestroy {
       this.serv.intrude(this.camera, l).subscribe(
         res => {
           this.intrude = res['data'];
-          console.log(this.intrude)
           for (const m of this.intrude.raw){
             m['clip_path']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/intrusion/' + m['cam_id'] + '/' + m['clip_path'];
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/intrusion/' + m['cam_id'] + '/' + m['picture']);
@@ -300,7 +299,6 @@ export class IntrComponent implements OnInit, OnDestroy {
           let zoneChart= echarts.init(document.getElementById('zoneChart'));
           this.options.series[0].data = this.intrude.donut;
           zoneChart.setOption(this.options)
-          console.log(this.options.series[0].data)
           if (Object.keys(this.intrude.over).includes(this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH'))) {
             this.intrude.over[this.datepipe.transform(new Date(res.TimeStamp * 1000), 'yyyy-M-dd HH')] += 1;
             this.dataL.datasets[0].data[this.dataL.datasets[0].data.length - 1] += 1;
