@@ -401,6 +401,11 @@ const tables = {
     alert: true,
     table: 'enterExit'
   },
+  'Vehicle parked in restricted area': {
+    id: 4,
+    alert: true,
+    table: 'parking'
+  },
   
 }
 

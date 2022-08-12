@@ -47,19 +47,71 @@ exports.getAll = (req, res) => {
           }
           switch (element.type) {
             case 'loitering': {
-              element.type = 'Loitering Detection'
+              element.type = 'Person Loitering in restricted area'
               break
             }
-            case 'intrusion': {
-              element.type = 'Intrusion Detection'
+            case 'intrude': {
+              element.type = 'Person trespassing - tripwire'
               break
             }
             case 'aod': {
-              element.type = 'Abandoned Object Detection'
+              element.type = 'Object left unattended'
               break
             }
             case 'fr': {
               element.type = 'Facial Recognition'
+              break
+            }
+            case 'crowd': {
+              element.type = 'People converged or crowd gathering'
+              break
+            }
+            case 'sceneChange': {
+              element.type = 'Camera scene changed'
+              break
+            }
+            case 'objectRemoval': {
+              element.type = 'Object removed/ possible theft'
+              break
+            }
+            case 'Veh_Entered': {
+              element.type = 'Vehicle entere restricted area'
+              break
+            }
+            case 'Entered': {
+              element.type = 'Person entered restricted area'
+              break
+            }
+            case 'fire': {
+              element.type = 'Incipient fire / fire detection'
+              break
+            }
+            case 'cameraBlinded': {
+              element.type = 'Camera Blinded'
+              break
+            }
+            case 'cameraDefocused': {
+              element.type = 'Camera defocused/ blurred'
+              break
+            }
+            case 'Exited': {
+              element.type = 'Person exited restricted area'
+              break
+            }
+            case 'Veh_Exited': {
+              element.type = 'Vehicle exited restricted area'
+              break
+            }
+            case 'velocity': {
+              element.type = 'Speeding vehicle'
+              break
+            }
+            case 'enterExit': {
+              element.type = 'Person entered / exited restricted area'
+              break
+            }
+            case 'parking': {
+              element.type = 'Vehicle parked in restricted area'
               break
             }
           }
