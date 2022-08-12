@@ -29,14 +29,14 @@ export class CenterComponent implements OnInit {
   }
   overview ={
     algo_id: -3,
-    name: 'Dashboard',
-    status: "'primary"
+    name: 'KRCL MASTER DASHBOARD',
+    status: "'primary'"
   }
 
   liveView  = {
     algo_id: -4,
     name: 'Live View',
-    status: "'primary"
+    status: "'primary'"
   }
 
 pic:string = `${api}/pictures/graymaticsLogo.png`

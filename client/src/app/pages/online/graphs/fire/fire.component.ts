@@ -284,11 +284,6 @@ export class FireComponent implements OnInit , OnDestroy {
         title: 'CAM',
         type: 'string',
         filter: false
-      },
-      alert_type: {
-        title: 'SEVERITY',
-        type: 'string',
-        filter: false
       }
     },
   };
