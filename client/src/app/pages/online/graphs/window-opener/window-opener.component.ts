@@ -18,7 +18,7 @@ export class WindowOpenerComponent implements OnInit {
   @Output() save: EventEmitter<any> = new EventEmitter();
 
   openWindowForm() {
-    this.windowService.open(VideoComponent, { title: `Play Incident`, context: { data: this.rowData}});
+    this.windowService.open(VideoComponent, { title: `Play Incident of ${this.rowData.camera_name || this.rowData.cam_name}`, context: { data: this.rowData}});
   }
 
   ngOnInit() {
