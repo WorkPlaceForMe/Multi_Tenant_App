@@ -20,6 +20,7 @@ import { Router } from "@angular/router";
 import { Account } from "../../../../models/Account";
 import { NbDialogRef, NbDialogService } from "@nebular/theme";
 import { FormBuilder, FormGroup } from "@angular/forms";
+import { WindowOpenerComponent } from "../window-opener/window-opener.component";
 
 @Component({
   selector: 'ngx-no-exit',
@@ -281,6 +282,17 @@ export class NoExitComponent implements OnInit , OnDestroy {
         renderComponent: ButtonViewComponentPic,
         onComponentInitFunction: (instance) => {
           instance.save.subscribe((row: string) => {});
+        },
+      },
+      movie: {
+        title: 'VIDEO',
+        type: 'custom',
+        filter: false,
+        renderComponent: WindowOpenerComponent,
+        onComponentInitFunction(instance) {
+          instance.save.subscribe(row => {
+            alert(`${row.name} saved!`);
+          });
         },
       },
       time: {

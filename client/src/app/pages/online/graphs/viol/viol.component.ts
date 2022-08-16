@@ -23,6 +23,7 @@ import { NbDialogRef, NbDialogService } from "@nebular/theme";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ip } from "../../../../models/IpServer";
 import { ViewManualTriggerComponent } from "../view-manual-trigger/view-manual-trigger.component";
+import { WindowOpenerComponent } from "../window-opener/window-opener.component";
 
 @Component({
   selector: "ngx-viol",
@@ -601,6 +602,17 @@ export class ViolComponent implements OnInit, OnDestroy {
         renderComponent: ButtonViewComponentPic,
         onComponentInitFunction: (instance) => {
           instance.save.subscribe((row: string) => {});
+        },
+      },
+      movie: {
+        title: 'VIDEO',
+        type: 'custom',
+        filter: false,
+        renderComponent: WindowOpenerComponent,
+        onComponentInitFunction(instance) {
+          instance.save.subscribe(row => {
+            alert(`${row.name} saved!`);
+          });
         },
       },
       time: {
