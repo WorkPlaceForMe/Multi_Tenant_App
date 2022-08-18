@@ -420,8 +420,10 @@ exports.getRels = async (req, res) => {
           where: {id: rel.dataValues.algo_id}
         }).then(alg => {
           rel.dataValues['algo_name'] = alg.dataValues.name
-          rel.dataValues['table'] = tables[alg.dataValues.name].table
-          rel.dataValues['alert'] = tables[alg.dataValues.name].alert
+          if(tables[alg.dataValues.name]){
+            rel.dataValues['table'] = tables[alg.dataValues.name].table
+            rel.dataValues['alert'] = tables[alg.dataValues.name].alert
+          }
           data.push(rel)
         })
       }
