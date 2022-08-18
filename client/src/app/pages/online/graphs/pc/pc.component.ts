@@ -141,7 +141,7 @@ export class PcComponent implements OnInit, OnDestroy {
               m["picture"]
           );
           m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/pc/' + m['cam_id'] + '/' + m['movie']);
-          m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss");
+          m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss", '+0000');
         }
         let labels = [];
         // for(var o of Object.keys(this.pc.histogramEn)){
@@ -151,7 +151,8 @@ export class PcComponent implements OnInit, OnDestroy {
         this.source = this.pc.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
         let times = [];
         for (var q of this.pc.label) {
-          times.push(this.datepipe.transform(q, "yyyy-M-dd HH:mm"));
+          times.push(this.datepipe.transform(q, "yyyy-M-dd HH:mm", '+0000'));
+          // times.push(q)
         }
 
         this.themeSubscription = this.theme.getJsTheme().subscribe((config) => {

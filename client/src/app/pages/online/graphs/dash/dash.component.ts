@@ -89,7 +89,8 @@ export class DashComponent implements OnInit , OnDestroy {
       type: 'id_branch',
       id: this.now_user.id_branch,
       cam: this.camera,
-      range: {}
+      range: {},
+      order : 'ASC'
     };
     
     this.max = this.dateService.addDay(this.dateService.today(), 0);
@@ -372,7 +373,6 @@ export class DashComponent implements OnInit , OnDestroy {
     this.videoplayer.nativeElement.src = vid    
     this.videoplayer.nativeElement.load();
     this.videoplayer.nativeElement.play();
-
   }
 
   got(id){
@@ -402,9 +402,9 @@ export class DashComponent implements OnInit , OnDestroy {
         title: 'TIME',
         type: 'string',
         filter: false,
-        valuePrepareFunction: (createdAt) => {
-          return this.datepipe.transform(new Date(createdAt), 'yyyy-M-dd HH:mm');
-        }
+        // valuePrepareFunction: (createdAt) => {
+        //   return this.datepipe.transform(new Date(createdAt), 'yyyy-M-dd HH:mm');
+        // }
       },
       cam_name: {
         title: 'CAMERA',

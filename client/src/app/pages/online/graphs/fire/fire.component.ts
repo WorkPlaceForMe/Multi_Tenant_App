@@ -129,7 +129,7 @@ export class FireComponent implements OnInit , OnDestroy {
           for(var m of this.fire.raw){
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/fire/' + m['cam_id'] + '/' + m['picture'])
             m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/fire/' + m['cam_id'] + '/' + m['clip_path']
-            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss')
+            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', '+0000')
             m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/fire/' + m['cam_id'] + '/' + m['movie']);
             switch(m['alert_type']){
               case '0':{
@@ -151,7 +151,7 @@ export class FireComponent implements OnInit , OnDestroy {
           let labels = []
           for(var o of Object.keys(this.fire.over)){
             o = o + ':00:00'
-            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm'))
+            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm', '+0000'))
           }
 
           this.themeSubscription = this.theme.getJsTheme().subscribe(config => {

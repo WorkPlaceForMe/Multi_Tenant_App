@@ -151,7 +151,7 @@ export class ObjectRemovalComponent implements OnInit , OnDestroy {
             "/" +
             m["clip_path"];
             m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/objectRemoval/' + m['cam_id'] + '/' + m['movie']);
-          m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss");
+          m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss", '+0000');
           switch (m["severity"]) {
             case "0": {
               m["severity"] = "Low";
@@ -171,7 +171,8 @@ export class ObjectRemovalComponent implements OnInit , OnDestroy {
         let labels = [];
         for (var o of Object.keys(this.objectRemoval.over)) {
           o = o + ":00:00";
-          labels.push(this.datepipe.transform(o, "yyyy-M-dd HH:mm"));
+          // labels.push(o)
+          labels.push(this.datepipe.transform(o, "yyyy-M-dd HH:mm", '+0000'));
         }
 
         this.themeSubscription = this.theme.getJsTheme().subscribe((config) => {
