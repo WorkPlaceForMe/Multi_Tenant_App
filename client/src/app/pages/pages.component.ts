@@ -38,7 +38,7 @@ export class PagesComponent {
       this.service.getDashboard().subscribe(
         res => {
           for(const alg of res['data']['analyticsT']){
-            if(alg.algo_id === 0){
+            if(alg.algo_id === 0 && this.menuBranch.length === 8){
               this.menuClient.push(this.fr)
               this.menuBranch.push(this.fr)
             }
