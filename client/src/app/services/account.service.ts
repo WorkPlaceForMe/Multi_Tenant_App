@@ -44,8 +44,14 @@ API_URI = api;
   }
   tickets(some: any) {
     // return this.http.post(`${this.API_URI}/ticket/all`, some);
+    let order
+    if(!some.order){
+      order = 'DESC'
+    }else{
+      order = some.order
+    }
     return new ServerDataSource(this.http, {
-      endPoint: `${this.API_URI}/ticket/all?type=${some.type}&id=${some.id}&_sort=createdAt&_order=DESC`,
+      endPoint: `${this.API_URI}/ticket/all?type=${some.type}&id=${some.id}&_sort=createdAt&_order=${order}`,
       dataKey: 'data',
       totalKey: 'total',
     });
