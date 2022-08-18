@@ -16,7 +16,6 @@ const count = {
 
 exports.getAll = (req, res) => {
   const data = req.query
-  console.log(data)
   const token = req.headers['x-access-token']
   const id = Array.isArray(data.id) ? data.id[data.id.length - 1] : data.id
   const type = Array.isArray(data.type) ? data.type[data.type.length - 1] : data.type
@@ -59,7 +58,7 @@ exports.getAll = (req, res) => {
               break
             }
             case 'fr': {
-              element.type = 'Facial Recognition'
+              element.type = 'Face detection'
               break
             }
             case 'crowd': {
@@ -130,7 +129,7 @@ const getAllTickets = async (row_count, type, id, data, res) => {
   const offset = (row_count === (page * limit)) ? (page - 1) * limit : (page - 1) * limit
   const _sort = Array.isArray(data._sort) ? data._sort[data._sort.length - 1] : data._sort
   const _order = Array.isArray(data._order) ? data._order[data._order.length - 1] : data._order
-  await db.con().query(`SELECT type, createdAt, updatedAt, assigned, level, reviewed, assignedBy FROM tickets WHERE BINARY ${type} = '${id}' ORDER BY ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, function (err, result) {
+  await db.con().query(`SELECT type, createdAt, updatedAt, assigned, level, reviewed, assignedBy, cam_name FROM tickets WHERE BINARY ${type} = '${id}' ORDER BY ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, function (err, result) {
     if (err) return res.status(500).json({ success: false, message: err })
     result.forEach(element => {
       element.createdAt = dateFormat(element.createdAt, 'yyyy-mm-dd HH:MM:ss')
@@ -140,15 +139,71 @@ const getAllTickets = async (row_count, type, id, data, res) => {
       }
       switch (element.type) {
         case 'loitering': {
-          element.type = 'Loitering Detection'
+          element.type = 'Person Loitering in restricted area'
           break
         }
-        case 'intrusion': {
-          element.type = 'Intrusion Detection'
+        case 'intrude': {
+          element.type = 'Person trespassing - tripwire'
           break
         }
         case 'aod': {
-          element.type = 'Abandoned Object Detection'
+          element.type = 'Object left unattended'
+          break
+        }
+        case 'fr': {
+          element.type = 'Face detection'
+          break
+        }
+        case 'crowd': {
+          element.type = 'People converged or crowd gathering'
+          break
+        }
+        case 'sceneChange': {
+          element.type = 'Camera scene changed'
+          break
+        }
+        case 'objectRemoval': {
+          element.type = 'Object removed/ possible theft'
+          break
+        }
+        case 'Veh_Entered': {
+          element.type = 'Vehicle entere restricted area'
+          break
+        }
+        case 'Entered': {
+          element.type = 'Person entered restricted area'
+          break
+        }
+        case 'fire': {
+          element.type = 'Incipient fire / fire detection'
+          break
+        }
+        case 'cameraBlinded': {
+          element.type = 'Camera Blinded'
+          break
+        }
+        case 'cameraDefocused': {
+          element.type = 'Camera defocused/ blurred'
+          break
+        }
+        case 'Exited': {
+          element.type = 'Person exited restricted area'
+          break
+        }
+        case 'Veh_Exited': {
+          element.type = 'Vehicle exited restricted area'
+          break
+        }
+        case 'velocity': {
+          element.type = 'Speeding vehicle'
+          break
+        }
+        case 'enterExit': {
+          element.type = 'Person entered / exited restricted area'
+          break
+        }
+        case 'parking': {
+          element.type = 'Vehicle parked in restricted area'
           break
         }
       }
@@ -169,12 +224,83 @@ exports.searchAllTickets = (req, res) => {
   const offset = (page - 1) * limit
   const _sort = Array.isArray(data._sort) ? data._sort[data._sort.length - 1] : data._sort
   const _order = Array.isArray(data._order) ? data._order[data._order.length - 1] : data._order
-  if (searchStr === 'Loitering Detection') {
-    searchStr = 'loitering'
-  } else if (searchStr === 'Intrusion Detection') {
-    searchStr = 'intrusion'
-  } else if (searchStr === 'Abandoned Object Detection') {
-    searchStr = 'aod'
+  switch (searchStr) {
+    case 'Person Loitering in restricted area': {
+      searchStr = 'loitering'
+      break
+    }
+    case 'Person trespassing - tripwire': {
+      searchStr = 'intrude'
+      break
+    }
+    case 'trespassing': {
+      searchStr = 'intrude'
+      break
+    }
+    case 'Object left unattended': {
+      searchStr = 'aod'
+      break
+    }
+    case 'Face detection': {
+      searchStr = 'fr'
+      break
+    }
+    case 'face':{
+      searchStr = 'fr'
+      break
+    }
+    case 'People converged or crowd gathering': {
+      searchStr = 'crowd'
+      break
+    }
+    case 'Camera scene changed': {
+      searchStr = 'sceneChange'
+      break
+    }
+    case 'Object removed/ possible theft': {
+      searchStr = 'objectRemoval'
+      break
+    }
+    case 'Vehicle entere restricted area': {
+      searchStr = 'Veh_Entered'
+      break
+    }
+    case 'Person entered restricted area': {
+      searchStr = 'Entered'
+      break
+    }
+    case 'Incipient fire / fire detection': {
+      searchStr = 'fire'
+      break
+    }
+    case 'Camera Blinded': {
+      searchStr = 'cameraBlinded'
+      break
+    }
+    case 'Camera defocused/ blurred': {
+      searchStr = 'cameraDefocused'
+      break
+    }
+    case 'Person exited restricted area': {
+      searchStr = 'Exited'
+      break
+    }
+    case 'Vehicle exited restricted area': {
+      searchStr = 'Veh_Exited'
+      break
+    }
+    case 'Speeding vehicle': {
+      searchStr = 'velocity'
+      break
+    }
+    case 'Person entered / exited restricted area': {
+      searchStr = 'enterExit'
+      break
+    }
+    case 'Vehicle parked in restricted area': {
+      searchStr = 'parking'
+      break
+    }
   }
   jwt.verify(token, process.env.secret, async (err, decoded) => {
     /* await db.con().query(`SELECT count(*) as count FROM tickets WHERE ${type} = '${id}' AND ${searchField} = '${searchStr}';`, function(err, resp) {
@@ -187,7 +313,7 @@ exports.searchAllTickets = (req, res) => {
       })
     })
     const promise2 = new Promise((resolve, reject) => {
-      db.con().query(`SELECT type, createdAt, updatedAt, assigned, level, reviewed, assignedBy FROM tickets WHERE BINARY ${type} = '${id}' AND ${searchField} = '${searchStr}' ORDER BY ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, (err, resp) => {
+      db.con().query(`SELECT type, createdAt, updatedAt, assigned, level, reviewed, assignedBy, cam_name FROM tickets WHERE BINARY ${type} = '${id}' AND ${searchField} LIKE '%${searchStr}%' ORDER BY ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, (err, resp) => {
         resolve(resp)
       })
     })
@@ -201,15 +327,71 @@ exports.searchAllTickets = (req, res) => {
           }
           switch (element.type) {
             case 'loitering': {
-              element.type = 'Loitering Detection'
+              element.type = 'Person Loitering in restricted area'
               break
             }
-            case 'intrusion': {
-              element.type = 'Intrusion Detection'
+            case 'intrude': {
+              element.type = 'Person trespassing - tripwire'
               break
             }
             case 'aod': {
-              element.type = 'Abandoned Object Detection'
+              element.type = 'Object left unattended'
+              break
+            }
+            case 'fr': {
+              element.type = 'Face detection'
+              break
+            }
+            case 'crowd': {
+              element.type = 'People converged or crowd gathering'
+              break
+            }
+            case 'sceneChange': {
+              element.type = 'Camera scene changed'
+              break
+            }
+            case 'objectRemoval': {
+              element.type = 'Object removed/ possible theft'
+              break
+            }
+            case 'Veh_Entered': {
+              element.type = 'Vehicle entere restricted area'
+              break
+            }
+            case 'Entered': {
+              element.type = 'Person entered restricted area'
+              break
+            }
+            case 'fire': {
+              element.type = 'Incipient fire / fire detection'
+              break
+            }
+            case 'cameraBlinded': {
+              element.type = 'Camera Blinded'
+              break
+            }
+            case 'cameraDefocused': {
+              element.type = 'Camera defocused/ blurred'
+              break
+            }
+            case 'Exited': {
+              element.type = 'Person exited restricted area'
+              break
+            }
+            case 'Veh_Exited': {
+              element.type = 'Vehicle exited restricted area'
+              break
+            }
+            case 'velocity': {
+              element.type = 'Speeding vehicle'
+              break
+            }
+            case 'enterExit': {
+              element.type = 'Person entered / exited restricted area'
+              break
+            }
+            case 'parking': {
+              element.type = 'Vehicle parked in restricted area'
               break
             }
           }
@@ -239,15 +421,71 @@ const searchTickets = async (row_count, type, id, searchField, searchStr, data, 
       }
       switch (element.type) {
         case 'loitering': {
-          element.type = 'Loitering Detection'
+          element.type = 'Person Loitering in restricted area'
           break
         }
-        case 'intrusion': {
-          element.type = 'Intrusion Detection'
+        case 'intrude': {
+          element.type = 'Person trespassing - tripwire'
           break
         }
         case 'aod': {
-          element.type = 'Abandoned Object Detection'
+          element.type = 'Object left unattended'
+          break
+        }
+        case 'fr': {
+          element.type = 'Facial Recognition'
+          break
+        }
+        case 'crowd': {
+          element.type = 'People converged or crowd gathering'
+          break
+        }
+        case 'sceneChange': {
+          element.type = 'Camera scene changed'
+          break
+        }
+        case 'objectRemoval': {
+          element.type = 'Object removed/ possible theft'
+          break
+        }
+        case 'Veh_Entered': {
+          element.type = 'Vehicle entere restricted area'
+          break
+        }
+        case 'Entered': {
+          element.type = 'Person entered restricted area'
+          break
+        }
+        case 'fire': {
+          element.type = 'Incipient fire / fire detection'
+          break
+        }
+        case 'cameraBlinded': {
+          element.type = 'Camera Blinded'
+          break
+        }
+        case 'cameraDefocused': {
+          element.type = 'Camera defocused/ blurred'
+          break
+        }
+        case 'Exited': {
+          element.type = 'Person exited restricted area'
+          break
+        }
+        case 'Veh_Exited': {
+          element.type = 'Vehicle exited restricted area'
+          break
+        }
+        case 'velocity': {
+          element.type = 'Speeding vehicle'
+          break
+        }
+        case 'enterExit': {
+          element.type = 'Person entered / exited restricted area'
+          break
+        }
+        case 'parking': {
+          element.type = 'Vehicle parked in restricted area'
           break
         }
       }
