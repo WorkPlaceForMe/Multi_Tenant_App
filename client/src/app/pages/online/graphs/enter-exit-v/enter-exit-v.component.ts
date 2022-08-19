@@ -47,7 +47,7 @@ export class EnterExitVComponent implements OnInit  , OnDestroy {
   algorithms: any;
   loading: boolean = false;
   loadingTakeScreenShot: boolean = false;
-  algoId = 59;
+  algoId = 65;
 
   constructor(
     private serv: AnalyticsService,
