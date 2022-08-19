@@ -278,6 +278,7 @@ export class AodComponent implements OnInit, OnDestroy {
     );
     this.testingDataService.messages.subscribe(
       res => {
+        console.log(res);
         if(!res['success'] && res.Analytic == "'16'"){
           this.aod.total += 1;
           const raw: RawAOD = {

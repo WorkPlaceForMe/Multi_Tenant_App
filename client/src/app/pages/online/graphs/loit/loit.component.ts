@@ -268,6 +268,7 @@ export class LoitComponent implements OnInit, OnDestroy {
     );
     this.testingDataService.messages.subscribe(
       res => {
+        console.log(res);
         if(!res['success'] && res.Analytic == "'2'"){
           this.loitering.total += 1;
           this.loitering.avgH = Math.round((this.loitering.total / 24) * 100) / 100;
@@ -287,7 +288,7 @@ export class LoitComponent implements OnInit, OnDestroy {
             track_id: res.Parameters.track_id, 
           }
           this.loitering.raw.push(raw);
-          this.source = this.loitering.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+          this.source.append(raw);
           if (new Date(raw.time).getHours() in this.loitering.histogram) {
             this.loitering.histogram[new Date(raw.time).getHours()] += 1;
             this.dataH.datasets[0].data[this.dataH.datasets[0].data.length - 1] += 1;

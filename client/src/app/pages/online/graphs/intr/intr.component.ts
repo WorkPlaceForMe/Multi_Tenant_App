@@ -263,6 +263,7 @@ export class IntrComponent implements OnInit, OnDestroy {
       );
     this.testingDataService.messages.subscribe(
       res => {
+        console.log(res)
         if(!res['success'] && res.Analytic == "'16'"){
           this.intrude.total += 1;
           this.intrude.avgH = Math.round((this.intrude.total / 24) * 100) / 100;
