@@ -9,7 +9,7 @@ import { FacesService } from '../../../../services/faces.service';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
-import { TestingDataService } from '../../../../services/testing-data.service';
+import { TestDataIntrudeService } from '../../../../services/test-data-intrude.service';
 import { ECharts } from 'echarts';
 
 interface RawIntrude {
@@ -55,7 +55,7 @@ export class IntrComponent implements OnInit, OnDestroy {
     private face: FacesService,
     public datepipe: DatePipe,
     private route: Router,
-    private testingDataService: TestingDataService
+    private testingDataService: TestDataIntrudeService
   ) { }
   single: any;
   colorScheme: any;

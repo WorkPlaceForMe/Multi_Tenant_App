@@ -4,7 +4,6 @@ import { Account } from '../../../../models/Account';
 import { NbPopoverDirective } from '@nebular/theme';
 import { AuthService } from '../../../../services/auth.service';
 import { FacesService } from '../../../../services/faces.service';
-import { TestingDataService } from '../../../../services/testing-data.service';
 import { map, catchError, tap } from 'rxjs/operators';
 
 @Component({

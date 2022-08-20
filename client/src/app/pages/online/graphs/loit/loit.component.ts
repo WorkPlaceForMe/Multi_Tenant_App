@@ -9,7 +9,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { FacesService } from '../../../../services/faces.service';
 import { Router } from '@angular/router';
-import { TestingDataService } from '../../../../services/testing-data.service';
+import { TestDataLoitService } from '../../../../services/test-data-loit.service';
 import { rawListeners } from 'process';
 import { Chart } from 'chart.js';
 
@@ -47,7 +47,7 @@ export class LoitComponent implements OnInit, OnDestroy {
     public sanitizer: DomSanitizer,
     private face: FacesService,
     private route: Router,
-    private testingDataService: TestingDataService
+    private testingDataService: TestDataLoitService
   ) {}
 
   themeSubscription: any;
@@ -128,7 +128,6 @@ export class LoitComponent implements OnInit, OnDestroy {
       }, err => console.error(err),
     );
     this.serv.loitering(this.camera, l).subscribe(
-      // this.testingDataService.messages.subscribe(
       res => {
         this.loitering = res['data'];
         for(const m of this.loitering.raw){
@@ -288,7 +287,7 @@ export class LoitComponent implements OnInit, OnDestroy {
             track_id: res.Parameters.track_id, 
           }
           this.loitering.raw.push(raw);
-          this.source.append(raw);
+          this.source = this.loitering.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
           if (new Date(raw.time).getHours() in this.loitering.histogram) {
             this.loitering.histogram[new Date(raw.time).getHours()] += 1;
             this.dataH.datasets[0].data[this.dataH.datasets[0].data.length - 1] += 1;

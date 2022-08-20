@@ -23,7 +23,7 @@ import { NbDialogRef, NbDialogService } from "@nebular/theme";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ip } from "../../../../models/IpServer";
 import { ViewManualTriggerComponent } from "../view-manual-trigger/view-manual-trigger.component";
-import { TestingDataService } from "../../../../services/testing-data.service";
+import { TestDataAodService } from "../../../../services/test-data-aod.service";
 
 interface RawAOD {
   cam_id: string,
@@ -75,7 +75,7 @@ export class AodComponent implements OnInit, OnDestroy {
     private dialogService: NbDialogService,
     private rd: Renderer2,
     private fb: FormBuilder,
-    private testingDataService: TestingDataService
+    private testingDataService: TestDataAodService
   ) {}
   single: any;
   colorScheme: any;
