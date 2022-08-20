@@ -24,7 +24,7 @@ export interface Message {
 @Injectable({
   providedIn: 'root'
 })
-export class TestingDataService {
+export class TestDataIntrudeService {
 
   private subject: AnonymousSubject<MessageEvent>;
   public messages: Subject<Message>;
@@ -33,7 +33,6 @@ export class TestingDataService {
     this.messages = <Subject<Message>>this.connect(environment.webSocketUrl).pipe(
       map(
         (res: MessageEvent): Message => {
-          console.log(res.data);
           let data = JSON.parse(res.data);
           return data;
         }
