@@ -6181,10 +6181,8 @@ exports.crowd = async (req, res) => {
                 se
               v.picture = `${d}_${v.track_id}.jpg`
               v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/crowd/${req.params.id}/${v.picture}`
-              if (rel.atributes[0].time > 0) {
-                v.clip_path = `${d}_${v.track_id}.mp4`
-                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/crowd/${req.params.id}/${v.clip_path}`
-              }
+              v.movie = `${d}_${v.track_id}_video.mp4`
+              v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/crowd/${req.params.id}/${v.movie}`
             }
             const a = {
               total: result.length,
