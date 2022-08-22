@@ -85,6 +85,8 @@ export class LiveComponent implements OnInit {
   streams: any = [];
   stre: any = [];
   newLink: TrustedUrlPipe;
+  isVid: Boolean = true;
+  url: SafeResourceUrl;
 
   ngOnInit() {
     let camId: string;
@@ -105,42 +107,47 @@ export class LiveComponent implements OnInit {
   loadCam(camId) {
     this.facesService.getCamera(camId).subscribe(
       (res) => {
-        const rtspIn =
-          res["data"]["http_in"] ||
-          "http://13.76.172.134:3300/api/pictures/videos/b.mp4"; // FOR TESTING
-
-        if (!rtspIn) {
-          this.unZippedVideoMessage = "Video not found";
-          return;
-        }
-        if (rtspIn && rtspIn.startsWith("http")) {
-          if (!rtspIn.match(/\.([^\./\?]+)($|\?)/)) {
-            this.unZippedVideoMessage =
-              "This video can not be played, There have multiple unzipped video in this folder";
-            return;
-          } else {
-            this.isHttpStream = true;
-            this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(rtspIn);
-            return;
-          }
-        } else {
-          this.isHttpStream = false;
-        }
+        // const rtspIn =
+        //   res["data"]["rtsp_in"]
+        // if (!rtspIn) {
+        //   this.unZippedVideoMessage = "Video not found";
+        //   return;
+        // }
+        // if (rtspIn && rtspIn.startsWith("http")) {
+        //   if (!rtspIn.match(/\.([^\./\?]+)($|\?)/)) {
+        //     this.unZippedVideoMessage =
+        //       "This video can not be played, There have multiple unzipped video in this folder";
+        //     return;
+        //   } else {
+        //     this.isHttpStream = true;
+        //     this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(rtspIn);
+        //     return;
+        //   }
+        // } else {
+        //   this.isHttpStream = false;
+        // }
         this.live = res["data"];
-        this.face.camera({ id: this.live.id }).subscribe(
-          (res) => {
-            this.player = new JSMpeg.Player(
-              `ws://${res["my_ip"]}:${res["port"]}`,
-              {
-                canvas: this.streamingcanvas.nativeElement,
-                autoplay: true,
-                audio: false,
-                loop: true,
-              }
-            );
-          },
-          (err) => console.error(err)
-        );
+        if(this.live.type === 'video'){
+          this.url = this.sanitizer.bypassSecurityTrustUrl(this.live.http_in)
+          console.log(this.url)
+        }else{
+          this.isVid = false;
+        }
+        // this.face.camera({ id: this.live.id }).subscribe(
+        //   (res) => {
+        //     console.log(res)
+        //     this.player = new JSMpeg.Player(
+        //       `ws://${res["my_ip"]}:${res["port"]}`,
+        //       {
+        //         canvas: this.streamingcanvas.nativeElement,
+        //         autoplay: true,
+        //         audio: false,
+        //         loop: true,
+        //       }
+        //     );
+        //   },
+        //   (err) => console.error(err)
+        // );
         if (window.innerWidth >= 1200) {
           this.width = 835;
           this.height = 400;

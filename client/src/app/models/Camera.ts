@@ -13,5 +13,7 @@ export interface Camera{
     longitude:string;
     latitude:string;
   };
+  type?:string;
+  http_in?:string;
   //The ? is for make it optionals
 }

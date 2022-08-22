@@ -10,8 +10,14 @@
     <div align="center" *ngIf="!unZippedVideoMessage">
       <!-- <iframe frameBorder = "0" height="100%" width="100%" style = "width:100%;height:100%;min-height: 800px" *ngIf = "isHttpStream" [src]="rtspIn">
           </iframe> -->
-
-      <vg-player>
+          <div class="player-wrapper" *ngIf="isVid">
+            <vg-player>
+                <video #media [vgMedia]="media" id="singleVideo" preload="auto" controls style="width: 100%; height: auto;">
+                  <source [src]="url" type="video/mp4">
+                </video>
+              </vg-player>
+              </div>
+      <!-- <vg-player>
         <video
           autoplay
           #media
@@ -36,7 +42,7 @@
           height: 480px !important;
         "
         *ngIf="isHttpStream == false"
-      ></canvas>
+      ></canvas> -->
     </div>
 
     <div class="p-2" *ngIf="!camera">
