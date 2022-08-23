@@ -16,6 +16,9 @@ module.exports = (sequelize, Sequelize) => {
     http_in: {
       type: Sequelize.STRING
     },
+    http_out: {
+      type: Sequelize.STRING
+    },
     heatmap_pic: {
       type: Sequelize.STRING
     },
