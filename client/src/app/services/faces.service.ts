@@ -13,10 +13,7 @@ import { Relation } from "../models/Relation";
 })
 export class FacesService {
   API_URI = api;
-  // API_URI = '/api';
-  // API_URI = 'http://'+ ip +':3300/api';
   API_FR = "/api";
-  // API_FR = 'http://'+ ip +':3330/api';
   constructor(private http: HttpClient) {}
   sendAlgs(id: string, settings: any) {
     return this.http.post(`${this.API_URI}/camConf/${id}`, settings);
