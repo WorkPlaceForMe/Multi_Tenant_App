@@ -129,9 +129,20 @@ export class LiveComponent implements OnInit {
         this.live = res["data"];
         if(this.live.type === 'video'){
           this.url = this.sanitizer.bypassSecurityTrustUrl(this.live.http_in)
-          console.log(this.url)
         }else{
-          this.isVid = false;
+          this.facesService.getRelations(this.camera).subscribe(
+            res => {
+              console.log(res)
+              if( res['data'][0]["http_out"]){
+                this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(
+                  res['data'][0]["http_out"]
+                );
+              }
+              this.isVid = false;
+            },
+            err => console.error(err)
+          )
+
         }
         // this.face.camera({ id: this.live.id }).subscribe(
         //   (res) => {
