@@ -24,7 +24,7 @@ export class ControlComponent implements OnInit, OnDestroy {
   //   name: ''
   // }
   location: string = '';
-  reTime: number = 0;
+  reTime: number = 5;
   refresh: number = 0;
   showRange: boolean;
   renew: any;
@@ -235,9 +235,10 @@ export class ControlComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       if (this.rel !== false){
         if (event === ''){
-          if (this.camera === ''){
-            return this.showToast('Please choose a camera.', 'info');
-          }
+          // if (this.camera === ''){
+
+          //   return this.showToast('Please choose a camera.', 'info');
+          // }
         }else{
           if (this.range.end === undefined){
             return;
@@ -307,6 +308,7 @@ export class ControlComponent implements OnInit, OnDestroy {
     };
     this.initMonths();
     this.selectedDate =  this.dateService.addDay(this.dateService.today(), 0);
+    this.set(this.reTime)
   }
 
   initMonths(){
