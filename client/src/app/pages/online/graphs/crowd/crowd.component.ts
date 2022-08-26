@@ -185,7 +185,7 @@ export class CrowdComponent implements OnInit, OnDestroy {
             }
           }
         }
-        this.source = this.crowd.raw
+        this.source = this.crowd.raw.slice().sort((a, b) => +new Date(b.time) + +new Date(a.time));
         //   .slice()
         //   .sort((a, b) => +new Date(b.time) - +new Date(a.time));
         let labels = [];

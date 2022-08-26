@@ -117,7 +117,7 @@ export class IntrComponent implements OnInit, OnDestroy {
           for (const m of this.intrude.raw){
             m['clip_path']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/intrusion/' + m['cam_id'] + '/' + m['clip_path'];
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/intrusion/' + m['cam_id'] + '/' + m['picture']);
-            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss');
+            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', '+0000');
             m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/intrusion/' + m['cam_id'] + '/' + m['movie']);
           }
           this.source = this.intrude.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
@@ -127,7 +127,7 @@ export class IntrComponent implements OnInit, OnDestroy {
           const labels = [];
           for (let o of Object.keys(this.intrude.over)){
             o = o + ':00:00';
-            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm'));
+            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm', '+0000'));
           }
 
             this.themeSubscription = this.theme.getJsTheme().subscribe(config => {

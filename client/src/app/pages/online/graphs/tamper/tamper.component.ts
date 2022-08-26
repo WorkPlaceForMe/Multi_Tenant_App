@@ -122,7 +122,7 @@ export class TamperComponent implements OnInit, OnDestroy {
               }
             }
           }
-          this.source = this.tamper.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
+          this.source = this.tamper.raw.slice().sort((a, b) => +new Date(b.time) + +new Date(a.time))
 
           let labels = []
           for(var o of Object.keys(this.tamper.over)){

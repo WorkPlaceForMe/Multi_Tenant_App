@@ -134,7 +134,7 @@ export class WrongTurnComponent implements OnInit, OnDestroy {
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss');
           m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/direction/' + m['cam_id'] + '/' + m['movie']);
         }
-        this.source = this.direction.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+        this.source = this.direction.raw.slice().sort((a, b) => +new Date(b.time) + +new Date(a.time));
 
       },
       err => {

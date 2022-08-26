@@ -148,7 +148,7 @@ export class PcComponent implements OnInit, OnDestroy {
         //   o = o + ':00:00'
         //   labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm'))
         // }
-        this.source = this.pc.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+        this.source = this.pc.raw.slice().sort((a, b) => +new Date(b.time) + +new Date(a.time));
         let times = [];
         for (var q of this.pc.label) {
           times.push(this.datepipe.transform(q, "yyyy-M-dd HH:mm", '+0000'));

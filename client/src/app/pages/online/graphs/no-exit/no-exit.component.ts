@@ -171,7 +171,7 @@ export class NoExitComponent implements OnInit , OnDestroy {
           o = o + ":00:00";
           labels.push(this.datepipe.transform(o, "yyyy-M-dd HH:mm"));
         }
-        this.source = this.exit.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+        this.source = this.exit.raw.slice().sort((a, b) => +new Date(b.time) + +new Date(a.time));
 
 
         this.themeSubscription = this.theme.getJsTheme().subscribe((config) => {

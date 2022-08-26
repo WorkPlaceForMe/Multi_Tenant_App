@@ -167,7 +167,7 @@ export class SignalLostComponent  implements OnInit, OnDestroy {
             }
           }
         }
-        this.source = this.signalLost.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
+        this.source = this.signalLost.raw.slice().sort((a, b) => +new Date(b.time) + +new Date(a.time));
 
         let labels = [];
         for (var o of Object.keys(this.signalLost.over)) {

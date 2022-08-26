@@ -184,7 +184,7 @@ export class AodComponent implements OnInit, OnDestroy {
             }
           }
         }
-        this.source = this.aod.raw
+        this.source = this.aod.raw.slice().sort((a, b) => +new Date(b.time) + +new Date(a.time));
         //   .slice()
         //   .sort((a, b) => +new Date(b.time) - +new Date(a.time));
         let labels = [];

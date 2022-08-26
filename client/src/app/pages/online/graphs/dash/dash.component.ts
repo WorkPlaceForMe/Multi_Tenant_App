@@ -90,7 +90,7 @@ export class DashComponent implements OnInit , OnDestroy {
       id: this.now_user.id_branch,
       cam: this.camera,
       range: {},
-      order : 'ASC'
+      order : 'DESC'
     };
     
     this.max = this.dateService.addDay(this.dateService.today(), 0);
