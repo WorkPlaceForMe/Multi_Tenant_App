@@ -290,7 +290,11 @@ exports.initial = async function () {
     id: 67,
     name: 'People in the tunnel'
   })
-  const lastId = 67
+  await algo.create({
+    id: 68,
+    name: 'Meat / Ham & Cheese'
+  })
+  const lastId = 68
   await usr.create({
     id: '3333-666666-cccccc-nnnnnn',
     username: 'testing',
