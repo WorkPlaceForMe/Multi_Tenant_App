@@ -113,6 +113,14 @@ exports.getAll = (req, res) => {
               element.type = 'Vehicle parked in restricted area'
               break
             }
+            case 'queue_mgt': {
+              element.type = 'Queue Management'
+              break
+            }
+            case 'faces': {
+              element.type = 'Face detection'
+              break
+            }
           }
         })
         res.status(200).json({ success: true, data: values[1], total: values[0] })
@@ -204,6 +212,14 @@ const getAllTickets = async (row_count, type, id, data, res) => {
         }
         case 'parking': {
           element.type = 'Vehicle parked in restricted area'
+          break
+        }
+        case 'queue_mgt': {
+          element.type = 'Queue Management'
+          break
+        }
+        case 'faces': {
+          element.type = 'Face detection'
           break
         }
       }
@@ -299,6 +315,14 @@ exports.searchAllTickets = (req, res) => {
     }
     case 'Vehicle parked in restricted area': {
       searchStr = 'parking'
+      break
+    }
+    case 'Queue Management': {
+      searchStr = 'queue_mgt'
+      break
+    }
+    case 'Face detection': {
+      searchStr = 'faces'
       break
     }
   }

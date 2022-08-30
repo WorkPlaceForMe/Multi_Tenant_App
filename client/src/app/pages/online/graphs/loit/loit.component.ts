@@ -120,7 +120,7 @@ export class LoitComponent implements OnInit, OnDestroy {
           // m['time'] = new Date(m['time'])
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', '+0000');
         }
-        this.source = this.loitering.raw.slice().sort((a, b) => +new Date(b.time) + +new Date(a.time));
+        this.source = this.loitering.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
         if (Object.keys(this.loitering.histogram).length !== 0){
           const labels = [];
           for (const o of Object.keys(this.loitering.histogram)){

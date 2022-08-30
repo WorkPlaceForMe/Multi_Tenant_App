@@ -19,7 +19,7 @@
                     <nb-card-body>
                         <p class = "badge-txt">Avg Wait Time: {{queue == undefined ? 'None' : queue.avg}} min</p>
                         <p class = "badge-reading" *ngFor="let avg of queue.avgs; let i = index">
-                            Queue {{i + 1}}: {{avg}} min</p>
+                            Queue {{i + 1 === 1 ? 'Ham & Cheese' : 'Meat'}}: {{avg}} min</p>
                     </nb-card-body>
                 </nb-card>
             </div>
@@ -27,7 +27,7 @@
                 <nb-card class = "top-badges">
                     <nb-card-body>
                         <p class = "badge-txt">Fastest Queue</p>
-                        <p class = "badge-reading">{{queue == undefined ? 'None' : queue.min}}</p>
+                        <p class = "badge-reading">{{queue == undefined || queue.min == undefined ? 'None' : queue.min}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
@@ -35,7 +35,7 @@
                 <nb-card class = "top-badges">
                     <nb-card-body>
                         <p class = "badge-txt">Slowest Queue</p>
-                        <p class = "badge-reading">{{queue == undefined ? 'None' : queue.max}}</p>
+                        <p class = "badge-reading">{{queue == undefined || queue.max == undefined ? 'None' : queue.max}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
@@ -50,7 +50,7 @@
                 </nb-card>
               </div>
         </div>
-        <!-- <div class="row">
+        <div class="row">
             <div class="col-md-12 less-padding">
                 <nb-card>
                   <nb-card-body class="top-badges">
@@ -69,7 +69,7 @@
                   </nb-card-body>
                 </nb-card>
               </div>
-        </div> -->
+        </div>
         <div class="row">
             <div class="col less-padding">
                 <nb-card>

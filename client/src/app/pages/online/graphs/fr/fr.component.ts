@@ -132,7 +132,7 @@ export class FrComponent implements OnInit , OnDestroy {
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', '+0000');
           m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/fr/' + m['cam_id'] + '/' + m['movie']);
         }
-        this.source = this.fr.raw.slice().sort((a, b) => +new Date(b.time) + +new Date(a.time));
+        this.source = this.fr.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
       },
       err => {
         console.error(err);

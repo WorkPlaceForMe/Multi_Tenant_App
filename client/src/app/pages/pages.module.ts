@@ -164,6 +164,7 @@ import { DirectionComponent } from './online/graphs/direction/direction.componen
 import { WindowOpenerComponent } from './online/graphs/window-opener/window-opener.component';
 import { SignalLostComponent } from './online/graphs/signal-lost/signal-lost.component';
 import { EnterExitVComponent } from './online/graphs/enter-exit-v/enter-exit-v.component';
+import { HamCheeseComponent } from './online/graphs/ham-cheese/ham-cheese.component';
 
 @NgModule({
   imports: [
@@ -336,6 +337,7 @@ import { EnterExitVComponent } from './online/graphs/enter-exit-v/enter-exit-v.c
     WindowOpenerComponent,
     SignalLostComponent,
     EnterExitVComponent,
+    HamCheeseComponent,
   ],
   providers: [
     FacesService,
