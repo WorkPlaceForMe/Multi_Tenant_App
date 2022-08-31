@@ -26,7 +26,7 @@ exports.report = async (req, res) => {
   await db
     .con()
     .query(
-            `SELECT * from queue_alerts WHERE ${data.type} = '${req.params.cam_id}' and time >= '${data.start}' and  time <= '${data.end}'${extra} order by time asc;`,
+            `SELECT id, time, camera_name, cam_id, zone, severity from queue_alerts WHERE ${data.type} = '${req.params.cam_id}' and time >= '${data.start}' and  time <= '${data.end}'${extra} order by time asc;`,
             async function (err, result) {
               const fn = `${req.params.cam_id}-${data.start}`
               const exc = await createExelReport(result, fn)
