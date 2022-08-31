@@ -1705,15 +1705,19 @@ exports.queue = async (req, res) => {
   let token = req.headers['x-access-token']
   const data = req.body
   jwt.verify(token, process.env.secret, async (err, decoded) => {
+    let id = 22
+    if(data.ham === true){
+      id = 68
+    }
     Relation.findOne({
       where: {
-        algo_id: 22,
+        algo_id: id,
         camera_id: req.params.id
       }
     }).then(async rel => {
       const count = await Relation.count({
         where: {
-          algo_id: 22,
+          algo_id: id,
           camera_id: req.params.id
         }
       });
@@ -1747,14 +1751,14 @@ exports.queue = async (req, res) => {
             for (var v of result) {
               // label.push(v.time)
               if (v.queuing == 1) {
-                countAll[v.zone] = (countAll[v.zone] || 0) + 1
+                countAll[v.qid] = (countAll[v.qid] || 0) + 1
                 countIn++
               } else {
                 v['wait'] = (v.end_time - v.start_time) / 1000
                 v['wait'] = display(v['wait'])
                 times.push({
                   time: (v.end_time - v.start_time) / 60000,
-                  queue: v.zone
+                  queue: v.qid
                 })
               }
               let d = v.start_time
@@ -1782,12 +1786,10 @@ exports.queue = async (req, res) => {
                 mi +
                 ':' +
                 se
-              v['picture'] = `${d}_${v.track_id}.jpg`
+              v['picture'] = `${d}_${v.id}.jpg`
               v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/queue/${req.params.id}/${v.picture}`
-              if (rel.atributes[0].time > 0) {
-                v.clip_path = `${d}_${v.track_id}.mp4`
-                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/queue/${req.params.id}/${v.clip_path}`
-              }
+              v.movie = `${d}_${v.id}_video.mp4`
+              v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/queue/${req.params.id}/${v.movie}`
             }
             for (var e of times) {
               avgs[e.queue - 1] = avgs[e.queue - 1] + e.time
@@ -1834,6 +1836,35 @@ exports.queue = async (req, res) => {
                 }
                 cache = new Date(data.start).getTime()
                 result2.forEach(function (v) {
+                  let d = v.time
+                  let se = d.getSeconds()
+                  let mi = d.getMinutes()
+                  let ho = d.getHours()
+                  if (se < 10) {
+                    se = '0' + se
+                  }
+                  if (mi < 10) {
+                    mi = '0' + mi
+                  }
+                  if (ho < 10) {
+                    ho = '0' + ho
+                  }
+                  d =
+                    d.getFullYear() +
+                    '-' +
+                    (d.getMonth() + 1) +
+                    '-' +
+                    d.getDate() +
+                    '_' +
+                    ho +
+                    ':' +
+                    mi +
+                    ':' +
+                    se
+                  v['picture'] = `${d}_${v.id}.jpg`
+                  v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/queue/${req.params.id}/${v.picture}`
+                  v.movie = `${d}_${v.id}_video.mp4`
+                  v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/queue/${req.params.id}/${v.movie}`
                   cou++
                   if (
                     cache < v.time.getTime()
@@ -1857,6 +1888,9 @@ exports.queue = async (req, res) => {
                     let t = cache
                     t -= range
                     t = new Date(t)
+                    if(v.zone > count){
+                      return
+                    }
                     switch (v.severity) {
                       case 0: {
                         dataAlertsLow[v.zone - 1][t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()
@@ -1897,6 +1931,7 @@ exports.queue = async (req, res) => {
                   dataAlertsMed: dataAlertsMed,
                   dataAlertsHigh: dataAlertsHigh,
                   raw: result,
+                  rawAlerts: result2,
                   count: countIn,
                   countAll : countAll,
                   avg: Math.round((avg / times.length) * 100) / 100,

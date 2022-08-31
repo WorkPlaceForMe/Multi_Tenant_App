@@ -406,6 +406,11 @@ const tables = {
     alert: true,
     table: 'parking'
   },
+  'Meat / Ham & Cheese': {
+    id: 68,
+    alert: true,
+    table: 'queue_mgt'
+  },
   
 }
 

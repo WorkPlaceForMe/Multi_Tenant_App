@@ -199,6 +199,7 @@ require('./app/routes/reply.routes')(app)
 require('./app/routes/incident.routes')(app)
 require('./app/routes/manualTrigger.routes')(app)
 require('./app/routes/info.routes')(app)
+require('./app/routes/report.routes')(app)
 
 // resources being served
 app.use('/api/pictures', express.static(picResourceFolderPath))
