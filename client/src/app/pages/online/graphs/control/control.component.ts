@@ -24,7 +24,7 @@ export class ControlComponent implements OnInit, OnDestroy {
   //   name: ''
   // }
   location: string = '';
-  reTime: number = 5;
+  reTime: number = 0;
   refresh: number = 0;
   showRange: boolean;
   renew: any;

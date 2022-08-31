@@ -14,7 +14,13 @@ export class SeverityComponent implements OnInit {
 
   @Output() save: EventEmitter<any> = new EventEmitter();
 
-  ngOnInit() {
+  val: string;
 
+  ngOnInit() {
+    if(this.rowData.severity == undefined){
+      this.val = this.rowData.level
+    }else if(this.rowData.level == undefined){
+      this.val = this.rowData.severity
+    }
   }
 }

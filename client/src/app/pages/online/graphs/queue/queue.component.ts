@@ -66,6 +66,7 @@ export class QueueComponent implements OnInit, OnDestroy {
   }
     timezone: any;
   video:boolean = false;
+  algo_id: number = 22;
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
@@ -88,7 +89,7 @@ export class QueueComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type
     }
-    this.face.checkVideo(22,this.camera).subscribe(
+    this.face.checkVideo(this.algo_id,this.camera).subscribe(
       res=>{
         this.video = res['video'];
         this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
@@ -111,10 +112,10 @@ export class QueueComponent implements OnInit, OnDestroy {
       this.serv.queue(this.camera,l).subscribe(
         res=>{
           this.queue = res['data']
-          for(let m of this.queue.raw){
+          for(let m of this.queue.rawAlerts){
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['picture'])
             m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['clip_path']
-            m['start_time'] = this.datepipe.transform(m['start_time'], 'yyyy-M-dd HH:mm:ss')
+            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss','-0400')
             m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/queue/' + m['cam_id'] + '/' + m['movie']);
             if(m.queuing === 1){
               m.inLine = 'Waiting'
@@ -125,11 +126,13 @@ export class QueueComponent implements OnInit, OnDestroy {
           for(const qu in this.queue.countAll){
             this.queues.push({zone: qu, amount: this.queue.countAll[qu]})
           }
-          this.source = this.queue.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
+          const source = this.queue.rawAlerts.filter( alert => alert.severity === 2 )
+          // this.source = this.queue.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
+          this.source = source.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
           const labels = [];
           for (let o of Object.keys(this.queue.dataAlertsLow[0])){
             o = o + ':00';
-            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm'));
+            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm','-0400'));
           }
     
           this.themeSubscription = this.theme.getJsTheme().subscribe((config) => {
@@ -244,6 +247,32 @@ export class QueueComponent implements OnInit, OnDestroy {
   got(id){
     this.route.navigate([`/pages/tickets`])
   }
+  goToLink(url: string){
+    window.open(url, "_blank");
+  }
+
+  csv(){
+    let type;
+    if(this.now_user.id_branch != '0000'){
+      type = 'cam_id';
+    }else{
+      type = 'id_account'
+    }
+    let l = {
+      start: this.range.start,
+      end: this.range.end,
+      type: type,
+      ham: true
+    }
+    this.serv.report(this.algo_id,this.camera, l).subscribe(
+      res => {
+        var blob = new Blob([res], { type: res.type.toString() });
+        var url = window.URL.createObjectURL(blob);
+        this.goToLink(url)
+      },
+      err => console.error(err)
+    )
+  }
   settings = {
     mode: 'external',
     actions: false,
@@ -270,26 +299,16 @@ export class QueueComponent implements OnInit, OnDestroy {
           });
         }
       },
-      start_time: {
+      time: {
         title: 'TIME',
         type: 'string',
         filter: false
-      },
-      track_id: {
-        title: 'CUSTOMER NUMBER',
-        type: 'number',
-        filter: false
-      },
-      wait: {
-        title: 'WAIT TIME',
+      },  
+      camera_name: {
+        title: 'CAM',
         type: 'string',
         filter: false
-      },      
-      inLine: {
-        title: 'QUEUEING',
-        type: 'string',
-        filter: false
-      },
+      },  
       zone: {
         title: 'QUEUE',
         type: 'string',
