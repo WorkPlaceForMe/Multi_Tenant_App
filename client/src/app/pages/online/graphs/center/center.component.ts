@@ -29,7 +29,7 @@ export class CenterComponent implements OnInit {
   }
   overview ={
     algo_id: -3,
-    name: 'KRCL MASTER DASHBOARD',
+    name: 'Main Dashboard',
     status: "'primary'"
   }
 
