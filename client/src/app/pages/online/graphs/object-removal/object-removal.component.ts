@@ -167,7 +167,7 @@ export class ObjectRemovalComponent implements OnInit , OnDestroy {
             }
           }
         }
-        this.source = this.objectRemoval.raw.slice().sort((a, b) => +new Date(b.time) + +new Date(a.time));
+        this.source = this.objectRemoval.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
         let labels = [];
         for (var o of Object.keys(this.objectRemoval.over)) {
           o = o + ":00:00";

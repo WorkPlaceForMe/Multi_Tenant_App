@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express')
 const compression = require('compression')
 const cors = require('cors')
 const bodyParser = require('body-parser')
