@@ -108,7 +108,12 @@ if (process.env.INSTALL === 'true') {
       connection.query('CREATE DATABASE IF NOT EXISTS ' + process.env.DB + ';').then(async () => {
         db.sequelize.sync({ force: false, alter: true }).then(async () => {
           console.log('Drop and Resync Db...')
-          await init.initial()
+          const find = await account.findOne({
+            where: { id: '0000-11111-aaaaaa-bbbbbb' }
+          })
+          if (find === null) {
+            await init.initial()
+          }
           connection.query(
             'CREATE TABLE IF NOT EXISTS `' +
               process.env.DB +
