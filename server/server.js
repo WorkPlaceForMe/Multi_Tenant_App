@@ -11,7 +11,8 @@ const mysql = require('mysql2/promise')
 const compression = require('compression')
 const swaggerJsDoc = require('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
-
+const db = require('./app/models')
+const usr = db.user
 // const resourcesFolderPath =
 //  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
 const resourcesFolderPath = path.resolve(process.env.resourcePath)
@@ -84,8 +85,6 @@ app.use(
   )
 )
 
-const db = require('./app/models')
-
 process.on('unhandledRejection', (error, promise) => {
   console.log(' Oh Lord! We forgot to handle a promise rejection here: ', promise)
   console.log(' The error was: ', error)
@@ -108,7 +107,7 @@ if (process.env.INSTALL === 'true') {
       connection.query('CREATE DATABASE IF NOT EXISTS ' + process.env.DB + ';').then(async () => {
         db.sequelize.sync({ force: false, alter: true }).then(async () => {
           console.log('Drop and Resync Db...')
-          const find = await account.findOne({
+          const find = await usr.findOne({
             where: { id: '0000-11111-aaaaaa-bbbbbb' }
           })
           if (find === null) {
