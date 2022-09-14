@@ -610,8 +610,6 @@ exports.configsRoi = (req, res) => {
   let token = req.headers['x-access-token']
   const relas = req.body
   const id = req.params.id
-  console.log(relas)
-
   jwt.verify(token, process.env.secret, (err, decoded) => {
     Relation.destroy({
       where: {algo_id: relas.id, id_branch: decoded.id_branch, camera_id: id}
