@@ -1262,7 +1262,7 @@ exports.pc = async (req, res) => {
       await db
         .con()
         .query(
-          `SELECT * from crowd_count WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          `SELECT * from pcount WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
           function (err, result) {
             if (err)
               return res.status(500).json({
@@ -1726,14 +1726,28 @@ exports.queue = async (req, res) => {
         .query(
           `SELECT * from queue_mgt WHERE ${data.type} = '${req.params.id}' and start_time >= '${data.start}' and  start_time <= '${data.end}' order by start_time asc;`,
           async function (err, result) {
-            if (err)
+            if (err || result.length === 0)
               return res.status(500).json({
                 success: false,
                 message: err
               })
+            const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
+            let cache = '', range, cou = 0
+            if(diff === 1){
+              range = 30 * 60 * 1000
+            }else if(diff >= 1 && diff <= 3){
+              range = 2 * 60 * 60 * 1000
+            }else if(diff >= 3 && diff <= 7){
+              range = 4 * 60 * 60 * 1000
+            }else if(diff >= 7 && diff <= 14){
+              range = 8 * 60 * 60 * 1000
+            }else if(diff >= 14 && diff <= 32){
+              range = 24 * 60 * 60 * 1000
+            }
+            cache = new Date(data.start).getTime()
             let countIn = 0
             let countAll = {}, timesAv = {}, avgs = []
-            let dataAlertsMed = [], dataAlertsHigh = [], dataAlertsLow = []
+            let dataAlertsMed = [], dataAlertsHigh = [], dataAlertsLow = [], dataPeople = {}
             for(let i = 1; i <= count; i++){
               avgs[i - 1] = 0
               timesAv[i] = 0
@@ -1743,13 +1757,13 @@ exports.queue = async (req, res) => {
               dataAlertsLow.push({})
             }
             const label = []
+            const labelPeople = []
             let avg = 0
             let min = 0
             let max = 0
             let minQ, maxQ
             let times = []
             for (var v of result) {
-              // label.push(v.time)
               if (v.queuing == 1) {
                 countAll[v.qid] = (countAll[v.qid] || 0) + 1
                 countIn++
@@ -1790,6 +1804,40 @@ exports.queue = async (req, res) => {
               v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/queue/${req.params.id}/${v.picture}`
               v.movie = `${d}_${v.id}_video.mp4`
               v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/queue/${req.params.id}/${v.movie}`
+              if(v.queuing == 1){
+                if (
+                  cache < v.start_time.getTime()
+                ) {
+                  while (
+                    cache < v.start_time.getTime()
+                  ) {
+                    cache = new Date(cache)
+                    dataPeople[cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                    cache = cache.getTime()
+                    cache += range
+                  }
+                }
+                if (
+                  cache >= v.start_time.getTime()
+                ) {
+                  let t = cache
+                  t -= range
+                  t = new Date(t)
+                  dataPeople[t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()] = (dataPeople[ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1    
+                }
+                labelPeople.push(v.start_time)
+                cou++
+              }
+            }
+            if(cou === countIn){
+              while (
+                cache <= new Date(data.end)
+              ) {
+                cache = new Date(cache)
+                dataPeople[cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                cache = cache.getTime()
+                cache += range
+              }
             }
             for (var e of times) {
               avgs[e.queue - 1] = avgs[e.queue - 1] + e.time
@@ -1927,6 +1975,8 @@ exports.queue = async (req, res) => {
                 })
                 let a = {
                   label: label,
+                  labelPeople: labelPeople,
+                  dataPeople: dataPeople,
                   dataAlertsLow: dataAlertsLow,
                   dataAlertsMed: dataAlertsMed,
                   dataAlertsHigh: dataAlertsHigh,
