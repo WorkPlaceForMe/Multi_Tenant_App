@@ -23,6 +23,7 @@ export class QueueComponent implements OnInit, OnDestroy {
   now_user: Account;
   rtspIn: any;
   queues: Array<any> = [];
+  avgss: Array<any> = [];
   themeSubscription: any;
   dataL: any;
   dataM: any;
@@ -113,6 +114,7 @@ export class QueueComponent implements OnInit, OnDestroy {
       this.serv.queue(this.camera,l).subscribe(
         res=>{
           this.queue = res['data']
+          this.avgss = this.queue.avgs
           for(let m of this.queue.rawAlerts){
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['picture'])
             m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['clip_path']
@@ -258,6 +260,7 @@ export class QueueComponent implements OnInit, OnDestroy {
         err => {
           console.error(err)
           this.queue = undefined;
+          this.avgss = []
         }
       )
   }

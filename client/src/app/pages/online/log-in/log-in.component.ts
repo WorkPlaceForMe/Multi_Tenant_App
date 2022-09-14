@@ -203,7 +203,7 @@ export class LogInComponent implements OnInit {
       position: this.position,
       preventDuplicates: this.preventDuplicates,
     };
-    const titleContent = 'Warning';
+    const titleContent = 'Peligro!';
 
     this.toastrService.show(
       body,

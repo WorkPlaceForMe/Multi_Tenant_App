@@ -152,7 +152,7 @@ exports.signin = (req, res) => {
       if (!user) {
         return res
           .status(404)
-          .send({ success: false, message: 'User is not in the records', type: 'user' })
+          .send({ success: false, message: 'Este usuario no esta registrado', type: 'user' })
       }
 
       const passwordIsValid = bcrypt.compareSync(req.body.password, user.password)
@@ -160,14 +160,14 @@ exports.signin = (req, res) => {
       if (!passwordIsValid) {
         return res.status(400).send({
           success: false,
-          message: 'Invalid Password',
+          message: 'Clave invalida',
           type: 'password'
         })
       }
       if (user.disabled === 1) {
         return res.status(401).send({
           success: false,
-          message: 'This account has been disabled, please get in contact with the Administator.',
+          message: 'Esta cuenta se a deshabilitado, por favor contactar al Administrador.',
           type: 'disable'
         })
       }

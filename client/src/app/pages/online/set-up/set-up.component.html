@@ -6,72 +6,69 @@
             <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="username" class="label">Username</label>
-                <input type="text" class="form-control" formControlName="username" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" nbInput fullWidth id="username" autofocus placeholder="Username" [status]='values.username' />
+                <label for="username" class="label">Usuario</label>
+                <input type="text" class="form-control" formControlName="username" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" nbInput fullWidth id="username" autofocus placeholder="Usuario" [status]='values.username' />
                 <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-                  <div *ngIf="f.username.errors.required">Username is required</div>
-                  <div *ngIf="f.username.errors.cantMatch">Username already in use</div>
+                  <div *ngIf="f.username.errors.required">Usuario es requerido</div>
+                  <div *ngIf="f.username.errors.cantMatch">Usuario ya esta registrado</div>
               </div>
               </div>
               <div class="form-group">
                 <label for="email" class="label">Email</label>
                 <input type="email" class="form-control" formControlName="email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" nbInput fullWidth id="email" autofocus placeholder="Email" [status]='values.email' />
                 <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-                  <div *ngIf="f.email.errors.required">Email is required</div>
-                  <div *ngIf="f.email.errors.pattern || f.email.errors.invalid">Email must be a valid email address</div>
-                  <div *ngIf="f.email.errors.cantMatch">Email already in use</div>
+                  <div *ngIf="f.email.errors.required">Email es requerido</div>
+                  <div *ngIf="f.email.errors.pattern || f.email.errors.invalid">Email debe ser en formato email correcto</div>
+                  <div *ngIf="f.email.errors.cantMatch">Email ya esta registrado</div>
               </div>
               </div>
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label class="label">VMS</label>
                 <nb-select fullWidth formControlName="vms" placeholder="Choose a VMS" [ngClass]="{ 'is-invalid': submitted && f.vms.errors }" [status]='values.vms' id="vms">
                   <nb-option value="" disabled>Choose:</nb-option>
                   <nb-option *ngFor="let vms of vmsList;" [value]='vms' >{{vms}}</nb-option>
-                  <!-- <nb-option value="Pelco">Pelco</nb-option>
-                  <nb-option value="Honeywell Maxpro">Honeywell Maxpro</nb-option>
-                  <nb-option value="Cognyte">Cognyte</nb-option> -->
                 </nb-select>
-              </div>
+              </div> -->
 
               <div class="form-group" *ngIf='now_user.role === "admin"'>
-                <label class="label">Type</label>
+                <label class="label">Tipo</label>
                   <nb-radio-group [(ngModel)]='type' [ngModelOptions]="{standalone: true}">
                     <nb-radio *ngIf='!edit'
                       [value]="'client'">
-                      Client
+                      Cliente
                     </nb-radio>
                     <nb-radio *ngIf='!edit'
                       [value]="'admin'">
-                      Admin
+                      Administrador
                     </nb-radio>
                     <nb-radio disabled *ngIf='edit'
                     [value]="'client'">
-                    Client
+                    Cliente
                   </nb-radio>
                   <nb-radio disabled *ngIf='edit'
                     [value]="'admin'">
-                    Admin
+                    Administrador
                   </nb-radio>
                   </nb-radio-group>
                 </div>
 
 
               <div class="form-group" *ngIf='now_user.role === "admin"'>
-                <nb-checkbox *ngIf='!edit && type === "client"' formControlName="unique" >Unique Account</nb-checkbox>
-                <nb-checkbox *ngIf='edit || type ==="admin"' disabled formControlName="unique" >Unique Account</nb-checkbox>
+                <nb-checkbox *ngIf='!edit && type === "client"' formControlName="unique" >Cuenta unica</nb-checkbox>
+                <nb-checkbox *ngIf='edit || type ==="admin"' disabled formControlName="unique" >Cuenta unica</nb-checkbox>
               </div>
               
               <div class="row"*ngIf='now_user.role === "admin"'>
               <div class="col-md-6">
               <div class="form-group">
-                <label for="form3" class="label">Number of Analytics</label>
+                <label for="form3" class="label">Numero de analiticas</label>
                 <input type="number" class="form-control" *ngIf='type ==="client"' nbInput fullWidth id="form3" status="primary" fieldSize="small" formControlName="analytics" min="0"/>
                 <input type="number" class="form-control" *ngIf='type ==="admin"' disabled nbInput fullWidth id="form3" status="primary" fieldSize="small" formControlName="analytics" min="0"/>
               </div>           
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label for="form4" class="label">Number of Cameras</label>
+                <label for="form4" class="label">Numero de camaras</label>
                 <input type="number" class="form-control" *ngIf='type ==="client"' nbInput fullWidth id="form4" status="primary" fieldSize="small" formControlName="cameras" min="0"/>
                 <input type="number" class="form-control" *ngIf='type ==="admin"' disabled nbInput fullWidth id="form4" status="primary" fieldSize="small" formControlName="cameras" min="0"/>
               </div>           
@@ -79,25 +76,25 @@
           </div>
 
               <div class="form-group" *ngIf='edit'>
-                <nb-checkbox formControlName="disabled" [status]="'danger'">Disable Account</nb-checkbox>
+                <nb-checkbox formControlName="disabled" [status]="'danger'">Deshabilitar cuenta</nb-checkbox>
               </div>
 
               <div class="form-group" *ngIf='!edit'>
-                <label for="password" class="label">Password</label>
-                <input [type]="typePass" class="form-control" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" nbInput fullWidth id="password" autofocus placeholder="Password" [status]='values.password' />
+                <label for="password" class="label">Clave</label>
+                <input [type]="typePass" class="form-control" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" nbInput fullWidth id="password" autofocus placeholder="Clave" [status]='values.password' />
                 <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                    <div *ngIf="f.password.errors.required">Password is required</div>
-                    <div *ngIf="f.password.errors.minlength">Password must be at least 10 characters</div>
-                    <div *ngIf="f.password.errors.pattern">Password must contain at least 1 uppercase, 1 lowercase, 1 number and a special character ( # ? ! @ $ % ^ & * - _ )</div>
+                    <div *ngIf="f.password.errors.required">La clave es requerida</div>
+                    <div *ngIf="f.password.errors.minlength">La clave debe contener al menos 10 caracteres</div>
+                    <div *ngIf="f.password.errors.pattern">La clave debe contener al menos: 1 mayuscula, 1 minuscula, 1 numero y un caracter especial ( # ? ! @ $ % ^ & * - _ )</div>
               </div>
-                <label for="confirmPassword" class="label">Confirm Password</label>
-                <input [type]="typePass" class="form-control" formControlName="confirmPassword" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" nbInput fullWidth id="confirmPassword" autofocus placeholder="Confirm Password" [status]='values.confirmPassword' />
+                <label for="confirmPassword" class="label">Confirmar clave</label>
+                <input [type]="typePass" class="form-control" formControlName="confirmPassword" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" nbInput fullWidth id="confirmPassword" autofocus placeholder="Confirmar clave" [status]='values.confirmPassword' />
                 <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
-                    <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
-                    <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
+                    <div *ngIf="f.confirmPassword.errors.required">La clave debe ser confirmada</div>
+                    <div *ngIf="f.confirmPassword.errors.mustMatch">La clave debe ser exacta</div>
               </div>
               <div class="form-group">
-                <nb-checkbox [(ngModel)]='view' (ngModelChange)='changeView()' [ngModelOptions]="{standalone: true}">View Password</nb-checkbox>
+                <nb-checkbox [(ngModel)]='view' (ngModelChange)='changeView()' [ngModelOptions]="{standalone: true}">Ver clave</nb-checkbox>
               </div>
               </div>
     
@@ -105,19 +102,19 @@
     <div class="col-md-6">
         <div *ngIf='now_user.role === "admin"'>
         <div class="form-group" *ngIf='type === "client"'>
-            <label class="label">Algorithms</label>
+            <label class="label">Algoritmos</label>
             <ul style="list-style-type:none;">
-            <li><nb-checkbox [status]="'primary'" [(ngModel)]='allAct' (ngModelChange)='changeAll()' [ngModelOptions]="{standalone: true}">Select All</nb-checkbox></li>
+            <li><nb-checkbox [status]="'primary'" [(ngModel)]='allAct' (ngModelChange)='changeAll()' [ngModelOptions]="{standalone: true}">Seleccionar todos</nb-checkbox></li>
             <li *ngFor='let alg of algos'>
             <nb-checkbox [status]="values.algorithm" [(ngModel)]='alg.act' [ngModelOptions]="{standalone: true}">{{alg.name}}</nb-checkbox>
         </li>
     </ul>
     <div *ngIf="submitted && values.algorithm == 'danger'" class="text-danger">
-      <small> Choose at least one algorithm to proceed.</small>
+      <small>Se debe elegir al menos un algoritmo para continuar.</small>
   </div>
             </div>
             <div class="form-group" *ngIf='type === "admin"'>
-                <label class="label">Algorithms</label>
+                <label class="label">Algoritmos</label>
                 <ul style="list-style-type:none;">
                 <li *ngFor='let alg of algos'>
                 <nb-checkbox disabled [status]="values.algorithm" [(ngModel)]='alg.act' [ngModelOptions]="{standalone: true}">{{alg.name}}</nb-checkbox>
@@ -128,13 +125,13 @@
             <div *ngIf='now_user.role != "admin"'>
               <br><br><br><br><br><br><br><br>
             </div>
-        <button [status]="'success'" nbButton class="btn-block" *ngIf="is_saving == false">Save</button>
+        <button [status]="'success'" nbButton class="btn-block" *ngIf="is_saving == false">Guardar</button>
         <button [status]="'success'" disabled nbButton class="btn-block" *ngIf="is_saving == true" [nbSpinner]="is_saving" nbSpinnerSize="medium" nbSpinnerStatus="primary">&nbsp;</button>
     </div>
 </div>
 </form>
 <hr>
-<button [routerLink]="['/pages/accounts']" [status]="'primary'" nbButton class="btn-block"><i class="fas fa-arrow-circle-left"></i> &nbsp;Back</button>
+<button [routerLink]="['/pages/accounts']" [status]="'primary'" nbButton class="btn-block"><i class="fas fa-arrow-circle-left"></i> &nbsp;Volver</button>
 <!-- <button (click)='view1()'>aaa</button> -->
         </nb-card-body>
         </nb-card>

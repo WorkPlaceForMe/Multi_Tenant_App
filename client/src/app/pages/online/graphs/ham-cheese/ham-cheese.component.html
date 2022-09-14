@@ -4,38 +4,38 @@
             <div class="col less-padding">
                 <nb-card class = "top-badges">
                     <nb-card-body>
-                        <p class = "badge-txt">People over time</p>
-                        <p class = "badge-reading">Total: {{queue == undefined ? 'None' : queue.count}}</p>
+                        <p class = "badge-txt">Personas en el periodo</p>
+                        <p class = "badge-reading">Total: {{queue == undefined ? '0' : queue.count}}</p>
                         <p class = "badge-reading" *ngFor="let qu of queues">
                             <!-- <button class="btn btn-sm btn-success" disabled *ngIf="qu.amount < 3"><i class="fas fa-battery-empty"></i></button>
                             <button class="btn btn-sm btn-warning" disabled *ngIf="qu.amount >= 3 && qu.amount < 5"><i class="fas fa-battery-half"></i></button>
                             <button class="btn btn-sm btn-danger" disabled *ngIf="qu.amount >= 5"><i class="fas fa-battery-full"></i></button> -->
-                            Queue {{qu.zone}}: {{qu.amount}}</p>
+                            Fila {{qu.zone}}: {{qu.amount}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
             <div class="col less-padding">
                 <nb-card class = "top-badges">
                     <nb-card-body>
-                        <p class = "badge-txt">Avg Wait Time: {{queue == undefined ? 'None' : queue.avg}} min</p>
-                        <p class = "badge-reading" *ngFor="let avg of queue.avgs; let i = index">
-                            Queue {{i + 1 === 1 ? 'Ham & Cheese' : 'Meat'}}: {{avg}} min</p>
+                        <p class = "badge-txt">Tiempo de espera medio: {{queue == undefined ? '0' : queue.avg}} min</p>
+                        <p class = "badge-reading" *ngFor="let avg of avgss; let i = index">
+                            Fila {{i + 1 === 1 ? 'Jamon & Queso' : 'Carne'}}: {{avg}} min</p>
                     </nb-card-body>
                 </nb-card>
             </div>
             <div class="col less-padding">
                 <nb-card class = "top-badges">
                     <nb-card-body>
-                        <p class = "badge-txt">Fastest Queue</p>
-                        <p class = "badge-reading">{{queue == undefined || queue.min == undefined ? 'None' : queue.min}}</p>
+                        <p class = "badge-txt">Fila mas rapida</p>
+                        <p class = "badge-reading">{{queue == undefined || queue.min == undefined ? 'Ninguna' : queue.min}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
             <div class="col less-padding">
                 <nb-card class = "top-badges">
                     <nb-card-body>
-                        <p class = "badge-txt">Slowest Queue</p>
-                        <p class = "badge-reading">{{queue == undefined || queue.max == undefined ? 'None' : queue.max}}</p>
+                        <p class = "badge-txt">Fila mas lenta</p>
+                        <p class = "badge-reading">{{queue == undefined || queue.max == undefined ? 'Ninguna' : queue.max}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>
@@ -44,7 +44,7 @@
             <div class="col-md-12 less-padding">
                 <nb-card>
                   <nb-card-body class="top-badges">
-                    <p>People over time</p>
+                    <p>Personas en el periodo</p>
                     <chart type="line" [data]="dataP" [options]="options"></chart>
                   </nb-card-body>
                 </nb-card>
@@ -54,7 +54,7 @@
             <div class="col-md-12 less-padding">
                 <nb-card>
                   <nb-card-body class="top-badges">
-                    <p>High alerts over time</p>
+                    <p>Alertas altas en el periodo</p>
                     <chart type="line" [data]="dataH" [options]="options"></chart>
                   </nb-card-body>
                 </nb-card>
@@ -64,7 +64,7 @@
             <div class="col-md-12 less-padding">
                 <nb-card>
                   <nb-card-body class="top-badges">
-                    <p>Medium alerts over time</p>
+                    <p>Alertas medias en el periodo</p>
                     <chart type="line" [data]="dataM" [options]="options"></chart>
                   </nb-card-body>
                 </nb-card>
@@ -74,7 +74,7 @@
             <div class="col-md-12 less-padding">
                 <nb-card>
                   <nb-card-body class="top-badges">
-                    <p>Low alerts over time</p>
+                    <p>Alertas bajas en el periodo</p>
                     <chart type="line" [data]="dataL" [options]="options"></chart>
                   </nb-card-body>
                 </nb-card>
@@ -84,8 +84,8 @@
             <div class="col less-padding">
                 <nb-card>
                     <nb-card-header>
-                        <button (click)='csv("alerts")' nbButton outline status="info" size = "tiny">Download Alerts Data</button>
-                        <button (click)='csv("count")' nbButton outline status="info" size = "tiny">Download Count Data</button>
+                        <button (click)='csv("alerts")' nbButton outline status="info" size = "tiny">Descargar data de Alertas</button>
+                        <button (click)='csv("count")' nbButton outline status="info" size = "tiny">Descargar data de Personas</button>
                     </nb-card-header>
                     <nb-card-body class = "graph-body" style = "padding: 0px">
                         <ng2-smart-table [settings]="settings" [source]="source" (edit)='got($event)'>
@@ -111,7 +111,7 @@
           <div class="col-md-8 less-padding">
             <nb-card>
                 <nb-card-header>
-                  <h4>Live Output Feed</h4>
+                  <h4>Camara en tiempo real</h4>
                 </nb-card-header>
                 <nb-card-body>
                   <div align='center'>

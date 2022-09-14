@@ -7,12 +7,14 @@ const morgan = require('morgan')
 const fs = require('fs')
 const path = require('path')
 const init = require('./app/initializator/initialFunct')
+const updt = require('./app/initializator/updateFunc')
 const mysql = require('mysql2/promise')
 const compression = require('compression')
 const swaggerJsDoc = require('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
 const db = require('./app/models')
 const usr = db.user
+const algo = db.algorithm
 // const resourcesFolderPath =
 //  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
 const resourcesFolderPath = path.resolve(process.env.resourcePath)
@@ -110,6 +112,12 @@ if (process.env.INSTALL === 'true') {
           const find = await usr.findOne({
             where: { id: '0000-11111-aaaaaa-bbbbbb' }
           })
+          const span = await algo.findOne({
+            where: { id: 69 }
+          })
+          if (span === null) {
+            await updt.initial()
+          }
           if (find === null) {
             await init.initial()
           }

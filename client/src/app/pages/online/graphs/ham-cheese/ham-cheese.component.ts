@@ -24,6 +24,7 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
     now_user: Account;
     rtspIn: any;
     queues: Array<any> = [];
+    avgss: Array<any> = [];
     themeSubscription: any;
     dataL: any;
     dataM: any;
@@ -115,6 +116,7 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
         this.serv.queue(this.camera,l).subscribe(
           res=>{
             this.queue = res['data']
+            this.avgss = this.queue.avgs
             for(let m of this.queue.rawAlerts){
               m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['picture'])
               m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['clip_path']
@@ -127,22 +129,22 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
               }
             }
             if(this.queue.min === '1'){
-              this.queue.min = 'Ham & Cheese'
+              this.queue.min = 'Jamon & Queso'
             }else if(this.queue.min === '2'){
-              this.queue.min = 'Meat'
+              this.queue.min = 'Carnes'
             }
             if(this.queue.max === '1'){
-              this.queue.max = 'Ham & Cheese'
+              this.queue.max = 'Jamon & Queso'
             }else if(this.queue.max === '2'){
-              this.queue.max = 'Meat'
+              this.queue.max = 'Carnes'
             }
             for(const qu in this.queue.countAll){
               let name;
               if(qu === '1'){
-                name = 'Ham & Cheese'
+                name = 'Jamon & Queso'
               }
               if(qu === '2'){
-                name = 'Meat'
+                name = 'Carnes'
               }
               this.queues.push({zone: name, amount: this.queue.countAll[qu]})
             }
@@ -173,9 +175,9 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
               for(let i = 0; i < this.queue.dataAlertsLow.length; i++){
                 let label = 'None'
                 if(i + 1 === 1){
-                  label = 'Ham & Cheese'
+                  label = 'Jamon & Quesos'
                 }else if (i + 1 === 2){
-                  label = 'Meat'
+                  label = 'Carnes'
                 }
                 datasetsLow.push({
                   label: `${label}`,
@@ -220,7 +222,7 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
               this.dataP = {
                 labels: times,
                 datasets: [{
-                  label: `People over time`,
+                  label: `Personas en el periodo`,
                   data: Object.values(this.queue.dataPeople),
                   borderColor: colors.primary,
                   backgroundColor: colors.primary,
@@ -248,7 +250,7 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
                       display: false,
                       scaleLabel: {
                         display: false,
-                        labelString: "Month",
+                        labelString: "Mes",
                       },
                       gridLines: {
                         display: true,
@@ -283,6 +285,7 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
           err => {
             console.error(err)
             this.queue = undefined;
+            this.avgss = []
           }
         )
     }
@@ -329,10 +332,10 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
         display : true,
         perPage:5
         },
-      noDataMessage: "No data found",
+      noDataMessage: "No se encotro data.",
       columns: {
         picture: {
-          title: 'PICTURE',
+          title: 'Imagen',
           type: 'custom',
           filter: false,
           renderComponent: ButtonViewComponentPic,
@@ -343,17 +346,17 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
           }
         },
         time: {
-          title: 'TIME',
+          title: 'Hora',
           type: 'string',
           filter: false
         },  
         camera_name: {
-          title: 'CAM',
+          title: 'Camara',
           type: 'string',
           filter: false
         },  
         severity: {
-          title: 'Severity',
+          title: 'Severidad',
           type: 'custom',
           filter: false,
           renderComponent: SeverityComponent,
@@ -364,7 +367,7 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
           },
         },
         zone: {
-          title: 'QUEUE',
+          title: 'Fila',
           type: 'string',
           filter: false
         }

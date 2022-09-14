@@ -5,7 +5,7 @@
         <!-- <h4 align="left">
           {{ dateMessage }}
         </h4> -->
-        <label *ngIf='now_user.role != "user"' align='right' for="noth" class="label">Remaining Cameras:&nbsp;</label>
+        <label *ngIf='now_user.role != "user"' align='right' for="noth" class="label">Camaras restantes:&nbsp;</label>
         <strong  *ngIf='now_user.role != "user"'>{{remaining.cameras}}</strong>
         </div>
     </nb-card-header>
@@ -15,12 +15,12 @@
       <table class="table table-hover" id="myTable">
         <thead align='center'>
           <tr>
-            <th scope="col"><h5>Name</h5></th>
-            <th scope="col"><h5>Play</h5></th>
-            <th scope="col"  *ngIf='now_user.role != "user"'><h5>Edit</h5></th>
-            <th scope="col"  *ngIf='now_user.role != "user"'><h5><i class="far fa-dot-circle"></i>&nbsp;Algorithms</h5></th>
+            <th scope="col"><h5>Nombre</h5></th>
+            <th scope="col"><h5>Reproducir</h5></th>
+            <th scope="col"  *ngIf='now_user.role != "user"'><h5>Editar</h5></th>
+            <th scope="col"  *ngIf='now_user.role != "user"'><h5><i class="far fa-dot-circle"></i>&nbsp;Algoritmos</h5></th>
             <th scope="col" *ngIf='heatmap == true'><h5><i class="far fa-map"></i> &nbsp;Heatmap</h5></th>
-            <th scope="col" *ngIf='now_user.role != "user"'><h5>Delete</h5></th>
+            <th scope="col" *ngIf='now_user.role != "user"'><h5>Eliminar</h5></th>
           </tr>
         </thead>
         <tr *ngFor = "let camera of cams">
@@ -29,10 +29,10 @@
                 <i class="fas fa-play"></i>
             </button></td>
             <td *ngIf='now_user.role != "user"'><button [routerLink]="['/pages/cameras/edit', camera.id]" class='btn-block' nbButton [status]="'info'">
-            Edit
+            Editar
             </button></td>
             <td *ngIf='now_user.role != "user"'><button [routerLink]="['/pages/cameras/algorithms', camera.id]" class='btn-block' nbButton [status]="'info'">
-              Algorithms
+              Algoritmos
             </button></td>
               <td *ngIf='heatmap == true'><button [routerLink]="['/pages/cameras/heatmap', camera.id]" class='btn-block' nbButton [status]="'info'" [disabled]= 'camera.hm == undefined'>
                 Heatmap

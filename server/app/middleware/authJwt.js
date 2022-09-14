@@ -15,7 +15,7 @@ const verifyToken = (req, res, next) => {
   jwt.verify(token, process.env.secret, (err, decoded) => {
     if (err) {
       return res.status(401).send({
-        message: 'Unauthorized!'
+        message: 'No autorizado'
       })
     }
     req.userId = decoded.id
@@ -149,7 +149,7 @@ const isAvailable = (req, res, next) => {
 
   if (id === 'none') {
     res.status(202).send({
-      message: 'Exists'
+      message: 'Existe'
     })
   }
   next()

@@ -105,7 +105,7 @@ export class LivestreamComponent implements OnInit, OnDestroy {
 
 
   deleteCamera(id: string){
-    if(confirm('Do you want to delete this camera?')){
+    if(confirm('Confirme para eliminar la camara.')){
       this.facesService.deleteCamera(id).subscribe(
         res =>{
           this.facesService.getLiveCameras().subscribe(

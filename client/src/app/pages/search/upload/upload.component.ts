@@ -33,7 +33,7 @@ export class UploadComponent implements OnInit {
     private facesService: FacesService,
     private SpinnerService: NgxSpinnerService
   ) {}
-  messageBar: string = "Processing";
+  messageBar: string = "Procesando";
   fileName: string;
   up: boolean = false;
   load: boolean = false;
@@ -93,8 +93,6 @@ export class UploadComponent implements OnInit {
       if (progress["progress"] === 100) {
         //this.SpinnerService.hide();
         this.finished = true;
-
-        console.log("video uploaded");
       }
     };
 
@@ -163,7 +161,7 @@ export class UploadComponent implements OnInit {
     } else {
       this.fileName = null;
       this.load = false;
-      alert("Please choose video file only");
+      alert("Porfavor elegir formato de video");
     }
   }
 

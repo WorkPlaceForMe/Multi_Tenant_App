@@ -29,13 +29,13 @@ export class CenterComponent implements OnInit {
   }
   overview ={
     algo_id: -3,
-    name: 'General Dashboard',
+    name: 'Dashboard General',
     status: "'primary'"
   }
 
   liveView  = {
     algo_id: -4,
-    name: 'Live View',
+    name: 'Vista en vivo',
     status: "'primary'"
   }
 

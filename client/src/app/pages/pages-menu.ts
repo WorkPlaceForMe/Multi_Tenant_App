@@ -8,18 +8,18 @@ export const MENU_ITEMSBRANCH: NbMenuItem[] = [
   //   home: true,
   // },
   {
-    title: "Start",
+    title: "Inicio",
     icon: "home-outline",
     link: "/dashboard",
     hidden: true,
     home: true,
   },
   {
-    title: "Features for Branch",
+    title: "Atributos",
     group: true,
   },
   {
-    title: "Accounts",
+    title: "Cuentas",
     icon: "people-outline",
     link: "accounts",
   },
@@ -34,15 +34,15 @@ export const MENU_ITEMSBRANCH: NbMenuItem[] = [
   //   link: 'analytics'
   // },
   {
-    title: "Cameras",
+    title: "Camaras",
     icon: "video-outline",
     children: [
       {
-        title: "Cameras List",
+        title: "Lista de Camaras",
         link: "camerasList",
       },
       {
-        title: "Add Camera",
+        title: "Agregar Camara",
         link: "cameras/add_camera",
       },
     ],
@@ -58,15 +58,15 @@ export const MENU_ITEMSBRANCH: NbMenuItem[] = [
     link: "tickets",
   },
   {
-    title: "Stored Videos",
+    title: "Videos locales",
     icon: "film-outline",
     children: [
       {
-        title: "Video List",
+        title: "Lista de videos",
         link: "search/list",
       },
       {
-        title: "Add Video",
+        title: "Agregar Videos",
         link: "search/upload",
       },
       {
@@ -76,7 +76,7 @@ export const MENU_ITEMSBRANCH: NbMenuItem[] = [
     ],
   },
   {
-    title: "Help",
+    title: "Ayuda",
     icon: "paper-plane-outline",
     link: "helpdesk",
   },
@@ -94,18 +94,18 @@ export const MENU_ITEMSADMIN: NbMenuItem[] = [
   //   link: '/pages/iot-dashboard',
   // },
   {
-    title: "Start",
+    title: "Inicio",
     icon: "home-outline",
     link: "/dashboard",
     hidden: true,
     home: true,
   },
   {
-    title: "Features for Admin",
+    title: "Atributos de Administrador",
     group: true,
   },
   {
-    title: "Accounts",
+    title: "Cuentas",
     icon: "people-outline",
     link: "accounts",
   },
@@ -113,23 +113,23 @@ export const MENU_ITEMSADMIN: NbMenuItem[] = [
 
 export const MENU_ITEMSCLIENT: NbMenuItem[] = [
   {
-    title: "Start",
+    title: "Inicio",
     icon: "home-outline",
     link: "/dashboard",
     hidden: true,
     home: true,
   },
   {
-    title: "Features for Client",
+    title: "Atributos de Cliente",
     group: true,
   },
   {
-    title: "Accounts",
+    title: "Cuentas",
     icon: "people-outline",
     link: "accounts",
   },
   {
-    title: "Reports",
+    title: "Reportes",
     icon: "bar-chart-outline",
     link: "graphs",
   },
@@ -139,15 +139,15 @@ export const MENU_ITEMSCLIENT: NbMenuItem[] = [
     link: "tickets",
   },
   {
-    title: "Stored Videos",
+    title: "Videos locales",
     icon: "film-outline",
     children: [
       {
-        title: "Video List",
+        title: "Lista de videos",
         link: "search/list",
       },
       {
-        title: "Add Video",
+        title: "Agregar Videos",
         link: "search/upload",
       },
       {
@@ -162,7 +162,7 @@ export const MENU_ITEMSCLIENT: NbMenuItem[] = [
     link: "helpdesk-listing",
   },
   {
-    title: "Incident Logs",
+    title: "Incidentes Logs",
     icon: "star",
     link: "incident-logs",
   },
@@ -170,22 +170,22 @@ export const MENU_ITEMSCLIENT: NbMenuItem[] = [
 
 export const MENU_ITEMSUSER: NbMenuItem[] = [
   {
-    title: "Start",
+    title: "Inicio",
     icon: "home-outline",
     link: "/dashboard",
     hidden: true,
     home: true,
   },
   {
-    title: "Features for User",
+    title: "Atributos de User",
     group: true,
   },
   {
-    title: "Cameras",
+    title: "Camaras",
     icon: "video-outline",
     children: [
       {
-        title: "Cameras List",
+        title: "Lista de camaras",
         link: "camerasList",
         home: true,
       },
@@ -207,7 +207,7 @@ export const MENU_ITEMSUSER: NbMenuItem[] = [
   //   link: 'settings'
   // }
   {
-    title: "Help",
+    title: "Ayuda",
     icon: "paper-plane-outline",
     link: "helpdesk",
   },

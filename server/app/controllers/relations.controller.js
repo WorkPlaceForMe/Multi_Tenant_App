@@ -507,7 +507,7 @@ exports.configs = (req, res) => {
   let token = req.headers['x-access-token']
   let inf = req.body
   const id = req.params.id
-  var count = 0
+  let count = 0
   jwt.verify(token, process.env.secret, (err, decoded) => {
     User.findOne({
       where: {
@@ -549,6 +549,12 @@ exports.configs = (req, res) => {
               }
               if (a.id == 12) {
                 stuff.push(inf[7])
+              }
+              if (a.id == 22) {
+                stuff.push(inf[9])
+              }
+              if (a.id == 68) {
+                stuff.push(inf[10])
               }
               for (var rela of rels) {
                 if (rela.algo_id == a.id) {
@@ -604,15 +610,16 @@ exports.configsRoi = (req, res) => {
   let token = req.headers['x-access-token']
   const relas = req.body
   const id = req.params.id
+  console.log(relas)
 
   jwt.verify(token, process.env.secret, (err, decoded) => {
     Relation.destroy({
       where: {algo_id: relas.id, id_branch: decoded.id_branch, camera_id: id}
     })
       .then(respo => {
-        for (var inside of relas.rois) {
+        for (let inside of relas.rois) {
           inside.pop()
-          var atr = []
+          let atr = []
           atr.push(relas.conf)
           if (inside[inside.length - 1]['x'] == undefined) {
             atr.push(inside[inside.length - 1])
@@ -686,6 +693,8 @@ exports.dashboards = (req, res) => {
                           parseInt(d) == 14 ||
                           parseInt(d) == 35 || 
                           parseInt(d) == 51
+                          || 
+                          parseInt(d) == 68
                         ) {
                           analyticsPrem.push({
                             algo_id: parseInt(d),

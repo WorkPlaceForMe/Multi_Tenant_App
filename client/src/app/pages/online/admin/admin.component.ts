@@ -33,7 +33,7 @@ export class AdminComponent implements OnInit {
   searchFields = [
   {
     value: 'username',
-    show: 'User Name'
+    show: 'Usuario'
   },
   {
     value: 'email',
@@ -41,7 +41,7 @@ export class AdminComponent implements OnInit {
   },
   {
     value: 'role',
-    show: 'Role'
+    show: 'Tipo'
   },
 ];
   searchWr:string = '';
@@ -52,7 +52,7 @@ export class AdminComponent implements OnInit {
     actions: {
       position: 'right',
       //custom: [{ name: 'routeToAPage', title: `<img src="/icon.png">` }]
-      columnTitle: 'Add User',
+      columnTitle: 'Agregar Usuario',
     //   add: true,
     //   edit: true,
     //   delete: true,
@@ -80,10 +80,10 @@ export class AdminComponent implements OnInit {
       deleteButtonContent: '<i class="nb-trash"></i>',
       confirmDelete: true,
     },
-    noDataMessage: "No users found",
+    noDataMessage: "No hay usuarios encontrados.",
     columns: {
       username: {
-        title: 'User Name',
+        title: 'Usuario',
         type: 'string',
         filter: false
       },
@@ -93,12 +93,12 @@ export class AdminComponent implements OnInit {
         filter: false
       },
       role: {
-        title: 'Role',
+        title: 'Tipo',
         type: 'string',
         filter: false
       },
       changePs: {
-        title: 'Change Password',
+        title: 'Cambiar clave',
         type: 'custom',
         filter: false,
         renderComponent: ButtonViewComponent,
@@ -109,7 +109,7 @@ export class AdminComponent implements OnInit {
         }
       },
       disabled: {
-        title: 'Active',
+        title: 'Activo',
         type: 'custom',
         filter: false,
         renderComponent: ButtonComponent,
@@ -164,7 +164,7 @@ export class AdminComponent implements OnInit {
   }
   
   hola3(event): void{
-    if(confirm("Do you want to delete "+ event.data.username +" account?")){
+    if(confirm("Se quiere eliminar la cuenta "+ event.data.username +"?")){
     this.accountserv.deleteAccount(event.data.id,event.data.role).subscribe(
       res => {
         console.log(res)
@@ -194,7 +194,7 @@ export class ButtonViewComponent implements ViewCell, OnInit {
   @Output() save: EventEmitter<any> = new EventEmitter();
 
   openWindowForm() {
-    this.windowService.open(ChangePassComponent, { title: `Change Password for ${this.rowData.username}`, context: { id: this.rowData.id}});
+    this.windowService.open(ChangePassComponent, { title: `Cambiar clave de ${this.rowData.username}`, context: { id: this.rowData.id}});
   }
 
   ngOnInit() {

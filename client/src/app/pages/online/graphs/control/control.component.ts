@@ -30,26 +30,26 @@ export class ControlComponent implements OnInit, OnDestroy {
   renew: any;
   timezone: string;
   now_user: Account;
-  calMonths: string[] = ['Jan', 'Feb', 'March', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  calMonths: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
   selectedDate: Date;
   selectedMonth: Date;
   lastMonths: Date[] = [];
 
-  currentSelection: string  = 'Date';
+  currentSelection: string  = 'Fecha';
   items = [
     {
-      title: 'Cameras',
+      title: 'Camaras',
       icon: 'video-outline',
       link:  '/pages/camerasList',
       children: [
         {
-          title: 'Add Camera',
+          title: 'Agregar Camara',
           link: '/pages/cameras/add_camera',
           home: true,
         },
         {
-          title: 'Cameras List',
+          title: 'Lista de Camaras',
           link: '/pages/camerasList',
           home: true,
         },
@@ -61,16 +61,16 @@ export class ControlComponent implements OnInit, OnDestroy {
       link: '/pages/tickets',
     },
     {
-      title: 'Stored Videos',
+      title: 'Videos locales',
       icon: 'film-outline',
       link: '/pages/search/list',
       children: [
         {
-          title: 'Video List',
+          title: 'Lista de videos',
           link: '/pages/search/list',
         },
         {
-          title: 'Add Video',
+          title: 'Agregar video',
           link: '/pages/search/upload',
         },
       ],
@@ -86,7 +86,7 @@ export class ControlComponent implements OnInit, OnDestroy {
     if (authService.isAdmin){
         this.items = [
           {
-            title: 'Accounts',
+            title: 'Cuentas',
             icon: 'people-outline',
             link: '/pages/accounts',
           },
@@ -349,7 +349,7 @@ private showToast( body: string, status: NbComponentStatus) {
     position: this.position,
     preventDuplicates: this.preventDuplicates,
   };
-  const titleContent = 'Look!';
+  const titleContent = 'Mira!';
 
   this.toastrService.show(
     body,

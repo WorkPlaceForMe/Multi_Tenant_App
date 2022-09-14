@@ -4,7 +4,7 @@
         <div class="col-md-6 offset-3">
             <nb-card>
                 <nb-card-header>
-                    <h3 align='center' style='word-wrap: break-word;'>Sign In</h3>
+                    <h3 align='center' style='word-wrap: break-word;'>Acceder</h3>
                 </nb-card-header>
                 <nb-card-body>
         <div class="authBlock" align='center'>
@@ -38,12 +38,12 @@
           <!-- Calling SignIn Api from AuthService -->
     
           <div class="form-group">
-            <button nbButton [status]="values.login" *ngIf="!loading">Log In</button>
+            <button nbButton [status]="values.login" *ngIf="!loading">Entrar</button>
             <button nbButton [status]="'primary'" [nbSpinner]="true" nbSpinnerSize="giant" nbSpinnerStatus="primary" [disabled]="loading" *ngIf="loading">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
         </div>
     
     </form>
-
+<!-- 
     <div class="dropdown-divider"></div>
     <p style='color: #6b8094'>Or Log In using:</p>
 
@@ -55,7 +55,7 @@
     <div id="customBtn" class="customGPlusSignIn" (click)="loginWithMs()">
       <span class="icon" [ngStyle]='iconMs()'></span>
       <span class="buttonText">Microsoft</span>
-    </div>
+    </div> -->
 
       </div>
     </nb-card-body>

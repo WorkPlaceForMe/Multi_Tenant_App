@@ -18,6 +18,12 @@ export class ROIComponent implements OnInit {
   link: SafeResourceUrl;
   open:boolean;
   actANPR: boolean = false;
+  queue: number;
+  hamAndCheese : any = {
+    low: 0,
+    med: 3,
+    high: 5
+  }
   constructor(private rd: Renderer2, private facesService: FacesService, private activatedRoute: ActivatedRoute,sanitizer: DomSanitizer, private colo:ColorsService, private router: Router) {
     const params = this.activatedRoute.snapshot.params;
     this.wrong['dir'] = 'beggining';
@@ -33,6 +39,14 @@ export class ROIComponent implements OnInit {
     }
     this.atr['save'] = a[1]
     this.atr['time'] = Number(a[2])
+    if(params.id === '22'){
+      this.queue = a[3]
+    }
+    if(params.id === '68'){
+      this.hamAndCheese.low = a[3]
+      this.hamAndCheese.med = a[4]
+      this.hamAndCheese.high = a[5]
+    }
     this.facesService.getAlgos()
     .subscribe(
       res =>{
@@ -89,7 +103,7 @@ export class ROIComponent implements OnInit {
  
   algorithm: Algorithm = {
     id: -1,
-    name: "Loading"
+    name: "Cargando"
   };
   relation: Relation ={
     camera_id: '',
@@ -183,7 +197,6 @@ export class ROIComponent implements OnInit {
         this.res_height =this.camera.cam_height;
         this.resRelation = this.res_height / this.res_width;
         this.width = rect.width;
-        console.log(this.width, rect.width)
         this.height = this.width*this.resRelation;
       },
       err =>{console.error(err)})
@@ -688,11 +701,20 @@ nSave(){
       }
     }
   }
+  if(this.id == 22){
+    this.atr['peopleAlert'] = this.queue
+    console.log('aaaa', this.queue)
+  }
+  if(this.id == 68){
+    this.atr['hamAndCheese'] = this.hamAndCheese
+  }
+
   data = {
     rois: this.polygons,
     id: this.id,
     conf: this.atr
   }
+
   this.facesService.sendRois(id,data).subscribe(
     res => console.log(res),
     err => console.log(err)

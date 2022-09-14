@@ -391,15 +391,15 @@ export class DashComponent implements OnInit , OnDestroy {
       cancelButtonContent: '<i class="nb-close"></i>',
       confirmSave: true,
     },
-    noDataMessage: "No data found",
+    noDataMessage: "No se a encontrado data",
     columns: {
       type: {
-        title: 'INCIDENT TYPE',
+        title: 'Tipo de incidente',
         type: 'string',
         filter: false
       },
       createdAt: {
-        title: 'TIME',
+        title: 'Hora',
         type: 'string',
         filter: false,
         // valuePrepareFunction: (createdAt) => {
@@ -407,12 +407,12 @@ export class DashComponent implements OnInit , OnDestroy {
         // }
       },
       cam_name: {
-        title: 'CAMERA',
+        title: 'Camara',
         type: 'string',
         filter: false,
       },
       level: {
-        title: 'SEVERITY',
+        title: 'Severidad',
         type: 'custom',
         filter: false,
         renderComponent: SeverityComponent,

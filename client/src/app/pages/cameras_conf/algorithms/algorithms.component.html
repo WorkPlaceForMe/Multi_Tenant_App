@@ -2,14 +2,14 @@
     <div class='col-md-10'>
       <nb-card>
         <nb-card-header>
-          <h1 align='center'>Settings of {{camera.name}}</h1>
+          <h1 align='center'>Configuracion de {{camera.name}}</h1>
         </nb-card-header>
       </nb-card>
     </div>
     <div class="col-md-2">
       <nb-card>
         <nb-card-body>
-          <label for="noth" class="label">Remaining Analytics:&nbsp;</label>
+          <label for="noth" class="label">Analiticas restantes:&nbsp;</label>
           <strong>{{remaining.analytics}}</strong>
         </nb-card-body>
       </nb-card>
@@ -22,16 +22,16 @@
       <nb-accordion multi>
         <nb-accordion-item>
           <nb-accordion-item-header>
-            <strong>A) People related.</strong> &nbsp;
+            <strong>A) Personas.</strong> &nbsp;
             <span class="badge badge-success">{{actC}}</span>/<span class="badge badge-info">{{Calgos.length}}</span>
           </nb-accordion-item-header>
           <nb-accordion-item-body>
             <section class="mat-elevation-z2 mat-header-row alfons">
               <span class="mat-header-cell">Status</span>
-              <span class="mat-header-cell">Name</span>
-              <span class="mat-header-cell">RoI</span>
-              <span class="mat-header-cell">Confidence</span>
-              <span class="mat-header-cell">Save crops</span>
+              <span class="mat-header-cell">Nombre</span>
+              <span class="mat-header-cell">RdI</span>
+              <!-- <span class="mat-header-cell">Confianza</span>
+              <span class="mat-header-cell">Guardar imagenes</span> -->
             </section>
             <div *ngFor='let algorithm of Calgos; index as i'>
               <div class="mat-row mat-cell">
@@ -42,13 +42,22 @@
                       for={{algorithm.id}}></label></div>
                 </span>
                 <span class="mat-cell">{{algorithm.name}}</span>
-                <span class="mat-cell"><button class="btn btn-sm"
-                    [ngClass]="(algorithm.id == 17 || algorithm.id == 12 || algorithm.id == 59 || algorithm.id == 22) ? 'btn-info' : 'btn-warning'"
-                    [routerLink]="['/pages/cameras/algorithms/', param, algorithm.id, algorithm.conf + '-' + algorithm.save + '-' + algorithm.time]"
-                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{i == 8 || i == 4  || algorithm.id == 59 || algorithm.id == 22 ? 'Click here to define the area' : 'Add an specific area'}}</button></span>
-                <span class="mat-cell"><input type="number" [(ngModel)]='Calgos[i].conf' min="0" max="100" value="95"
-                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>&nbsp;%</span>
                 <span class="mat-cell">
+                  <!-- <button class="btn btn-sm"
+                    [ngClass]="(algorithm.id == 17 || algorithm.id == 12 || algorithm.id == 59 || algorithm.id == 22 || algorithm.id == 68) ? 'btn-info' : 'btn-warning'"
+                    [routerLink]="['/pages/cameras/algorithms/', param, algorithm.id, algorithm.conf + '-' + algorithm.save + '-' + algorithm.time]"
+                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{i == 8 || i == 4  || algorithm.id == 59 || algorithm.id == 22  || algorithm.id == 68 ? 'Hacer click para definir area necesaria' : 'Agregar area de foco'}}</button> -->
+                    <button class="btn btn-sm" *ngIf="algorithm.id == 22"
+                    [ngClass]="(algorithm.id == 17 || algorithm.id == 12 || algorithm.id == 59 || algorithm.id == 22 || algorithm.id == 68)? 'btn-info': 'btn-warning'"
+                    [routerLink]="['/pages/cameras/algorithms/', param, algorithm.id, algorithm.conf + '-' + algorithm.save + '-' + algorithm.time + '-' + queue.peopleAlert]"
+                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{i == 8 || i == 4  || algorithm.id == 59 || algorithm.id == 22  || algorithm.id == 68 ?  'Hacer click para definir area necesaria' : 'Agregar area de foco'}}</button>
+                    <button class="btn btn-sm" *ngIf="algorithm.id == 68"
+                    [ngClass]="(algorithm.id == 17 || algorithm.id == 12 || algorithm.id == 59 || algorithm.id == 22 || algorithm.id == 68) ? 'btn-info': 'btn-warning'"
+                    [routerLink]="['/pages/cameras/algorithms/', param, algorithm.id, algorithm.conf + '-' + algorithm.save + '-' + algorithm.time + '-' + hamAndCheese.low+ '-' + hamAndCheese.med+ '-' + hamAndCheese.high]"
+                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{i == 8 || i == 4  || algorithm.id == 59 || algorithm.id == 22  || algorithm.id == 68 ?  'Hacer click para definir area necesaria' : 'Agregar area de foco'}}</button></span>
+                <!-- <span class="mat-cell"><input type="number" [(ngModel)]='Calgos[i].conf' min="0" max="100" value="95"
+                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>&nbsp;%</span> -->
+                <!-- <span class="mat-cell">
                   <div class="custom-control custom-checkbox">
                     <input type="checkbox" class="custom-control-input-label" [(ngModel)]='Calgos[i].save'
                       [disabled]='algorithm.activated==false || algorithm.activated == undefined'>Save
@@ -56,12 +65,12 @@
                       [disabled]='algorithm.activated==false || algorithm.activated == undefined || Calgos[i].save == false || Calgos[i].save == undefined'>
                     sec.
                   </div>
-                </span>
+                </span> -->
               </div>
             </div>
           </nb-accordion-item-body>
         </nb-accordion-item>
-
+<!-- 
         <nb-accordion-item>
           <nb-accordion-item-header>
             <strong>B) Traffic Management related.</strong> &nbsp;
@@ -102,18 +111,18 @@
               </div>
             </div>
           </nb-accordion-item-body>
-        </nb-accordion-item>
+        </nb-accordion-item> -->
         <nb-accordion-item>
           <nb-accordion-item-header>
-            <strong>C) Security realated.</strong> &nbsp;<span class="badge badge-success">{{actA}}</span>/<span class="badge badge-info">{{Aalgos.length}}</span>
+            <strong>B) Seguridad.</strong> &nbsp;<span class="badge badge-success">{{actA}}</span>/<span class="badge badge-info">{{Aalgos.length}}</span>
           </nb-accordion-item-header>
           <nb-accordion-item-body>
             <section class="mat-elevation-z2 mat-header-row alfons">
               <span class="mat-header-cell">Status</span>
-              <span class="mat-header-cell">Name</span>
-              <span class="mat-header-cell">RoI</span>
-              <span class="mat-header-cell">Confidence</span>
-              <span class="mat-header-cell">Save crops</span>
+              <span class="mat-header-cell">Nombre</span>
+              <span class="mat-header-cell">RdI</span>
+              <!-- <span class="mat-header-cell">Confidence</span>
+              <span class="mat-header-cell">Save crops</span> -->
             </section>
             <div *ngFor='let algorithm of Aalgos; index as i'>
               <div class="mat-row mat-cell">
@@ -127,8 +136,8 @@
                 <span class="mat-cell"><button class="btn btn-sm"
                     [ngClass]="algorithm.id == 4 || algorithm.id == 8 ? 'btn-info': 'btn-warning'"
                     [routerLink]="['/pages/cameras/algorithms/', param, algorithm.id, algorithm.conf + '-' + algorithm.save + '-' + algorithm.time]"
-                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{algorithm.id == 4 || algorithm.id == 8 ? 'Click here to define the area' : 'Add an specific area'}}</button></span>
-                <span class="mat-cell"><input type="number" [(ngModel)]='Aalgos[i].conf' min="0" max="100" value="95"
+                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{algorithm.id == 4 || algorithm.id == 8 ?  'Hacer click para definir area necesaria' : 'Agregar area de foco'}}</button></span>
+                <!-- <span class="mat-cell"><input type="number" [(ngModel)]='Aalgos[i].conf' min="0" max="100" value="95"
                     [disabled]='algorithm.activated==false || algorithm.activated == undefined'>&nbsp;%</span>
                 <span class="mat-cell">
                   <div class="custom-control custom-checkbox">
@@ -138,7 +147,7 @@
                       [disabled]='algorithm.activated==false || algorithm.activated == undefined || Aalgos[i].save == false || Aalgos[i].save == undefined'>
                     sec.
                   </div>
-                </span>
+                </span> -->
               </div>
             </div>
           </nb-accordion-item-body>
@@ -153,9 +162,9 @@
         </canvas>
       </div>
       <div class='buttons-row'>
-        <button nbButton [status]="'success'" (click)="saveAndBack(camera.stored_vid)">Save and back</button>
+        <button nbButton [status]="'success'" (click)="saveAndBack(camera.stored_vid)">Guardar y volver</button>
         <!-- <button nbButton [status]="'info'"(click)="saave()">Save</button> -->
-        <button nbButton [status]="'warning'" (click)="back(camera.stored_vid)">Back</button>
+        <button nbButton [status]="'warning'" (click)="back(camera.stored_vid)">Volver</button>
       </div>
 
 
@@ -402,6 +411,41 @@
               </nb-card-body>
             </nb-card>
           </div>
+
+          <!-- <div *ngIf="algos[68]['activated']==true && algos[68]!=undefined">
+            <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
+              <nb-card-header align='center'>
+                Parking Violation settings
+              </nb-card-header>
+              <nb-card-body>
+                <div class="form-group">
+                  <div align='center'>
+                    Personas<br>
+                    <input type="number" [(ngModel)]="hamAndCheese['low']" min="0" max="50"><br>
+                    Personas<br>
+                    <input type="number" [(ngModel)]="hamAndCheese['med']" min="0" max="50"><br>
+                    Personas<br>
+                    <input type="number" [(ngModel)]="hamAndCheese['high']" min="0" max="50"><br>
+                  </div>
+                </div>
+              </nb-card-body>
+            </nb-card>
+          </div>
+          <div *ngIf="algos[22]['activated']==true && algos[22]!=undefined">
+            <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
+              <nb-card-header align='center'>
+                Configuracion de Fila tradicional
+              </nb-card-header>
+              <nb-card-body>
+                <div class="form-group">
+                  <div align='center'>
+                    Personas<br>
+                    <input type="number" [(ngModel)]="queue['peopleAlert']" min="0" max="50">
+                  </div>
+                </div>
+              </nb-card-body>
+            </nb-card>
+          </div> -->
         </div>
       </div>
     </div>

@@ -65,7 +65,7 @@ export class AlgorithmsComponent implements OnInit {
                   this.Calgos.push(this.algos[i]);
                 } else if (this.algos[i]['id'] > 3 && this.algos[i]['id'] <= 8 || this.algos[i]['id'] === 5 || this.algos[i]['id'] === 13 || this.algos[i]['id'] === 25 || this.algos[i]['id'] === 26 || this.algos[i]['id'] === 28 || this.algos[i]['id'] === 29 || this.algos[i]['id'] === 30 || this.algos[i]['id'] === 31 || this.algos[i]['id'] === 33 || this.algos[i]['id'] === 58 || this.algos[i]['id'] === 34 || this.algos[i]['id'] === 63 || this.algos[i]['id'] === 65) {
                   this.Balgos.push(this.algos[i]);
-                } else if (this.algos[i]['id'] > 8 && this.algos[i]['id'] <= 11 || this.algos[i]['id'] === 27 || this.algos[i]['id'] === 39 || this.algos[i]['id'] === 53 || this.algos[i]['id'] === 54 || this.algos[i]['id'] === 55 || this.algos[i]['id'] === 56 || this.algos[i]['id'] === 66 || this.algos[i]['id'] === 64) {
+                } else if (this.algos[i]['id'] > 8 && this.algos[i]['id'] <= 11 || this.algos[i]['id'] === 27 || this.algos[i]['id'] === 39 || this.algos[i]['id'] === 53 || this.algos[i]['id'] === 54 || this.algos[i]['id'] === 55 || this.algos[i]['id'] === 56 || this.algos[i]['id'] === 66 || this.algos[i]['id'] === 64 || this.algos[i]['id'] === 69) {
                 this.Aalgos.push(this.algos[i]);
                 }
               }
@@ -212,6 +212,14 @@ export class AlgorithmsComponent implements OnInit {
   quantity: any = {
     crowd: 50,
   };
+  queue: any = {
+    peopleAlert: 5
+  }
+  hamAndCheese: any = {
+    low: 1,
+    med: 3,
+    high: 5
+  }
   showL: boolean;
   showS: boolean;
   showU0: boolean;
@@ -423,7 +431,7 @@ export class AlgorithmsComponent implements OnInit {
   saave() {
     const data = [];
     const id = this.activatedRoute.snapshot.params.uuid;
-    data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime);
+    data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime,this.queue, this.hamAndCheese);
     this.facesService.sendAlgs(id, data).subscribe(
       res => {
         // this.router.navigateByUrl(`/pages/cameras/algorithms/${id}`)
@@ -440,7 +448,7 @@ export class AlgorithmsComponent implements OnInit {
   nSave() {
     const data = [];
     const id = this.activatedRoute.snapshot.params.uuid;
-    data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime);
+    data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime, this.queue, this.hamAndCheese);
     this.facesService.sendAlgs(id, data).subscribe(
       res => {},
       err => console.log(err),

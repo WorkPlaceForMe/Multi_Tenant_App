@@ -96,11 +96,11 @@ export class TicketComponent implements OnInit, OnDestroy {
   searchFields = [
   {
     value: 'type',
-    show: 'Type of alert',
+    show: 'Tipo de alerta',
   },
   {
     value: 'assigned',
-    show: 'Assigned User',
+    show: 'Usuario asignado',
   },
 ];
   searchWr: string = '';
@@ -111,7 +111,7 @@ export class TicketComponent implements OnInit, OnDestroy {
     actions: {
       position: 'right',
       // custom: [{ name: 'routeToAPage', title: `<img src="/icon.png">` }]
-      columnTitle: 'Asign / Update',
+      columnTitle: 'Asignar / Actualizar',
       add: false,
     //   edit: true,
     //   delete: true,
@@ -133,35 +133,35 @@ export class TicketComponent implements OnInit, OnDestroy {
       deleteButtonContent: '<i class="far fa-file"></i>',
       confirmDelete: true,
     },
-    noDataMessage: 'No tickets found',
+    noDataMessage: 'No se han encontrado tickets',
     columns: {
       createdAt: {
-        title: 'Occurance',
+        title: 'Ocurrencia',
         type: 'string',
         filter: false,
       },
       updatedAt: {
-        title: 'Finished',
+        title: 'Finalizado',
         type: 'string',
         filter: false,
       },
       type: {
-        title: 'Type of alert',
+        title: 'Tipo de alerta',
         type: 'string',
         filter: false,
       },
       assigned: {
-        title: 'Assigned User',
+        title: 'Usuario asignado',
         type: 'string',
         filter: false,
       },
       assignedBy: {
-        title: 'Assigned By',
+        title: 'Asignado por',
         type: 'string',
         filter: false,
       },
       level: {
-        title: 'Severity',
+        title: 'Severidad',
         type: 'custom',
         filter: false,
         renderComponent: SeverityComponent,
@@ -172,7 +172,7 @@ export class TicketComponent implements OnInit, OnDestroy {
         },
       },
       status: {
-        title: 'Reviewed',
+        title: 'Revisado',
         type: 'custom',
         filter: false,
         renderComponent: StatusComponent,
@@ -297,7 +297,7 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   hola1(event): void {
     if (event.data.assigned != null && this.now_user.role === 'user'){
-      return this.showToast('User has been assigned previously.', 'warning');
+      return this.showToast('Usuario a sido asignado anteriormente.', 'warning');
     }else {
       this.windowService.open(ReviewComponent, { title: `Assign for ${event.data.type}`, context: { type: 'assign', id: event.data.id, assigned: event.data.assigned}});
     }
@@ -305,9 +305,9 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   hola3(event): void {
     if (event.data.assigned != null && this.now_user.role === 'user'){
-     return this.showToast(`This task has been finished by: ${event.data.reviewed}.`, 'danger');
+     return this.showToast(`Esta tarea a sido finalizada por: ${event.data.reviewed}.`, 'danger');
   }else {
-    this.windowService.open(ReviewComponent, { title: `Update for ${event.data.type}`, context: { type: 'update' , id: event.data.id, reviewed: event.data.reviewed, date: event.data.createdAt}});
+    this.windowService.open(ReviewComponent, { title: `Actualizar ${event.data.type}`, context: { type: 'update' , id: event.data.id, reviewed: event.data.reviewed, date: event.data.createdAt}});
   }
 }
 
