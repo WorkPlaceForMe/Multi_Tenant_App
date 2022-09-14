@@ -27,6 +27,7 @@ export class QueueComponent implements OnInit, OnDestroy {
   dataL: any;
   dataM: any;
   dataH: any;
+  dataP: any;
   options: any;
 
   @ViewChild('streaming', {static: false}) streamingcanvas: ElementRef; 
@@ -128,11 +129,15 @@ export class QueueComponent implements OnInit, OnDestroy {
           }
           const source = this.queue.rawAlerts.filter( alert => alert.severity === 2 )
           // this.source = this.queue.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
-          this.source = source.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
-          const labels = [];
+          this.source = source.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
+          const labels = []
           for (let o of Object.keys(this.queue.dataAlertsLow[0])){
             o = o + ':00';
             labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm','-0400'));
+          }
+          let times = [];
+          for (var q of Object.keys(this.queue.dataPeople)) {
+            times.push(this.datepipe.transform(q, "yyyy-M-dd HH:mm", '-0400'));
           }
     
           this.themeSubscription = this.theme.getJsTheme().subscribe((config) => {
@@ -187,7 +192,19 @@ export class QueueComponent implements OnInit, OnDestroy {
               labels: labels,
               datasets: datasetsMed,
             };
-        
+
+            this.dataP = {
+              labels: times,
+              datasets: [{
+                label: `People over time`,
+                data: Object.values(this.queue.dataPeople),
+                borderColor: colors.primary,
+                backgroundColor: colors.primary,
+                fill: false,
+                pointRadius: 2,
+                pointHoverRadius: 5,
+              },]
+            };
             this.options = {
               responsive: true,
               maintainAspectRatio: false,
@@ -251,7 +268,7 @@ export class QueueComponent implements OnInit, OnDestroy {
     window.open(url, "_blank");
   }
 
-  csv(){
+  csv(algo){
     let type;
     if(this.now_user.id_branch != '0000'){
       type = 'cam_id';
@@ -262,7 +279,8 @@ export class QueueComponent implements OnInit, OnDestroy {
       start: this.range.start,
       end: this.range.end,
       type: type,
-      ham: true
+      ham: true,
+      algo: algo
     }
     this.serv.report(this.algo_id,this.camera, l).subscribe(
       res => {
@@ -273,6 +291,7 @@ export class QueueComponent implements OnInit, OnDestroy {
       err => console.error(err)
     )
   }
+
   settings = {
     mode: 'external',
     actions: false,

@@ -44,6 +44,16 @@
             <div class="col-md-12 less-padding">
                 <nb-card>
                   <nb-card-body class="top-badges">
+                    <p>People over time</p>
+                    <chart type="line" [data]="dataP" [options]="options"></chart>
+                  </nb-card-body>
+                </nb-card>
+              </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 less-padding">
+                <nb-card>
+                  <nb-card-body class="top-badges">
                     <p>High alerts over time</p>
                     <chart type="line" [data]="dataH" [options]="options"></chart>
                   </nb-card-body>
@@ -74,7 +84,8 @@
             <div class="col less-padding">
                 <nb-card>
                     <nb-card-header>
-                        <button (click)='csv()' nbButton outline status="info" size = "tiny">Download CSV</button>
+                        <button (click)='csv("alerts")' nbButton outline status="info" size = "tiny">Download Alerts Data</button>
+                        <button (click)='csv("count")' nbButton outline status="info" size = "tiny">Download Count Data</button>
                     </nb-card-header>
                     <nb-card-body class = "graph-body" style = "padding: 0px">
                         <ng2-smart-table [settings]="settings" [source]="source" (edit)='got($event)'>
