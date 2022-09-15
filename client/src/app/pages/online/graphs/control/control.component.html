@@ -31,7 +31,7 @@
                 </div>
                 <div class = "col-md-auto less-padding">
                     <nb-select  [(ngModel)]='reTime' (ngModelChange)='set($event)' id='select' size="small">
-                        <nb-option [value]=0>Apagado</nb-option>
+                        <nb-option [value]=0>No refrescar</nb-option>
                         <nb-option [value]=5>5 s</nb-option>
                         <nb-option [value]=30>30 s</nb-option>
                         <nb-option [value]=60>1 m</nb-option>
@@ -127,6 +127,8 @@
             <ngx-direction *ngSwitchCase='63' [range]='range' [camera]='camera'></ngx-direction>
             <ngx-signal-lost *ngSwitchCase='64' [range]='range' [camera]='camera'></ngx-signal-lost>
             <ngx-ham-cheese *ngSwitchCase='68' [range]='range' [camera]='camera'></ngx-ham-cheese>
+            <ngx-availability *ngSwitchCase='69' [range]='range' [camera]='camera'></ngx-availability>
+            <ngx-temperature *ngSwitchCase='70' [range]='range' [camera]='camera'></ngx-temperature>
             <app-live *ngSwitchCase='-4' [camera]='camera'></app-live>
         </div>
     </div>

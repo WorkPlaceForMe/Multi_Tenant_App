@@ -2831,4 +2831,8 @@ module.exports = function (app) {
   app.post('/api/analytics/64/:id', [authJwt.isAvailable, authJwt.verifyToken], controller.signalLost)
 
   app.post('/api/analytics/65/:id', [authJwt.isAvailable, authJwt.verifyToken], controller.enterExitV)
+
+  app.post('/api/analytics/69/:id', [authJwt.isAvailable, authJwt.verifyToken], controller.breadAvail)
+
+  app.post('/api/analytics/70/:id', [authJwt.isAvailable, authJwt.verifyToken], controller.breadTemp)
 }

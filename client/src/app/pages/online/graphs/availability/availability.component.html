@@ -1,0 +1,32 @@
+<div class="container no-padding">
+    <div class="col-md-12 no-padding" style="margin-top: 15px">
+      <div class="row justify-content-start">
+        <div class="col-md-12 less-padding">
+            <nb-card class="graph-body">
+              <nb-card-body>
+                <p>En el periodo de tiempo</p>
+                <chart type="line" [data]="dataL" [options]="optionsL"></chart>
+              </nb-card-body>
+            </nb-card>
+          </div>
+      </div>
+      <div class="col-md-12 no-padding" style="margin-top: 15px">
+        <div class="row">
+          <div class="col-md-8 less-padding">
+            <nb-card>
+              <nb-card-header>
+                <h4>Camara en tiempo real</h4>
+                <div align="center">
+                </div>
+              </nb-card-header>
+              <nb-card-body>
+                <div align="center">
+                  <img [src]="rtspIn" style="width: 100%; height: auto" />
+                </div>
+              </nb-card-body>
+            </nb-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

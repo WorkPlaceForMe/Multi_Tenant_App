@@ -8746,3 +8746,147 @@ exports.enterExitV = async (req, res) => {
     })
   })
 }
+
+exports.breadAvail = async (req, res) => {
+  let token = req.headers['x-access-token']
+  const data = req.body
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    let wh
+    if (decoded.id_branch != 0000) {
+      wh = {
+        id_branch: decoded.id_branch,
+        algo_id: 69
+      }
+    } else {
+      wh = {
+        id_account: decoded.id_account,
+        algo_id: 69
+      }
+    }
+    Relation.findOne({
+      where: wh
+    })
+      .then(async rel => {
+        await db
+          .con()
+          .query(
+            `SELECT * from availability WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+            function (err, result) {
+              if (err)
+                return res.status(500).json({
+                  success: false,
+                  message: err
+                })
+                const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
+                let cache = '', range, cou = 0
+                if(diff === 1){
+                  range = 30 * 60 * 1000
+                }else if(diff >= 1 && diff <= 3){
+                  range = 2 * 60 * 60 * 1000
+                }else if(diff >= 3 && diff <= 7){
+                  range = 4 * 60 * 60 * 1000
+                }else if(diff >= 7 && diff <= 14){
+                  range = 8 * 60 * 60 * 1000
+                }else if(diff >= 14 && diff <= 32){
+                  range = 24 * 60 * 60 * 1000
+                }
+                cache = new Date(data.start).getTime()
+              var ress = {}
+              var dwell = []
+              var labelsD = []
+              result.forEach(function (v) {
+                ress[v.time.getHours()] = (ress[v.time.getHours()] || 0) + 1
+                dwell.push(v.availability)
+                labelsD.push(v.time)
+              })
+              let a = {
+                dwell: dwell,
+                labelsD: labelsD,
+              }
+              res.status(200).json({
+                success: true,
+                data: a
+              })
+            }
+          )
+      })
+      .catch(err => {
+        return res.status(500).send({
+          success: false,
+          message: err
+        })
+      })
+  })
+}
+
+exports.breadTemp = async (req, res) => {
+  let token = req.headers['x-access-token']
+  const data = req.body
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    let wh
+    if (decoded.id_branch != 0000) {
+      wh = {
+        id_branch: decoded.id_branch,
+        algo_id: 70
+      }
+    } else {
+      wh = {
+        id_account: decoded.id_account,
+        algo_id: 70
+      }
+    }
+    Relation.findOne({
+      where: wh
+    })
+      .then(async rel => {
+        await db
+          .con()
+          .query(
+            `SELECT * from temperature WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+            function (err, result) {
+              if (err)
+                return res.status(500).json({
+                  success: false,
+                  message: err
+                })
+                const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
+                let cache = '', range, cou = 0
+                if(diff === 1){
+                  range = 30 * 60 * 1000
+                }else if(diff >= 1 && diff <= 3){
+                  range = 2 * 60 * 60 * 1000
+                }else if(diff >= 3 && diff <= 7){
+                  range = 4 * 60 * 60 * 1000
+                }else if(diff >= 7 && diff <= 14){
+                  range = 8 * 60 * 60 * 1000
+                }else if(diff >= 14 && diff <= 32){
+                  range = 24 * 60 * 60 * 1000
+                }
+                cache = new Date(data.start).getTime()
+              var ress = {}
+              var dwell = []
+              var labelsD = []
+              result.forEach(function (v) {
+                ress[v.time.getHours()] = (ress[v.time.getHours()] || 0) + 1
+                dwell.push(v.temperature)
+                labelsD.push(v.time)
+              })
+              let a = {
+                dwell: dwell,
+                labelsD: labelsD,
+              }
+              res.status(200).json({
+                success: true,
+                data: a
+              })
+            }
+          )
+      })
+      .catch(err => {
+        return res.status(500).send({
+          success: false,
+          message: err
+        })
+      })
+  })
+}
