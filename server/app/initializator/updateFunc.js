@@ -16,6 +16,10 @@ exports.initial = async function () {
   })
   await algo.create({
     id: 69,
-    name: 'Temperatura y disponibilidad Pan'
+    name: 'Disponibilidad Pan'
+  })
+  await algo.create({
+    id: 70,
+    name: 'Temperatura Pan'
   })
 }
