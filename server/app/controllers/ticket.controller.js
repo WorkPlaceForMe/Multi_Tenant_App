@@ -114,7 +114,19 @@ exports.getAll = (req, res) => {
               break
             }
             case 'queue_mgt': {
-              element.type = 'Queue Management'
+              element.type = 'Fila tradicional'
+              break
+            }
+            case 'breadAvail': {
+              element.type = 'Disponibilidad Pan'
+              break
+            }
+            case 'breadTemp': {
+              element.type = 'Temperatura Pan'
+              break
+            }
+            case 'hamCheese': {
+              element.type = 'Carnes / Jamon & Queso'
               break
             }
             case 'faces': {
@@ -146,6 +158,22 @@ const getAllTickets = async (row_count, type, id, data, res) => {
         element.updatedAt = ''
       }
       switch (element.type) {
+        case 'queue_mgt': {
+          element.type = 'Fila tradicional'
+          break
+        }
+        case 'breadAvail': {
+          element.type = 'Disponibilidad Pan'
+          break
+        }
+        case 'breadTemp': {
+          element.type = 'Temperatura Pan'
+          break
+        }
+        case 'hamCheese': {
+          element.type = 'Carnes / Jamon & Queso'
+          break
+        }
         case 'loitering': {
           element.type = 'Person Loitering in restricted area'
           break
@@ -214,10 +242,6 @@ const getAllTickets = async (row_count, type, id, data, res) => {
           element.type = 'Vehicle parked in restricted area'
           break
         }
-        case 'queue_mgt': {
-          element.type = 'Queue Management'
-          break
-        }
         case 'faces': {
           element.type = 'Face detection'
           break
@@ -261,7 +285,7 @@ exports.searchAllTickets = (req, res) => {
       searchStr = 'fr'
       break
     }
-    case 'face':{
+    case 'face': {
       searchStr = 'fr'
       break
     }
@@ -317,12 +341,20 @@ exports.searchAllTickets = (req, res) => {
       searchStr = 'parking'
       break
     }
-    case 'Queue Management': {
+    case 'Fila tradicional': {
       searchStr = 'queue_mgt'
       break
     }
-    case 'Face detection': {
-      searchStr = 'faces'
+    case 'Disponibilidad Pan': {
+      searchStr = 'breadAvail'
+      break
+    }
+    case 'Temperatura Pan': {
+      searchStr = 'breadTemp'
+      break
+    }
+    case 'Carnes / Jamon & Queso': {
+      searchStr = 'hamCheese'
       break
     }
   }

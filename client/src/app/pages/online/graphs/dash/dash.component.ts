@@ -402,9 +402,9 @@ export class DashComponent implements OnInit , OnDestroy {
         title: 'Hora',
         type: 'string',
         filter: false,
-        // valuePrepareFunction: (createdAt) => {
-        //   return this.datepipe.transform(new Date(createdAt), 'yyyy-M-dd HH:mm');
-        // }
+        valuePrepareFunction: (createdAt) => {
+          return this.datepipe.transform(new Date(createdAt), 'yyyy-M-dd HH:mm','-0300');
+        }
       },
       cam_name: {
         title: 'Camara',

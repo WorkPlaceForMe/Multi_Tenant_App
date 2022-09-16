@@ -118,7 +118,7 @@ export class QueueComponent implements OnInit, OnDestroy {
           for(let m of this.queue.rawAlerts){
             m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['picture'])
             m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['clip_path']
-            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss','-0400')
+            m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss','-0300')
             m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/queue/' + m['cam_id'] + '/' + m['movie']);
             if(m.queuing === 1){
               m.inLine = 'Waiting'
@@ -135,11 +135,11 @@ export class QueueComponent implements OnInit, OnDestroy {
           const labels = []
           for (let o of Object.keys(this.queue.dataAlertsLow[0])){
             o = o + ':00';
-            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm','-0400'));
+            labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm','-0300'));
           }
           let times = [];
           for (var q of Object.keys(this.queue.dataPeople)) {
-            times.push(this.datepipe.transform(q, "yyyy-M-dd HH:mm", '-0400'));
+            times.push(this.datepipe.transform(q, "yyyy-M-dd HH:mm", '-0300'));
           }
     
           this.themeSubscription = this.theme.getJsTheme().subscribe((config) => {

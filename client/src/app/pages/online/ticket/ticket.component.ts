@@ -139,11 +139,17 @@ export class TicketComponent implements OnInit, OnDestroy {
         title: 'Ocurrencia',
         type: 'string',
         filter: false,
+        valuePrepareFunction: (createdAt) => {
+          return this.datepipe.transform(new Date(createdAt), 'yyyy-M-dd HH:mm','-0300');
+        }
       },
       updatedAt: {
         title: 'Finalizado',
         type: 'string',
         filter: false,
+        valuePrepareFunction: (updatedAt) => {
+          return this.datepipe.transform(new Date(updatedAt), 'yyyy-M-dd HH:mm','-0300');
+        }
       },
       type: {
         title: 'Tipo de alerta',

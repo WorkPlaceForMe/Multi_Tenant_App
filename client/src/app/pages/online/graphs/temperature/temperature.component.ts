@@ -114,7 +114,7 @@ export class TemperatureComponent implements OnInit, OnDestroy {
         const times = [];
         for (const q of this.temperature.labelsD){
           // times.push(new Date(q))
-          times.push(this.datepipe.transform(q, 'yyyy-M-dd HH:mm', '+0000'));
+          times.push(this.datepipe.transform(q, 'yyyy-M-dd HH:mm', '-0300'));
         }
 
         this.themeSubscription = this.theme.getJsTheme().subscribe((config) => {
