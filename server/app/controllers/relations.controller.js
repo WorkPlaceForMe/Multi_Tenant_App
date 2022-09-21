@@ -411,6 +411,21 @@ const tables = {
     alert: true,
     table: 'queue_mgt'
   },
+  'Carnes / Jamon & Queso': {
+    id: 68,
+    alert: true,
+    table: 'queue_mgt'
+  },
+  'Disponibilidad Pan': {
+    id: 69,
+    alert: true,
+    table: 'bread_availability'
+  },
+  'Temperatura Pan': {
+    id: 70,
+    alert: true,
+    table: 'bread_temperature'
+  },
   
 }
 

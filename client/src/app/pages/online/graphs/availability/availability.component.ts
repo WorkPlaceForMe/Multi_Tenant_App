@@ -95,6 +95,7 @@ export class AvailabilityComponent implements OnInit, OnDestroy {
       start: this.range.start,
       end: this.range.end,
       type: type,
+      timezone: '-0300'
     };
     // this.algoId = 19;
     this.face.checkVideo(this.algoId, this.camera).subscribe(
@@ -111,33 +112,44 @@ export class AvailabilityComponent implements OnInit, OnDestroy {
       (res) => {
         this.availability = res["data"];
         const times = [];
-        for (const q of this.availability.labelsD){
+        for (const q of this.availability.labelsDAll[0]){
           // times.push(new Date(q))
-          times.push(this.datepipe.transform(q, 'yyyy-M-dd HH:mm', '-0300'));
+          times.push(this.datepipe.transform(q, 'HH:mm', '-0300'));
         }
 
         this.themeSubscription = this.theme.getJsTheme().subscribe((config) => {
           const colors: any = config.variables;
           const chartjs: any = config.variables.chartjs;
-
-          this.dataL = {
-            labels: times,
-            datasets: [{
-              label: 'Disponibilidad',
-              data: this.availability.dwell,
-              borderColor: colors.primary,
-              backgroundColor: colors.primary,
+          const data = []
+          const cols = {
+            0: colors.primary,
+            1: colors.warning,
+            2: colors.success,
+            3: colors.info,
+            4: colors.danger
+          }
+          for(let i = 0; i < this.availability.dwellAll.length; i++){
+            data.push({
+              label: `Zone: ${i + 1}`,
+              data: Object.values(this.availability.dwellAll[i]),
+              borderColor: cols[i],
+              backgroundColor: cols[i],
               fill: false,
               pointRadius: 2,
               pointHoverRadius: 5,
-            }],
+            })
+          }
+
+          this.dataL = {
+            labels: times,
+            datasets: data,
           };
 
           this.optionsL = {
             responsive: true,
             maintainAspectRatio: false,
             legend: {
-              display: false,
+              display: true,
               position: "bottom",
               labels: {
                 fontColor: chartjs.textColor,
@@ -149,7 +161,7 @@ export class AvailabilityComponent implements OnInit, OnDestroy {
             scales: {
               xAxes: [
                 {
-                  display: false,
+                  display: true,
                   scaleLabel: {
                     display: false,
                     labelString: "Month",

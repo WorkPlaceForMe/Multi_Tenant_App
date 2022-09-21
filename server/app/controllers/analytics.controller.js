@@ -8767,10 +8767,125 @@ exports.breadAvail = async (req, res) => {
       where: wh
     })
       .then(async rel => {
+        const count = await Relation.count({
+          where: {
+            algo_id: 69,
+            camera_id: req.params.id
+          }
+        });
         await db
           .con()
           .query(
-            `SELECT * from availability WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+            `SELECT * from bread_availability WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+            function (err, result) {
+              if (err)
+                return res.status(500).json({
+                  success: false,
+                  message: err
+                })
+                const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
+                let cache = [], range
+                if(diff === 1){
+                  range = 30 * 60 * 1000
+                }else if(diff >= 1 && diff <= 3){
+                  range = 2 * 60 * 60 * 1000
+                }else if(diff >= 3 && diff <= 7){
+                  range = 4 * 60 * 60 * 1000
+                }else if(diff >= 7 && diff <= 14){
+                  range = 8 * 60 * 60 * 1000
+                }else if(diff >= 14 && diff <= 32){
+                  range = 24 * 60 * 60 * 1000
+                }
+                // cache = new Date(data.start).getTime()
+                let dwell = [], dwellAll = []
+                let labelsD = [], labelsDAll =[]
+                let av = [], sum = []
+                let cacheTime = 0
+                const num = parseInt(data.timezone.slice(1,3)) * 3600 * 1000
+                if(data.timezone.slice(0,1) == '-'){
+                  cacheTime = new Date(data.start).getTime() + range + num
+                }else{
+                  cacheTime = new Date(data.start).getTime() + range - num
+                }
+                for(let i = 1; i <= count; i++){
+                  cache.push(cacheTime)
+                  dwellAll.push([])
+                  labelsDAll.push([new Date(data.start).getTime()])
+                  av.push([])
+                  sum.push(0)
+                }
+              result.forEach(function (v) {
+                if(v.zone == 'right'){
+                  v.zone = 1
+                }else if(v.zone == 'left'){
+                  v.zone = 0
+                }
+                if(v.time.getTime() < cache[v.zone]){
+                  av[v.zone].push(v.availability)
+                  sum[v.zone] = sum[v.zone] + parseInt(v.availability)
+                }else{
+                  cache[v.zone] += range
+                  let availability = sum[v.zone]/av[v.zone].length
+                  availability = Math.round(availability * 100) / 100
+                  dwellAll[v.zone].push(availability)
+                  sum[v.zone] = 0
+                  av[v.zone] = []
+                  labelsDAll[v.zone].push(cache[v.zone])
+                }
+              })
+              let a = {
+                dwell: dwell,
+                labelsD: labelsD,
+                dwellAll: dwellAll,
+                labelsDAll: labelsDAll
+              }
+              res.status(200).json({
+                success: true,
+                data: a
+              })
+            }
+          )
+      })
+      .catch(err => {
+        console.error(err)
+        return res.status(500).send({
+          success: false,
+          message: err
+        })
+      })
+  })
+}
+
+exports.breadTemp = async (req, res) => {
+  let token = req.headers['x-access-token']
+  const data = req.body
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    let wh
+    if (decoded.id_branch != 0000) {
+      wh = {
+        id_branch: decoded.id_branch,
+        algo_id: 70
+      }
+    } else {
+      wh = {
+        id_account: decoded.id_account,
+        algo_id: 70
+      }
+    }
+    Relation.findOne({
+      where: wh
+    })
+      .then(async rel => {
+        const count = await Relation.count({
+          where: {
+            algo_id: 70,
+            camera_id: req.params.id
+          }
+        });
+        await db
+          .con()
+          .query(
+            `SELECT * from bread_temperature WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
             function (err, result) {
               if (err)
                 return res.status(500).json({
@@ -8791,17 +8906,33 @@ exports.breadAvail = async (req, res) => {
                   range = 24 * 60 * 60 * 1000
                 }
                 cache = new Date(data.start).getTime()
-              var ress = {}
-              var dwell = []
-              var labelsD = []
+                let ress = {}, ressAll = []
+                let dwell = [], dwellAll = []
+                let labelsD = [], labelsDAll =[]
+                for(let i = 1; i <= count; i++){
+                  ressAll.push({})
+                  dwellAll.push([])
+                  labelsDAll.push([])
+                }
+
               result.forEach(function (v) {
+                if(v.zone == 'right'){
+                  v.zone = 1
+                }else if(v.zone == 'left'){
+                  v.zone = 0
+                }
                 ress[v.time.getHours()] = (ress[v.time.getHours()] || 0) + 1
-                dwell.push(v.availability)
+                dwell.push(v.temperature)
                 labelsD.push(v.time)
+                ressAll[v.zone][v.time.getHours()] = (ressAll[v.zone][v.time.getHours()] || 0) + 1
+                dwellAll[v.zone].push(v.temperature)
+                labelsDAll[v.zone].push(v.time)
               })
               let a = {
                 dwell: dwell,
                 labelsD: labelsD,
+                dwellAll: dwellAll,
+                labelsDAll: labelsDAll
               }
               res.status(200).json({
                 success: true,
@@ -8839,10 +8970,16 @@ exports.breadTemp = async (req, res) => {
       where: wh
     })
       .then(async rel => {
+        const count = await Relation.count({
+          where: {
+            algo_id: 70,
+            camera_id: req.params.id
+          }
+        });
         await db
           .con()
           .query(
-            `SELECT * from temperature WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+            `SELECT * from bread_temperature WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
             function (err, result) {
               if (err)
                 return res.status(500).json({
@@ -8850,7 +8987,7 @@ exports.breadTemp = async (req, res) => {
                   message: err
                 })
                 const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
-                let cache = '', range, cou = 0
+                let cache = [], range
                 if(diff === 1){
                   range = 30 * 60 * 1000
                 }else if(diff >= 1 && diff <= 3){
@@ -8862,18 +8999,48 @@ exports.breadTemp = async (req, res) => {
                 }else if(diff >= 14 && diff <= 32){
                   range = 24 * 60 * 60 * 1000
                 }
-                cache = new Date(data.start).getTime()
-              var ress = {}
-              var dwell = []
-              var labelsD = []
+                // cache = new Date(data.start).getTime()
+                let dwell = [], dwellAll = []
+                let labelsD = [], labelsDAll =[]
+                let av = [], sum = []
+                let cacheTime = 0
+                const num = parseInt(data.timezone.slice(1,3)) * 3600 * 1000
+                if(data.timezone.slice(0,1) == '-'){
+                  cacheTime = new Date(data.start).getTime() + range + num
+                }else{
+                  cacheTime = new Date(data.start).getTime() + range - num
+                }
+                for(let i = 1; i <= count; i++){
+                  cache.push(cacheTime)
+                  dwellAll.push([])
+                  labelsDAll.push([new Date(data.start).getTime()])
+                  av.push([])
+                  sum.push(0)
+                }
               result.forEach(function (v) {
-                ress[v.time.getHours()] = (ress[v.time.getHours()] || 0) + 1
-                dwell.push(v.temperature)
-                labelsD.push(v.time)
+                if(v.zone == 'right'){
+                  v.zone = 1
+                }else if(v.zone == 'left'){
+                  v.zone = 0
+                }
+                if(v.time.getTime() < cache[v.zone]){
+                  av[v.zone].push(v.temperature)
+                  sum[v.zone] = sum[v.zone] + parseInt(v.temperature)
+                }else{
+                  cache[v.zone] += range
+                  let temperature = sum[v.zone]/av[v.zone].length
+                  temperature = Math.round(temperature * 100) / 100
+                  dwellAll[v.zone].push(temperature)
+                  sum[v.zone] = 0
+                  av[v.zone] = []
+                  labelsDAll[v.zone].push(cache[v.zone])
+                }
               })
               let a = {
                 dwell: dwell,
                 labelsD: labelsD,
+                dwellAll: dwellAll,
+                labelsDAll: labelsDAll
               }
               res.status(200).json({
                 success: true,
@@ -8883,6 +9050,7 @@ exports.breadTemp = async (req, res) => {
           )
       })
       .catch(err => {
+        console.error(err)
         return res.status(500).send({
           success: false,
           message: err
