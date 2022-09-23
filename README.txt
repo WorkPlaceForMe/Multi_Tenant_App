@@ -3,6 +3,7 @@ Instructions to run this platform:
 -Install dependencies of requirements.txt on pythonServer.
 One file need to be added in order to run the platform, this should be required by email:
 - ./config.env
+-Install Mysql in the local server.
 
 Certain dependecies are:
 -Node (14 or above)
