@@ -4,6 +4,7 @@ Instructions to run this platform:
 One file need to be added in order to run the platform, this should be required by email:
 - ./config.env
 -Install Mysql in the local server.
+-Change parameter of install to true for the first time at config.env. After installing the database change back the parameter to false.
 
 Certain dependecies are:
 -Node (14 or above)
