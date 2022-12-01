@@ -5,7 +5,7 @@ exports.retrieve = async (req, res) => {
     await db
     .con()
     .query(
-      `SELECT * from ${data.table}`,
+      `SELECT * from ${data.table} LIMIT 1000`,
       function (err, result) {
         if (err)
         return res.status(500).json({
@@ -53,7 +53,6 @@ exports.insert = async (req, res) => {
   .query(
     `INSERT INTO ${data.table} VALUES (${data.values});`,
     function (err, result) {
-      console.log(`INSERT INTO ${data.table} VALUES (${data.values});`)
       if (err)
       return res.status(500).json({
         success: false,
