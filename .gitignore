@@ -34,6 +34,10 @@ wsServer/resources/**
 !wsServer/resources/pictures/
 !wsServer/resources/pictures/graymaticsLogo.png
 !wsServer/resources/logs/test.log
+!proxy/resources/logs/
+!proxy/resources/pictures/
+!proxy/resources/pictures/graymaticsLogo.png
+!proxy/resources/logs/test.log
 config.env
 configShare.env
 configDockerShare.env
