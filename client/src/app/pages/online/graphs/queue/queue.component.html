@@ -17,9 +17,9 @@
             <div class="col less-padding">
                 <nb-card class = "top-badges">
                     <nb-card-body>
-                        <p class = "badge-txt">Tiempo de espera medio: {{queue == undefined ? '0' : queue.avg}} min</p>
+                        <p class = "badge-txt">Tiempo de espera medio - {{queue == undefined ? '0' : queue.avg}} min</p>
                         <p class = "badge-reading" *ngFor="let avg of avgss; let i = index">
-                            Fila {{i + 1}}: {{avg}} min</p>
+                            Fila {{i + 1}} - {{avg}} min</p>
                     </nb-card-body>
                 </nb-card>
             </div>
@@ -45,7 +45,7 @@
                 <nb-card>
                   <nb-card-body class="top-badges">
                     <p>Personas en el periodo</p>
-                    <chart type="line" [data]="dataP" [options]="options"></chart>
+                    <chart type="line" [data]="dataP" [options]="options" style="height: 400px"></chart>
                   </nb-card-body>
                 </nb-card>
               </div>
@@ -55,7 +55,7 @@
                 <nb-card>
                   <nb-card-body class="top-badges">
                     <p>Alertas altas en el periodo</p>
-                    <chart type="line" [data]="dataH" [options]="options"></chart>
+                    <chart type="line" [data]="dataH" [options]="options" style="height: 400px"></chart>
                   </nb-card-body>
                 </nb-card>
               </div>

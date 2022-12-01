@@ -207,10 +207,21 @@ export class AnalyticsService {
   temperature(id: string, dates){
     return this.http.post(`${this.API_URL}70/${id}`, dates);
   }
-  report(algo_id:number, cam_id:string, dates){
-    return this.http.post(`${api}/report/${algo_id}/${cam_id}`, dates ,{
+  scc(id: string, dates){
+    return this.http.post(`${this.API_URL}71/${id}`, dates);
+  }
+  async report(algo_id:number, cam_id:string, dates){
+    return await this.http.post(`${api}/report/${algo_id}/${cam_id}`, dates ,{
       responseType: 'blob'
     });
   }
+
+  // async downloadLargeFile(url:string): Promise<ArrayBuffer> {
+  //   return await this.http.get(url, {
+  //       responseType: "arraybuffer",
+  //     }).pipe(map((file:ArrayBuffer) => {
+  //   return file;
+  //   })).toPromise
+  //   }
   constructor(private http: HttpClient) { }
 }

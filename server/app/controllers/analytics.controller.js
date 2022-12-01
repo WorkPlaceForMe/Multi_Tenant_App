@@ -1721,33 +1721,50 @@ exports.queue = async (req, res) => {
           camera_id: req.params.id
         }
       });
+      const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
+      let cache = '', range, cou = 0, start, end
+      if(diff === 1){
+        range = 30 * 60 * 1000
+        start = new Date(data.start).getTime() + 7 * 60 * 60 * 1000
+        start = JSON.stringify(new Date(start))
+        start = start.substring(1, start.length - 1);
+        end =  new Date(data.end).getTime() - 1.5 * 60 * 60 * 1000
+        end = JSON.stringify(new Date(end))
+        end = end.substring(1, end.length - 1);
+      }else if(diff >= 1 && diff <= 3){
+        range = 2 * 60 * 60 * 1000
+      }else if(diff >= 3 && diff <= 7){
+        range = 4 * 60 * 60 * 1000
+      }else if(diff >= 7 && diff <= 14){
+        range = 8 * 60 * 60 * 1000
+      }else if(diff >= 14 && diff <= 32){
+        range = 24 * 60 * 60 * 1000
+      }
+      if(start === undefined){
+        start = data.start
+        end = data.end
+      }
+      // console.log(data, start, end)
+      // console.log(`SELECT * from queue_mgt WHERE ${data.type} = '${req.params.id}' and start_time >= '${start}' and  start_time <= '${end}' order by start_time asc;`)
       await db
         .con()
         .query(
-          `SELECT * from queue_mgt WHERE ${data.type} = '${req.params.id}' and start_time >= '${data.start}' and  start_time <= '${data.end}' order by start_time asc;`,
+          `SELECT * from queue_mgt WHERE ${data.type} = '${req.params.id}' and start_time >= '${start}' and  start_time <= '${end}' order by start_time asc;`,
           async function (err, result) {
-            if (err || result.length === 0)
+            if (result === undefined || result.length === 0)
+              return res.status(500).json({
+                success: false,
+                message: 'No results'
+              })
+            if (err)
               return res.status(500).json({
                 success: false,
                 message: err
               })
-            const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
-            let cache = '', range, cou = 0
-            if(diff === 1){
-              range = 30 * 60 * 1000
-            }else if(diff >= 1 && diff <= 3){
-              range = 2 * 60 * 60 * 1000
-            }else if(diff >= 3 && diff <= 7){
-              range = 4 * 60 * 60 * 1000
-            }else if(diff >= 7 && diff <= 14){
-              range = 8 * 60 * 60 * 1000
-            }else if(diff >= 14 && diff <= 32){
-              range = 24 * 60 * 60 * 1000
-            }
-            cache = new Date(data.start).getTime()
+            // cache = new Date(data.start).getTime()
             let countIn = 0
             let countAll = {}, timesAv = {}, avgs = []
-            let dataAlertsMed = [], dataAlertsHigh = [], dataAlertsLow = [], dataPeople = {}
+            let dataAlertsMed = [], dataAlertsHigh = [], dataAlertsLow = [], dataPeople = {}, dataPeopleAll = []
             for(let i = 1; i <= count; i++){
               avgs[i - 1] = 0
               timesAv[i] = 0
@@ -1755,23 +1772,35 @@ exports.queue = async (req, res) => {
               dataAlertsMed.push({})
               dataAlertsHigh.push({})
               dataAlertsLow.push({})
+              dataPeopleAll.push({})
             }
             const label = []
             const labelPeople = []
             let avg = 0
-            let min = 0
-            let max = 0
+            let min = -1
+            let max = -1
             let minQ, maxQ
             let times = []
+            // let cacheTime = new Date(start).getTime()
+            // let cacheTime = 0
+            // const num = parseInt(data.timezone.slice(1,3)) * 3600 * 1000
+            // if(data.timezone.slice(0,1) == '-'){
+            //   cacheTime = new Date(start).getTime() + num
+            // }else{
+            //   cacheTime = new Date(start).getTime() - num
+            // }
+            cache = new Date(start).getTime()
+            // console.log(dataPeopleAll)
             for (var v of result) {
-              if (v.queuing == 1) {
+              if (v.queuing == 0) {
                 countAll[v.qid] = (countAll[v.qid] || 0) + 1
                 countIn++
-              } else {
+              // } else {
                 v['wait'] = (v.end_time - v.start_time) / 1000
                 v['wait'] = display(v['wait'])
+                // console.log(v.end_time, v.start_time, (v.end_time - v.start_time))
                 times.push({
-                  time: (v.end_time - v.start_time) / 60000,
+                  time: (v.end_time - v.start_time) / 1000,
                   queue: v.qid
                 })
               }
@@ -1804,7 +1833,7 @@ exports.queue = async (req, res) => {
               v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/queue/${req.params.id}/${v.picture}`
               v.movie = `${d}_${v.id}_video.mp4`
               v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/queue/${req.params.id}/${v.movie}`
-              if(v.queuing == 1){
+              if(v.queuing == 0){
                 if (
                   cache < v.start_time.getTime()
                 ) {
@@ -1813,6 +1842,9 @@ exports.queue = async (req, res) => {
                   ) {
                     cache = new Date(cache)
                     dataPeople[cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                    for(let e = 0; e < count; e++){
+                      dataPeopleAll[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                    }
                     cache = cache.getTime()
                     cache += range
                   }
@@ -1824,6 +1856,7 @@ exports.queue = async (req, res) => {
                   t -= range
                   t = new Date(t)
                   dataPeople[t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()] = (dataPeople[ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1    
+                  dataPeopleAll[v.qid - 1][t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()] = (dataPeopleAll[v.qid - 1][ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1     
                 }
                 labelPeople.push(v.start_time)
                 cou++
@@ -1831,35 +1864,43 @@ exports.queue = async (req, res) => {
             }
             if(cou === countIn){
               while (
-                cache <= new Date(data.end)
+                cache <= new Date(end)
               ) {
                 cache = new Date(cache)
                 dataPeople[cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                for(let e = 0; e < count; e++){
+                  dataPeopleAll[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                }
                 cache = cache.getTime()
                 cache += range
               }
             }
-            for (var e of times) {
+            for (let e of times) {
               avgs[e.queue - 1] = avgs[e.queue - 1] + e.time
               avg = avg + e.time
               timesAv[e.queue] = (timesAv[e.queue] || 0 ) + 1
-              if (min == 0) {
+              if (min === -1) {
+                // console.log('++++++++++++++++++++++++++++++++', e.queue, e.time, min)
                 min = e.time
                 minQ = e.queue
               } else if (e.time < min) {
+                // console.log('================================', e.queue, min)
                 min = e.time
                 minQ = e.queue
               }
-              if (max == 0) {
+              if (max === -1) {
+                // console.log('////////////////////////////////', e.queue)
                 max = e.time
                 maxQ = e.queue
               } else if (e.time > max) {
+                // console.log('--------------------------------', e.queue)
                 max = e.time
                 maxQ = e.queue
               }
             }
+            // console.log(minQ, maxQ)
             for(let t = 0; t < avgs.length; t++){
-              avgs[t] = Math.round((avgs[t] / timesAv[t + 1]) * 100) / 100
+              avgs[t] = Math.round(avgs[t] / timesAv[t + 1])
               if(isNaN(avgs[t])){
                 avgs[t] = 0
               }
@@ -1867,22 +1908,9 @@ exports.queue = async (req, res) => {
             await db
             .con()
             .query(
-              `SELECT * from queue_alerts WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+              `SELECT * from queue_alerts WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`,
               function (err, result2) {
-                const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
-                let cache = '', range, cou = 0
-                if(diff === 1){
-                  range = 30 * 60 * 1000
-                }else if(diff >= 1 && diff <= 3){
-                  range = 2 * 60 * 60 * 1000
-                }else if(diff >= 3 && diff <= 7){
-                  range = 4 * 60 * 60 * 1000
-                }else if(diff >= 7 && diff <= 14){
-                  range = 8 * 60 * 60 * 1000
-                }else if(diff >= 14 && diff <= 32){
-                  range = 24 * 60 * 60 * 1000
-                }
-                cache = new Date(data.start).getTime()
+                cache = new Date(start).getTime()
                 result2.forEach(function (v) {
                   let d = v.time
                   let se = d.getSeconds()
@@ -1959,20 +1987,32 @@ exports.queue = async (req, res) => {
                   }
                   label.push(v.time)
                   if(cou === result2.length){
-                    while (
-                      cache <= new Date(data.end)
-                    ) {
-                      cache = new Date(cache)
-                      for(let e = 0; e < count; e++){
-                      dataAlertsLow[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
-                      dataAlertsMed[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
-                      dataAlertsHigh[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
-                    }
-                      cache = cache.getTime()
-                      cache += range
-                    }
+                    // while (
+                    //   cache <= new Date(end)
+                    // ) {
+                    //   cache = new Date(cache)
+                    //   for(let e = 0; e < count; e++){
+                    //   dataAlertsLow[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                    //   dataAlertsMed[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                    //   dataAlertsHigh[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                    // }
+                    //   cache = cache.getTime()
+                    //   cache += range
+                    // }
                   }
                 })
+                while (
+                  cache <= new Date(end)
+                ) {
+                  cache = new Date(cache)
+                  for(let e = 0; e < count; e++){
+                  dataAlertsLow[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                  dataAlertsMed[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                  dataAlertsHigh[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                }
+                  cache = cache.getTime()
+                  cache += range
+                }
                 let a = {
                   label: label,
                   labelPeople: labelPeople,
@@ -1988,7 +2028,8 @@ exports.queue = async (req, res) => {
                   avgs: avgs,
                   min: minQ,
                   max: maxQ,
-                  rel: rel
+                  rel: rel,
+                  dataPeopleAll: dataPeopleAll
                 }
                 res.status(200).json({
                   success: true,
@@ -8773,44 +8814,55 @@ exports.breadAvail = async (req, res) => {
             camera_id: req.params.id
           }
         });
+        const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
+        let start, end
+        let cache = [], range
+        start = new Date(data.start)
+        end = new Date(data.end)
+        if(diff === 1){
+          // range = 30 * 60 * 1000
+          range = 5 * 60 * 1000
+          start = new Date(data.start).getTime() + 7 * 60 * 60 * 1000
+          start = JSON.stringify(new Date(start))
+          start = start.substring(1, start.length - 1);
+          end =  new Date(data.end).getTime() - 1.5* 60 * 60 * 1000
+          end = JSON.stringify(new Date(end))
+          end = end.substring(1, end.length - 1);
+        }else if(diff >= 1 && diff <= 3){
+          range = 2 * 60 * 60 * 1000
+        }else if(diff >= 3 && diff <= 7){
+          range = 4 * 60 * 60 * 1000
+        }else if(diff >= 7 && diff <= 14){
+          range = 8 * 60 * 60 * 1000
+        }else if(diff >= 14 && diff <= 32){
+          range = 24 * 60 * 60 * 1000
+        }
+        console.log(start, end,`SELECT * from bread_availability WHERE ${data.type} = '${req.params.id}' and time >= ${JSON.stringify(start)} and  time <= ${JSON.stringify(end)} order by time asc;`)
         await db
           .con()
           .query(
-            `SELECT * from bread_availability WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-            function (err, result) {
+            `SELECT * from bread_availability WHERE ${data.type} = '${req.params.id}' and time >= ${JSON.stringify(start)} and  time <= ${JSON.stringify(end)} order by time asc;`,
+            async function (err, result) {
               if (err)
                 return res.status(500).json({
                   success: false,
                   message: err
                 })
-                const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
-                let cache = [], range
-                if(diff === 1){
-                  range = 30 * 60 * 1000
-                }else if(diff >= 1 && diff <= 3){
-                  range = 2 * 60 * 60 * 1000
-                }else if(diff >= 3 && diff <= 7){
-                  range = 4 * 60 * 60 * 1000
-                }else if(diff >= 7 && diff <= 14){
-                  range = 8 * 60 * 60 * 1000
-                }else if(diff >= 14 && diff <= 32){
-                  range = 24 * 60 * 60 * 1000
-                }
-                // cache = new Date(data.start).getTime()
+
                 let dwell = [], dwellAll = []
                 let labelsD = [], labelsDAll =[]
                 let av = [], sum = []
                 let cacheTime = 0
                 const num = parseInt(data.timezone.slice(1,3)) * 3600 * 1000
                 if(data.timezone.slice(0,1) == '-'){
-                  cacheTime = new Date(data.start).getTime() + range + num
+                  cacheTime = new Date(start).getTime()
                 }else{
-                  cacheTime = new Date(data.start).getTime() + range - num
+                  cacheTime = new Date(start).getTime()
                 }
                 for(let i = 1; i <= count; i++){
                   cache.push(cacheTime)
                   dwellAll.push([])
-                  labelsDAll.push([new Date(data.start).getTime()])
+                  labelsDAll.push([new Date(cacheTime).getTime()])
                   av.push([])
                   sum.push(0)
                 }
@@ -8820,29 +8872,85 @@ exports.breadAvail = async (req, res) => {
                 }else if(v.zone == 'left'){
                   v.zone = 0
                 }
-                if(v.time.getTime() < cache[v.zone]){
+                if(v.time.getTime() >= cache[v.zone] && v.time.getTime() < cache[v.zone] + range){
                   av[v.zone].push(v.availability)
-                  sum[v.zone] = sum[v.zone] + parseInt(v.availability)
+                  sum[v.zone] += parseInt(v.availability)
                 }else{
                   cache[v.zone] += range
+                  labelsDAll[v.zone].push(cache[v.zone])
                   let availability = sum[v.zone]/av[v.zone].length
                   availability = Math.round(availability * 100) / 100
                   dwellAll[v.zone].push(availability)
                   sum[v.zone] = 0
-                  av[v.zone] = []
-                  labelsDAll[v.zone].push(cache[v.zone])
+                  av[v.zone] = []                  
                 }
               })
-              let a = {
-                dwell: dwell,
-                labelsD: labelsD,
-                dwellAll: dwellAll,
-                labelsDAll: labelsDAll
+              for(let i = 0; i < sum.length; i++){
+                let availability = sum[i]/av[i].length
+                availability = Math.round(availability * 100) / 100
+                dwellAll[i].push(availability)
               }
-              res.status(200).json({
-                success: true,
-                data: a
-              })
+              await db
+              .con()
+              .query(
+                `SELECT * from avail_alerts WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`,
+                function (err, result2) {
+                  if(result2 === undefined || result2.length === 0){
+                    let a = {
+                      dwell: dwell,
+                      labelsD: labelsD,
+                      dwellAll: dwellAll,
+                      labelsDAll: labelsDAll,
+                      rawAlerts: result2
+                    }
+                    return res.status(200).json({
+                      success: true,
+                      data: a
+                    })
+                  }
+                  result2.forEach(function (v) {
+                    let d = v.time
+                    let se = d.getSeconds()
+                    let mi = d.getMinutes()
+                    let ho = d.getHours()
+                    if (se < 10) {
+                      se = '0' + se
+                    }
+                    if (mi < 10) {
+                      mi = '0' + mi
+                    }
+                    if (ho < 10) {
+                      ho = '0' + ho
+                    }
+                    d =
+                      d.getFullYear() +
+                      '-' +
+                      (d.getMonth() + 1) +
+                      '-' +
+                      d.getDate() +
+                      '_' +
+                      ho +
+                      ':' +
+                      mi +
+                      ':' +
+                      se
+                    v['picture'] = `${d}_${v.id}.jpg`
+                    v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/avail_alerts/${req.params.id}/${v.picture}`
+                    v.movie = `${d}_${v.id}_video.mp4`
+                    v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/avail_alerts/${req.params.id}/${v.movie}`
+                  })
+                  let a = {
+                    dwell: dwell,
+                    labelsD: labelsD,
+                    dwellAll: dwellAll,
+                    labelsDAll: labelsDAll,
+                    rawAlerts: result2
+                  }
+                  res.status(200).json({
+                    success: true,
+                    data: a
+                  })
+                })
             }
           )
       })
@@ -8882,66 +8990,144 @@ exports.breadTemp = async (req, res) => {
             camera_id: req.params.id
           }
         });
+        const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
+        let start, end
+        let cache = [], range, cou = 0
+        start = new Date(data.start)
+        end = new Date(data.end)
+        if(diff === 1){
+          range = 5 * 60 * 1000
+          start = new Date(data.start).getTime() + 7 * 60 * 60 * 1000
+          start = JSON.stringify(new Date(start))
+          start = start.substring(1, start.length - 1);
+          end =  new Date(data.end).getTime() - 1.5 * 60 * 60 * 1000
+          end = JSON.stringify(new Date(end))
+          end = end.substring(1, end.length - 1);
+        }else if(diff >= 1 && diff <= 3){
+          range = 2 * 60 * 60 * 1000
+        }else if(diff >= 3 && diff <= 7){
+          range = 4 * 60 * 60 * 1000
+        }else if(diff >= 7 && diff <= 14){
+          range = 8 * 60 * 60 * 1000
+        }else if(diff >= 14 && diff <= 32){
+          range = 24 * 60 * 60 * 1000
+        }
+        // console.log(`SELECT * from bread_temperature WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`)
         await db
           .con()
           .query(
-            `SELECT * from bread_temperature WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-            function (err, result) {
+            `SELECT * from bread_temperature WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`,
+            async function (err, result) {
               if (err)
                 return res.status(500).json({
                   success: false,
                   message: err
                 })
-                const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
-                let cache = '', range, cou = 0
-                if(diff === 1){
-                  range = 30 * 60 * 1000
-                }else if(diff >= 1 && diff <= 3){
-                  range = 2 * 60 * 60 * 1000
-                }else if(diff >= 3 && diff <= 7){
-                  range = 4 * 60 * 60 * 1000
-                }else if(diff >= 7 && diff <= 14){
-                  range = 8 * 60 * 60 * 1000
-                }else if(diff >= 14 && diff <= 32){
-                  range = 24 * 60 * 60 * 1000
-                }
-                cache = new Date(data.start).getTime()
-                let ress = {}, ressAll = []
+
                 let dwell = [], dwellAll = []
                 let labelsD = [], labelsDAll =[]
+                let av = [], sum = []
+                let cacheTime = new Date(start).getTime()
                 for(let i = 1; i <= count; i++){
-                  ressAll.push({})
+                  cache.push(cacheTime)
                   dwellAll.push([])
-                  labelsDAll.push([])
+                  labelsDAll.push([new Date(cacheTime).getTime()])
+                  av.push([])
+                  sum.push(0)
                 }
-
+                // console.log(result)
               result.forEach(function (v) {
                 if(v.zone == 'right'){
                   v.zone = 1
                 }else if(v.zone == 'left'){
                   v.zone = 0
                 }
-                ress[v.time.getHours()] = (ress[v.time.getHours()] || 0) + 1
-                dwell.push(v.temperature)
-                labelsD.push(v.time)
-                ressAll[v.zone][v.time.getHours()] = (ressAll[v.zone][v.time.getHours()] || 0) + 1
-                dwellAll[v.zone].push(v.temperature)
-                labelsDAll[v.zone].push(v.time)
+                // console.log(v.time.getTime())
+                if(v.time.getTime() >= cache[v.zone] && v.time.getTime() < cache[v.zone] + range){
+                  av[v.zone].push(v.temperature)
+                  sum[v.zone] += parseInt(v.temperature)
+                }else{
+                  cache[v.zone] += range
+                  labelsDAll[v.zone].push(cache[v.zone])
+                  let temperature = sum[v.zone]/av[v.zone].length
+                  temperature = Math.round(temperature * 100) / 100
+                  dwellAll[v.zone].push(temperature)
+                  // console.log(v)
+                  sum[v.zone] = 0
+                  av[v.zone] = []                  
+                }
               })
-              let a = {
-                dwell: dwell,
-                labelsD: labelsD,
-                dwellAll: dwellAll,
-                labelsDAll: labelsDAll
+              for(let i = 0; i < sum.length; i++){
+                let temperature = sum[i]/av[i].length
+                temperature = Math.round(temperature * 100) / 100
+                dwellAll[i].push(temperature)
               }
-              res.status(200).json({
-                success: true,
-                data: a
+            await db
+            .con()
+            .query(
+              `SELECT * from temp_alerts WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`,
+              function (err, result2) {
+                if(result2 === undefined || result2.length === 0){
+                  let a = {
+                    dwell: dwell,
+                    labelsD: labelsD,
+                    dwellAll: dwellAll,
+                    labelsDAll: labelsDAll,
+                    rawAlerts: result2
+                  }
+                  return res.status(200).json({
+                    success: true,
+                    data: a
+                  })
+                }
+                result2.forEach(function (v) {
+                  let d = v.time
+                  let se = d.getSeconds()
+                  let mi = d.getMinutes()
+                  let ho = d.getHours()
+                  if (se < 10) {
+                    se = '0' + se
+                  }
+                  if (mi < 10) {
+                    mi = '0' + mi
+                  }
+                  if (ho < 10) {
+                    ho = '0' + ho
+                  }
+                  d =
+                    d.getFullYear() +
+                    '-' +
+                    (d.getMonth() + 1) +
+                    '-' +
+                    d.getDate() +
+                    '_' +
+                    ho +
+                    ':' +
+                    mi +
+                    ':' +
+                    se
+                  v['picture'] = `${d}_${v.id}.jpg`
+                  v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/temp_alerts/${req.params.id}/${v.picture}`
+                  v.movie = `${d}_${v.id}_video.mp4`
+                  v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/temp_alerts/${req.params.id}/${v.movie}`
+                })
+                let a = {
+                  dwell: dwell,
+                  labelsD: labelsD,
+                  dwellAll: dwellAll,
+                  labelsDAll: labelsDAll,
+                  rawAlerts: result2
+                }
+                res.status(200).json({
+                  success: true,
+                  data: a
+                })
               })
             }
           )
       })
       .catch(err => {
+        console.error(err)
         return res.status(500).send({
           success: false,
           message: err
@@ -8950,7 +9136,7 @@ exports.breadTemp = async (req, res) => {
   })
 }
 
-exports.breadTemp = async (req, res) => {
+exports.scc = async (req, res) => {
   let token = req.headers['x-access-token']
   const data = req.body
   jwt.verify(token, process.env.secret, async (err, decoded) => {
@@ -8958,12 +9144,12 @@ exports.breadTemp = async (req, res) => {
     if (decoded.id_branch != 0000) {
       wh = {
         id_branch: decoded.id_branch,
-        algo_id: 70
+        algo_id: 71
       }
     } else {
       wh = {
         id_account: decoded.id_account,
-        algo_id: 70
+        algo_id: 71
       }
     }
     Relation.findOne({
@@ -8972,75 +9158,144 @@ exports.breadTemp = async (req, res) => {
       .then(async rel => {
         const count = await Relation.count({
           where: {
-            algo_id: 70,
+            algo_id: 71,
             camera_id: req.params.id
           }
         });
+        const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
+        let start, end
+        let cache, cacheTr, range
+        let dataAlertsTrolley = {}, dataPeopleReceipt = {}
+        start = new Date(data.start)
+        end = new Date(data.end)
+        const labelPeople = []
+        if(diff === 1){
+          range = 5 * 60 * 1000
+          start = new Date(data.start).getTime() + 7 * 60 * 60 * 1000
+          start = JSON.stringify(new Date(start))
+          start = start.substring(1, start.length - 1);
+          end =  new Date(data.end).getTime() - 1.5 * 60 * 60 * 1000
+          end = JSON.stringify(new Date(end))
+          end = end.substring(1, end.length - 1);
+        }else if(diff >= 1 && diff <= 3){
+          range = 2 * 60 * 60 * 1000
+        }else if(diff >= 3 && diff <= 7){
+          range = 4 * 60 * 60 * 1000
+        }else if(diff >= 7 && diff <= 14){
+          range = 8 * 60 * 60 * 1000
+        }else if(diff >= 14 && diff <= 32){
+          range = 24 * 60 * 60 * 1000
+        }
+        cache = new Date(start).getTime()
+        cacheTr = new Date(start).getTime()
         await db
           .con()
           .query(
-            `SELECT * from bread_temperature WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-            function (err, result) {
+            `SELECT * from scc WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`,
+            async function (err, result) {
               if (err)
                 return res.status(500).json({
                   success: false,
                   message: err
                 })
-                const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
-                let cache = [], range
-                if(diff === 1){
-                  range = 30 * 60 * 1000
-                }else if(diff >= 1 && diff <= 3){
-                  range = 2 * 60 * 60 * 1000
-                }else if(diff >= 3 && diff <= 7){
-                  range = 4 * 60 * 60 * 1000
-                }else if(diff >= 7 && diff <= 14){
-                  range = 8 * 60 * 60 * 1000
-                }else if(diff >= 14 && diff <= 32){
-                  range = 24 * 60 * 60 * 1000
-                }
-                // cache = new Date(data.start).getTime()
-                let dwell = [], dwellAll = []
-                let labelsD = [], labelsDAll =[]
-                let av = [], sum = []
-                let cacheTime = 0
-                const num = parseInt(data.timezone.slice(1,3)) * 3600 * 1000
-                if(data.timezone.slice(0,1) == '-'){
-                  cacheTime = new Date(data.start).getTime() + range + num
-                }else{
-                  cacheTime = new Date(data.start).getTime() + range - num
-                }
-                for(let i = 1; i <= count; i++){
-                  cache.push(cacheTime)
-                  dwellAll.push([])
-                  labelsDAll.push([new Date(data.start).getTime()])
-                  av.push([])
-                  sum.push(0)
-                }
               result.forEach(function (v) {
-                if(v.zone == 'right'){
-                  v.zone = 1
-                }else if(v.zone == 'left'){
-                  v.zone = 0
+                let d = v.time
+                let se = d.getSeconds()
+                let mi = d.getMinutes()
+                let ho = d.getHours()
+                if (se < 10) {
+                  se = '0' + se
                 }
-                if(v.time.getTime() < cache[v.zone]){
-                  av[v.zone].push(v.temperature)
-                  sum[v.zone] = sum[v.zone] + parseInt(v.temperature)
-                }else{
-                  cache[v.zone] += range
-                  let temperature = sum[v.zone]/av[v.zone].length
-                  temperature = Math.round(temperature * 100) / 100
-                  dwellAll[v.zone].push(temperature)
-                  sum[v.zone] = 0
-                  av[v.zone] = []
-                  labelsDAll[v.zone].push(cache[v.zone])
+                if (mi < 10) {
+                  mi = '0' + mi
+                }
+                if (ho < 10) {
+                  ho = '0' + ho
+                }
+                d =
+                  d.getFullYear() +
+                  '-' +
+                  (d.getMonth() + 1) +
+                  '-' +
+                  d.getDate() +
+                  '_' +
+                  ho +
+                  ':' +
+                  mi +
+                  ':' +
+                  se
+                v['picture'] = `${d}_${v.id}.jpg`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/temp_alerts/${req.params.id}/${v.picture}`
+                if(v.trolley == '1'){
+                  if (
+                    cacheTr < v.time.getTime()
+                  ) {
+                    while (
+                      cacheTr < v.time.getTime()
+                    ) {
+                      cacheTr = new Date(cacheTr)
+                      dataAlertsTrolley[cacheTr.getFullYear() + '-' + (cacheTr.getMonth() + 1) +  '-' + cacheTr.getDate() + ' ' + cacheTr.getHours() + ':' + cacheTr.getMinutes()] = 0
+                      cacheTr = cacheTr.getTime()
+                      cacheTr += range
+                    }
+                  }
+                  if (
+                    cacheTr >= v.time.getTime()
+                  ) {
+                    let t = cacheTr
+                    t -= range
+                    t = new Date(t)
+                    dataAlertsTrolley[t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()] = (dataAlertsTrolley[ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1    
+                  }
+                  labelPeople.push(v.time)
+                }
+                if(v.receipt == '1'){
+                  if (
+                    cache < v.time.getTime()
+                  ) {
+                    while (
+                      cache < v.time.getTime()
+                    ) {
+                      cache = new Date(cache)
+                      dataPeopleReceipt[cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                      cache = cache.getTime()
+                      cache += range
+                    }
+                  }
+                  if (
+                    cache >= v.time.getTime()
+                  ) {
+                    let t = cache
+                    t -= range
+                    t = new Date(t)
+                    dataPeopleReceipt[t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()] = (dataPeopleReceipt[ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1    
+                  }
+                  labelPeople.push(v.time)
                 }
               })
+              while (
+                cacheTr <= new Date(end)
+              ) {
+                cacheTr = new Date(cacheTr)
+                dataAlertsTrolley[cacheTr.getFullYear() + '-' + (cacheTr.getMonth() + 1) +  '-' + cacheTr.getDate() + ' ' + cacheTr.getHours() + ':' + cacheTr.getMinutes()] = 0
+                cacheTr = cacheTr.getTime()
+                cacheTr += range
+              }
+              while (
+                cache <= new Date(end)
+              ) {
+                cache = new Date(cache)
+                dataPeopleReceipt[cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                cache = cache.getTime()
+                cache += range
+              }
               let a = {
-                dwell: dwell,
-                labelsD: labelsD,
-                dwellAll: dwellAll,
-                labelsDAll: labelsDAll
+                raw: result,
+                dataAlertsTrolley: dataAlertsTrolley,
+                dataPeopleReceipt: dataPeopleReceipt
+                // labelsD: labelsD,
+                // dwellAll: dwellAll,
+                // labelsDAll: labelsDAll,
               }
               res.status(200).json({
                 success: true,

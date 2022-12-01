@@ -91,7 +91,8 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
         start: this.range.start,
         end: this.range.end,
         type: type,
-        ham: true
+        ham: true,
+        timezone: '-0300'
       }
       this.face.checkVideo(this.algo_id,this.camera).subscribe(
         res=>{
@@ -116,7 +117,51 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
         this.serv.queue(this.camera,l).subscribe(
           res=>{
             this.queue = res['data']
-            this.avgss = this.queue.avgs
+            let secondsString
+            if(this.queue.avg >= 60){
+              let minutes = Math.floor(this.queue.avg / 60);
+              let seconds = Math.round(this.queue.avg - minutes * 60);
+              if(seconds < 10){
+                secondsString = `0${seconds}`
+              }else{
+                secondsString = seconds
+              }
+              this.queue.avg = `${minutes}:${secondsString}`
+            }else{
+              if(this.queue.avg < 10){
+                secondsString = `0${ Math.round(this.queue.avg)}`
+              }else{
+                secondsString =  Math.round(this.queue.avg)
+              }
+              this.queue.avg = `0:${secondsString}`
+            }
+            for(let s of this.queue.avgs){
+              let secondsStr
+              if(s >= 60){
+                let minutes = Math.floor(s / 60);
+                let seconds = Math.round(s - minutes * 60);
+                if(seconds < 10){
+                  secondsStr = `0${seconds}`
+                }else{
+                  secondsStr = seconds
+                }
+                s = `${minutes}:${secondsStr}`
+                this.avgss.push(s)
+              }else{
+                // console.log(s,'--')
+                if(s < 10){
+                  // console.log(s,'==')
+                  secondsStr = `0${s}`
+                  // console.log(secondsStr,'==')
+                }else{
+                  secondsStr = s
+                }
+                // console.log(secondsStr,'++')
+                s = `0:${secondsStr}`
+                this.avgss.push(s)
+              }
+            }
+            // this.avgss = this.queue.avgs
             for(let m of this.queue.rawAlerts){
               m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['picture'])
               m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['clip_path']
@@ -155,11 +200,11 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
             const labels = [];
             for (let o of Object.keys(this.queue.dataAlertsLow[0])){
               o = o + ':00';
-              labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm','-0300'));
+              labels.push(this.datepipe.transform(o, 'HH:mm','-0600'));
             }
             let times = [];
             for (var q of Object.keys(this.queue.dataPeople)) {
-              times.push(this.datepipe.transform(q, "yyyy-M-dd HH:mm", '-0300'));
+              times.push(this.datepipe.transform(q, "HH:mm", '-0600'));
             }
             this.themeSubscription = this.theme.getJsTheme().subscribe((config) => {
               const colors: any = config.variables;
@@ -171,13 +216,13 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
                 4: colors.dhanger
               }
               const chartjs: any = config.variables.chartjs;
-              const datasetsLow = [], datasetsMed = [], datasetsHigh = []
+              const datasetsLow = [], datasetsMed = [], datasetsHigh = [], datasetsPall = []
               for(let i = 0; i < this.queue.dataAlertsLow.length; i++){
                 let label = 'None'
                 if(i + 1 === 1){
-                  label = 'Jamon & Quesos'
+                  label = 'Jamon & Quesos: '
                 }else if (i + 1 === 2){
-                  label = 'Carnes'
+                  label = 'Carnes: '
                 }
                 datasetsLow.push({
                   label: `${label}`,
@@ -207,6 +252,23 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
                   pointHoverRadius: 5,
                 })
               }
+              for(let i = 0; i < this.queue.dataPeopleAll.length; i++){
+                let label = 'None'
+                if(i + 1 === 1){
+                  label = 'Jamon & Quesos: '
+                }else if (i + 1 === 2){
+                  label = 'Carnes: '
+                }
+                datasetsPall.push({
+                  label: `${label}`,
+                  data: Object.values(this.queue.dataPeopleAll[i]),
+                  borderColor: cols[i],
+                  backgroundColor: cols[i],
+                  fill: false,
+                  pointRadius: 2,
+                  pointHoverRadius: 5,
+                })
+              }
               this.dataL = {
                 labels: labels,
                 datasets: datasetsLow,
@@ -221,21 +283,14 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
               };
               this.dataP = {
                 labels: times,
-                datasets: [{
-                  label: `Personas en el periodo`,
-                  data: Object.values(this.queue.dataPeople),
-                  borderColor: colors.primary,
-                  backgroundColor: colors.primary,
-                  fill: false,
-                  pointRadius: 2,
-                  pointHoverRadius: 5,
-                },]
+                datasets: datasetsPall
               };
           
               this.options = {
                 responsive: true,
                 maintainAspectRatio: false,
                 legend: {
+                  display: true,
                   position: "bottom",
                   labels: {
                     fontColor: chartjs.textColor,
@@ -247,10 +302,10 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
                 scales: {
                   xAxes: [
                     {
-                      display: false,
+                      display: true,
                       scaleLabel: {
                         display: false,
-                        labelString: "Mes",
+                        labelString: "Month",
                       },
                       gridLines: {
                         display: true,
@@ -265,8 +320,8 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
                     {
                       display: true,
                       scaleLabel: {
-                        display: true,
-                        // labelString: 'Value',
+                        display: false,
+                        labelString: "Value",
                       },
                       gridLines: {
                         display: true,
@@ -296,7 +351,7 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
       window.open(url, "_blank");
     }
   
-    csv(algo){
+    async csv(algo){
       let type;
       if(this.now_user.id_branch != '0000'){
         type = 'cam_id';
@@ -310,7 +365,7 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
         ham: true,
         algo: algo
       }
-      this.serv.report(this.algo_id,this.camera, l).subscribe(
+      ;(await this.serv.report(this.algo_id, this.camera, l)).subscribe(
         res => {
           var blob = new Blob([res], { type: res.type.toString() });
           var url = window.URL.createObjectURL(blob);
@@ -369,7 +424,14 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
         zone: {
           title: 'Fila',
           type: 'string',
-          filter: false
+          filter: false,
+          valuePrepareFunction: (zone) => {
+            if(zone == '1'){
+              return 'Jamon & Queso'
+            }else if(zone == '2'){
+              return 'Carnes'
+            }
+          }
         }
       },
     };

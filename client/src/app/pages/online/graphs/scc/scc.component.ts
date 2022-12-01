@@ -10,23 +10,23 @@ import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
 
 @Component({
-  selector: 'ngx-queue',
-  templateUrl: './queue.component.html',
-  styleUrls: ['./queue.component.scss', '../smart-table.scss']
+  selector: 'ngx-scc',
+  templateUrl: './scc.component.html',
+  styleUrls: ['./scc.component.scss']
 })
-export class QueueComponent implements OnInit, OnDestroy {
+export class SccComponent implements  OnInit, OnDestroy {
 
   @Input() range: NbCalendarRange<Date>;
   @Input() camera;
-  queue: any = [];
+  scc: any = [];
   player: any;
   now_user: Account;
   rtspIn: any;
-  queues: Array<any> = [];
+  sccs: Array<any> = [];
   avgss: Array<any> = [];
   themeSubscription: any;
-  dataL: any;
-  dataM: any;
+  dataR: any;
+  dataT: any;
   dataH: any;
   dataP: any;
   options: any;
@@ -68,7 +68,7 @@ export class QueueComponent implements OnInit, OnDestroy {
   }
     timezone: any;
   video:boolean = false;
-  algo_id: number = 22;
+  algo_id: number = 71;
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
@@ -112,84 +112,35 @@ export class QueueComponent implements OnInit, OnDestroy {
         }
       }, err => console.error(err)
     )
-      this.serv.queue(this.camera,l).subscribe(
+      this.serv.scc(this.camera,l).subscribe(
         res=>{
-          this.queue = res['data']
-          let secondsString
-          if(this.queue.avg >= 60){
-            let minutes = Math.floor(this.queue.avg / 60);
-            let seconds = Math.round(this.queue.avg - minutes * 60);
-            if(seconds < 10){
-              secondsString = `0${seconds}`
-            }else{
-              secondsString = seconds
-            }
-            this.queue.avg = `${minutes}:${secondsString}`
-          }else{
-            if(this.queue.avg < 10){
-              secondsString = `0${ Math.round(this.queue.avg)}`
-            }else{
-              secondsString =  Math.round(this.queue.avg)
-            }
-            this.queue.avg = `0:${secondsString}`
-          }
-          for(let s of this.queue.avgs){
-            let secondsStr
-            if(s >= 60){
-              let minutes = Math.floor(s / 60);
-              let seconds = Math.round(s - minutes * 60);
-              if(seconds < 10){
-                secondsStr = `0${seconds}`
-              }else{
-                secondsStr = seconds
-              }
-              s = `${minutes}:${secondsStr}`
-              this.avgss.push(s)
-            }else{
-              // console.log(s,'--')
-              if(s < 10){
-                // console.log(s,'==')
-                secondsStr = `0${s}`
-                // console.log(secondsStr,'==')
-              }else{
-                secondsStr = s
-              }
-              // console.log(secondsStr,'++')
-              s = `0:${secondsStr}`
-              this.avgss.push(s)
-            }
-          }
-          // console.log(this.queue.avgs)
-          // this.avgss = this.queue.avgs
-          for(let m of this.queue.rawAlerts){
-            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['picture'])
-            m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/queue/' + m['cam_id'] + '/' + m['clip_path']
+          this.scc = res['data']
+          for(let m of this.scc.raw){
+            m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/scc/' + m['cam_id'] + '/' + m['picture'])
+            m['clip_path']  = api + "/pictures/" + this.now_user['id_account']+'/' + m['id_branch']+'/scc/' + m['cam_id'] + '/' + m['clip_path']
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss','-0300')
-            m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/queue/' + m['cam_id'] + '/' + m['movie']);
-            if(m.queuing === 1){
-              m.inLine = 'Waiting'
-            }else{
-              m.inLine = 'Exit'
-            }
+            m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/scc/' + m['cam_id'] + '/' + m['movie']);
           }
-          for(const qu in this.queue.countAll){
-            this.queues.push({zone: qu, amount: this.queue.countAll[qu]})
-          }
-          const source = this.queue.rawAlerts.filter( alert => alert.severity === 2 )
-          // this.source = this.queue.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
+          const source = this.scc.raw
           this.source = source.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
-          const labels = [], lab = {}
-          for (let o of Object.keys(this.queue.dataAlertsLow[0])){
-            lab[this.datepipe.transform(o, 'yyyy-M-dd HH:mm','-0300')] = this.queue.dataAlertsLow[0][o]
+          const labelstr = [], lab = {}, labelsr = []
+          for (let o of Object.keys(this.scc.dataAlertsTrolley)){
+            lab[this.datepipe.transform(o, 'yyyy-M-dd HH:mm','-0300')] = this.scc.dataAlertsTrolley[o]
             o = o + ':00';
             const date = new Date(o)
-            labels.push(this.datepipe.transform(date, 'HH:mm','-0600'));
+            labelstr.push(this.datepipe.transform(date, 'HH:mm','-0600'));
           }
-          let times = [];
-          for (var q of Object.keys(this.queue.dataPeople)) {
-            const date = new Date(q)
-            times.push(this.datepipe.transform(date, "HH:mm", '-0600'));
+          for (let o of Object.keys(this.scc.dataPeopleReceipt)){
+            lab[this.datepipe.transform(o, 'yyyy-M-dd HH:mm','-0300')] = this.scc.dataPeopleReceipt[o]
+            o = o + ':00';
+            const date = new Date(o)
+            labelsr.push(this.datepipe.transform(date, 'HH:mm','-0600'));
           }
+          // let times = [];
+          // for (var q of Object.keys(this.scc.dataPeople)) {
+          //   const date = new Date(q)
+          //   times.push(this.datepipe.transform(date, "HH:mm", '-0600'));
+          // }
     
           this.themeSubscription = this.theme.getJsTheme().subscribe((config) => {
             const colors: any = config.variables;
@@ -201,64 +152,44 @@ export class QueueComponent implements OnInit, OnDestroy {
               4: colors.danger
             }
             const chartjs: any = config.variables.chartjs;
-            const datasetsLow = [], datasetsMed = [], datasetsHigh = [], datasetsPall = []
-            for(let i = 0; i < this.queue.dataAlertsLow.length; i++){
-              datasetsLow.push({
-                label: `Fila: ${i + 1}`,
-                data: Object.values(this.queue.dataAlertsLow[i]),
-                borderColor: cols[i],
-                backgroundColor: cols[i],
-                fill: false,
-                pointRadius: 2,
-                pointHoverRadius: 5,
-              })
-              datasetsMed.push({
-                label: `Fila: ${i + 1}`,
-                data: Object.values(this.queue.dataAlertsMed[i]),
-                borderColor: cols[i],
-                backgroundColor: cols[i],
-                fill: false,
-                pointRadius: 2,
-                pointHoverRadius: 5,
-              })
-              datasetsHigh.push({
-                label: `Fila: ${i + 1}`,
-                data: Object.values(this.queue.dataAlertsHigh[i]),
-                borderColor: cols[i],
-                backgroundColor: cols[i],
-                fill: false,
-                pointRadius: 2,
-                pointHoverRadius: 5,
-              })
-            }
-            for(let i = 0; i < this.queue.dataPeopleAll.length; i++){
-              datasetsPall.push({
-                label: `Fila: ${i + 1}`,
-                data: Object.values(this.queue.dataPeopleAll[i]),
-                borderColor: cols[i],
-                backgroundColor: cols[i],
-                fill: false,
-                pointRadius: 2,
-                pointHoverRadius: 5,
-              })
-            }
-            this.dataL = {
-              labels: labels,
-              datasets: datasetsLow,
-            };
-            this.dataH = {
-              labels: labels,
-              datasets: datasetsHigh,
-            };
-            this.dataM = {
-              labels: labels,
-              datasets: datasetsMed,
-            };
 
-            this.dataP = {
-              labels: times,
-              datasets: datasetsPall
+            this.dataR = {
+              labels: labelsr,
+              datasets: [
+                {
+                  label: `Recibo`,
+                  data: Object.values(this.scc.dataPeopleReceipt),
+                  borderColor: cols[0],
+                  backgroundColor: cols[0],
+                  fill: false,
+                  pointRadius: 2,
+                  pointHoverRadius: 5,
+                }
+              ],
             };
+            this.dataT = {
+              labels: labelstr,
+              datasets: [
+                {
+                  label: `Carro`,
+                  data: Object.values(this.scc.dataAlertsTrolley),
+                  borderColor: cols[1],
+                  backgroundColor: cols[1],
+                  fill: false,
+                  pointRadius: 2,
+                  pointHoverRadius: 5,
+                }
+              ],
+            };
+            // this.dataM = {
+            //   labels: labels,
+            //   datasets: datasetsMed,
+            // };
+
+            // this.dataP = {
+            //   labels: times,
+            //   datasets: datasetsPall
+            // };
             this.options = {
               responsive: true,
               maintainAspectRatio: false,
@@ -312,7 +243,7 @@ export class QueueComponent implements OnInit, OnDestroy {
         },
         err => {
           console.error(err)
-          this.queue = undefined;
+          this.scc = undefined;
           this.avgss = []
         }
       )
@@ -385,7 +316,7 @@ export class QueueComponent implements OnInit, OnDestroy {
         filter: false
       },  
       zone: {
-        title: 'QUEUE',
+        title: 'scc',
         type: 'string',
         filter: false
       }

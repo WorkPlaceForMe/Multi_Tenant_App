@@ -167,6 +167,7 @@ import { EnterExitVComponent } from './online/graphs/enter-exit-v/enter-exit-v.c
 import { HamCheeseComponent } from './online/graphs/ham-cheese/ham-cheese.component';
 import { AvailabilityComponent } from './online/graphs/availability/availability.component';
 import { TemperatureComponent } from './online/graphs/temperature/temperature.component';
+import { SccComponent } from './online/graphs/scc/scc.component';
 
 @NgModule({
   imports: [
@@ -342,6 +343,7 @@ import { TemperatureComponent } from './online/graphs/temperature/temperature.co
     HamCheeseComponent,
     AvailabilityComponent,
     TemperatureComponent,
+    SccComponent,
   ],
   providers: [
     FacesService,

@@ -15,6 +15,10 @@ exports.initial = async function () {
     where: { id: 68 }
   })
   await algo.create({
+    id: 71,
+    name: 'Caja automatica'
+  })
+  await algo.create({
     id: 69,
     name: 'Disponibilidad Pan'
   })

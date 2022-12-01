@@ -54,7 +54,12 @@
                     <button class="btn btn-sm" *ngIf="algorithm.id == 68"
                     [ngClass]="(algorithm.id == 17 || algorithm.id == 12 || algorithm.id == 59 || algorithm.id == 22 || algorithm.id == 68) ? 'btn-info': 'btn-warning'"
                     [routerLink]="['/pages/cameras/algorithms/', param, algorithm.id, algorithm.conf + '-' + algorithm.save + '-' + algorithm.time + '-' + hamAndCheese.low+ '-' + hamAndCheese.med+ '-' + hamAndCheese.high]"
-                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{i == 8 || i == 4  || algorithm.id == 59 || algorithm.id == 22  || algorithm.id == 68 ?  'Hacer click para definir area necesaria' : 'Agregar area de foco'}}</button></span>
+                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{i == 8 || i == 4  || algorithm.id == 59 || algorithm.id == 22  || algorithm.id == 68 ?  'Hacer click para definir area necesaria' : 'Agregar area de foco'}}</button>
+                    <button class="btn btn-sm" *ngIf="algorithm.id != 68 && algorithm.id != 22"
+                    [ngClass]="algorithm.id == 4 || algorithm.id == 8 ? 'btn-info': 'btn-warning'"
+                    [routerLink]="['/pages/cameras/algorithms/', param, algorithm.id, algorithm.conf + '-' + algorithm.save + '-' + algorithm.time]"
+                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{algorithm.id == 4 || algorithm.id == 8 ?  'Hacer click para definir area necesaria' : 'Agregar area de foco'}}</button>
+                </span>
                 <!-- <span class="mat-cell"><input type="number" [(ngModel)]='Calgos[i].conf' min="0" max="100" value="95"
                     [disabled]='algorithm.activated==false || algorithm.activated == undefined'>&nbsp;%</span> -->
                 <!-- <span class="mat-cell">
