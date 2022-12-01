@@ -148,7 +148,7 @@ exports.processVideo = async (req, res) => {
           .then(progress => {
             if (progress) {
               console.log('Progress data created with id: ' + progress.id)
-              cameraDBService.updateSummarizationStatus(reqBody.videoId, summarizationStatus.IN_PROGRESS).then()
+              cameraDBService.updateSummarizationStatus(reqBody.videoId, summarizationStatus.IN_PROGRESS, null).then()
 
               exec(
                 cmd,
@@ -160,7 +160,7 @@ exports.processVideo = async (req, res) => {
                     summarizationDBService
                       .updateProgressData(progress.id, summarizationStatus.ERROR)
                       .then(() => {
-                        cameraDBService.updateSummarizationStatus(reqBody.videoId, summarizationStatus.ERROR).then()
+                        cameraDBService.updateSummarizationStatus(reqBody.videoId, summarizationStatus.ERROR, null).then()
                       })
                     console.log('======= Video Processing failed =======')
                     console.log(`error: ${err}`)
@@ -170,7 +170,8 @@ exports.processVideo = async (req, res) => {
                     summarizationDBService
                       .updateProgressData(progress.id, summarizationStatus.COMPLETED)
                       .then(() => {
-                        cameraDBService.updateSummarizationStatus(reqBody.videoId, summarizationStatus.COMPLETED, summarizationStatus.COMPLETED).then()
+                        const outputVideoStream = `${process.env.app_url}/api/pictures/${req.decodedJWT.id_account}/${req.decodedJWT.id_branch}/videos/${outputVideoFile}`
+                        cameraDBService.updateSummarizationStatus(reqBody.videoId, summarizationStatus.COMPLETED, summarizationStatus.COMPLETED, outputVideoStream).then()
                       }
                       )
                     console.log(`stdout: ${stdout}`)
@@ -213,7 +214,7 @@ exports.getOutputVideoStream = async (req, res) => {
         if (data) {
           if (fs.existsSync(data.output_file_path)) {
             console.log(
-              'Found Processed video found for the client with client id: ' +
+              'Processed video fund for the client with client id: ' +
                 req.query.clientId +
                 ' video path: ' +
                 data.output_file_path

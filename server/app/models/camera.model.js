@@ -50,6 +50,9 @@ module.exports = (sequelize, Sequelize) => {
     any_successful_summarization: {
       type: Sequelize.INTEGER,
       defaultValue: 0
+    },
+    sum_http_in: {
+      type: Sequelize.STRING
     }
   })
 

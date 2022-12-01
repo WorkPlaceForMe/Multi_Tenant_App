@@ -1,11 +1,11 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-require('dotenv').config({ path: '../config.env' })
+const path = require('path')
+require('dotenv').config({ path: path.resolve(__dirname, '../config.env') })
 const app = express()
 const morgan = require('morgan')
 const fs = require('fs')
-const path = require('path')
 const init = require('./app/initializator/initialFunct')
 const mysql = require('mysql2/promise')
 const compression = require('compression')
@@ -105,9 +105,9 @@ if (process.env.INSTALL === 'true') {
       port: process.env.DB_PORT
     }).then(connection => {
       connection.query(`CREATE DATABASE IF NOT EXISTS ${process.env.DB}`).then(() => {
-        db.sequelize.sync({ force: true }).then(() => {
-          console.log('Drop and Resync Db')
-          init.initial().then()
+        db.sequelize.sync({ force: false, alter: true }).then(() => {
+          init.initial()
+          console.log('Sequelize is connected and updated.')
         })
       })
     })
@@ -120,10 +120,6 @@ const opt = {
       title: 'Graymatics API',
       version: '5.0.2',
       description: 'Graymatics API Information',
-      // license: {
-      //   name: "MIT",
-      //   url: "https://spdx.org/licenses/MIT.html",
-      // },
       contact: {
         name: 'Graymatics',
         url: 'https://www.graymatics.com',
@@ -163,12 +159,6 @@ app.use(
   })
 )
 
-// if (1 === 2) {
-//   const doc = YAML.dump(swaggerDocs)
-//   fs.writeFileSync('./resources/swagger.yaml', doc, 'utf8')
-// }
-
-// routes
 require('./app/routes/auth.routes')(app)
 require('./app/routes/user.routes')(app)
 require('./app/routes/fr.routes')(app)
@@ -180,7 +170,6 @@ require('./app/routes/relations.routes')(app)
 require('./app/routes/schedule.routes')(app)
 require('./app/routes/ticket.routes')(app)
 require('./app/routes/analytics.routes')(app)
-// require('./app/routes/email.routes')(app)
 require('./app/routes/elastic.routes')(app)
 require('./app/routes/alerts.routes')(app)
 require('./app/routes/path.routes')(app)
@@ -195,13 +184,5 @@ app.use('/api/pictures', express.static(resourcesFolderPath))
 
 // assets being served
 app.use('/api/assets', express.static(assetsFolderPath))
-
-// client side
-// app.use(express.static(process.env.WEBSITE_PATH));
-
-// // 404 re-route
-// app.get('*', function(req,res){
-//     res.redirect('/');
-//   });
 
 module.exports = app

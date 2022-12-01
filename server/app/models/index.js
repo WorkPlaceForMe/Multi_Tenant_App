@@ -1,4 +1,5 @@
-require('dotenv').config({ path: '../../../config.env' })
+const path = require('path')
+require('dotenv').config({ path: path.resolve(__dirname,'../../../config.env') })
 const Sequelize = require('sequelize')
 const sequelize = new Sequelize(process.env.DB, process.env.USERM, process.env.PASSWORD, {
   host: process.env.HOST,
