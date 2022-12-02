@@ -170,7 +170,7 @@ exports.processVideo = async (req, res) => {
                     summarizationDBService
                       .updateProgressData(progress.id, summarizationStatus.COMPLETED)
                       .then(() => {
-                        const outputVideoStream = `${process.env.app_url}/api/pictures/${req.decodedJWT.id_account}/${req.decodedJWT.id_branch}/videos/${outputVideoFile}`
+                        const outputVideoStream = `${process.env.app_url}/api/pictures/${req.decodedJWT.id_account}/${req.decodedJWT.id_branch}/videos/${path.basename(outputVideoFile)}`
                         cameraDBService.updateSummarizationStatus(reqBody.videoId, summarizationStatus.COMPLETED, summarizationStatus.COMPLETED, outputVideoStream).then()
                       }
                       )
