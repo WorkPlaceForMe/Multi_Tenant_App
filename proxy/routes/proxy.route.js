@@ -1,4 +1,4 @@
-const { verifyIn } = require('../middleware')
+const { verifyIn, verify } = require('../middleware')
 const controller = require('../controllers/proxy.controller')
 
 module.exports = function (app, v) {
@@ -21,7 +21,7 @@ module.exports = function (app, v) {
 
   app.post(
     `/api/${v}/i`,
-    [ verifyIn.values],
+    [verifyIn.values],
     controller.insert
   )
 }

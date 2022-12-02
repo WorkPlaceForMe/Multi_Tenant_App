@@ -1,5 +1,7 @@
 const verifyIn = require('./verifyInsertion')
+const verify = require('./verify')
 
 module.exports = {
-    verifyIn
+    verifyIn,
+    verify
 }
