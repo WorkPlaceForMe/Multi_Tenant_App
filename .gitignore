@@ -50,4 +50,4 @@ dockerDeployment/resources/**
 !dockerDeployment/resources/googleLogo.png
 !dockerDeployment/resources/favicon1.png
 !dockerDeployment/resources/favicon1.ico
-pythonServer/resources/logs/prAccess.log
+proxy/resources/logs/prAccess.log
