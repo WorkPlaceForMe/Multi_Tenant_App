@@ -57,7 +57,7 @@ services:
     #   - "3301:3301"
     # networks:
     #   - dev
-    image: graymatics1/multi-tenant-proxy:1.0.0
+    image: graymatics1/multi-tenant-proxy:1.1.1
     restart: always
     volumes:
       - ../configDocker.env:/usr/src/config.env
