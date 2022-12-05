@@ -9,7 +9,7 @@ module.exports = function (app, v) {
 
   app.post(
     `/api/${v}/r`,
-    [],
+    [verify.check],
     controller.retrieve
   )
 

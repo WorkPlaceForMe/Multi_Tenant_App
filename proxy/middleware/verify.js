@@ -10,7 +10,12 @@ const check = (req, res, next) => {
       }
 
     const bytes  = crypt.AES.decrypt(token, process.env.SECRETAPIPROXY);
+
+    //================================
+
     const comparison = bytes.toString(crypt.enc.Utf8);
+
+    //Ask Ranjit to help me in this area. ==================
 
     console.log(comparison)
 
