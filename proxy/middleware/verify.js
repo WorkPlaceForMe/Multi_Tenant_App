@@ -1,4 +1,4 @@
-const crypt = require('crypto-js')
+const CryptoJS = require('crypto-js')
 require('dotenv').config({ path: '../../../config.env' })
 
 const check = (req, res, next) => {
@@ -7,17 +7,12 @@ const check = (req, res, next) => {
         return res.status(403).send({
           message: 'No password provided!'
         })
-      }
+    }
 
-    const bytes  = crypt.AES.decrypt(token, process.env.SECRETAPIPROXY);
-
-    //================================
-
-    const comparison = bytes.toString(crypt.enc.Utf8);
-
-    //Ask Ranjit to help me in this area. ==================
-
-    console.log(comparison)
+    const key = CryptoJS.enc.Utf8.parse(process.env.SECRETAPIPROXY);
+    const iv  = CryptoJS.enc.Utf8.parse(process.env.ENCRYPTIONIV);
+    const data = CryptoJS.AES.decrypt(token, key, { iv: iv });
+    const comparison = data.toString(CryptoJS.enc.Utf8);
 
     if(comparison !== process.env.PASSAPIPROXY){
         return res.status(401).send({
