@@ -30,7 +30,6 @@ export class AdminGuard implements CanActivate {
         return new Promise((resolve, reject) => {
           this.facesService.mess().subscribe(
             (res) => {
-              return this.router.navigate(["/pages/accounts"]);
               return resolve(true);
             },
             (err) => {

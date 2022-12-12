@@ -22,14 +22,12 @@ export class OtherGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    if (this.authService.isClientorBranch !== true) {
       if (this.authService.isLoggedIn !== true) {
         return this.router.navigate(["/pages/sign-in"]);
       } else {
         return new Promise((resolve, reject) => {
           this.facesService.mess().subscribe(
             (res) => {
-              return this.router.navigate(["/pages/graphs"]);
               return resolve(true);
             },
             (err) => {
@@ -43,5 +41,4 @@ export class OtherGuard implements CanActivate {
         });
       }
     }
-  }
 }
