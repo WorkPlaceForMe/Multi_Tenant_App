@@ -237,11 +237,12 @@ exports.search1 = async (req, res) => {
     })
   }
   try {
-    console.dir(params, { depth: null })
     const body = await client.search(params)
+    console.log('============')
     const hits = body.body.hits
     if (hits.hits.length > 0) {
       for (const elem of hits.hits) {
+        console.log(elem)
         elem._source.url =
           'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
       }
@@ -444,8 +445,10 @@ exports.search = async (req, res) => {
           const hits2 = secondBody.body.hits
           if (hits2.hits.length !== 0) {
             for (const elem of hits2.hits) {
-              elem._source.url =
-                'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
+              if (elem._source.filename) {
+                elem._source.url =
+                  'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
+              }
               hits.hits.push(elem)
             }
           }
@@ -805,17 +808,102 @@ exports.editVid = (req, res) => {
   })
 }
 
-exports.some = async (req, res) => {
-  const table = 'violence'
-  client.cluster.health({}, async function (_err, resp, status) {
-    console.log('-- Client Health --', resp)
-    try {
-      const r = await deleteIndex(table)
-      res.status(200).json({ success: true, data: r })
-    } catch (err) {
-      res.status(500).json({ success: false, mess: err })
+const index = 'gmtc_searcher_3333-666666-cccccc-nnnnnn'
+
+exports.some3 = async (req, res) => {
+  // const a = await client.info()
+  // console.log(a)
+  try {
+    await run()
+    const a = await read()
+    res.status(200).json({ success: true, mess: a })
+  } catch (err) {
+    res.status(500).json({ success: false, mess: err })
+  }
+}
+
+async function read () {
+  const { body } = await client.search({
+    index: index,
+    body: {
+      query: {
+        match: { description: 'winter' }
+      }
     }
   })
+  // console.log(body.hits.hits)
+  return body.hits.hits
+}
+
+async function run () {
+  await client.index({
+    index: index,
+    body: {
+      character: 'Ned Stark',
+      time: new Date(),
+      description: 'Winter is coming.'
+    }
+  })
+
+  await client.index({
+    index: index,
+    body: {
+      character: 'Daenerys Targaryen',
+      time: new Date(),
+      description: 'I am the blood of the dragon.'
+    }
+  })
+
+  await client.index({
+    index: index,
+    body: {
+      character: 'Tyrion Lannister',
+      time: new Date(),
+      description: 'A mind needs books like a sword needs whetstone.'
+    }
+  })
+
+  await client.indices.refresh({ index: index })
+}
+
+exports.some = async (req, res) => {
+  const data = {}
+  data.query = ''
+  const actualIndexName = 'antwrep'
+  // const indexAlreadyExists = await client.indices.exists({
+  //   index: actualIndexName
+  // })
+  // if (indexAlreadyExists.statusCode !== 200) {
+  //   res.status(501).json({
+  //     success: true,
+  //     data: { hits: [] }
+  //   })
+  // } else {
+  const params = {
+    index: [actualIndexName],
+    body: {
+      query: {
+        bool: {
+          must: [
+            {
+              match: {
+                description: data.query
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+  try {
+    console.dir(params, { depth: null })
+    const body = await client.search(params)
+    const hits = body.body.hits
+    res.status(200).json({ success: true, hits })
+  } catch (err) {
+    res.status(500).json({ success: false, mess: err })
+  }
+  // }
 }
 
 async function deleteIndex (table) {
