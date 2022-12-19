@@ -68,3 +68,32 @@ exports.insert = async (req, res) => {
     }
   )
 }
+
+exports.create = async (req, res) => {
+  const data = req.body
+  console.log(data)
+  await db
+  .con()
+  .query(
+    `CREATE TABLE if not exists ${data.table} (${data.values});`,
+    //CREATE TABLE `multi_tenant5`.`new_table` (
+  // `id` VARCHAR(45) NOT NULL,
+  // `time` DATETIME NULL,
+  // `value` VARCHAR(45) NULL,
+  // PRIMARY KEY (`id`));
+    function (err, result) {
+      if (err)
+      return res.status(500).json({
+        success: false,
+        message: err
+      })
+      const a = {
+          results: result,
+        }
+        res.status(200).json({
+          success: true,
+          data: a
+        })
+    }
+  )
+}

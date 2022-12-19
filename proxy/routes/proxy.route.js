@@ -15,13 +15,19 @@ module.exports = function (app, v) {
 
   app.put(
     `/api/${v}/u`,
-    [],
+    [verify.check],
     controller.update
   )
 
   app.post(
     `/api/${v}/i`,
-    [verifyIn.values],
+    [verifyIn.values,verify.check],
     controller.insert
+  )
+
+  app.post(
+    `/api/${v}/c`,
+    [verify.check],
+    controller.create
   )
 }
