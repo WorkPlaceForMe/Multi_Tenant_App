@@ -1,50 +1,50 @@
-:host ::ng-deep ng2-smart-table table tr.ng2-smart-titles th a:hover, :host ::ng-deep ng2-smart-table table tr.ng2-smart-titles th a:active, :host ::ng-deep ng2-smart-table table tr.ng2-smart-titles th a:visited {
-    font-size: 12px !important;
-    color: #222222 !important;
-    font-family: Roboto, Helvetica, sans-serif;
-  }
+// :host ::ng-deep ng2-smart-table table tr.ng2-smart-titles th a:hover, :host ::ng-deep ng2-smart-table table tr.ng2-smart-titles th a:active, :host ::ng-deep ng2-smart-table table tr.ng2-smart-titles th a:visited {
+//     font-size: 12px !important;
+//     color: #222222 !important;
+//     font-family: Roboto, Helvetica, sans-serif;
+//   }
 
-  :host ::ng-deep ng2-smart-table table tr.ng2-smart-filters{
-    display: none !important;
-  }
+//   :host ::ng-deep ng2-smart-table table tr.ng2-smart-filters{
+//     display: none !important;
+//   }
   
-  :host ::ng-deep ng2-smart-table table tr th,  :host ::ng-deep ng2-smart-table table tr td {
-    padding-top: 12px !important;
-    padding-bottom: 12px !important;
-    border-left: 0px !important;
-    border-right: 0px !important;
-    border-top: 0px !important; 
-    border-bottom: 1px solid #eeeeee
-  }
+//   :host ::ng-deep ng2-smart-table table tr th,  :host ::ng-deep ng2-smart-table table tr td {
+//     padding-top: 12px !important;
+//     padding-bottom: 12px !important;
+//     border-left: 0px !important;
+//     border-right: 0px !important;
+//     border-top: 0px !important; 
+//     border-bottom: 1px solid #eeeeee
+//   }
 
-:host ::ng-deep ng2-smart-table thead > tr > th  { 
-    padding-top: 12px !important;
-    padding-bottom: 12px !important;
-    border-left: 0px !important;
-    border-right: 0px !important;
-    border-top: 0px !important;  
-}
+// :host ::ng-deep ng2-smart-table thead > tr > th  { 
+//     padding-top: 12px !important;
+//     padding-bottom: 12px !important;
+//     border-left: 0px !important;
+//     border-right: 0px !important;
+//     border-top: 0px !important;  
+// }
 
-:host ::ng-deep ng2-smart-table tbody tr:nth-child(2n), :host ::ng-deep ng2-smart-table tbody tr.selected{
-    background-color: #FFFFFF !important
-}
-
-
-:host ::ng-deep ng2-smart-table nav.ng2-smart-pagination-nav .pagination li a, :host ::ng-deep ng2-smart-table nav.ng2-smart-pagination-nav .pagination li > span {
-    color: #d12e26
-}
-
-:host ::ng-deep ng2-smart-table nav.ng2-smart-pagination-nav .pagination li.active > span, :host ::ng-deep ng2-smart-table nav.ng2-smart-pagination-nav .pagination li.active > span, .nb-theme-corporate ng2-smart-table nav.ng2-smart-pagination-nav .pagination li.active > span:hover {
-    color: #bbbbbb;
-    background-color: #FFFFFF
-}
+// :host ::ng-deep ng2-smart-table tbody tr:nth-child(2n), :host ::ng-deep ng2-smart-table tbody tr.selected{
+//     background-color: #FFFFFF !important
+// }
 
 
+// :host ::ng-deep ng2-smart-table nav.ng2-smart-pagination-nav .pagination li a, :host ::ng-deep ng2-smart-table nav.ng2-smart-pagination-nav .pagination li > span {
+//     color: #d12e26
+// }
 
-:host ::ng-deep  ng2-smart-table nav.ng2-smart-pagination-nav .pagination, :host ::ng-deep ng2-smart-table nav.ng2-smart-pagination-nav .pagination li:not(:last-child){
-    border: 0px !important;
-}
+// :host ::ng-deep ng2-smart-table nav.ng2-smart-pagination-nav .pagination li.active > span, :host ::ng-deep ng2-smart-table nav.ng2-smart-pagination-nav .pagination li.active > span, .nb-theme-corporate ng2-smart-table nav.ng2-smart-pagination-nav .pagination li.active > span:hover {
+//     color: #bbbbbb;
+//     background-color: #FFFFFF
+// }
 
-:host ::ng-deep ng2-smart-table .ng2-smart-actions a.ng2-smart-action {
-    font-size: 16px !important;
-}
+
+
+// :host ::ng-deep  ng2-smart-table nav.ng2-smart-pagination-nav .pagination, :host ::ng-deep ng2-smart-table nav.ng2-smart-pagination-nav .pagination li:not(:last-child){
+//     border: 0px !important;
+// }
+
+// :host ::ng-deep ng2-smart-table .ng2-smart-actions a.ng2-smart-action {
+//     font-size: 16px !important;
+// }
