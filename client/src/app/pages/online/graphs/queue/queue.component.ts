@@ -364,7 +364,7 @@ export class QueueComponent implements OnInit, OnDestroy {
     noDataMessage: "No data found",
     columns: {
       picture: {
-        title: 'PICTURE',
+        title: 'Imagen',
         type: 'custom',
         filter: false,
         renderComponent: ButtonViewComponentPic,
@@ -375,17 +375,17 @@ export class QueueComponent implements OnInit, OnDestroy {
         }
       },
       time: {
-        title: 'TIME',
+        title: 'Hora',
         type: 'string',
         filter: false
       },  
       camera_name: {
-        title: 'CAM',
+        title: 'Camara',
         type: 'string',
         filter: false
       },  
       zone: {
-        title: 'QUEUE',
+        title: 'Fila',
         type: 'string',
         filter: false
       }
