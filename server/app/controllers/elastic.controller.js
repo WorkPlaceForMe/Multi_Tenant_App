@@ -205,7 +205,7 @@ exports.search1 = async (req, res) => {
     const recRes = await searchAndAdd(words, data.filters.bounded.time, index, data.filters.range)
     for (const elem of recRes) {
       elem._source.url =
-        'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
+        `${process.env.app_url}/api/pictures${encodeURI(elem._source.filename)}`
     }
 
     return res.status(200).json({ success: true, data: { hits: recRes } })
@@ -238,13 +238,11 @@ exports.search1 = async (req, res) => {
   }
   try {
     const body = await client.search(params)
-    console.log('============')
     const hits = body.body.hits
     if (hits.hits.length > 0) {
       for (const elem of hits.hits) {
-        console.log(elem)
         elem._source.url =
-          'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
+          `${process.env.app_url}/api/pictures${encodeURI(elem._source.filename)}`
       }
       const gt = new Date(Date.parse(hits.hits[0]._source.time) - 1000)
       const lt = new Date(Date.parse(hits.hits[0]._source.time) + 1000)
@@ -279,7 +277,7 @@ exports.search1 = async (req, res) => {
         if (hits2.hits.length !== 0) {
           for (const elem of hits2.hits) {
             elem._source.url =
-              'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
+              `${process.env.app_url}/api/pictures${encodeURI(elem._source.filename)}`
             hits.hits.push(elem)
           }
         }
@@ -357,7 +355,7 @@ exports.search = async (req, res) => {
       for (const elem of recRes) {
         if (elem._source.filename) {
           elem._source.url =
-            'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
+            `${process.env.app_url}/api/pictures${encodeURI(elem._source.filename)}`
         }
       }
 
@@ -410,7 +408,7 @@ exports.search = async (req, res) => {
         for (const elem of hits.hits) {
           if (elem._source.filename) {
             elem._source.url =
-              'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
+              `${process.env.app_url}/api/pictures${encodeURI(elem._source.filename)}`
           }
         }
         const gt = new Date(Date.parse(hits.hits[0]._source.time) - 1000)
@@ -447,7 +445,7 @@ exports.search = async (req, res) => {
             for (const elem of hits2.hits) {
               if (elem._source.filename) {
                 elem._source.url =
-                  'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
+                  `${process.env.app_url}/api/pictures${encodeURI(elem._source.filename)}`
               }
               hits.hits.push(elem)
             }
