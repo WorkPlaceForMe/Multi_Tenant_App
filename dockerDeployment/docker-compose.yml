@@ -18,7 +18,7 @@ services:
       - ../configDocker.env:/usr/src/config.env
 
   multi-tenant-ui:
-    image: graymatics1/multi-tenant-ui:2.3.40
+    image: graymatics1/multi-tenant-ui:2.3.42
     # networks:
     #   - dev
     restart: always
