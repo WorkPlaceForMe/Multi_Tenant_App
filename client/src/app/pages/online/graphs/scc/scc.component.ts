@@ -295,7 +295,7 @@ export class SccComponent implements  OnInit, OnDestroy {
     noDataMessage: "No data found",
     columns: {
       picture: {
-        title: 'PICTURE',
+        title: 'Imagen',
         type: 'custom',
         filter: false,
         renderComponent: ButtonViewComponentPic,
@@ -306,17 +306,27 @@ export class SccComponent implements  OnInit, OnDestroy {
         }
       },
       time: {
-        title: 'TIME',
+        title: 'Hora',
         type: 'string',
         filter: false
       },  
       camera_name: {
-        title: 'CAM',
+        title: 'Camara',
+        type: 'string',
+        filter: false
+      },  
+      receipt: {
+        title: 'Recibo',
+        type: 'string',
+        filter: false
+      },  
+      trolley: {
+        title: 'Carro',
         type: 'string',
         filter: false
       },  
       zone: {
-        title: 'scc',
+        title: 'Zona',
         type: 'string',
         filter: false
       }
