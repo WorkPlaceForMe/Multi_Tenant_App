@@ -3,6 +3,7 @@ import { FacesService } from '../../../../services/faces.service';
 import { Account } from '../../../../models/Account';
 import { AccountService } from '../../../../services/account.service';
 import { api } from '../../../../models/API'
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'ngx-center',
@@ -15,6 +16,7 @@ export class CenterComponent implements OnInit {
   constructor(
     private accountserv: AccountService,
     private face: FacesService,
+    private activatedRoute: ActivatedRoute
     ) { }
 
   info: any = []
@@ -29,17 +31,19 @@ export class CenterComponent implements OnInit {
   }
   overview ={
     algo_id: -3,
-    name: 'General Dashboard',
-    status: "'primary'"
+    name: 'Dashboard',
+    status: "'primary"
   }
 
   liveView  = {
     algo_id: -4,
     name: 'Live View',
-    status: "'primary'"
+    status: "'primary"
   }
 
-pic:string = `${api}/pictures/graymaticsLogo.png`
+pic:string = `${api}/assets/graymaticsLogo.png`
+cameraMenu = [];
+cameraId: string;
 
   aaa(event){
     this.camera = event
@@ -102,6 +106,14 @@ pic:string = `${api}/pictures/graymaticsLogo.png`
 
   dispThreats: boolean = false;
   ngOnInit(): void {
+    this.activatedRoute.params.subscribe(() => {
+      const queryParams = this.activatedRoute.snapshot.params;
+    
+      if(queryParams.id){
+        this.cameraId = queryParams.id
+      } 
+    });
+
     this.now_user = JSON.parse(localStorage.getItem('now_user'))
     this.analytic = this.overview
     this.face.getDashboard().subscribe(
@@ -129,6 +141,34 @@ pic:string = `${api}/pictures/graymaticsLogo.png`
       },
       err => console.error(err)
     )
+
+    this.face.getCameras().subscribe(
+      res => {
+        console.log(res)
+        const cams = res['data'];
+        cams.forEach( camera => {
+          const  data = {
+            title: camera.name,
+            link: ["/pages/dashboards", camera.id],
+            icon: "film-outline",
+            badge: {
+              text: '1+',
+              status: 'success',
+            },
+          }
+
+          if(camera.stored_vid.toLowerCase() === 'no'){
+            data.icon = "video-outline"
+          }
+          
+          if(!this.cameraId){
+            this.cameraId = camera.id
+          }       
+          this.cameraMenu.push(data)
+        });
+      },
+      err => console.error(err)
+    );
   }
 
 }

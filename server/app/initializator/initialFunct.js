@@ -6,8 +6,16 @@ const bcrypt = require('bcryptjs')
 const fs = require('fs')
 
 exports.initial = async function () {
-  const path =
-  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+  const user = await usr.findOne({
+    where: { username: "admin" },
+  })
+
+  if (user) {
+    return
+  }
+
+  const path = process.env.resourcePath
+
   await usr.create({
     id: '0000-11111-aaaaaa-bbbbbb',
     username: 'admin',
@@ -322,4 +330,3 @@ exports.initial = async function () {
     })
   }
 }
-// INSERT INTO `multi_tenant`.`algorithms` (`id`, `name`, `createdAt`, `updatedAt`) VALUES ('27', 'Camera Tampering', '2020-10-05 07:31:29', '2020-10-05 07:31:29');

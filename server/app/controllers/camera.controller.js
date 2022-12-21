@@ -7,8 +7,7 @@ const { v4: uuidv4 } = require('uuid')
 const fs = require('fs')
 const axios = require('axios')
 
-const path =
-  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+const path = process.env.resourcePath
 const my_ip = process.env.my_ip
 
 exports.addCamera = (req, res) => {
@@ -46,7 +45,7 @@ exports.viewCams = (req, res) => {
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Camera.findAll({
       where: { id_branch: decoded.id_branch },
-      attributes: ['name', 'id', 'createdAt', 'updatedAt']
+      attributes: ['name', 'id', 'stored_vid', 'createdAt', 'updatedAt']
     })
       .then(cameras => {
         res.status(200).send({ success: true, data: cameras })

@@ -5,8 +5,7 @@ const User = db.user
 const Camera = db.camera
 const Relation = db.relation
 const bcrypt = require('bcryptjs')
-const path =
-  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+const path = process.env.resourcePath
 const fs = require('fs')
 
 // Add heatmap to be deleted

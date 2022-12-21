@@ -51,7 +51,7 @@ export class LogInComponent implements OnInit {
 
   iconGoogle(){
     let icon = {
-    'background': "url('" + api + "/pictures/googleLogo.png') 100% 100% no-repeat",
+    'background': "url('" + api + "/assets/googleLogo.png') 100% 100% no-repeat",
     'display': 'inline-block',
     'vertical-align': 'middle',
     'width': '42px',
@@ -128,7 +128,7 @@ export class LogInComponent implements OnInit {
 
   iconMs(){
     let icon = {
-      'background': "url('" + api + "/pictures/Microsoft_logo.svg.png') 100% 100% no-repeat",
+      'background': "url('" + api + "/assets/Microsoft_logo.svg.png') 100% 100% no-repeat",
       'display': 'inline-block',
       'vertical-align': 'middle',
       'width': '42px',

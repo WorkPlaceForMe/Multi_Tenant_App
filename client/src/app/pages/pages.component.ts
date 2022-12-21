@@ -34,11 +34,11 @@ export class PagesComponent {
   }
 
   constructor( public authService: AuthService, private router: Router, private service: FacesService) {
-    if(authService.isLoggedIn && !authService.isAdmin){
+    if(authService.isLoggedIn){
       this.service.getDashboard().subscribe(
         res => {
           for(const alg of res['data']['analyticsT']){
-            if(alg.algo_id === 0 && this.menuBranch.length === 8){
+            if(alg.algo_id === 0){
               this.menuClient.push(this.fr)
               this.menuBranch.push(this.fr)
             }
@@ -52,7 +52,7 @@ export class PagesComponent {
     }
     router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
-        if(val.url == '/pages/graphs'){
+        if(val.url == '/pages/dashnboards'){
           this.showHeader = false;
           this.state = "collapsed";
         }else{

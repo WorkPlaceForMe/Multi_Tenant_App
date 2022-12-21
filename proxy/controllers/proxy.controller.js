@@ -48,6 +48,7 @@ exports.update = async (req, res) => {
 
 exports.insert = async (req, res) => {
   const data = req.body
+  
   await db
   .con()
   .query(
@@ -72,10 +73,19 @@ exports.insert = async (req, res) => {
 exports.create = async (req, res) => {
   const data = req.body
   console.log(data)
+
+  data.values = ''
+
+  data.columns.map(item => {   
+      data.values +=  `${item.key} ${item.type} ${item.default}, `
+  })
+
+  data.values += `PRIMARY KEY (id)`
+
   await db
   .con()
   .query(
-    `CREATE TABLE if not exists ${data.table} (${data.values});`,
+    `CREATE TABLE if not exists multi_tenantrel.${data.table} (${data.values});`,
     //CREATE TABLE `multi_tenant5`.`new_table` (
   // `id` VARCHAR(45) NOT NULL,
   // `time` DATETIME NULL,

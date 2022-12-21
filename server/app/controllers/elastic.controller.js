@@ -19,8 +19,7 @@ const client = new elasticsearch.Client({
 })
 
 const con = require('../models/dbmysql')
-const path =
-  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+const path = process.env.resourcePath
 const multer = require('multer')
 const AWS = require('aws-sdk')
 const s3 = new AWS.S3({
@@ -28,6 +27,8 @@ const s3 = new AWS.S3({
   secretAccessKey: process.env.SECRETKEY
 })
 const incidentIndex = 'gmtc_searcher'
+const summarizationStatus = require('../utils/summarization.status')
+const cameraDBService = require('../services/camera.db.service')
 
 exports.ping = async (req, res) => {
   try {
@@ -205,7 +206,7 @@ exports.search1 = async (req, res) => {
     const recRes = await searchAndAdd(words, data.filters.bounded.time, index, data.filters.range)
     for (const elem of recRes) {
       elem._source.url =
-        `${process.env.app_url}/api/pictures${encodeURI(elem._source.filename)}`
+        'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
     }
 
     return res.status(200).json({ success: true, data: { hits: recRes } })
@@ -237,12 +238,13 @@ exports.search1 = async (req, res) => {
     })
   }
   try {
+    console.dir(params, { depth: null })
     const body = await client.search(params)
     const hits = body.body.hits
     if (hits.hits.length > 0) {
       for (const elem of hits.hits) {
         elem._source.url =
-          `${process.env.app_url}/api/pictures${encodeURI(elem._source.filename)}`
+          'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
       }
       const gt = new Date(Date.parse(hits.hits[0]._source.time) - 1000)
       const lt = new Date(Date.parse(hits.hits[0]._source.time) + 1000)
@@ -277,7 +279,7 @@ exports.search1 = async (req, res) => {
         if (hits2.hits.length !== 0) {
           for (const elem of hits2.hits) {
             elem._source.url =
-              `${process.env.app_url}/api/pictures${encodeURI(elem._source.filename)}`
+              'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
             hits.hits.push(elem)
           }
         }
@@ -355,7 +357,7 @@ exports.search = async (req, res) => {
       for (const elem of recRes) {
         if (elem._source.filename) {
           elem._source.url =
-            `${process.env.app_url}/api/pictures${encodeURI(elem._source.filename)}`
+            'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
         }
       }
 
@@ -408,7 +410,7 @@ exports.search = async (req, res) => {
         for (const elem of hits.hits) {
           if (elem._source.filename) {
             elem._source.url =
-              `${process.env.app_url}/api/pictures${encodeURI(elem._source.filename)}`
+              'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
           }
         }
         const gt = new Date(Date.parse(hits.hits[0]._source.time) - 1000)
@@ -443,10 +445,8 @@ exports.search = async (req, res) => {
           const hits2 = secondBody.body.hits
           if (hits2.hits.length !== 0) {
             for (const elem of hits2.hits) {
-              if (elem._source.filename) {
-                elem._source.url =
-                  `${process.env.app_url}/api/pictures${encodeURI(elem._source.filename)}`
-              }
+              elem._source.url =
+                'https://multi-tenant2.s3.amazonaws.com/' + encodeURI(elem._source.filename)
               hits.hits.push(elem)
             }
           }
@@ -495,6 +495,8 @@ const stor = multer.diskStorage({
 
     jwt.verify(token, process.env.secret, (_err, decoded) => {
       const where = `${path}${decoded.id_account}/${decoded.id_branch}/videos/`
+      console.log('Path: ', path)
+      console.log('id_account: ', decoded.id_account)
 
       if (!fs.existsSync(where)) {
         fs.mkdirSync(where, {
@@ -729,10 +731,11 @@ exports.viewVids = async (req, res) => {
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Camera.findAll({
       where: {
-        id_branch: decoded.id_branch,
+        id_branch: decoded.id_account,
         stored_vid: 'Yes'
       },
-      attributes: ['name', 'id', 'createdAt', 'updatedAt', 'rtsp_in', 'stored_vid']
+      attributes: ['id_account', 'name', 'id', 'createdAt', 'updatedAt', 'rtsp_in',
+        'stored_vid', 'last_summarization_status', 'any_successful_summarization']
     })
       .then(cameras => {
         res.status(200).send({
@@ -806,102 +809,17 @@ exports.editVid = (req, res) => {
   })
 }
 
-const index = 'gmtc_searcher_3333-666666-cccccc-nnnnnn'
-
-exports.some3 = async (req, res) => {
-  // const a = await client.info()
-  // console.log(a)
-  try {
-    await run()
-    const a = await read()
-    res.status(200).json({ success: true, mess: a })
-  } catch (err) {
-    res.status(500).json({ success: false, mess: err })
-  }
-}
-
-async function read () {
-  const { body } = await client.search({
-    index: index,
-    body: {
-      query: {
-        match: { description: 'winter' }
-      }
-    }
-  })
-  // console.log(body.hits.hits)
-  return body.hits.hits
-}
-
-async function run () {
-  await client.index({
-    index: index,
-    body: {
-      character: 'Ned Stark',
-      time: new Date(),
-      description: 'Winter is coming.'
-    }
-  })
-
-  await client.index({
-    index: index,
-    body: {
-      character: 'Daenerys Targaryen',
-      time: new Date(),
-      description: 'I am the blood of the dragon.'
-    }
-  })
-
-  await client.index({
-    index: index,
-    body: {
-      character: 'Tyrion Lannister',
-      time: new Date(),
-      description: 'A mind needs books like a sword needs whetstone.'
-    }
-  })
-
-  await client.indices.refresh({ index: index })
-}
-
 exports.some = async (req, res) => {
-  const data = {}
-  data.query = ''
-  const actualIndexName = 'antwrep'
-  // const indexAlreadyExists = await client.indices.exists({
-  //   index: actualIndexName
-  // })
-  // if (indexAlreadyExists.statusCode !== 200) {
-  //   res.status(501).json({
-  //     success: true,
-  //     data: { hits: [] }
-  //   })
-  // } else {
-  const params = {
-    index: [actualIndexName],
-    body: {
-      query: {
-        bool: {
-          must: [
-            {
-              match: {
-                description: data.query
-              }
-            }
-          ]
-        }
-      }
+  const table = 'violence'
+  client.cluster.health({}, async function (_err, resp, status) {
+    console.log('-- Client Health --', resp)
+    try {
+      const r = await deleteIndex(table)
+      res.status(200).json({ success: true, data: r })
+    } catch (err) {
+      res.status(500).json({ success: false, mess: err })
     }
-  }
-  try {
-    console.dir(params, { depth: null })
-    const body = await client.search(params)
-    const hits = body.body.hits
-    res.status(200).json({ success: true, hits })
-  } catch (err) {
-    res.status(500).json({ success: false, mess: err })
-  }
-  // }
+  })
 }
 
 async function deleteIndex (table) {

@@ -1,0 +1,57 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - /var/lib/mysql-v:/var/lib/mysql
+    restart: always
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: graymatics
+      MYSQL_DATABASE: multi_tenantRel
+      MYSQL_USER: graymatics
+      MYSQL_PASSWORD: graymatics
+
+  multi-tenant-server:
+    build:
+      context: ./
+      dockerfile: ./server/Dockerfile
+    restart: always
+    depends_on:
+      - mysql
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities:
+                - gpu
+    ports:
+       - 3300:3300
+    volumes:
+      - /home/ubuntu/Multi_Tenant_App/video-summarization/Video_Summarization:/home/Video_Summarization
+      - /home/ubuntu/Multi_Tenant_App/resources:/home/Multi_Tenant_App/resources
+      - /home/ubuntu/Multi_Tenant_App/config.env:/usr/src/config.env
+
+  multi-tenant-ui:
+    build:
+      context: ./
+      dockerfile: ./client/Dockerfile
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+  
+  multi-tenant-python-server:
+    build:
+      context: ./
+      dockerfile: ./pythonServer/Dockerfile
+    restart: always
+    ports:
+      - 3330:3330
+    volumes:
+      - /home/ubuntu/Multi_Tenant_App/resources:/home/Multi_Tenant_App/resources
+      - /home/ubuntu/Multi_Tenant_App/config.env:/usr/src/config.env
+      

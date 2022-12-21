@@ -12,6 +12,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TrustedUrlPipe } from "../../../pipes/trusted-url.pipe";
 import JSMpeg from "@cycjimmy/jsmpeg-player";
+import { environment } from "../../../../environments/environment";
+import { AuthService } from "../../../services/auth.service";
 
 @Component({
   selector: "app-live",
@@ -20,6 +22,8 @@ import JSMpeg from "@cycjimmy/jsmpeg-player";
 })
 export class LiveComponent implements OnInit {
   @Input() camera: string;
+  @Input() isSummarizedVideo: boolean = true;
+
   live: Camera = {
     id: "",
     name: "",
@@ -27,6 +31,7 @@ export class LiveComponent implements OnInit {
     rtsp_out: "",
     cam_height: 0,
     cam_width: 0,
+    summarization_status: 0
   };
   link: SafeResourceUrl;
   ffmpege: any;
@@ -39,12 +44,13 @@ export class LiveComponent implements OnInit {
   on: boolean = false;
   rtspIn: SafeResourceUrl;
   unZippedVideoMessage: string = null;
+  
   constructor(
     private facesService: FacesService,
-    private router: Router,
     private activatedRoute: ActivatedRoute,
     sanitizer: DomSanitizer,
-    private face: FacesService
+    private face: FacesService,
+    private authService: AuthService
   ) {
     this.sanitizer = sanitizer;
     this.link = sanitizer.bypassSecurityTrustResourceUrl(this.live.rtsp_out);
@@ -85,80 +91,63 @@ export class LiveComponent implements OnInit {
   streams: any = [];
   stre: any = [];
   newLink: TrustedUrlPipe;
-  isVid: Boolean = true;
-  url: SafeResourceUrl;
 
   ngOnInit() {
     let camId: string;
     if (this.camera) {
-      this.loadCam(this.camera);
+      this.loadCam(this.camera, this.isSummarizedVideo);
     } else if (
       this.activatedRoute.snapshot &&
       this.activatedRoute.snapshot.params
     ) {
       const params = this.activatedRoute.snapshot.params;
-      camId = params.id;
-      if (camId) this.loadCam(camId);
+      this.loadCam(params.id, params.summarizedVideo);
     }
   }
 
   isHttpStream: boolean = false;
 
-  loadCam(camId) {
+  loadCam(camId, summarizedVideo) {
     this.facesService.getCamera(camId).subscribe(
-      (res) => {
-        // const rtspIn =
-        //   res["data"]["rtsp_in"]
-        // if (!rtspIn) {
-        //   this.unZippedVideoMessage = "Video not found";
-        //   return;
-        // }
-        // if (rtspIn && rtspIn.startsWith("http")) {
-        //   if (!rtspIn.match(/\.([^\./\?]+)($|\?)/)) {
-        //     this.unZippedVideoMessage =
-        //       "This video can not be played, There have multiple unzipped video in this folder";
-        //     return;
-        //   } else {
-        //     this.isHttpStream = true;
-        //     this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(rtspIn);
-        //     return;
-        //   }
-        // } else {
-        //   this.isHttpStream = false;
-        // }
-        this.live = res["data"];
-        if(this.live.type === 'video'){
-          this.url = this.sanitizer.bypassSecurityTrustUrl(this.live.http_in)
-        }else{
-          this.facesService.getRelations(this.camera).subscribe(
-            res => {
-              console.log(res)
-              if( res['data'][0]["http_out"]){
-                this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(
-                  res['data'][0]["http_out"]
-                );
-              }
-              this.isVid = false;
-            },
-            err => console.error(err)
-          )
+      (res: any) => {
+        const rtspIn = summarizedVideo == 1
+          ? res["data"]["sum_http_in"]
+          : res["data"]["http_in"];
 
+          console.log('Video play url: ', rtspIn)
+
+        if (!rtspIn) {
+          this.unZippedVideoMessage = "Video not found";
+          return;
         }
-        // this.face.camera({ id: this.live.id }).subscribe(
-        //   (res) => {
-        //     console.log(res)
-        //     this.player = new JSMpeg.Player(
-        //       `ws://${res["my_ip"]}:${res["port"]}`,
-        //       {
-        //         canvas: this.streamingcanvas.nativeElement,
-        //         autoplay: true,
-        //         audio: false,
-        //         loop: true,
-        //       }
-        //     );
-        //   },
-        //   (err) => console.error(err)
-        // );
+        if (rtspIn && rtspIn.startsWith("http")) {
+          if (!rtspIn.match(/\.([^\./\?]+)($|\?)/)) {
+            this.unZippedVideoMessage =
+              "This video can not be played, There have multiple unzipped video in this folder";
+            return;
+          } else {
+            this.isHttpStream = true;
+            this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(rtspIn);
+            return;
+          }
+        } else {
+          this.isHttpStream = false;
+        }
+        this.live = res["data"];
+        this.face.camera({ id: this.live.id }).subscribe(
+          (res) => {
+            this.player = new JSMpeg.Player(
+              `ws://${res["my_ip"]}:${res["port"]}`,
+              {
+                canvas: this.streamingcanvas.nativeElement,
+                autoplay: true,
+                audio: false,
+                loop: true,
+              }
+            );
+          },
+          (err) => console.error(err)
+        );
         if (window.innerWidth >= 1200) {
           this.width = 835;
           this.height = 400;

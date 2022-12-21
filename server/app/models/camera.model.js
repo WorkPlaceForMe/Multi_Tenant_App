@@ -45,6 +45,17 @@ module.exports = (sequelize, Sequelize) => {
     },
     atributes: {
       type: Sequelize.JSON
+    },
+    last_summarization_status: {
+      type: Sequelize.INTEGER,
+      defaultValue: -1
+    },
+    any_successful_summarization: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0
+    },
+    sum_http_in: {
+      type: Sequelize.STRING
     }
   })
 

@@ -2,32 +2,75 @@
   <nb-card>
   
     <nb-card-body>
+      <div [style.visibility]="summarizationMessageVisibility" 
+      class="justify-content-center text-center m-auto">
+        <span [style.color]="summarizationMessageColor">{{summarizationMessage}}</span>
+      </div>
 
       <table class="table table-hover" id="myTable">
         <thead align='center'>
           <tr>
+            <th scope="col"><h5>Status</h5></th>
             <th scope="col"><h5>Name</h5></th>
-            <th scope="col"><h5>Play</h5></th>
+            <th scope="col"><h5>Original</h5></th>
+            <th scope="col"><h5>Summarized</h5></th>
             <th scope="col" ><h5><i class="far fa-dot-circle"></i>&nbsp;Algorithms</h5></th>
-            <th scope="col" *ngIf='heatmap == true'><h5><i class="far fa-map"></i> &nbsp;Heatmap</h5></th>
+            <th scope="col" ><h5>Action</h5></th>
             <th scope="col"><h5>Delete</h5></th>
           </tr>
         </thead>
-        <tr *ngFor = "let camera of videos">
+        <tr *ngFor="let camera of videos; trackBy: trackByFn">
+            <td>
+              <ng-container *ngIf="camera['last_summarization_status'] == -1">
+                <i class="fas fa-cloud"style="margin-left: 20px; margin-top: 5px; color:blue;"></i>
+              </ng-container>
+              <ng-container *ngIf="camera['last_summarization_status'] == 0">
+                  <i (click)="refreshStatus(camera.id)" class="fas fa-spinner"style="margin-left: 20px; margin-top: 5px; color:amber; cursor: pointer;"></i>
+              </ng-container>
+              <ng-container *ngIf="camera['last_summarization_status'] == 1">
+                <i class="fas fa-check"style="margin-left: 20px;margin-top: 5px; color:green"></i>
+            </ng-container>
+            <ng-container *ngIf="camera['last_summarization_status'] == 2">
+              <i class="fas fa-window-close"style="margin-left: 20px; margin-top: 5px; color:red"></i>
+          </ng-container>
+            </td>
             <td scope="row"><h6 align='center' style='word-wrap: break-word;'>{{camera.name}}</h6></td>
-            <td><button [routerLink]="['/pages/cameras/live/', camera.id]" class='btn-block' nbButton [status]="'warning'">
+            <td><button [routerLink]="['/pages/cameras/live/', camera.id, 0]" class='btn-block' nbButton [status]="'warning'">
                 <i class="fas fa-play"></i>
             </button></td>
+            <td><button [disabled]="camera['any_successful_summarization'] === 0" [routerLink]="['/pages/cameras/live/', camera.id, 1]" class='btn-block' nbButton [status]="'warning'">
+              <i class="fas fa-play"></i>
+            </button></td>           
             <td><button [routerLink]="['/pages/cameras/algorithms', camera.id]" class='btn-block' nbButton [status]="'info'">
               Algorithms
             </button></td>
-              <td *ngIf='heatmap == true'><button [routerLink]="['/pages/cameras/heatmap', camera.id]" class='btn-block' nbButton [status]="'info'" [disabled]= 'camera.hm == undefined'>
-                Heatmap
-              </button></td>
+            <td><button [disabled]="camera['last_summarization_status'] === 0 || camera['last_summarization_status'] === 1" [routerLink]="['/pages/search/summarization', camera.id]" class='btn-block' nbButton [status]="'success'">
+              Summarize
+            </button></td>
             <td><button  class='btn-block' nbButton [status]="'danger'" (click)="deleteVideo(camera.rtsp_in, camera.id, camera.stored_vid)">
               <i class="far fa-trash-alt"></i>
             </button></td>
         </tr>
+        </table>
+        <table *ngIf="videos.length > 0">
+          <tr>
+            <td>
+              <i class="fas fa-cloud"style="margin-left: 20px; margin-top: 5px; margin-right: 5px; color:blue;"></i>
+                <span>Not Started</span>
+            </td>
+            <td>
+              <i class="fas fa-spinner"style="margin-left: 20px; margin-top: 5px; margin-right: 5px; color:amber;"></i>
+                <span>In Progress</span>
+            </td>
+            <td>
+              <i class="fas fa-check"style="margin-left: 20px; margin-top: 5px; margin-right: 5px; color:green;"></i>
+                <span>Completed</span>
+            </td>
+            <td>
+              <i class="fas fa-window-close"style="margin-left: 20px; margin-top: 5px; margin-right: 5px; color:red;"></i>
+                <span>Error</span>
+            </td>
+          </tr>
         </table>
       
       </nb-card-body>

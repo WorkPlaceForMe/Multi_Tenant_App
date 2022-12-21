@@ -147,9 +147,6 @@ export class BarComponent implements OnInit, OnDestroy {
               time,
               "yyyy-M-dd HH:mm:ss"
             );
-            if(!m._source.url){
-              m["_source"]["url"] = "/assets/images/loading.jpg";
-            }
             m["_source"]["base64"] = "/assets/images/loading.jpg";
             m["_source"]["id"] = m._id;
             this.stuff.push(m._source);

@@ -37,117 +37,127 @@ const routes: Routes = [
       {
         path: "sign-in",
         component: LogInComponent,
-        canActivate: [SecureInnerPagesGuard],
+        canActivate: [SecureInnerPagesGuard]
       },
       {
         path: "accounts/add",
         component: SetUpComponent,
-        canActivate: [AdminGuard],
+        canActivate: [AdminGuard]
       },
       {
         path: "accounts/edit/:id",
         component: SetUpComponent,
-        canActivate: [AdminGuard],
+        canActivate: [AdminGuard]
       },
       {
         path: "accounts/changePass/:id",
         component: ChangePassComponent,
-        canActivate: [AdminGuard],
+        canActivate: [AdminGuard]
       },
       {
         path: "accounts",
         component: AdminComponent,
-        canActivate: [AdminGuard],
+        canActivate: [AdminGuard]
       },
       {
         path: "dashboard",
         component: DashboardComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard]
       },
       {
         path: "management",
         component: FaceListComponent,
-        canActivate: [OtherGuard],
+        canActivate: [OtherGuard]
       },
       {
         path: "cameras/heatmap/:uuid",
         component: HeatmapComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard]
       },
       {
         path: "user/schedule/:id",
         component: ScheduleComponent,
-        canActivate: [OtherGuard],
+        canActivate: [OtherGuard]
       },
       {
         path: "user/edit/:uuid",
         component: FaceFormComponent,
-        canActivate: [OtherGuard],
+        canActivate: [OtherGuard]
       },
       {
         path: "user/add",
         component: FaceFormComponent,
-        canActivate: [OtherGuard],
+        canActivate: [OtherGuard]
       },
       {
         path: "user/images/:id",
         component: ImagesFormComponent,
-        canActivate: [OtherGuard],
+        canActivate: [OtherGuard]
       },
       {
-        path: "cameras/live/:id",
+        path: "cameras/live/:id/:summarizedVideo",
         component: LiveComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard]
       },
       {
         path: "cameras/algorithms/:uuid/:id/:atr",
         component: ROIComponent,
-        canActivate: [OtherGuard],
+        canActivate: [OtherGuard]
       },
       {
         path: "camerasList",
         component: LivestreamComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard]
       },
       {
         path: "cameras/edit/:uuid",
         component: VidComponent,
-        canActivate: [OtherGuard],
+        canActivate: [OtherGuard]
       },
       {
         path: "cameras/add_camera",
         component: VidComponent,
-        canActivate: [OtherGuard],
+        canActivate: [OtherGuard]
       },
       {
         path: "cameras/algorithms/:uuid",
         component: AlgorithmsComponent,
-        canActivate: [OtherGuard],
+        canActivate: [OtherGuard]
+      },
+      {
+        path: 'dashboards/:id',
+        component: CenterComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: "dashboards",
+        component: CenterComponent,
+        canActivate: [AuthGuard]
       },
       {
         path: "tickets",
         component: TicketComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard]
       },
       {
         path: "helpdesk",
         component: GenerateHelpDeskTicketComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard]
       },
       {
         path: "helpdesk-listing",
         component: HelpdeskTicketListingComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard]
       },
       {
         path: "incident-logs",
         component: IncidentLogsComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard]
       },
       {
         path: "graphs",
         component: CenterComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard]
       },
       {
         path: "search",
@@ -157,84 +167,10 @@ const routes: Routes = [
       { path: "", redirectTo: "sign-in", pathMatch: "full" },
       {
         path: "**",
-        component: PagenotfoundComponent,
+        component: PagenotfoundComponent
       },
     ],
-  },
-
-  // {
-  // path: '',
-  // component: PagesComponent,
-  // children: [
-  //   {
-  //     path: 'dashboard',
-  //     component: ECommerceComponent,
-  //   },
-  //   {
-  //     path: 'iot-dashboard',
-  //     component: DashboardComponent,
-  //   },
-  //   {
-  //     path: 'layout',
-  //     loadChildren: () => import('./layout/layout.module')
-  //       .then(m => m.LayoutModule),
-  //   },
-  //   {
-  //     path: 'forms',
-  //     loadChildren: () => import('./forms/forms.module')
-  //       .then(m => m.FormsModule),
-  //   },
-  //   {
-  //     path: 'ui-features',
-  //     loadChildren: () => import('./ui-features/ui-features.module')
-  //       .then(m => m.UiFeaturesModule),
-  //   },
-  //   {
-  //     path: 'modal-overlays',
-  //     loadChildren: () => import('./modal-overlays/modal-overlays.module')
-  //       .then(m => m.ModalOverlaysModule),
-  //   },
-  //   {
-  //     path: 'extra-components',
-  //     loadChildren: () => import('./extra-components/extra-components.module')
-  //       .then(m => m.ExtraComponentsModule),
-  //   },
-  //   {
-  //     path: 'maps',
-  //     loadChildren: () => import('./maps/maps.module')
-  //       .then(m => m.MapsModule),
-  //   },
-  //   {
-  //     path: 'charts',
-  //     loadChildren: () => import('./charts/charts.module')
-  //       .then(m => m.ChartsModule),
-  //   },
-  //   {
-  //     path: 'editors',
-  //     loadChildren: () => import('./editors/editors.module')
-  //       .then(m => m.EditorsModule),
-  //   },
-  //   {
-  //     path: 'tables',
-  //     loadChildren: () => import('./tables/tables.module')
-  //       .then(m => m.TablesModule),
-  //   },
-  //   {
-  //     path: 'miscellaneous',
-  //     loadChildren: () => import('./miscellaneous/miscellaneous.module')
-  //       .then(m => m.MiscellaneousModule),
-  //   },
-  //   {
-  //     path: '',
-  //     redirectTo: 'dashboard',
-  //     pathMatch: 'full',
-  //   },
-  //   {
-  //     path: '**',
-  //     component: NotFoundComponent,
-  //   },
-  //   ],
-  // }
+  }
 ];
 
 @NgModule({

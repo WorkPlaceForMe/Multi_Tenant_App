@@ -20,7 +20,7 @@ module.exports = function (app) {
 
   app.get('/api/elastic/demo', [], controller.some)
 
-  app.get('/api/elastic/demo2', [], controller.some3)
+  app.get('/api/elastic/demo2', [], controller.loit)
 
   app.post('/api/elastic/video/delete', [authJwt.verifyToken], controller.delVid)
 

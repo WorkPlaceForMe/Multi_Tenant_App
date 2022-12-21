@@ -40,6 +40,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
     },
   ];
 
+  items = [
+    {
+      title: 'Cameras',
+      icon: 'video-outline',
+      link:  '/pages/camerasList'
+    },
+    {
+      title: 'Tickets',
+      icon: 'done-all-outline',
+      link: '/pages/tickets',
+    },
+    {
+      title: 'Stored Videos',
+      icon: 'film-outline',
+      link: '/pages/search/list'
+    },
+  ];
+
   currentTheme = 'dark';
   pic: string;
   now_user: Account;
@@ -55,7 +73,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private authservice: AuthService,
               public router: Router,
               ) {
-                this.pic = `${api}/pictures/graymaticsLogo.png`
+                this.pic = `${api}/assets/graymaticsLogo.png`
+
+                if (authservice.isAdmin){
+                  this.items = [
+                    {
+                      title: 'Accounts',
+                      icon: 'people-outline',
+                      link: '/pages/accounts',
+                    },
+                  ];
+              }
   }
 
   signOff(){

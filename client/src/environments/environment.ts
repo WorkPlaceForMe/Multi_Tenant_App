@@ -10,4 +10,6 @@
 
 export const environment = {
   production: false,
+  summarizationURL: 'http://127.0.0.1:4200',
+  webSocketUrl: 'ws://40.84.143.162:3301/ws/connect/client'
 };

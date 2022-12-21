@@ -3,9 +3,7 @@ require('dotenv').config({ path: '../../../config.env' })
 const jwt = require('jsonwebtoken')
 const { v4: uuidv4 } = require('uuid')
 const fs = require('fs')
-const path =
-  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
-
+const path = process.env.resourcePath
 exports.addFr = async (req, res) => {
   const token = req.headers['x-access-token']
 

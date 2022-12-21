@@ -23,6 +23,7 @@ import {
   NbCheckboxModule,
   NbRadioModule,
   NbDatepickerModule,
+  NbTimepickerModule,
   NbFormFieldModule,
   NbSelectModule,
   NbSpinnerModule,
@@ -52,11 +53,13 @@ import { CheckComponent } from "./check/check.component";
 import { ViewChartComponent } from "./view-chart/view-chart.component";
 import { ChartsModule } from "ng2-charts";
 import { NgxHorizontalTimelineModule } from "ngx-horizontal-timeline";
+import { SummarizationComponent } from "./summarization/summarization.component";
 
 @NgModule({
   declarations: [
     SearchComponent,
     UploadComponent,
+    SummarizationComponent,
     BarComponent,
     ListComponent,
     SetngsComponent,
@@ -86,6 +89,7 @@ import { NgxHorizontalTimelineModule } from "ngx-horizontal-timeline";
     NbListModule,
     NbRadioModule,
     NbDatepickerModule,
+    NbTimepickerModule,
     NbIconModule,
     NbPopoverModule,
     ReactiveFormsModule,

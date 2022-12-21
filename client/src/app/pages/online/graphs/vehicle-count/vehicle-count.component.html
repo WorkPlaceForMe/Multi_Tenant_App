@@ -7,43 +7,51 @@
             <div class="row">
               <div class="col-md-3">
                 <p class="badge-txt">Last Motorbikes amount</p>
-                <p class="badge-reading">
+                <div class="badge-reading">
+                  <!-- <div *ngIf="vcount.totalMotorbikesEn; else totalMotorbikesEnNone">{{vcount.totalMotorbikesEn}}</div>
+                  <ng-template #totalMotorbikesEnNone>None</ng-template> -->
                   {{
-                    vcount.totalMotorbikesEn == undefined
+                    vcount?.totalMotorbikesEn == undefined
                       ? "None"
                       : vcount.totalMotorbikesEn
                   }}
-                </p>
+                </div>
               </div>
               <div class="col-md-3">
                 <p class="badge-txt">Last Cars amount</p>
-                <p class="badge-reading">
+                <div class="badge-reading">
+                  <!-- <div *ngIf="vcount.totalCarsEn; else totalCarsEnNone">{{vcount.totalCarsEn}}</div>
+                  <ng-template #totalCarsEnNone>None</ng-template> -->
                   {{
-                    vcount.totalCarsEn == undefined
+                    vcount?.totalCarsEn == undefined
                       ? "None"
                       : vcount.totalCarsEn
                   }}
-                </p>
+                </div>
               </div>
               <div class="col-md-3">
                 <p class="badge-txt">Last Trucks amount</p>
-                <p class="badge-reading">
+                <div class="badge-reading">
+                  <!-- <div *ngIf="vcount.totalTrucksEn; else totalTrucksEnNone">{{vcount.totalTrucksEn}}</div>
+                  <ng-template #totalTrucksEnNone>None</ng-template> -->
                   {{
-                    vcount.totalTrucksEn == undefined
+                    vcount?.totalTrucksEn == undefined
                       ? "None"
                       : vcount.totalTrucksEn
                   }}
-                </p>
+                </div>
               </div>
               <div class="col-md-3">
                 <p class="badge-txt">Last Buses amount</p>
-                <p class="badge-reading">
+                <div class="badge-reading">
+                  <!-- <div *ngIf="vcount.totalBusesEn; else totalBusesEnNone">{{vcount.totalBusesEn}}</div>
+                  <ng-template #totalBusesEnNone>None</ng-template> -->
                   {{
-                    vcount.totalBusesEn == undefined
+                    vcount?.totalBusesEn == undefined
                       ? "None"
                       : vcount.totalBusesEn
                   }}
-                </p>
+                </div>
               </div>
             </div>
           </nb-card-body>

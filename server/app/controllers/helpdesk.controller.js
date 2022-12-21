@@ -6,8 +6,7 @@ const db = require('../models')
 const HelpDesk = db.helpdesk
 const User = db.user
 const imageTypes = ['jpg', 'png', 'jpeg']
-const path =
-  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+const path = process.env.resourcePath
 
 const storage = multer.diskStorage({
   // multers disk storage settings

@@ -1,0 +1,96 @@
+<label><b>Summarization</b></label>
+
+
+<form [formGroup]="processForm" (ngSubmit)="onProcessVideoSubmit()">
+  <nb-card size="large">
+    <nb-card-body>
+      <div class="card mb-3">
+        <div class="row" style="margin: 10px;">
+          <div class="col-md-5" style="margin-top: 10px;">
+            <label><b>Summarization Video File</b></label>
+          </div>
+          <div class="col-md-4">
+            <nb-select style="width:100%;" [(selected)]="selectedVideo" placeholder="Choose a Video file" formControlName="inputFileName" id="inputFileName">
+              <nb-option *ngFor="let file of videoFiles" [value]="file.path">{{ file.name }}</nb-option>
+            </nb-select>
+          </div>
+        </div>
+        <div class="row" style="margin: 10px;">
+          <div class="col-md-5" style="margin-top: 10px;">
+            <label><b>Start time</b></label>
+          </div>
+          <div class="col-md-4">
+            <input style="width:80%;" id="startTime" nbInput type="text" [nbTimepicker]="startTimepicker" formControlName="startTime" />
+            <nb-timepicker #startTimepicker withSeconds></nb-timepicker>
+            <button type="button" class="btn-sm" style="margin-left: 2px;" [status]="'primary'" nbButton
+              (click)="clearStartOrEnd('startTime')">
+              <i class="fa fa-trash" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row" style="margin: 10px;">
+          <div class="col-md-5" style="margin-top: 10px;">
+            <label><b>End time</b></label>
+          </div>
+          <div class="col-md-4">
+            <input style="width:80%;" id="endTime" nbInput type="text" [nbTimepicker]="endTimepicker" formControlName="endTime" />
+            <nb-timepicker #endTimepicker withSeconds></nb-timepicker>
+            <button type="button" style="margin-left: 2px;" class="btn-sm" [status]="'primary'" nbButton
+              (click)="clearStartOrEnd('endTime')">
+              <i class="fa fa-trash" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row" style="margin: 10px;">
+          <div class="col-md-5" style="margin-top: 10px;">
+            <label><b>Duration</b></label>
+          </div>
+          <div class="col-md-4">
+            <input style="width:100%;" nbInput type="number" min="3" placeholder="Enter Duration" formControlName="duration" />
+          </div>
+        </div>
+        <div class="p-3 mb-4">
+          <div class=" text-center">
+            <p *ngIf="serverSuccessMessage" class="success text-success mb-1">
+              <span>
+                {{serverSuccessMessage}}
+              </span>
+            </p>
+            <p *ngIf="serverErrorMessage" class="error text-danger mb-1">
+              <span>
+                {{serverErrorMessage}}
+              </span>
+            </p>
+            <p *ngIf="processForm.controls.inputFileName.touched &&
+        !processForm.controls.inputFileName.valid
+      " class="error text-danger mb-1">
+              <span>
+                Input file must be choosen
+              </span>
+            </p>
+            <p *ngIf="
+        !processForm.controls.duration.valid
+      " class="error text-danger mb-1">
+              <span>
+                Duration value must be atleast 3 minutes
+              </span>
+            </p>
+            <p *ngIf="processForm.errors?.['invalidStartTimeEndTime'] && (processForm.touched || processForm.dirty)"
+              class="error text-danger mb-1">
+              <span>
+                End time must be greater than start time
+              </span>
+            </p>
+          </div>
+        </div>
+        <div class="p-3 mb-4">
+          <div class=" text-center">
+            <button class="btn btn-success" type="submit" [disabled]="
+        !processForm.valid || serverErrorMessage || serverSuccessMessage">Process Video</button>
+          </div>
+        </div>
+      </div>
+      <button *ngIf="selectedVideo" [routerLink]="['/pages/search/list']" class="btn-block" nbButton [status]="'primary'"><i class="fas fa-arrow-circle-left"></i>&nbsp;Go Back</button>
+    </nb-card-body>
+  </nb-card>
+</form>

@@ -4,7 +4,12 @@ const db = require('../models')
 const User = db.user
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers['x-access-token']
+  let token = req.headers['x-access-token']
+
+  // If token not available frokm header check if its available in query params
+  if (!token) {
+    token = req.query['x-access-token']
+  }
 
   if (!token) {
     return res.status(403).send({
@@ -19,6 +24,7 @@ const verifyToken = (req, res, next) => {
       })
     }
     req.userId = decoded.id
+    req.decodedJWT = decoded
     next()
   })
 }

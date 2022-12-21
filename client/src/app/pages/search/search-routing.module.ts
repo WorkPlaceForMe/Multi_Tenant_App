@@ -6,6 +6,7 @@ import { OtherGuard } from '../../guard/other.guard';
 import { PagenotfoundComponent } from '../pagenotfound/pagenotfound.component';
 import { BarComponent } from './bar/bar.component';
 import { ListComponent } from './list/list.component';
+import { SummarizationComponent } from './summarization/summarization.component';
 
 const routes: Routes = [
   {path: '',
@@ -14,6 +15,16 @@ const routes: Routes = [
       {
         path: 'upload',
         component: UploadComponent,
+        canActivate: [OtherGuard]
+      },
+      {
+        path: 'summarization/:id',
+        component: SummarizationComponent,
+        canActivate: [OtherGuard]
+      },
+      {
+        path: 'summarization',
+        component: SummarizationComponent,
         canActivate: [OtherGuard]
       },
       {

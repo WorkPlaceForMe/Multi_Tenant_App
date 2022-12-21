@@ -1,20 +1,21 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { NbCalendarRange, NbComponentStatus, NbDateService, NbGlobalPhysicalPosition, NbGlobalPosition, NbToastrService } from '@nebular/theme';
 import { Account } from '../../../../models/Account';
 import { NbPopoverDirective } from '@nebular/theme';
 import { AuthService } from '../../../../services/auth.service';
+import { FacesService } from '../../../../services/faces.service';
 
 @Component({
   selector: 'ngx-control',
   templateUrl: './control.component.html',
   styleUrls: ['./control.component.scss'],
 })
-export class ControlComponent implements OnInit, OnDestroy {
+export class ControlComponent implements OnInit, OnDestroy, OnChanges {
 
   @ViewChild(NbPopoverDirective) rangeSelector: NbPopoverDirective;
 
   @Input() analytic;
-  @Input() cameras;
+  @Input() cameraId;
   @Input() rel;
   max: Date;
   fin: Date;
@@ -37,63 +38,14 @@ export class ControlComponent implements OnInit, OnDestroy {
   lastMonths: Date[] = [];
 
   currentSelection: string  = 'Date';
-  items = [
-    {
-      title: 'Cameras',
-      icon: 'video-outline',
-      link:  '/pages/camerasList',
-      children: [
-        {
-          title: 'Add Camera',
-          link: '/pages/cameras/add_camera',
-          home: true,
-        },
-        {
-          title: 'Cameras List',
-          link: '/pages/camerasList',
-          home: true,
-        },
-      ],
-    },
-    {
-      title: 'Tickets',
-      icon: 'done-all-outline',
-      link: '/pages/tickets',
-    },
-    {
-      title: 'Stored Videos',
-      icon: 'film-outline',
-      link: '/pages/search/list',
-      children: [
-        {
-          title: 'Video List',
-          link: '/pages/search/list',
-        },
-        {
-          title: 'Add Video',
-          link: '/pages/search/upload',
-        },
-      ],
-    },
-  ];
-
-
+  relations: any;
+  
   constructor(
     private toastrService: NbToastrService,
     protected dateService: NbDateService<Date>,
     private authService: AuthService,
+    private facesService: FacesService
   ) {
-    if (authService.isAdmin){
-        this.items = [
-          {
-            title: 'Accounts',
-            icon: 'people-outline',
-            link: '/pages/accounts',
-          },
-        ];
-    }
-
-
   }
 
   signOff(){
@@ -131,56 +83,28 @@ export class ControlComponent implements OnInit, OnDestroy {
   setDate(event){
     this.selectedDate = event
     if (this.selectedDate){
-      let start = this.selectedDate;
+      const start = this.selectedDate;
       // Add one data and minus 1 sec to set time to end of the day
       let end = this.dateService.addDay(start, 1);
       end = new Date(end.getTime() - 1000);
-      if(new Date(end).getTimezoneOffset() == -530){
-        let off = new Date(end).getTimezoneOffset() + 30
-        off = off / 60
-        end = new Date(end.setHours(end.getHours() - off))
-        end = new Date(end.setMinutes(end.getMinutes() + 30));
-        start = new Date(start.setHours(start.getHours() - off))
-        start = new Date(start.setMinutes(start.getMinutes() + 30));
-      }else{
-        let off = new Date(end).getTimezoneOffset()
-        off = off / 60
-        end = new Date(end.setHours(end.getHours() - off))
-        start = new Date(start.setHours(start.getHours() - off))
-      }
       this.range = {
         start: new Date(start),
         end: new Date(end),
       };
-      this.cam(this.camera);
       this.showRangeSelector(false);
     }
   }
 
   setMonth(){
     if (this.selectedMonth){
-      let start = this.selectedMonth;
+      const start = this.selectedMonth;
       // Add one month and minus 1 second to go to the end of the month
       let end = this.dateService.addMonth(start, 1);
       end = new Date(end.getTime() - 1000);
-      if(new Date(end).getTimezoneOffset() == -530){
-        let off = new Date(end).getTimezoneOffset() + 30
-        off = off / 60
-        end = new Date(end.setHours(end.getHours() - off))
-        end = new Date(end.setMinutes(end.getMinutes() + 30));
-        start = new Date(start.setHours(start.getHours() - off))
-        start = new Date(start.setMinutes(start.getMinutes() + 30));
-      }else{
-        let off = new Date(end).getTimezoneOffset()
-        off = off / 60
-        end = new Date(end.setHours(end.getHours() - off))
-        start = new Date(start.setHours(start.getHours() - off))
-      }
       this.range = {
         start: new Date(start),
         end: new Date(end),
       };
-      this.cam(this.camera);
       this.showRangeSelector(false);
 
     }
@@ -193,83 +117,20 @@ export class ControlComponent implements OnInit, OnDestroy {
       event.end = new Date(event.end.setHours(event.end.getHours() + 23));
       event.end = new Date(event.end.setMinutes(event.end.getMinutes() + 59));
       event.end = new Date(event.end.setSeconds(event.end.getSeconds() + 59));
-      if(new Date(event.end).getTimezoneOffset() == -530){
-        let off = new Date(event.end).getTimezoneOffset() + 30
-        off = off / 60
-        event.end = new Date(event.end.setHours(event.end.getHours() - off))
-        event.end = new Date(event.end.setMinutes(event.end.getMinutes() + 30));
-        event.start = new Date(event.start.setHours(event.start.getHours() - off))
-        event.start = new Date(event.start.setMinutes(event.start.getMinutes() + 30));
-      }else{
-        let off = new Date(event.end).getTimezoneOffset()
-        off = off / 60
-        event.end = new Date(event.end.setHours(event.end.getHours() - off))
-        event.start = new Date(event.start.setHours(event.start.getHours() - off))
-      }
       this.range = {
         start: new Date(event.start),
         end: new Date(event.end),
       };
-      this.cam(this.camera);
       this.showRangeSelector(false);
     }else{
       this.showRange = true;
     }
   }
 
-  set(event){
-    if (this.renew){
-      clearInterval(this.renew);
-    }
-    this.refresh = event * 1000;
-    if (event !== 0){
-      this.cam(this.camera);
-      this.renew = setInterval(() => {
-        this.cam(this.camera);
-      }, this.refresh);
-    }
-  }
   info: any;
-  cam(event){
-    this.cameraSel.emit(event);
-    setTimeout(() => {
-      if (this.rel !== false){
-        if (event === ''){
-          // if (this.camera === ''){
 
-          //   return this.showToast('Please choose a camera.', 'info');
-          // }
-        }else{
-          if (this.range.end === undefined){
-            return;
-          }
-          for(const cam of this.cameras){
-            if(cam.id == event){
-              this.info = cam
-            }
-          }
-          const algo_id = this.analytic.algo_id;
-          this.analytic.algo_id = -1;
-          setTimeout(() => {
-            this.camera = event;    
-            this.analytic.algo_id = algo_id;
-          }, 50);
-        }
-      }
-    }, 50);
-  }
-
-  reload(){
-    this.cam(this.camera);
-  }
 
   paths:Number = -1
-
-  reloadPath(num){
-    this.paths = num
-    this.cam(this.camera);
-  }
-
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem('now_user'));
@@ -278,37 +139,17 @@ export class ControlComponent implements OnInit, OnDestroy {
     //   this.analytic.algo_id = -2;
     // }
     this.max = this.dateService.addDay(this.dateService.today(), 0);
-    if(new Date(this.max).getTimezoneOffset() == -530){
-      let off = new Date(this.max).getTimezoneOffset() + 30
-      off = off / 60
-      this.max = new Date(this.max.setHours(this.max.getHours() - off))
-      this.max = new Date(this.max.setMinutes(this.max.getMinutes() + 30));
-    }else{
-      let off = new Date(this.max).getTimezoneOffset()
-      off = off / 60
-      this.max = new Date(this.max.setHours(this.max.getHours() - off))
-    }
     const a = this.dateService.addDay(this.dateService.today(), 0);
     this.fin = new Date(a.setHours(a.getHours() + 23));
-    this.fin = new Date(this.fin.setMinutes(this.fin.getMinutes() + 58));
+    this.fin = new Date(this.fin.setMinutes(this.fin.getMinutes() + 59));
     this.fin = new Date(this.fin.setSeconds(this.fin.getSeconds() + 59));
-    if(new Date(this.fin).getTimezoneOffset() == -530){
-      let off = new Date(this.fin).getTimezoneOffset() + 30
-      off = off / 60
-      this.fin = new Date(this.fin.setHours(this.fin.getHours() - off))
-      this.fin = new Date(this.fin.setMinutes(this.fin.getMinutes() + 30));
-    }else{
-      let off = new Date(this.fin).getTimezoneOffset()
-      off = off / 60
-      this.fin = new Date(this.fin.setHours(this.fin.getHours() - off))
-    }
     this.range = {
       start: new Date(this.max),
       end: new Date(this.fin),
     };
     this.initMonths();
     this.selectedDate =  this.dateService.addDay(this.dateService.today(), 0);
-    this.set(this.reTime)
+
   }
 
   initMonths(){
@@ -318,6 +159,7 @@ export class ControlComponent implements OnInit, OnDestroy {
     let daysToMinus = t.getDate() - 1;
     daysToMinus *= -1;
     t = this.dateService.addDay(t, daysToMinus);
+
 
     this.lastMonths.push(t);
     for (let i = 1; i <= 12; i++){
@@ -331,6 +173,16 @@ export class ControlComponent implements OnInit, OnDestroy {
     if (this.renew){
       clearInterval(this.renew);
     }
+  }
+
+  ngOnChanges(){
+    this.facesService.getRelations(this.cameraId).subscribe(
+      res => {
+        console.log(res);
+        this.relations = res['data'];
+      },
+      err => console.error(err)
+    );
   }
 
 
