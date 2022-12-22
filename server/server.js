@@ -13,8 +13,7 @@ const swaggerJsDoc = require('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
 const db = require('./app/models')
 const usr = db.user
-// const resourcesFolderPath =
-//  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+const algo = db.algorithm
 const resourcesFolderPath = path.resolve(process.env.resourcePath)
 const picResourceFolderPath = path.join(resourcesFolderPath)
 
@@ -112,6 +111,15 @@ if (process.env.INSTALL === 'true') {
           })
           if (find === null) {
             await init.initial()
+          } else {
+            const algos = await algo.findAll({
+              limit: 1,
+              order: [['createdAt', 'DESC']]
+            })
+            if (init.lastId > algos[0].dataValues.id) {
+              await init.initial()
+              console.log('Db updated')
+            }
           }
           connection.query(
             'CREATE TABLE IF NOT EXISTS `' +
@@ -121,7 +129,7 @@ if (process.env.INSTALL === 'true') {
           connection.query('CREATE TABLE IF NOT EXISTS `' +
           process.env.DB +
           '`.alerts (`id` VARCHAR(45) NOT NULL,`time` DATETIME NULL,`alert` VARCHAR(45) NULL,`cam_name` VARCHAR(45) NULL,`cam_id` VARCHAR(45) NULL,`trackid` INT NULL,`alert_type` INT NULL,`id_account` VARCHAR(45) NULL,`id_branch` VARCHAR(45) NULL, PRIMARY KEY (`id`));')
-          console.log('Installed DB')
+          console.log('Finallized DB')
         })
       })
     })
