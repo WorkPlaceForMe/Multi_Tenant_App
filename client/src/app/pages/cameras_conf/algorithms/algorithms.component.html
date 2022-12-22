@@ -402,6 +402,24 @@
               </nb-card-body>
             </nb-card>
           </div>
+
+          <div *ngIf="algos[70]['activated']==true && algos[70]!=undefined">
+            <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
+              <nb-card-header align='center'>
+                Vehicle congestion settings
+              </nb-card-header>
+              <nb-card-body>
+                <div class="form-group">
+                  <div align='center'>
+                    Seconds:&nbsp;
+                    <input type="number" [(ngModel)]="congestion['duration']" min="0" max="1000"><br>
+                    Vehicles:&nbsp;
+                    <input type="number" [(ngModel)]="congestion['vehicles']" min="0" max="100">
+                  </div>
+                </div>
+              </nb-card-body>
+            </nb-card>
+          </div>
         </div>
       </div>
     </div>

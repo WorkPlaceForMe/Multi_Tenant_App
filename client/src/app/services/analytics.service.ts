@@ -201,6 +201,9 @@ export class AnalyticsService {
   enterExitV(id: string, dates){
     return this.http.post(`${this.API_URL}65/${id}`, dates);
   }
+  congestion(id: string, dates){
+    return this.http.post(`${this.API_URL}70/${id}`, dates);
+  }
   report(algo_id:number, cam_id:string, dates){
     return this.http.post(`${api}/report/${algo_id}/${cam_id}`, dates ,{
       responseType: 'blob'
