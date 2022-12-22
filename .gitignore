@@ -52,4 +52,43 @@ dockerDeployment/resources/**
 !dockerDeployment/resources/favicon1.png
 !dockerDeployment/resources/favicon1.ico
 client/buildFrontEnd.sh
-client/.angular
+client/tmp
+client/out-tsc
+
+# dependencies
+client/node_modules
+
+# IDEs and editors
+client/.idea
+client/.project
+client/.classpath
+client/.c9/
+client/*.launch
+client/.settings/
+client/*.sublime-workspace
+
+# IDE - VSCode
+client/.vscode/*
+client/!.vscode/settings.json
+client/!.vscode/tasks.json
+client/!.vscode/launch.json
+client/!.vscode/extensions.json
+
+# misc
+client/.angular/cache
+client/.sass-cache
+client/connect.lock
+client/coverage
+client/libpeerconnection.log
+client/npm-debug.log
+client/testem.log
+client/typings
+client/docs
+
+# e2e
+client/e2e/*.js
+client/e2e/*.map
+
+# System Files
+client/.DS_Store
+client/Thumbs.db
