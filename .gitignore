@@ -52,3 +52,4 @@ dockerDeployment/resources/**
 !dockerDeployment/resources/favicon1.png
 !dockerDeployment/resources/favicon1.ico
 client/buildFrontEnd.sh
+client/.angular
