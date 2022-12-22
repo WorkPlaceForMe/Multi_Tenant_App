@@ -325,6 +325,11 @@ export class LoitComponent implements OnInit, OnDestroy {
         type: 'string',
         filter: false,
       },
+      name: {
+        title: 'NAME',
+        type: 'string',
+        filter: false,
+      },
     },
   };
 

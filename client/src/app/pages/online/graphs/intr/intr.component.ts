@@ -257,13 +257,7 @@ export class IntrComponent implements OnInit, OnDestroy {
 
   settings = {
     mode: 'external',
-    actions: {
-      position: 'right',
-      columnTitle: 'ACTIONS',
-      add: false,
-      edit: true,
-      delete: false,
-    },
+    actions: false,
     edit: {
       editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
@@ -310,6 +304,11 @@ export class IntrComponent implements OnInit, OnDestroy {
       },
       zone: {
         title: 'ZONE',
+        type: 'string',
+        filter: false,
+      },      
+      name: {
+        title: 'NAME',
         type: 'string',
         filter: false,
       },

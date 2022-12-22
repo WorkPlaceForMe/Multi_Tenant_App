@@ -624,6 +624,11 @@ export class ViolComponent implements OnInit, OnDestroy {
         title: "CAM",
         type: "string",
         filter: false,
+      },
+      name: {
+        title: "NAME",
+        type: "string",
+        filter: false,
       }
     },
   };

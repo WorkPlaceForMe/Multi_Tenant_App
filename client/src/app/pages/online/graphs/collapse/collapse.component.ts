@@ -23,6 +23,7 @@ import { NbDialogRef, NbDialogService } from "@nebular/theme";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ip } from "../../../../models/IpServer";
 import { ViewManualTriggerComponent } from "../view-manual-trigger/view-manual-trigger.component";
+import { WindowOpenerComponent } from "../window-opener/window-opener.component";
 
 @Component({
   selector: "ngx-collapse",
@@ -601,6 +602,17 @@ export class CollapseComponent implements OnInit, OnDestroy {
           instance.save.subscribe((row: string) => {});
         },
       },
+      movie: {
+        title: 'VIDEO',
+        type: 'custom',
+        filter: false,
+        renderComponent: WindowOpenerComponent,
+        onComponentInitFunction(instance) {
+          instance.save.subscribe(row => {
+            alert(`${row.name} saved!`);
+          });
+        },
+      },
       time: {
         title: "TIME",
         type: "string",
@@ -608,6 +620,11 @@ export class CollapseComponent implements OnInit, OnDestroy {
       },
       camera_name: {
         title: "CAM",
+        type: "string",
+        filter: false,
+      },
+      name: {
+        title: "NAME",
         type: "string",
         filter: false,
       }

@@ -201,6 +201,12 @@ export class AnalyticsService {
   enterExitV(id: string, dates){
     return this.http.post(`${this.API_URL}65/${id}`, dates);
   }
+  demographics(id: string, dates){
+    return this.http.post(`${this.API_URL}15/${id}`, dates);
+  }
+  blackWhite(id: string, dates){
+    return this.http.post(`${this.API_URL}69/${id}`, dates);
+  }
   report(algo_id:number, cam_id:string, dates){
     return this.http.post(`${api}/report/${algo_id}/${cam_id}`, dates ,{
       responseType: 'blob'

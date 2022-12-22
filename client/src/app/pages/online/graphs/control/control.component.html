@@ -90,7 +90,7 @@
             <ngx-speeding *ngSwitchCase='5' [range]='range' [camera]='camera'></ngx-speeding>
             <ngx-cloth *ngSwitchCase='32' [range]='range' [camera]='camera'></ngx-cloth>
             <ngx-fr *ngSwitchCase='0' [range]='range' [camera]='camera'></ngx-fr>
-            <ngx-fr *ngSwitchCase='15' [range]='range' [camera]='camera'></ngx-fr>
+            <ngx-demographics *ngSwitchCase='15' [range]='range' [camera]='camera'></ngx-demographics>
             <ngx-pc-camera *ngSwitchCase='33' [range]='range' [camera]='camera'></ngx-pc-camera>
             <ngx-brand-car *ngSwitchCase='34' [range]='range' [camera]='camera'></ngx-brand-car>
             <ngx-path *ngSwitchCase='37' [range]='range' [camera]='camera' (refresh)="reloadPath($event)" [paths]='paths'></ngx-path>
@@ -127,6 +127,7 @@
             <ngx-direction *ngSwitchCase='63' [range]='range' [camera]='camera'></ngx-direction>
             <ngx-signal-lost *ngSwitchCase='64' [range]='range' [camera]='camera'></ngx-signal-lost>
             <ngx-ham-cheese *ngSwitchCase='68' [range]='range' [camera]='camera'></ngx-ham-cheese>
+            <ngx-black-white *ngSwitchCase='69' [range]='range' [camera]='camera'></ngx-black-white>
             <app-live *ngSwitchCase='-4' [camera]='camera'></app-live>
         </div>
     </div>
