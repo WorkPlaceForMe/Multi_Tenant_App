@@ -615,12 +615,12 @@ exports.initial = async function () {
     await fs.promises.mkdir(`${pathBranch}/pictures`)
     await fs.promises.mkdir(`${pathBranch}/heatmap_pics`)
   }
-  // for (let i = 0; i <= this.lastId; i++) {
-  //   aa.create({
-  //     algoId: i,
-  //     accountId: '3333-666666-cccccc-nnnnnn'
-  //   })
-  // }
+  for (let i = 0; i <= this.lastId; i++) {
+    aa.create({
+      algoId: i,
+      accountId: '3333-666666-cccccc-nnnnnn'
+    })
+  }
 }
 // INSERT INTO `multi_tenant`.`algorithms` (`id`, `name`, `createdAt`, `updatedAt`) VALUES ('27', 'Camera Tampering', '2020-10-05 07:31:29', '2020-10-05 07:31:29');
 
