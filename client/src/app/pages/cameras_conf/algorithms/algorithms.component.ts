@@ -98,6 +98,8 @@ export class AlgorithmsComponent implements OnInit {
                         this.aod = this.relations[e]['atributes'][1];
                       } else if (this.relations[e]['algo_id'] == 32) {
                         this.parkingTime = this.relations[e]['atributes'][1];
+                      } else if (this.relations[e]['algo_id'] == 70) {
+                        this.congestion = this.relations[e]['atributes'][1];
                       }
                     }
                   }
@@ -425,9 +427,10 @@ export class AlgorithmsComponent implements OnInit {
     //this.router.navigateByUrl('/pages/camerasList');
   }
   saave() {
+    console.log(this.congestion)
     const data = [];
     const id = this.activatedRoute.snapshot.params.uuid;
-    data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime);
+    data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime, this.congestion);
     this.facesService.sendAlgs(id, data).subscribe(
       res => {
         // this.router.navigateByUrl(`/pages/cameras/algorithms/${id}`)
@@ -444,7 +447,7 @@ export class AlgorithmsComponent implements OnInit {
   nSave() {
     const data = [];
     const id = this.activatedRoute.snapshot.params.uuid;
-    data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime);
+    data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime, this.congestion);
     this.facesService.sendAlgs(id, data).subscribe(
       res => {},
       err => console.log(err),
