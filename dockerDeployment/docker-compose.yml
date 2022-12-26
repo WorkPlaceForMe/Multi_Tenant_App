@@ -11,14 +11,14 @@ services:
     # ports:
     #   - "3300:3300"
     network_mode: host
-    image: graymatics1/thk-server:1.2.38
+    image: graymatics1/thk-server:1.0.1
     restart: always
     volumes:
       - ./resources:/usr/src/app/resources
       - ../configDocker.env:/usr/src/config.env
 
   multi-tenant-ui:
-    image: graymatics1/thk-ui:1.2.57
+    image: graymatics1/thk-ui:1.0.1
     # networks:
     #   - dev
     restart: always
