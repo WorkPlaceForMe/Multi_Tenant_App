@@ -46,7 +46,7 @@ export class CongestionComponent implements OnInit , OnDestroy {
   algorithms: any;
   loading: boolean = false;
   loadingTakeScreenShot: boolean = false;
-  algoId = 65;
+  algoId = 70;
 
   constructor(
     private serv: AnalyticsService,
