@@ -11,7 +11,7 @@ services:
     # ports:
     #   - "3300:3300"
     network_mode: host
-    image: graymatics1/multi-tenant-server:2.3.47
+    image: graymatics1/multi-tenant-server:2.3.48
     restart: always
     volumes:
       - ./resources:/usr/src/app/resources
