@@ -118,8 +118,12 @@ const opt = {
     openapi: '3.0.0',
     info: {
       title: 'Graymatics API',
-      version: '5.0.2',
+      version: '5.2.1',
       description: 'Graymatics API Information',
+      license: {
+        name: 'MIT',
+        url: 'https://spdx.org/licenses/MIT.html'
+      },
       contact: {
         name: 'Graymatics',
         url: 'https://www.graymatics.com',
@@ -132,12 +136,12 @@ const opt = {
         description: 'Main'
       },
       {
-        url: 'localhost:3311',
-        description: 'Other'
+        url: 'localhost:3300',
+        description: 'Local'
       }
     ]
   },
-  apis: ['server.js', './app/routes/*.js']
+  apis: [`${__dirname}/app/routes/*.js`]
 }
 
 const swaggerDocs = swaggerJsDoc(opt)
@@ -146,12 +150,11 @@ app.use(
   '/api-docs',
   swaggerUi.serve,
   swaggerUi.setup(swaggerDocs, {
-    explorer: true,
-    customCss: `img[alt='Swagger UI'] { content:url(${process.env.app_url}/api/assets/graymaticsLogo.png);}`,
+    explorer: false,
+    customCssUrl: '/api/assets/swagger.css',
     customSiteTitle: 'Graymatics API Manual',
-    customfavIcon: `${process.env.app_url}/api/assets/favicon1.ico`,
+    customfavIcon: '/api/assets/favicon1.ico',
     swaggerOptions: {
-      url: `${process.env.app_url}/api/pictures/swagger.json`,
       docExpansion: 'none',
       validatorUrl: null
     },
@@ -178,6 +181,7 @@ require('./app/routes/reply.routes')(app)
 require('./app/routes/incident.routes')(app)
 require('./app/routes/manualTrigger.routes')(app)
 require('./app/routes/summarization.routes')(app)
+require('./../proxy/routes/proxy.route')(app, 'v1')
 
 // resources being served
 app.use('/api/pictures', express.static(resourcesFolderPath))
@@ -186,5 +190,3 @@ app.use('/api/pictures', express.static(resourcesFolderPath))
 app.use('/api/assets', express.static(assetsFolderPath))
 
 module.exports = app
-
-require('./../proxy/routes/proxy.route')(app, 'v1')
