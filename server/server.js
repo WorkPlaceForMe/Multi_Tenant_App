@@ -136,7 +136,7 @@ const opt = {
         description: 'Main'
       },
       {
-        url: 'localhost:3300',
+        url: 'http://localhost:3300',
         description: 'Local'
       }
     ]
