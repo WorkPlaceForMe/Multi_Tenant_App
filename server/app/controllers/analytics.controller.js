@@ -1879,32 +1879,33 @@ exports.queue = async (req, res) => {
               avgs[e.queue - 1] = avgs[e.queue - 1] + e.time
               avg = avg + e.time
               timesAv[e.queue] = (timesAv[e.queue] || 0 ) + 1
-              if (min === -1) {
-                // console.log('++++++++++++++++++++++++++++++++', e.queue, e.time, min)
-                min = e.time
-                minQ = e.queue
-              } else if (e.time < min) {
-                // console.log('================================', e.queue, min)
-                min = e.time
-                minQ = e.queue
-              }
-              if (max === -1) {
-                // console.log('////////////////////////////////', e.queue)
-                max = e.time
-                maxQ = e.queue
-              } else if (e.time > max) {
-                // console.log('--------------------------------', e.queue)
-                max = e.time
-                maxQ = e.queue
-              }
+              // console.log(e.time, e.queue)
             }
-            // console.log(minQ, maxQ)
             for(let t = 0; t < avgs.length; t++){
               avgs[t] = Math.round(avgs[t] / timesAv[t + 1])
               if(isNaN(avgs[t])){
                 avgs[t] = 0
               }
+              if (min === -1) {
+                // console.log('++++++++++++++++++++++++++++++++', avgs[t])
+                min = avgs[t]
+                minQ = t + 1
+              } else if (avgs[t] < min) {
+                // console.log('================================', avgs[t])
+                min = avgs[t]
+                minQ = t + 1
+              }
+              if (max === -1) {
+                // console.log('////////////////////////////////',avgs[t])
+                max = avgs[t]
+                maxQ = t + 1
+              } else if (avgs[t] > max) {
+                // console.log('--------------------------------',avgs[t])
+                max = avgs[t]
+                maxQ = t + 1
+              }
             }
+            // console.log(minQ, maxQ)
             await db
             .con()
             .query(
@@ -1986,20 +1987,6 @@ exports.queue = async (req, res) => {
                     }
                   }
                   label.push(v.time)
-                  if(cou === result2.length){
-                    // while (
-                    //   cache <= new Date(end)
-                    // ) {
-                    //   cache = new Date(cache)
-                    //   for(let e = 0; e < count; e++){
-                    //   dataAlertsLow[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
-                    //   dataAlertsMed[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
-                    //   dataAlertsHigh[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
-                    // }
-                    //   cache = cache.getTime()
-                    //   cache += range
-                    // }
-                  }
                 })
                 while (
                   cache <= new Date(end)
