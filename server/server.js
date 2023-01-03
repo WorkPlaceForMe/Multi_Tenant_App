@@ -15,7 +15,6 @@ const swaggerUi = require('swagger-ui-express')
 const resourcesFolderPath = path.join(process.env.resourcePath)
 const assetsFolderPath = path.resolve(__dirname, './resources/')
 
-
 app.use(compression())
 
 if (process.env.NODE_ENV === 'production') {
