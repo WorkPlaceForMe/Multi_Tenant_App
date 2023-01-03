@@ -306,7 +306,7 @@ exports.intrude = async (req, res) => {
         await db
           .con()
           .query(
-            `SELECT * from intru_fr WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+            `SELECT * from intrude_fr WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
             function (err, result) {
               if (err)
                 return res.status(500).json({
@@ -3988,7 +3988,7 @@ exports.collapse = async (req, res) => {
       await db
         .con()
         .query(
-          `SELECT * from Collapse_fr WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          `SELECT * from collapse_fr WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
           function (err, result) {
             if (err) {
               return res.status(500).json({
@@ -8758,7 +8758,7 @@ exports.blackWhite = async (req, res) => {
       await db
         .con()
         .query(
-          `SELECT * from Black_white_fr WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          `SELECT * from black_white_fr WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
           function (err, result) {
             if (err) {
               return res.status(500).json({
@@ -8921,7 +8921,7 @@ exports.demographics = async (req, res) => {
       await db
         .con()
         .query(
-          `SELECT * from Demograph_fr WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          `SELECT * from demograph_fr WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
           function (err, result) {
             if (err) {
               return res.status(500).json({
