@@ -11,7 +11,7 @@ services:
     # ports:
     #   - "3300:3300"
     network_mode: host
-    image: graymatics1/thk-server:1.0.1
+    image: graymatics1/thk-server:1.0.2
     restart: always
     volumes:
       - ./resources:/usr/src/app/resources
