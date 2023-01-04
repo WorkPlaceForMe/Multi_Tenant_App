@@ -97,7 +97,7 @@ export class ParkingComponent implements OnInit {
             m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', '+0000')
             m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/parking/' + m['cam_id'] + '/' + m['movie']);
           }
-          this.source = this.parking.raw.slice().sort((a, b) => +new Date(b.time) + +new Date(a.time))
+          this.source = this.parking.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time))
 
         },
         err => {
@@ -160,6 +160,16 @@ export class ParkingComponent implements OnInit {
       },
       cam_name: {
         title: 'CAM',
+        type: 'string',
+        filter: false
+      },
+      severity: {
+        title: 'SEVERITY',
+        type: 'string',
+        filter: false
+      },
+      level: {
+        title: 'LEVEL',
         type: 'string',
         filter: false
       }
