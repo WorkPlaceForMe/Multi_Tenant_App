@@ -109,16 +109,24 @@ exports.getAll = (req, res) => {
               element.type = 'Person entered / exited restricted area'
               break
             }
-            case 'parking': {
-              element.type = 'Vehicle parked in restricted area'
-              break
-            }
             case 'queue_mgt': {
               element.type = 'Queue Management'
               break
             }
             case 'faces': {
               element.type = 'Face detection'
+              break
+            }
+            case 'parking': {
+              element.type = 'Parking Violation in Restricted Area'
+              break
+            }
+            case 'congestion': {
+              element.type = 'Vehicle Congestion'
+              break
+            }
+            case 'anpr': {
+              element.type = 'ANPR alert'
               break
             }
           }
@@ -261,7 +269,7 @@ exports.searchAllTickets = (req, res) => {
       searchStr = 'fr'
       break
     }
-    case 'face':{
+    case 'face': {
       searchStr = 'fr'
       break
     }

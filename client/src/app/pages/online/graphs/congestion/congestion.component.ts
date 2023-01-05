@@ -21,6 +21,7 @@ import { Account } from "../../../../models/Account";
 import { NbDialogRef, NbDialogService } from "@nebular/theme";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { WindowOpenerComponent } from "../window-opener/window-opener.component";
+import { SeverityComponent } from "../../severity/severity.component";
 
 @Component({
   selector: 'ngx-congestion',
@@ -150,7 +151,7 @@ export class CongestionComponent implements OnInit , OnDestroy {
             m["cam_id"] +
             "/" +
             m["clip_path"];
-          m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss", '+0000');
+          m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss", '+0530');
           switch (m["severity"]) {
             case "0": {
               m["severity"] = "Low";
@@ -316,9 +317,15 @@ export class CongestionComponent implements OnInit , OnDestroy {
         filter: false,
       },
       level: {
-        title: "LEVEL",
-        type: "number",
+        title: 'SEVERITY',
+        type: 'custom',
         filter: false,
+        renderComponent: SeverityComponent,
+        onComponentInitFunction(instance) {
+          instance.save.subscribe(row => {
+            alert(`${row.name} saved!`);
+          });
+        },
       },
     },
   };

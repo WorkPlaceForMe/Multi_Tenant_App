@@ -10,6 +10,7 @@ import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
 import { WindowOpenerComponent } from '../window-opener/window-opener.component';
+import { SeverityComponent } from '../../severity/severity.component';
 
 @Component({
   selector: 'ngx-illegal-parking',
@@ -131,10 +132,10 @@ export class IllegalParkingComponent implements OnInit, OnDestroy {
         this.parking = res['data'];
         for (const m of this.parking.raw) {
           m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/parking/' + m['cam_id'] + '/' + m['picture']);
-          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', '+0000');
+          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', '+0530');
           m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/parking/' + m['cam_id'] + '/' + m['movie']);
         }
-        this.source = this.parking.raw.slice().sort((a, b) => +new Date(b.time) + +new Date(a.time));
+        this.source = this.parking.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
       },
       err => {
         console.error(err);
@@ -198,6 +199,22 @@ export class IllegalParkingComponent implements OnInit, OnDestroy {
         title: 'CAM',
         type: 'string',
         filter: false,
+      },
+      // severity: {
+      //   title: 'SEVERITY',
+      //   type: 'string',
+      //   filter: false
+      // },
+      level: {
+        title: 'SEVERITY',
+        type: 'custom',
+        filter: false,
+        renderComponent: SeverityComponent,
+        onComponentInitFunction(instance) {
+          instance.save.subscribe(row => {
+            alert(`${row.name} saved!`);
+          });
+        },
       },
     },
   };
