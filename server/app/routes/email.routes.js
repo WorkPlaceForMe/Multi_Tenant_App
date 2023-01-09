@@ -6,5 +6,12 @@ module.exports = function (app) {
     next()
   })
 
+  /**
+   * @swagger
+   *tags:
+   *  name: Email
+   *  description: API to send email.
+   */
+
   app.post('/api/mail/send', [], controller.sendEm)
 }
