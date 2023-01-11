@@ -8824,7 +8824,7 @@ exports.breadAvail = async (req, res) => {
         }else if(diff >= 14 && diff <= 32){
           range = 24 * 60 * 60 * 1000
         }
-        console.log(start, end,`SELECT * from bread_availability WHERE ${data.type} = '${req.params.id}' and time >= ${JSON.stringify(start)} and  time <= ${JSON.stringify(end)} order by time asc;`)
+        // console.log(start, end,`SELECT * from bread_availability WHERE ${data.type} = '${req.params.id}' and time >= ${JSON.stringify(start)} and  time <= ${JSON.stringify(end)} order by time asc;`)
         await db
           .con()
           .query(
@@ -8880,8 +8880,10 @@ exports.breadAvail = async (req, res) => {
               await db
               .con()
               .query(
-                `SELECT * from avail_alerts WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`,
+                `SELECT * from avail_alerts WHERE ${data.type} = '${req.params.id}' and time >= ${JSON.stringify(start)} and  time <= ${JSON.stringify(end)} order by time asc;`,
                 function (err, result2) {
+                  // console.log(`SELECT * from avail_alerts WHERE ${data.type} = '${req.params.id}' and time >= ${JSON.stringify(start)} and  time <= ${JSON.stringify(end)} order by time asc;`)
+                  // console.log(result2.length,'==========')
                   if(result2 === undefined || result2.length === 0){
                     let a = {
                       dwell: dwell,
@@ -8926,6 +8928,7 @@ exports.breadAvail = async (req, res) => {
                     v.movie = `${d}_${v.id}_video.mp4`
                     v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/avail_alerts/${req.params.id}/${v.movie}`
                   })
+                  console.log(result2.length)
                   let a = {
                     dwell: dwell,
                     labelsD: labelsD,
