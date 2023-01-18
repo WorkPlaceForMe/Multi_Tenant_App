@@ -306,11 +306,11 @@ export class CongestionComponent implements OnInit , OnDestroy {
         type: "string",
         filter: false,
       },
-      no_of_vehicles: {
-        title: "VEHICLES",
-        type: "number",
-        filter: false,
-      },
+      // no_of_vehicles: {
+      //   title: "VEHICLES",
+      //   type: "number",
+      //   filter: false,
+      // },
       alert: {
         title: "ALERT",
         type: "string",
