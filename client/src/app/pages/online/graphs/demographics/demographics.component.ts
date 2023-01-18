@@ -264,23 +264,12 @@ export class DemographicsComponent implements OnInit, OnDestroy {
           instance.save.subscribe((row: string) => {});
         },
       },
-      movie: {
-        title: 'VIDEO',
-        type: 'custom',
-        filter: false,
-        renderComponent: WindowOpenerComponent,
-        onComponentInitFunction(instance) {
-          instance.save.subscribe(row => {
-            alert(`${row.name} saved!`);
-          });
-        },
-      },
       time: {
         title: "TIME",
         type: "string",
         filter: false,
       },
-      camera_name: {
+      cam_name: {
         title: "CAM",
         type: "string",
         filter: false,
@@ -290,8 +279,8 @@ export class DemographicsComponent implements OnInit, OnDestroy {
         type: "string",
         filter: false,
       },
-      emotion: {
-        title: "EMOTION",
+      gender: {
+        title: "GENDER",
         type: "string",
         filter: false,
       },
