@@ -3471,7 +3471,7 @@ exports.fr = async (req, res) => {
         await db
           .con()
           .query(
-            `SELECT * from faces WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+            `SELECT * from Demograph_fr WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
             function (err, result) {
               if (err) {
                 return res.status(500).json({

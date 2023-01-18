@@ -161,79 +161,54 @@ export class FrComponent implements OnInit , OnDestroy {
     noDataMessage: 'No data found',
     columns: {
       picture: {
-        title: 'PHOTO',
-        type: 'custom',
+        title: "PICTURE",
+        type: "custom",
         filter: false,
-        renderComponent: ButtonViewComponent,
-        onComponentInitFunction(instance) {
-          instance.save.subscribe(row => {
-            alert(`${row.name} saved!`);
-          });
+        renderComponent: ButtonViewComponentPic,
+        onComponentInitFunction: (instance) => {
+          instance.save.subscribe((row: string) => {});
         },
       },
-      movie: {
-        title: 'VIDEO',
-        type: 'custom',
-        filter: false,
-        renderComponent: WindowOpenerComponent,
-        onComponentInitFunction(instance) {
-          instance.save.subscribe(row => {
-            alert(`${row.name} saved!`);
-          });
-        },
-      }, 
       time: {
-        title: 'TIME',
-        type: 'string',
-        filter: false,
-      },
-      name: {
-        title: 'NAME',
-        type: 'string',
-        filter: false,
-      },
-      gender: {
-        title: 'GENDER',
-        type: 'string',
-        filter: false,
-      },
-      age: {
-        title: 'AGE',
-        type: 'string',
-        filter: false,
-      },
-      emotion: {
-        title: 'EMOTION',
-        type: 'string',
+        title: "TIME",
+        type: "string",
         filter: false,
       },
       cam_name: {
-        title: 'CAM',
-        type: 'string',
+        title: "CAM",
+        type: "string",
         filter: false,
       },
+      age: {
+        title: "AGE",
+        type: "string",
+        filter: false,
+      },
+      gender: {
+        title: "GENDER",
+        type: "string",
+        filter: false,
+      },
+      name: {
+        title: "NAME",
+        type: "string",
+        filter: false,
+      }
     },
   };
 
 }
 
 @Component({
-  selector: 'button-view',
-  template: `
-    <img [src]="rowData.picture" width='60' height='60'>
-  `,
+  selector: "button-view",
+  template: ` <img [src]="rowData.picture" width="60" height="60" /> `,
 })
-export class ButtonViewComponent implements ViewCell, OnInit {
-
-  constructor() {
-  }
+export class ButtonViewComponentPic implements ViewCell, OnInit {
+  constructor() {}
 
   @Input() value: string | number;
   @Input() rowData: any;
   @Output() save: EventEmitter<any> = new EventEmitter();
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }
-
