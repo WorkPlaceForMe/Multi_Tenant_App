@@ -26,6 +26,9 @@
                     <nb-card-header>
                       <button (click)='csv("alerts")' *ngIf="!csvAlerts['alerts']" nbButton outline status="info" size = "tiny">Descargar data de Alertas</button>
                       <button nbButton outline status="info" size = "tiny" [nbSpinner]="true" nbSpinnerSize="tiny" nbSpinnerStatus="info" [disabled]="csvAlerts['alerts']" *ngIf="csvAlerts['alerts']">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                      <div *ngIf="showData" class="text-danger">
+                        <small>No hay data.</small>
+                    </div>
                       <!-- <button (click)='csv("count")' nbButton outline status="info" size = "tiny">Descargar data de Personas</button> -->
                     </nb-card-header>
                     <nb-card-body class = "graph-body" style = "padding: 0px">

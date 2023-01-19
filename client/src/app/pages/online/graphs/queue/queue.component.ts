@@ -330,6 +330,8 @@ export class QueueComponent implements OnInit, OnDestroy {
     alerts: false,
     count: false
   }
+  showAlert: boolean = false;
+  showData: boolean = false;
 
  async csv(algo){
     let type;
@@ -356,6 +358,12 @@ export class QueueComponent implements OnInit, OnDestroy {
       err => {
         console.error(err)
         this.csvAlerts[algo] = false
+        if(algo === 'count'){
+          this.showData = true;
+        }
+        if(algo === 'alerts'){
+          this.showAlert = true;
+        }
       }
     )
   }

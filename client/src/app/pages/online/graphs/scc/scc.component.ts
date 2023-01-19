@@ -261,6 +261,7 @@ export class SccComponent implements  OnInit, OnDestroy {
     alerts: false,
     count: false
   }
+  showData: boolean = false;
 
   async csv(algo){
     let type;
@@ -287,6 +288,9 @@ export class SccComponent implements  OnInit, OnDestroy {
       err => {
         console.error(err)
         this.csvAlerts[algo] = false
+        if(algo === 'alerts'){
+          this.showData = true;
+        }
       }
     )
   }
