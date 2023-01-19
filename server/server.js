@@ -60,9 +60,9 @@ function customHeaders (req, res, next) {
 app.use(customHeaders)
 
 // parse requests of content-type - application/json
-app.use(bodyParser.json({ limit: '10mb', extended: true }))
+app.use(bodyParser.json({ limit: '100mb', extended: true }))
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
+app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }))
 app.all(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', `http://${process.env.my_ip}:4200`)
   res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE')
