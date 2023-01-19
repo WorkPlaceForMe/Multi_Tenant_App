@@ -8824,7 +8824,7 @@ exports.breadAvail = async (req, res) => {
         }else if(diff >= 14 && diff <= 32){
           range = 24 * 60 * 60 * 1000
         }
-        // console.log(start, end,`SELECT * from bread_availability WHERE ${data.type} = '${req.params.id}' and time >= ${JSON.stringify(start)} and  time <= ${JSON.stringify(end)} order by time asc;`)
+        console.log(start, end,`SELECT * from bread_availability WHERE ${data.type} = '${req.params.id}' and time >= ${JSON.stringify(start)} and  time <= ${JSON.stringify(end)} order by time asc;`)
         await db
           .con()
           .query(
@@ -9002,11 +9002,11 @@ exports.breadTemp = async (req, res) => {
         }else if(diff >= 14 && diff <= 32){
           range = 24 * 60 * 60 * 1000
         }
-        // console.log(`SELECT * from bread_temperature WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`)
+        console.log(`SELECT * from bread_temperature WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`, range/1000/60/60)
         await db
           .con()
           .query(
-            `SELECT * from bread_temperature WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`,
+            `SELECT * from bread_temperature WHERE ${data.type} = '${req.params.id}' and time >= ${JSON.stringify(start)} and  time <= ${JSON.stringify(end)} order by time asc;`,
             async function (err, result) {
               if (err)
                 return res.status(500).json({
@@ -9055,7 +9055,7 @@ exports.breadTemp = async (req, res) => {
             await db
             .con()
             .query(
-              `SELECT * from temp_alerts WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`,
+              `SELECT * from temp_alerts WHERE ${data.type} = '${req.params.id}' and time >= ${JSON.stringify(start)} and  time <= ${JSON.stringify(end)} order by time asc;`,
               function (err, result2) {
                 if(result2 === undefined || result2.length === 0){
                   let a = {
@@ -9181,7 +9181,7 @@ exports.scc = async (req, res) => {
         await db
           .con()
           .query(
-            `SELECT * from scc WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`,
+            `SELECT * from scc WHERE ${data.type} = '${req.params.id}' and time >= ${JSON.stringify(start)} and  time <= ${JSON.stringify(end)} order by time asc;`,
             async function (err, result) {
               if (err)
                 return res.status(500).json({

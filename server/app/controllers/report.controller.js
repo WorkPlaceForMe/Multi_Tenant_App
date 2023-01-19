@@ -105,38 +105,20 @@ exports.report = async (req, res) => {
   if (req.params.algo_id === '70' && data.typ === 'data') {
     query = `SELECT time, camera_name, cam_id, zone, temperature from bread_temperature WHERE ${data.type} = '${req.params.cam_id}' and time >= '${start}' and  time <= '${end}' order by time asc;`
   }
-  const options = {
-    stream: res, // write to server response
-    useStyles: false,
-    useSharedStrings: false
+  if (req.params.algo_id === '71') {
+    query = `SELECT time, camera_name, cam_id, zone, receipt, trolley from scc WHERE ${data.type} = '${req.params.cam_id}' and time >= '${start}' and  time <= '${end}' order by time asc;`
   }
-
-  const workbook = new Excel.stream.xlsx.WorkbookWriter(options)
-  const tableToSheet = function (name, done, id, query) {
-    const str = db.con().query(query).stream()
-    const sheet = workbook.addWorksheet(name)
-
-    str.on('data', function (d) {
-      sheet.addRow(d).commit() // format object if required
-    })
-
-    str.on('end', function () {
-      sheet.commit()
-      done()
-    })
-
-    str.on('error', function (err) {
-      done(err)
-    })
-  }
-  res.status(200)
-  res.setHeader('Content-disposition', 'attachment; filename=db_dump.xls')
-  res.setHeader('Content-type', 'application/vnd.ms-excel')
-
-  async.mapSeries(['cars'], tableToSheet, function (err) {
-    if (err) {
-      // log error
-    }
-    res.end()
-  })
+  await db
+    .con()
+    .query(
+      query,
+      async function (_err, result) {
+        if (result === undefined || result.length === 0) {
+          return res.status(400).send({ success: false, message: 'No hay data.', type: data.typ })
+        }
+        res.status(200).json({
+          sucess: true,
+          data: result
+        })
+      })
 }

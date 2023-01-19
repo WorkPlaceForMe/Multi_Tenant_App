@@ -9,6 +9,8 @@ import { FacesService } from '../../../../services/faces.service';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
 import { SeverityComponent } from '../../severity/severity.component';
+import { utils, writeFileXLSX } from 'xlsx';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'ngx-ham-cheese',
@@ -350,8 +352,14 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
     goToLink(url: string){
       window.open(url, "_blank");
     }
+
+    csvAlerts: Object = {
+      alerts: false,
+      count: false
+    }
   
     async csv(algo){
+      this.csvAlerts[algo] = true
       let type;
       if(this.now_user.id_branch != '0000'){
         type = 'cam_id';
@@ -365,13 +373,18 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
         ham: true,
         algo: algo
       }
-      ;(await this.serv.report(this.algo_id, this.camera, l)).subscribe(
-        res => {
-          var blob = new Blob([res], { type: res.type.toString() });
-          var url = window.URL.createObjectURL(blob);
-          this.goToLink(url)
+      ;(await this.serv.report1(this.algo_id, this.camera, l)).subscribe(
+        async (res) => {
+          const ws = utils.json_to_sheet(res['data']);
+          const wb = utils.book_new();
+          utils.book_append_sheet(wb, ws, "Data");
+          await writeFileXLSX(wb, `${uuidv4()}.xlsx`);
+          this.csvAlerts[algo] = false
         },
-        err => console.error(err)
+        err => {
+          console.error(err)
+          this.csvAlerts[algo] = false
+        }
       )
     }
     settings = {

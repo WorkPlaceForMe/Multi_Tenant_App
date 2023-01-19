@@ -19,7 +19,8 @@ import { FacesService } from "../../../../services/faces.service";
 import { Account } from "../../../../models/Account";
 import { NbDialogRef, NbDialogService } from "@nebular/theme";
 import { FormBuilder, FormGroup } from "@angular/forms";
-
+import { utils, writeFileXLSX } from 'xlsx';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'ngx-temperature',
@@ -308,11 +309,12 @@ export class TemperatureComponent implements OnInit, OnDestroy {
       typ: typ,
       algo: this.algoId
     }
-    ;(await this.serv.report(this.algoId, this.camera, l)).subscribe(
+    ;(await this.serv.report1(this.algoId, this.camera, l)).subscribe(
       async (res) => {
-        const blob = new Blob([res], { type: res.type.toString() });
-        const url = await window.URL.createObjectURL(blob);
-        await window.open(url, "_blank");
+        const ws = utils.json_to_sheet(res['data']);
+        const wb = utils.book_new();
+        utils.book_append_sheet(wb, ws, "Data");
+        await writeFileXLSX(wb, `${uuidv4()}.xlsx`);
         this.csvAlerts[typ] = false
       },
       err => {

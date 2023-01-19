@@ -216,6 +216,10 @@ export class AnalyticsService {
     });
   }
 
+  report1(algo_id:number, cam_id:string, dates){
+    return this.http.post(`${api}/report/${algo_id}/${cam_id}`, dates);
+  }
+
   // async downloadLargeFile(url:string): Promise<ArrayBuffer> {
   //   return await this.http.get(url, {
   //       responseType: "arraybuffer",
