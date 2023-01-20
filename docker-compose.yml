@@ -18,7 +18,7 @@ services:
     volumes:
       - ./dockerDeployment/nginx.conf:/etc/nginx/conf.d/default.conf
   
-  port-pythonServer:
+  port-python-server:
     network_mode: host
     build: ./pythonServer
     restart: always
