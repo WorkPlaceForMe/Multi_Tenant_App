@@ -6,7 +6,7 @@ services:
     build: ./server
     restart: always
     env_file:
-      - ./configDocker.env
+      - ../conf/configDocker.env
     volumes:
       - ./dockerDeployment/resources:/usr/src/app/resources
 
@@ -25,7 +25,7 @@ services:
     volumes:
       - ./dockerDeployment/resources:/usr/src/app/resources
     env_file:
-      - ./configDocker.env
+      - ../conf/configDocker.env
 
   port-ws:
     network_mode: host
@@ -34,7 +34,7 @@ services:
     volumes:
       - ./dockerDeployment/resources:/usr/src/app/resources
     env_file:
-      - ./configDocker.env
+      - ../conf/configDocker.env
 
   port-proxy:
     network_mode: host
@@ -43,4 +43,4 @@ services:
     volumes:
       - ./dockerDeployment/resources:/usr/src/app/resources
     env_file:
-      - ./configDocker.env
+      - ../conf/configDocker.env
