@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  port-server:
+    network_mode: host
+    build: ./server
+    restart: always
+    env_file:
+      - ../configDocker.env
+    volumes:
+      - ./resources:/usr/src/app/resources
+
+  port-ui:
+    build: ./client
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+  
+  port-pythonServer:
+    network_mode: host
+    build: ./pythonServer
+    restart: always
+    volumes:
+      - ./resources:/usr/src/app/resources
+    env_file:
+      - ../configDocker.env
+
+  port-ws:
+    network_mode: host
+    build: ./wsServer
+    restart: always
+    volumes:
+      - ./resources:/usr/src/app/resources
+    env_file:
+      - ../configDocker.env
+
+  port-proxy:
+    network_mode: host
+    build: ./proxy
+    restart: always
+    volumes:
+      - ./resources:/usr/src/app/resources
+    env_file:
+      - ../configDocker.env

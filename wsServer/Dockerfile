@@ -1,8 +1,7 @@
 FROM node:alpine
 WORKDIR /usr/src/app
+RUN apk add --no-cache tzdata
 COPY package*.json ./
-RUN npm ci --only=production
-RUN npm i pm2 -g
+RUN npm ci --omit=dev
 COPY . .
-EXPOSE 3301
-CMD ["pm2-runtime", "index.js"]
+CMD ["npm", "start"]
