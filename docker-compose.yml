@@ -3,6 +3,7 @@ version: '3'
 services:
   port-server:
     network_mode: host
+    image: graymatics1/port-server
     build: ./server
     restart: always
     env_file:
@@ -11,6 +12,7 @@ services:
       - ./dockerDeployment/resources:/usr/src/app/resources
 
   port-ui:
+    image: graymatics1/port-ui
     build: ./client
     restart: always
     ports:
@@ -20,6 +22,7 @@ services:
   
   port-python-server:
     network_mode: host
+    image: graymatics1/port-python-server
     build: ./pythonServer
     restart: always
     volumes:
@@ -29,6 +32,7 @@ services:
 
   port-ws:
     network_mode: host
+    image: graymatics1/port-ws
     build: ./wsServer
     restart: always
     volumes:
@@ -38,6 +42,7 @@ services:
 
   port-proxy:
     network_mode: host
+    image: graymatics1/port-proxy
     build: ./proxy
     restart: always
     volumes:
