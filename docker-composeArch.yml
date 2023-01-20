@@ -6,9 +6,9 @@ services:
     build: ./server
     restart: always
     env_file:
-      - ../configDocker.env
+      - ./configDocker.env
     volumes:
-      - ./resources:/usr/src/app/resources
+      - ./dockerDeployment/resources:/usr/src/app/resources
 
   port-ui:
     build: ./client
@@ -16,31 +16,31 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./dockerDeployment/nginx.conf:/etc/nginx/conf.d/default.conf
   
   port-pythonServer:
     network_mode: host
     build: ./pythonServer
     restart: always
     volumes:
-      - ./resources:/usr/src/app/resources
+      - ./dockerDeployment/resources:/usr/src/app/resources
     env_file:
-      - ../configDocker.env
+      - ./configDocker.env
 
   port-ws:
     network_mode: host
     build: ./wsServer
     restart: always
     volumes:
-      - ./resources:/usr/src/app/resources
+      - ./dockerDeployment/resources:/usr/src/app/resources
     env_file:
-      - ../configDocker.env
+      - ./configDocker.env
 
   port-proxy:
     network_mode: host
     build: ./proxy
     restart: always
     volumes:
-      - ./resources:/usr/src/app/resources
+      - ./dockerDeployment/resources:/usr/src/app/resources
     env_file:
-      - ../configDocker.env
+      - ./configDocker.env
