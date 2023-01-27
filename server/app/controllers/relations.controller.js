@@ -707,7 +707,8 @@ exports.dashboards = (req, res) => {
                           parseInt(d) == 35 || 
                           parseInt(d) == 51
                           || 
-                          parseInt(d) == 68
+                          parseInt(d) == 68|| 
+                          parseInt(d) == 71
                         ) {
                           analyticsPrem.push({
                             algo_id: parseInt(d),

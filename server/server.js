@@ -120,6 +120,15 @@ if (process.env.INSTALL === 'true') {
           }
           if (find === null) {
             await init.initial()
+          } else {
+            const algos = await algo.findAll({
+              limit: 1,
+              order: [['createdAt', 'DESC']]
+            })
+            if (init.lastId > algos[0].dataValues.id) {
+              await init.initial()
+              console.log('Db updated')
+            }
           }
           connection.query(
             'CREATE TABLE IF NOT EXISTS `' +

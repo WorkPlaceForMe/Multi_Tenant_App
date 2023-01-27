@@ -9303,3 +9303,261 @@ exports.scc = async (req, res) => {
       })
   })
 }
+
+exports.ppe = async (req, res) => {
+  const token = req.headers['x-access-token']
+  const data = req.body
+  const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
+  let start, end
+  let cache = [], range, cou = 0
+  start = new Date(data.start)
+  end = new Date(data.end)
+  if(diff === 1){
+    range = 5 * 60 * 1000
+    start = new Date(data.start).getTime() + 7 * 60 * 60 * 1000
+    start = JSON.stringify(new Date(start))
+    start = start.substring(1, start.length - 1);
+    end =  new Date(data.end).getTime() - 1.5 * 60 * 60 * 1000
+    end = JSON.stringify(new Date(end))
+    end = end.substring(1, end.length - 1);
+  }else if(diff >= 1 && diff <= 3){
+    range = 2 * 60 * 60 * 1000
+  }else if(diff >= 3 && diff <= 7){
+    range = 4 * 60 * 60 * 1000
+  }else if(diff >= 7 && diff <= 14){
+    range = 8 * 60 * 60 * 1000
+  }else if(diff >= 14 && diff <= 32){
+    range = 24 * 60 * 60 * 1000
+  }
+  start = JSON.stringify(start)
+  end = JSON.stringify(end)
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 71,
+        camera_id: req.params.id
+      }
+    }).then(async rel => {
+      await db
+        .con()
+        .query(
+          `SELECT * from ppe WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`,
+          function (err, result) {
+            if (err) {
+              return res.status(500).json({
+                success: false,
+                message: err
+              })
+            }
+            const ress = {}
+            let cache = ''
+            let cache2 = new Date(start).getTime()
+            const labelHelmet = [], labelVest = []
+            let dataAlertsMed = [], dataAlertsHigh = [], dataAlertsLow = [], dataPeople = {}, dataPeopleAll = [],
+            data = [{}, {}]
+            for (const v of result) {
+              if (cache == '') {
+                cache =
+                  v.time.getFullYear() +
+                  '-' +
+                  (v.time.getMonth() + 1) +
+                  '-' +
+                  v.time.getDate() +
+                  ' ' +
+                  v.time.getHours()
+              }
+
+              if (
+                cache !=
+                v.time.getFullYear() +
+                  '-' +
+                  (v.time.getMonth() + 1) +
+                  '-' +
+                  v.time.getDate() +
+                  ' ' +
+                  v.time.getHours()
+              ) {
+                while (
+                  cache !=
+                  v.time.getFullYear() +
+                    '-' +
+                    (v.time.getMonth() + 1) +
+                    '-' +
+                    v.time.getDate() +
+                    ' ' +
+                    v.time.getHours()
+                ) {
+                  let t = new Date(cache + ':00:00').getTime()
+                  // Add one hours to date
+                  t += 60 * 60 * 1000
+                  cache = new Date(t)
+                  ress[
+                    cache.getFullYear() +
+                      '-' +
+                      (cache.getMonth() + 1) +
+                      '-' +
+                      cache.getDate() +
+                      ' ' +
+                      cache.getHours()
+                  ] =
+                    ress[
+                      v.time.getFullYear() +
+                        '-' +
+                        (v.time.getMonth() + 1) +
+                        '-' +
+                        v.time.getDate() +
+                        ' ' +
+                        v.time.getHours()
+                    ] + 1 || 1
+
+                  cache =
+                    cache.getFullYear() +
+                    '-' +
+                    (cache.getMonth() + 1) +
+                    '-' +
+                    cache.getDate() +
+                    ' ' +
+                    cache.getHours()
+                }
+              }
+              if (
+                cache ==
+                v.time.getFullYear() +
+                  '-' +
+                  (v.time.getMonth() + 1) +
+                  '-' +
+                  v.time.getDate() +
+                  ' ' +
+                  v.time.getHours()
+              ) {
+                ress[
+                  v.time.getFullYear() +
+                    '-' +
+                    (v.time.getMonth() + 1) +
+                    '-' +
+                    v.time.getDate() +
+                    ' ' +
+                    v.time.getHours()
+                ] =
+                  ress[
+                    v.time.getFullYear() +
+                      '-' +
+                      (v.time.getMonth() + 1) +
+                      '-' +
+                      v.time.getDate() +
+                      ' ' +
+                      v.time.getHours()
+                  ] + 1 || 1
+              }
+              let d = v.time
+              let se = d.getSeconds()
+              let mi = d.getMinutes()
+              let ho = d.getHours()
+              if (se < 10) {
+                se = '0' + se
+              }
+              if (mi < 10) {
+                mi = '0' + mi
+              }
+              if (ho < 10) {
+                ho = '0' + ho
+              }
+              d =
+                d.getFullYear() +
+                '-' +
+                (d.getMonth() + 1) +
+                '-' +
+                d.getDate() +
+                '_' +
+                ho +
+                ':' +
+                mi +
+                ':' +
+                se
+              v.picture = `${d}_${v.track_id}.jpg`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/ppe/${req.params.id}/${v.picture}`
+              v.movie = `${d}_${v.track_id}_video.mp4`
+              v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/ppe/${req.params.id}/${v.movie}`
+
+            if(v.helmet == 'true'){
+              if (
+                cache2 < v.time.getTime()
+              ) {
+                while (
+                  cache2 < v.time.getTime()
+                ) {
+                  cache2 = new Date(cache2)
+                  dataPeople[cache2.getFullYear() + '-' + (cache2.getMonth() + 1) +  '-' + cache2.getDate() + ' ' + cache2.getHours() + ':' + cache2.getMinutes()] = 0
+                  for(let e = 0; e < count; e++){
+                    dataPeopleAll[e][cache2.getFullYear() + '-' + (cache2.getMonth() + 1) +  '-' + cache2.getDate() + ' ' + cache2.getHours() + ':' + cache2.getMinutes()] = 0
+                  }
+                  cache2 = cache2.getTime()
+                  cache2 += range
+                }
+              }
+              if (
+                cache2 >= v.time.getTime()
+              ) {
+                let t = cache2
+                t -= range
+                t = new Date(t)
+                dataPeople[t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()] = (dataPeople[ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1    
+                dataPeopleAll[v.qid - 1][t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()] = (dataPeopleAll[v.qid - 1][ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1     
+              }
+              labelHelmet.push(v.time)
+            }
+            if(v.vest == 'true'){
+              if (
+                cache2 < v.time.getTime()
+              ) {
+                while (
+                  cache2 < v.time.getTime()
+                ) {
+                  cache2 = new Date(cache2)
+                  dataPeople[cache2.getFullYear() + '-' + (cache2.getMonth() + 1) +  '-' + cache2.getDate() + ' ' + cache2.getHours() + ':' + cache2.getMinutes()] = 0
+                  for(let e = 0; e < count; e++){
+                    dataPeopleAll[e][cache2.getFullYear() + '-' + (cache2.getMonth() + 1) +  '-' + cache2.getDate() + ' ' + cache2.getHours() + ':' + cache2.getMinutes()] = 0
+                  }
+                  cache2 = cache2.getTime()
+                  cache2 += range
+                }
+              }
+              if (
+                cache2 >= v.time.getTime()
+              ) {
+                let t = cache2
+                t -= range
+                t = new Date(t)
+                dataPeople[t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()] = (dataPeople[ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1    
+                dataPeopleAll[v.qid - 1][t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()] = (dataPeopleAll[v.qid - 1][ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1     
+              }
+              labelVest.push(v.time)
+            }
+          }
+          
+            while (
+              cache2 <= new Date(end)
+            ) {
+              cache2 = new Date(cache2)
+              dataPeople[cache2.getFullYear() + '-' + (cache2.getMonth() + 1) +  '-' + cache2.getDate() + ' ' + cache2.getHours() + ':' + cache2.getMinutes()] = 0
+              for(let e = 0; e < count; e++){
+                dataPeopleAll[e][cache2.getFullYear() + '-' + (cache2.getMonth() + 1) +  '-' + cache2.getDate() + ' ' + cache2.getHours() + ':' + cache2.getMinutes()] = 0
+              }
+              cache2 = cache2.getTime()
+              cache2 += range
+            }
+            const a = {
+              total: result.length,
+              raw: result,
+              rel: rel,
+              over: ress
+            }
+            res.status(200).json({
+              success: true,
+              data: a
+            })
+          }
+        )
+    })
+  })
+}
