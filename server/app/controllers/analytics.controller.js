@@ -1798,7 +1798,7 @@ exports.queue = async (req, res) => {
               // } else {
                 v['wait'] = (v.end_time - v.start_time) / 1000
                 v['wait'] = display(v['wait'])
-                // console.log(v.end_time, v.start_time, (v.end_time - v.start_time))
+                // console.log(v.end_time, v.start_time, (v.end_time - v.start_time) / 1000)
                 times.push({
                   time: (v.end_time - v.start_time) / 1000,
                   queue: v.qid

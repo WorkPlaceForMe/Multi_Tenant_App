@@ -119,6 +119,7 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
         this.serv.queue(this.camera,l).subscribe(
           res=>{
             this.queue = res['data']
+            // console.log(this.queue)
             let secondsString
             if(this.queue.avg >= 60){
               let minutes = Math.floor(this.queue.avg / 60);
