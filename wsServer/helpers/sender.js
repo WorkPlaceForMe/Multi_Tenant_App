@@ -3,8 +3,9 @@ const { v4: uuidv4 } = require('uuid')
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 exports.sender = async function(){
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMzMzMtNjY2NjY2LWNjY2NjYy1ubm5ubm4iLCJpZF9hY2NvdW50IjoiMzMzMy02NjY2NjYtY2NjY2NjLW5ubm5ubiIsImlkX2JyYW5jaCI6IjMzMzMtNjY2NjY2LWNjY2NjYy1ubm5ubm4iLCJpYXQiOjE2NzUxNzk3NjgsImV4cCI6MTY3NTIyMjk2OH0.ppveAXWWzz0zh66_SRLKzt8jANRjEiJDvUTMz9tSQtI'
     try{
-        const connection = new ws('ws://localhost:3301/ws/connect/algorithm')
+        const connection = new ws('ws://localhost:3301/ws/connect/algorithm', token)
         let ts, uuid, message, dwell = 10, analytic, parameters, track_id = 1, zone = 0
 
         setInterval(async ()=>{

@@ -4,6 +4,7 @@ const algo = db.algorithm
 const aa = db.aa
 const bcrypt = require('bcryptjs')
 const fs = require('fs')
+const { v4: uuidv4 } = require('uuid')
 
 exports.initial = async function () {
   const path =
@@ -590,6 +591,30 @@ exports.initial = async function () {
   } catch (err) {
     if (err.name !== 'SequelizeUniqueConstraintError') console.error(err.name)
   }
+  try {
+    await algo.create({
+      id: 71,
+      name: 'Ppe'
+    })
+  } catch (err) {
+    if (err.name !== 'SequelizeUniqueConstraintError') console.error(err.name)
+  }
+  try {
+    await algo.create({
+      id: 72,
+      name: 'Vehicle loitering'
+    })
+  } catch (err) {
+    if (err.name !== 'SequelizeUniqueConstraintError') console.error(err.name)
+  }
+  try {
+    await algo.create({
+      id: 73,
+      name: 'New Fr'
+    })
+  } catch (err) {
+    if (err.name !== 'SequelizeUniqueConstraintError') console.error(err.name)
+  }
   // const lastId = 70
   try {
     await usr.create({
@@ -615,6 +640,39 @@ exports.initial = async function () {
     await fs.promises.mkdir(`${pathBranch}/pictures`)
     await fs.promises.mkdir(`${pathBranch}/heatmap_pics`)
   }
+  const id = uuidv4()
+  try {
+    await usr.create({
+      id: id,
+      username: 'advention',
+      password: bcrypt.hashSync('Graymatics1!', 12),
+      email: 'advention@graymatics.com',
+      role: 'client',
+      id_account: id,
+      id_branch: id,
+      cameras: 100,
+      analytics: 100,
+      disabled: 0
+    })
+    const pathPic = `${path}${id}`
+    if (!fs.existsSync(pathPic)) {
+      await fs.promises.mkdir(pathPic)
+      const pathBranch = `${pathPic}/${id}`
+      await fs.promises.mkdir(pathBranch)
+      await fs.promises.mkdir(`${pathBranch}/pictures`)
+      await fs.promises.mkdir(`${pathBranch}/heatmap_pics`)
+    }
+  } catch (err) {
+    if (err.name !== 'SequelizeUniqueConstraintError') console.error(err.name)
+  }
+  try {
+    await aa.create({
+      algoId: 73,
+      accountId: id
+    })
+  } catch (err) {
+    if (err.name !== 'SequelizeUniqueConstraintError') console.error(err.name)
+  }
   for (let i = 0; i <= this.lastId; i++) {
     try {
       await aa.create({
@@ -628,4 +686,4 @@ exports.initial = async function () {
 }
 // INSERT INTO `multi_tenant`.`algorithms` (`id`, `name`, `createdAt`, `updatedAt`) VALUES ('27', 'Camera Tampering', '2020-10-05 07:31:29', '2020-10-05 07:31:29');
 
-exports.lastId = 70
+exports.lastId = 73

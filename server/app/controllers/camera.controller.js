@@ -11,10 +11,10 @@ const path =
   process.env.home + process.env.username + process.env.pathDocker + process.env.resources
 const my_ip = process.env.my_ip
 
-exports.addCamera = (req, res) => {
+exports.addCamera = async (req, res) => {
   const token = req.headers['x-access-token']
 
-  jwt.verify(token, process.env.secret, (_err, decoded) => {
+  jwt.verify(token, process.env.secret, async (_err, decoded) => {
     const uuid = uuidv4()
     // Save User to Database
     Camera.create({
@@ -23,13 +23,17 @@ exports.addCamera = (req, res) => {
       rtsp_in: req.body.rtsp_in,
       id_account: decoded.id_account,
       id_branch: decoded.id_branch,
-      stored_vid: 'No',
-      atributes: {
-        longitude: req.body.atributes.longitude,
-        latitude: req.body.atributes.latitude
-      }
+      stored_vid: 'No'
     })
-      .then(_camera => {
+      .then(async _camera => {
+        await Relations.create({
+          camera_id: uuid,
+          algo_id: 73,
+          roi_id: null,
+          atributes: null,
+          id_account: decoded.id_account,
+          id_branch: decoded.id_branch
+        })
         res
           .status(200)
           .send({ success: true, message: 'Camera was registered successfully!', id: uuid })
@@ -40,15 +44,21 @@ exports.addCamera = (req, res) => {
   })
 }
 
-exports.viewCams = (req, res) => {
+exports.viewCams = async (req, res) => {
   const token = req.headers['x-access-token']
 
   jwt.verify(token, process.env.secret, async (_err, decoded) => {
     Camera.findAll({
       where: { id_branch: decoded.id_branch },
-      attributes: ['name', 'id', 'createdAt', 'updatedAt']
+      attributes: ['name', 'id', 'rtsp_in', 'createdAt', 'updatedAt']
     })
-      .then(cameras => {
+      .then(async cameras => {
+        for (const camera of cameras) {
+          const rel = await Relations.findAll({
+            where: { camera_id: camera.id }
+          })
+          camera.dataValues.stream = rel[0].http_out
+        }
         res.status(200).send({ success: true, data: cameras })
       })
       .catch(err => {

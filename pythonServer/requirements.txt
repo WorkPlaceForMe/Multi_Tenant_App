@@ -1,7 +1,0 @@
-Flask
-# Flask>=2.0.2
-opencv-python
-# opencv-python==4.0.0.21
-python-dotenv
-mysqlclient
-waitress
