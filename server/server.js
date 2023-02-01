@@ -2,7 +2,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 require('dotenv').config({ path: '../config.env' })
-const app = express()
 const morgan = require('morgan')
 const fs = require('fs')
 const path = require('path')
@@ -12,31 +11,33 @@ const compression = require('compression')
 const swaggerJsDoc = require('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
 const db = require('./app/models')
+const enableWs = require('express-ws')
+const sendTest = require('./app/helpers/sender').sender
+const helmet = require('helmet')
 const usr = db.user
 const algo = db.algorithm
 const resourcesFolderPath = path.resolve(process.env.resourcePath)
 const picResourceFolderPath = path.join(resourcesFolderPath)
+
+const port = process.env.PORTNODE || 3300
+
+const app = express()
+enableWs(app)
 
 app.use(compression())
 
 if (process.env.NODE_ENV === 'production') {
   const corsOptions = {
     origin: [
-      `http://${process.env.my_ip}:4200`,
-      `${process.env.app_url}`,
-      'http://localhost:4200',
-      `http://${process.env.my_ip}:3200`
+      `${process.env.app_url}`
     ]
   }
   app.use(cors(corsOptions))
-  console.log(`Running on Production for http://${process.env.my_ip}:4200`)
+  console.log(`Running on Production for http://${process.env.my_ip}:${port}`)
 } else {
   const corsOptions = {
     origin: [
-      `http://${process.env.my_ip}:4200`,
-      `${process.env.app_url}`,
-      'http://localhost:4200',
-      `http://${process.env.my_ip}:3200`
+      `${process.env.app_url}`
     ]
   }
   app.use(cors(corsOptions))
@@ -55,13 +56,14 @@ function customHeaders (req, res, next) {
 }
 
 app.use(customHeaders)
+app.use(helmet())
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json({ limit: '10mb', extended: true }))
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
 app.all(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', `http://${process.env.my_ip}:4200`)
+  res.header('Access-Control-Allow-Origin', `${process.env.app_url}`)
   res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE')
   res.header(
     'Access-Control-Allow-Headers',
@@ -69,7 +71,7 @@ app.all(function (req, res, next) {
   )
   next()
 })
-
+express.Router()
 app.use(
   morgan(
     'Method: :method:url // Url: :remote-addr // Status::status // User-agent: :user-agent // Date: :date[web]'
@@ -87,11 +89,6 @@ app.use(
 process.on('unhandledRejection', (error, promise) => {
   console.log(' Oh Lord! We forgot to handle a promise rejection here: ', promise)
   console.log(' The error was: ', error)
-})
-
-process.on('uncaughtException', function (err, promise) {
-  console.log(' Oh Lord! We forgot to handle a promise rejection here: ', promise)
-  console.log(' The error was: ', err)
 })
 
 if (process.env.INSTALL === 'true') {
@@ -140,7 +137,7 @@ const opt = {
     openapi: '3.0.0',
     info: {
       title: 'Graymatics API',
-      version: '5.2.1',
+      version: '6.2.1',
       description: 'Graymatics API Information',
       license: {
         name: 'MIT',
@@ -158,7 +155,7 @@ const opt = {
         description: 'Main'
       },
       {
-        url: 'localhost:3311',
+        url: 'http://localhost:3300',
         description: 'Local'
       }
     ]
@@ -185,39 +182,22 @@ app.use(
   })
 )
 
-// if (1 === 2) {
-//   const doc = YAML.dump(swaggerDocs)
-//   fs.writeFileSync('./resources/swagger.yaml', doc, 'utf8')
-// }
-
 // routes
 require('./app/routes/auth.routes')(app)
 require('./app/routes/user.routes')(app)
-require('./app/routes/fr.routes')(app)
-require('./app/routes/image.routes')(app)
 require('./app/routes/camera.routes')(app)
-require('./app/routes/algorithm.routes')(app)
-require('./app/routes/heatmap.routes')(app)
-require('./app/routes/relations.routes')(app)
-require('./app/routes/schedule.routes')(app)
-require('./app/routes/ticket.routes')(app)
 require('./app/routes/analytics.routes')(app)
-// require('./app/routes/email.routes')(app)
-require('./app/routes/elastic.routes')(app)
-require('./app/routes/alerts.routes')(app)
-require('./app/routes/path.routes')(app)
-require('./app/routes/helpdesk.routes')(app)
-require('./app/routes/reply.routes')(app)
-require('./app/routes/incident.routes')(app)
-require('./app/routes/manualTrigger.routes')(app)
-require('./app/routes/info.routes')(app)
-require('./app/routes/report.routes')(app)
+require('./app/routes/ws.route')(app)
+
+if (process.env.TESTWS === 'true') {
+  try {
+    sendTest()
+  } catch (err) {
+    console.error(err)
+  }
+}
 
 // resources being served
 app.use('/api/pictures', express.static(picResourceFolderPath))
 
-// app.use((req, res, next) => {
-//   res.sendFile('/app/views/error.html', { root: __dirname })
-// })
-
-module.exports = app
+app.listen(port)
