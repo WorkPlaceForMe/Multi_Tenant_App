@@ -18,135 +18,112 @@ const verifyToken = (req, res, next) => {
   }
 
   jwt.verify(token, process.env.secret, (err, decoded) => {
-    if (err) {
+    if (err || !decoded || !decoded.id) {
       return res.status(401).send({
         message: 'Unauthorized!'
       })
     }
-    req.userId = decoded.id
+
     req.decodedJWT = decoded
+    req.userId = decoded.id
+
     next()
   })
 }
 
 const isAdmin = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
-    if (user.role === 'admin') {
+    if (user && user.role === 'admin') {
       next()
-      return
+    } else {
+      res.status(403).send({
+        message: 'Require Admin Role!'
+      })
     }
-
-    res.status(403).send({
-      message: 'Require Admin Role!'
-    })
   })
 }
 
 const isBranch = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
-    if (user.role === 'branch') {
+    if (user && user.role === 'branch') {
       next()
-      return
+    } else {
+      res.status(403).send({
+        message: 'Require Branch Role!'
+      })
     }
-
-    res.status(403).send({
-      message: 'Require Branch Role!'
-    })
   })
 }
 
 const isClient = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
-    if (user.role === 'client') {
+    if (user && user.role === 'client') {
       next()
-      return
+    } else {
+      res.status(403).send({
+        message: 'Require Client Role!'
+      })
     }
-
-    res.status(403).send({
-      message: 'Require Client Role!'
-    })
   })
 }
 
 const isClientOrBranch = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
-    if (user.role === 'client') {
+    if (user && user.role === 'client') {
       next()
-      return
-    }
-
-    if (user.role === 'branch') {
+    } else if (user && user.role === 'branch') {
       next()
-      return
+    } else {
+      res.status(403).send({
+        message: 'Require Client or Branch account!'
+      })
     }
-
-    res.status(403).send({
-      message: 'Require Client or Branch account!'
-    })
   })
 }
 
 const isClientOrBranchOrAdmin = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
-    if (user.role === 'client') {
+    if (user && user.role === 'client') {
       next()
-      return
-    }
-
-    if (user.role === 'branch') {
+    } else if (user && user.role === 'branch') {
       next()
-      return
-    }
-
-    if (user.role === 'admin') {
+    } else if (user && user.role === 'admin') {
       next()
-      return
+    } else {
+      res.status(403).send({
+        message: 'Require Client or Branch or Admin account!'
+      })
     }
-
-    res.status(403).send({
-      message: 'Require Client or Branch or Admin account!'
-    })
   })
 }
 
 const isUserOrBranch = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
-    if (user.role === 'user') {
+    if (user && user.role === 'user') {
       next()
-      return
-    }
-
-    if (user.role === 'branch') {
+    } else if (user && user.role === 'branch') {
       next()
-      return
+    } else {
+      res.status(403).send({
+        message: 'Require User or Branch account!'
+      })
     }
-
-    res.status(403).send({
-      message: 'Require User or Branch account!'
-    })
   })
 }
 
 const isClientOrUserOrBranch = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
-    if (user.role === 'user') {
+    if (user && user.role === 'user') {
       next()
-      return
-    }
-
-    if (user.role === 'branch') {
+    } else if (user && user.role === 'branch') {
       next()
-      return
-    }
-
-    if (user.role === 'client') {
+    } else if (user && user.role === 'client') {
       next()
-      return
+    } else {
+      res.status(403).send({
+        message: 'Require Client or User or Branch account!'
+      })
     }
-
-    res.status(403).send({
-      message: 'Require Client or User or Branch account!'
-    })
   })
 }
 
@@ -158,6 +135,7 @@ const isAvailable = (req, res, next) => {
       message: 'Exists'
     })
   }
+
   next()
 }
 

@@ -142,7 +142,6 @@ module.exports = function (app) {
    */
   app.post(
     '/api/alerts/:id',
-    /* [authJwt.verifyToken, authJwt.isClientOrBranch], */
     controller.getAlerts
   )
 }
