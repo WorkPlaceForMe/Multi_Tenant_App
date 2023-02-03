@@ -143,7 +143,7 @@ export class BlackWhiteComponent implements OnInit , OnDestroy {
             m["cam_id"] +
             "/" +
             m["clip_path"];
-          m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss");
+          m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss",'+0800');
           switch (m["severity"]) {
             case "0": {
               m["severity"] = "Low";

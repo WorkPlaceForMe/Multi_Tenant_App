@@ -25,7 +25,6 @@
   },
   "dependencies": {
     "@akveo/ng2-completer": "^9.0.1",
-    "@angular-devkit/build-angular": "^13.3.9",
     "@angular-devkit/core": "^13.3.9",
     "@angular/animations": "^13.3.11",
     "@angular/cdk": "^13.2.6",
@@ -91,6 +90,7 @@
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "^13.3.10",
     "@compodoc/compodoc": "^1.1.18",
     "@fortawesome/fontawesome-free": "^5.2.0",
     "@types/d3-color": "1.0.5",
