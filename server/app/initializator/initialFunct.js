@@ -89,7 +89,7 @@ exports.initial = async function () {
   try {
     await algo.create({
       id: 8,
-      name: 'Wrong way or illegal turn detection'
+      name: 'Direccion equivocada'
     })
   } catch (err) {
     if (err.name !== 'SequelizeUniqueConstraintError') console.error(err.name)
@@ -585,7 +585,7 @@ exports.initial = async function () {
   try {
     await algo.create({
       id: 70,
-      name: 'Vehicle congestion'
+      name: 'Congestion vehicular'
     })
   } catch (err) {
     if (err.name !== 'SequelizeUniqueConstraintError') console.error(err.name)
@@ -601,7 +601,7 @@ exports.initial = async function () {
   try {
     await algo.create({
       id: 72,
-      name: 'Congestion vehicular'
+      name: 'Vehiculo estancado'
     })
   } catch (err) {
     if (err.name !== 'SequelizeUniqueConstraintError') console.error(err.name)
