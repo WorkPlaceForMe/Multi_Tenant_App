@@ -8824,7 +8824,7 @@ exports.breadAvail = async (req, res) => {
         }else if(diff >= 14 && diff <= 32){
           range = 24 * 60 * 60 * 1000
         }
-        console.log(start, end,`SELECT * from bread_availability WHERE ${data.type} = '${req.params.id}' and time >= ${JSON.stringify(start)} and  time <= ${JSON.stringify(end)} order by time asc;`)
+        // console.log(start, end,`SELECT * from bread_availability WHERE ${data.type} = '${req.params.id}' and time >= ${JSON.stringify(start)} and  time <= ${JSON.stringify(end)} order by time asc;`)
         await db
           .con()
           .query(
@@ -8854,6 +8854,7 @@ exports.breadAvail = async (req, res) => {
                   sum.push(0)
                 }
               result.forEach(function (v) {
+                // console.log(v.availability)
                 if(v.zone == 'right'){
                   v.zone = 1
                 }else if(v.zone == 'left'){
@@ -8863,8 +8864,11 @@ exports.breadAvail = async (req, res) => {
                   av[v.zone].push(v.availability)
                   sum[v.zone] += parseInt(v.availability)
                 }else{
+                  av[v.zone].push(v.availability)
+                  sum[v.zone] += parseInt(v.availability)
                   cache[v.zone] += range
                   labelsDAll[v.zone].push(cache[v.zone])
+                  // console.log(sum[v.zone],av[v.zone].length, v.zone)
                   let availability = sum[v.zone]/av[v.zone].length
                   availability = Math.round(availability * 100) / 100
                   dwellAll[v.zone].push(availability)
@@ -9002,7 +9006,7 @@ exports.breadTemp = async (req, res) => {
         }else if(diff >= 14 && diff <= 32){
           range = 24 * 60 * 60 * 1000
         }
-        console.log(`SELECT * from bread_temperature WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`, range/1000/60/60)
+        // console.log(`SELECT * from bread_temperature WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`, range/1000/60/60)
         await db
           .con()
           .query(
