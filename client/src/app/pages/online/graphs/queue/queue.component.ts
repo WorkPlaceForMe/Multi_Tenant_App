@@ -26,6 +26,7 @@ export class QueueComponent implements OnInit, OnDestroy {
   rtspIn: any;
   queues: Array<any> = [];
   avgss: Array<any> = [];
+  labelsQueues: Array<any> = []
   themeSubscription: any;
   dataL: any;
   dataM: any;
@@ -116,6 +117,8 @@ export class QueueComponent implements OnInit, OnDestroy {
       this.serv.queue(this.camera,l).subscribe(
         res=>{
           this.queue = res['data']
+          console.log(this.queue)
+          this.labelsQueues = this.queue.cam_name.split('-')[1].split('/')
           let secondsString
           if(this.queue.avg >= 60){
             let minutes = Math.floor(this.queue.avg / 60);
@@ -135,6 +138,7 @@ export class QueueComponent implements OnInit, OnDestroy {
             this.queue.avg = `0:${secondsString}`
           }
           for(let s of this.queue.avgs){
+            console.log(s)
             let secondsStr
             if(s >= 60){
               let minutes = Math.floor(s / 60);
@@ -173,8 +177,18 @@ export class QueueComponent implements OnInit, OnDestroy {
               m.inLine = 'Exit'
             }
           }
+          if(this.queue.min === 1){
+            this.queue.min = this.labelsQueues[0]
+          }else if(this.queue.min === 2){
+            this.queue.min = this.labelsQueues[1]
+          }
+          if(this.queue.max === 1){
+            this.queue.max = this.labelsQueues[0]
+          }else if(this.queue.max === 2){
+            this.queue.max = this.labelsQueues[1]
+          }
           for(const qu in this.queue.countAll){
-            this.queues.push({zone: qu, amount: this.queue.countAll[qu]})
+            this.queues.push({zone: this.labelsQueues[parseInt(qu) - 1], amount: this.queue.countAll[qu]})
           }
           const source = this.queue.rawAlerts.filter( alert => alert.severity === 2 )
           // this.source = this.queue.raw.slice().sort((a, b) => +new Date(b.start_time) - +new Date(a.start_time))
@@ -204,8 +218,9 @@ export class QueueComponent implements OnInit, OnDestroy {
             const chartjs: any = config.variables.chartjs;
             const datasetsLow = [], datasetsMed = [], datasetsHigh = [], datasetsPall = []
             for(let i = 0; i < this.queue.dataAlertsLow.length; i++){
+              
               datasetsLow.push({
-                label: `Fila: ${i + 1}`,
+                label: `Fila: ${this.labelsQueues[i]}`,
                 data: Object.values(this.queue.dataAlertsLow[i]),
                 borderColor: cols[i],
                 backgroundColor: cols[i],
@@ -214,7 +229,7 @@ export class QueueComponent implements OnInit, OnDestroy {
                 pointHoverRadius: 5,
               })
               datasetsMed.push({
-                label: `Fila: ${i + 1}`,
+                label: `Fila: ${this.labelsQueues[i]}`,
                 data: Object.values(this.queue.dataAlertsMed[i]),
                 borderColor: cols[i],
                 backgroundColor: cols[i],
@@ -223,7 +238,7 @@ export class QueueComponent implements OnInit, OnDestroy {
                 pointHoverRadius: 5,
               })
               datasetsHigh.push({
-                label: `Fila: ${i + 1}`,
+                label: `Fila: ${this.labelsQueues[i]}`,
                 data: Object.values(this.queue.dataAlertsHigh[i]),
                 borderColor: cols[i],
                 backgroundColor: cols[i],
@@ -234,7 +249,7 @@ export class QueueComponent implements OnInit, OnDestroy {
             }
             for(let i = 0; i < this.queue.dataPeopleAll.length; i++){
               datasetsPall.push({
-                label: `Fila: ${i + 1}`,
+                label: `Fila: ${this.labelsQueues[i]}`,
                 data: Object.values(this.queue.dataPeopleAll[i]),
                 borderColor: cols[i],
                 backgroundColor: cols[i],

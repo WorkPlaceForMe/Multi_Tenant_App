@@ -1781,6 +1781,7 @@ exports.queue = async (req, res) => {
             let max = -1
             let minQ, maxQ
             let times = []
+            let cam_name = ''
             // let cacheTime = new Date(start).getTime()
             // let cacheTime = 0
             // const num = parseInt(data.timezone.slice(1,3)) * 3600 * 1000
@@ -1860,6 +1861,9 @@ exports.queue = async (req, res) => {
                 }
                 labelPeople.push(v.start_time)
                 cou++
+              }
+              if(cam_name === ''){
+                cam_name = v.camera_name
               }
             }
             if(cou === countIn){
@@ -2016,7 +2020,8 @@ exports.queue = async (req, res) => {
                   min: minQ,
                   max: maxQ,
                   rel: rel,
-                  dataPeopleAll: dataPeopleAll
+                  dataPeopleAll: dataPeopleAll,
+                  cam_name: cam_name
                 }
                 res.status(200).json({
                   success: true,

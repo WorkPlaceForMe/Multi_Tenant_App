@@ -19,7 +19,7 @@
                     <nb-card-body>
                         <p class = "badge-txt">Tiempo de espera medio - {{queue == undefined ? '0' : queue.avg}} min</p>
                         <p class = "badge-reading" *ngFor="let avg of avgss; let i = index">
-                            Fila {{i + 1}} - {{avg}} min</p>
+                            Fila {{labelsQueues[i]}} - {{avg}} min</p>
                     </nb-card-body>
                 </nb-card>
             </div>
