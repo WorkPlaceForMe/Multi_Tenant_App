@@ -66,7 +66,6 @@ export class QueueComponent implements OnInit, OnDestroy {
     this.videoplayer.nativeElement.src = vid    
     this.videoplayer.nativeElement.load();
     this.videoplayer.nativeElement.play();
-
   }
     timezone: any;
   video:boolean = false;
