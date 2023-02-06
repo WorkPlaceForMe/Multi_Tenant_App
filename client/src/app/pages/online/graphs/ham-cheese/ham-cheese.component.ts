@@ -176,14 +176,14 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
                 m.inLine = 'Exit'
               }
             }
-            if(this.queue.min === '1'){
+            if(this.queue.min === 1){
               this.queue.min = 'Jamon & Queso'
-            }else if(this.queue.min === '2'){
+            }else if(this.queue.min === 2){
               this.queue.min = 'Carnes'
             }
-            if(this.queue.max === '1'){
+            if(this.queue.max === 1){
               this.queue.max = 'Jamon & Queso'
-            }else if(this.queue.max === '2'){
+            }else if(this.queue.max === 2){
               this.queue.max = 'Carnes'
             }
             for(const qu in this.queue.countAll){
