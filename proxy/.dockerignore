@@ -1,0 +1,8 @@
+config.env
+node_modules
+.gitignore
+access.log
+.dockerignore
+Dockerfile
+resources/**
+test
