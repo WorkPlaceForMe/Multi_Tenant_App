@@ -8937,7 +8937,6 @@ exports.breadAvail = async (req, res) => {
                     v.movie = `${d}_${v.id}_video.mp4`
                     v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/avail_alerts/${req.params.id}/${v.movie}`
                   })
-                  console.log(result2.length)
                   let a = {
                     dwell: dwell,
                     labelsD: labelsD,
@@ -9011,7 +9010,7 @@ exports.breadTemp = async (req, res) => {
         }else if(diff >= 14 && diff <= 32){
           range = 24 * 60 * 60 * 1000
         }
-        // console.log(`SELECT * from bread_temperature WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`, range/1000/60/60)
+        console.log(`SELECT * from bread_temperature WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`, range/1000/60/60)
         await db
           .con()
           .query(
@@ -9046,6 +9045,8 @@ exports.breadTemp = async (req, res) => {
                   av[v.zone].push(v.temperature)
                   sum[v.zone] += parseInt(v.temperature)
                 }else{
+                  av[v.zone].push(v.temperature)
+                  sum[v.zone] += parseInt(v.temperature)
                   cache[v.zone] += range
                   labelsDAll[v.zone].push(cache[v.zone])
                   let temperature = sum[v.zone]/av[v.zone].length
