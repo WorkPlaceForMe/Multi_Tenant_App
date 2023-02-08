@@ -9,11 +9,3 @@ services:
       - ../configDocker.env
     volumes:
       - ./resources:/usr/src/app/resources
-
-  api-proxy:
-    image: graymatics1/api-proxy:1.0.1
-    restart: always
-    ports:
-      - 80:80
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
