@@ -13,7 +13,6 @@ const swaggerUi = require('swagger-ui-express')
 const db = require('./app/models')
 const enableWs = require('express-ws')
 const sendTest = require('./app/helpers/sender').sender
-const helmet = require('helmet')
 const usr = db.user
 const algo = db.algorithm
 const resourcesFolderPath = path.resolve(process.env.resourcePath)
@@ -56,7 +55,6 @@ function customHeaders (req, res, next) {
 }
 
 app.use(customHeaders)
-app.use(helmet())
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json({ limit: '10mb', extended: true }))
@@ -129,6 +127,8 @@ if (process.env.INSTALL === 'true') {
           console.log('Finallized DB')
         })
       })
+    }).catch(async err => {
+      console.error(err)
     })
 }
 
