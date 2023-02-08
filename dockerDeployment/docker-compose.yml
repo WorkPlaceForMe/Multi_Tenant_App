@@ -3,7 +3,7 @@ version: '3'
 services:
   api-server:
     network_mode: host
-    image: graymatics1/api-server:1.0.1
+    image: graymatics1/api-server:1.1.6
     restart: always
     env_file:
       - ../configDocker.env
