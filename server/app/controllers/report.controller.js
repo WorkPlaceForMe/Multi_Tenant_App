@@ -72,7 +72,7 @@ exports.report = async (req, res) => {
     query = `SELECT * from parking WHERE ${data.type} = '${req.params.cam_id}' and time >= '${start}' and  time <= '${end}' order by time asc;`
   }
   if (req.params.algo_id === '70') {
-    query = `SELECT * from parking WHERE ${data.type} = '${req.params.cam_id}' and time >= '${start}' and  time <= '${end}' order by time asc;`
+    query = `SELECT * from congestion WHERE ${data.type} = '${req.params.cam_id}' and time >= '${start}' and  time <= '${end}' order by time asc;`
   }
   await db
     .con()
@@ -81,6 +81,34 @@ exports.report = async (req, res) => {
       async function (_err, result) {
         if (result === undefined || result.length === 0) {
           return res.status(400).send({ success: false, message: 'No hay data.', type: data.typ })
+        }
+        for (const v of result) {
+          let d = v.time
+          let se = d.getSeconds()
+          let mi = d.getMinutes()
+          let ho = d.getHours()
+          if (se < 10) {
+            se = '0' + se
+          }
+          if (mi < 10) {
+            mi = '0' + mi
+          }
+          if (ho < 10) {
+            ho = '0' + ho
+          }
+          d =
+            d.getFullYear() +
+            '-' +
+            (d.getMonth() + 1) +
+            '-' +
+            d.getDate() +
+            '_' +
+            ho +
+            ':' +
+            mi +
+            ':' +
+            se
+          v.picture = `${d}_${v.track_id}.jpg`
         }
         res.status(200).json({
           sucess: true,

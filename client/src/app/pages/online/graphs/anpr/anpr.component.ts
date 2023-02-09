@@ -235,7 +235,14 @@ export class AnprComponent implements OnInit, OnDestroy {
     }
     ;(await this.serv.report1(this.algo_id, this.camera, l)).subscribe(
       async (res) => {
-        const ws = utils.json_to_sheet(res['data']);
+        let data: Array<any>;
+        data = res['data']
+        for (let m of data) {
+          m['picture'] = 'http://localhost' + api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/anpr/' + m['cam_id'] + '/' + m['picture']
+          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', '+0530');
+        }
+        console.log(data, res['data'])
+        const ws = utils.json_to_sheet(data);
         const wb = utils.book_new();
         utils.book_append_sheet(wb, ws, "Data");
         await writeFileXLSX(wb, `${uuidv4()}.xlsx`);
