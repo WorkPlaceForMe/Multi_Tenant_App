@@ -163,6 +163,7 @@ export class AvailabilityComponent implements OnInit, OnDestroy {
           };
 
           this.optionsL = {
+            spanGaps: true,
             responsive: true,
             maintainAspectRatio: false,
             legend: {
@@ -207,7 +208,8 @@ export class AvailabilityComponent implements OnInit, OnDestroy {
                   ticks: {
                     fontColor: chartjs.textColor,
                     min: 0, 
-                    max:100
+                    max:100,
+                    beginAtZero: true,
                   },
                 },
               ],

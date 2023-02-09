@@ -17,9 +17,9 @@
             <div class="col less-padding">
                 <nb-card class = "top-badges">
                     <nb-card-body>
-                        <p class = "badge-txt">Tiempo de espera medio - {{queue == undefined ? '0' : queue.avg}} min</p>
+                        <p class = "badge-txt">Tiempo de espera medio - {{queue == undefined ? '0' : queue.avg}}</p>
                         <p class = "badge-reading" *ngFor="let avg of avgss; let i = index">
-                            Fila {{i + 1 === 1 ? 'Jamon & Queso' : 'Carne'}} - {{avg}} min</p>
+                            Fila {{i + 1 === 1 ? 'Jamon & Queso' : 'Carne'}} - {{avg}}</p>
                     </nb-card-body>
                 </nb-card>
             </div>

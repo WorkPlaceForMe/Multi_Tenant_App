@@ -290,6 +290,7 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
               };
           
               this.options = {
+                spanGaps: true,
                 responsive: true,
                 maintainAspectRatio: false,
                 legend: {
@@ -332,6 +333,8 @@ export class HamCheeseComponent implements OnInit ,OnDestroy {
                       },
                       ticks: {
                         fontColor: chartjs.textColor,
+                        beginAtZero: true,
+                        stepSize: 1
                       },
                     },
                   ],

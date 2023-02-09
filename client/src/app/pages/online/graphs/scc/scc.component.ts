@@ -193,6 +193,7 @@ export class SccComponent implements  OnInit, OnDestroy {
             //   datasets: datasetsPall
             // };
             this.options = {
+              spanGaps: true,
               responsive: true,
               maintainAspectRatio: false,
               legend: {
@@ -235,6 +236,8 @@ export class SccComponent implements  OnInit, OnDestroy {
                     },
                     ticks: {
                       fontColor: chartjs.textColor,
+                      beginAtZero: true,
+                      stepSize: 1
                     },
                   },
                 ],
@@ -308,7 +311,7 @@ export class SccComponent implements  OnInit, OnDestroy {
       display : true,
       perPage:5
       },
-    noDataMessage: "No data found",
+    noDataMessage: "No hay data",
     columns: {
       picture: {
         title: 'Imagen',

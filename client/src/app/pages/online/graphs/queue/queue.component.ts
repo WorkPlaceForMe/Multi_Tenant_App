@@ -276,6 +276,7 @@ export class QueueComponent implements OnInit, OnDestroy {
               datasets: datasetsPall
             };
             this.options = {
+              spanGaps: true,
               responsive: true,
               maintainAspectRatio: false,
               legend: {
@@ -318,6 +319,8 @@ export class QueueComponent implements OnInit, OnDestroy {
                     },
                     ticks: {
                       fontColor: chartjs.textColor,
+                      beginAtZero: true,
+                      stepSize: 1
                     },
                   },
                 ],

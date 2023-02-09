@@ -163,6 +163,7 @@ export class TemperatureComponent implements OnInit, OnDestroy {
           };
 
           this.optionsL = {
+            spanGaps: true,
             responsive: true,
             maintainAspectRatio: false,
             legend: {
@@ -205,6 +206,7 @@ export class TemperatureComponent implements OnInit, OnDestroy {
                   },
                   ticks: {
                     fontColor: chartjs.textColor,
+                    beginAtZero: true,
                   },
                 },
               ],
