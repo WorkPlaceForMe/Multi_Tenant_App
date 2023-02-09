@@ -209,5 +209,8 @@ export class AnalyticsService {
       responseType: 'blob'
     });
   }
+  report1(algo_id:number, cam_id:string, dates){
+    return this.http.post(`${api}/report/${algo_id}/${cam_id}`, dates);
+  }
   constructor(private http: HttpClient) { }
 }

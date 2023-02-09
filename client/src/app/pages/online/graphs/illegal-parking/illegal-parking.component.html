@@ -3,6 +3,13 @@
     <div class="row">
       <div class="col-md-12 less-padding">
         <nb-card>
+          <nb-card-header>
+            <button (click)='csv("count")' *ngIf="!csvAlerts['count']" nbButton outline status="info" size = "tiny">Download table data</button>
+            <button nbButton outline status="info" size = "tiny" [nbSpinner]="true" nbSpinnerSize="tiny" nbSpinnerStatus="info" [disabled]="csvAlerts['count']" *ngIf="csvAlerts['count']">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+            <div *ngIf="showData" class="text-danger">
+              <small>No data available.</small>
+          </div>
+          </nb-card-header>
           <nb-card-body style="padding: 0px">
             <ng2-smart-table [settings]="settings" [source]="source" (edit)='got($event)'>
             </ng2-smart-table>

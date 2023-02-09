@@ -22,6 +22,8 @@ import { NbDialogRef, NbDialogService } from "@nebular/theme";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { WindowOpenerComponent } from "../window-opener/window-opener.component";
 import { SeverityComponent } from "../../severity/severity.component";
+import { utils, writeFileXLSX } from 'xlsx';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'ngx-congestion',
@@ -329,6 +331,49 @@ export class CongestionComponent implements OnInit , OnDestroy {
       },
     },
   };
+
+  csvAlerts: Object = {
+    alerts: false,
+    count: false
+  }
+  showAlert: boolean = false;
+  showData: boolean = false;
+
+  async csv(algo){
+    this.csvAlerts[algo] = true
+    let type;
+    if(this.now_user.id_branch != '0000'){
+      type = 'cam_id';
+    }else{
+      type = 'id_account'
+    }
+    let l = {
+      start: this.range.start,
+      end: this.range.end,
+      type: type,
+      ham: true,
+      algo: algo
+    }
+    ;(await this.serv.report1(this.algoId, this.camera, l)).subscribe(
+      async (res) => {
+        const ws = utils.json_to_sheet(res['data']);
+        const wb = utils.book_new();
+        utils.book_append_sheet(wb, ws, "Data");
+        await writeFileXLSX(wb, `${uuidv4()}.xlsx`);
+        this.csvAlerts[algo] = false
+      },
+      err => {
+        console.error(err)
+        this.csvAlerts[algo] = false
+        if(algo === 'count'){
+          this.showData = true;
+        }
+        if(algo === 'alerts'){
+          this.showAlert = true;
+        }
+      }
+    )
+  }
 }
 
 @Component({

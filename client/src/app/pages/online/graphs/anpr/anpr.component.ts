@@ -10,6 +10,8 @@ import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
 import { WindowOpenerComponent } from '../window-opener/window-opener.component';
+import { utils, writeFileXLSX } from 'xlsx';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'ngx-anpr',
@@ -27,6 +29,7 @@ export class AnprComponent implements OnInit, OnDestroy {
   now_user: Account;
   themeSubscription: any;
   options: any = {};
+  algo_id: number = 13;
 
   @ViewChild('streaming', { static: false }) streamingcanvas: ElementRef;
 
@@ -106,7 +109,7 @@ export class AnprComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type,
     };
-    this.face.checkVideo(13, this.camera).subscribe(
+    this.face.checkVideo(this.algo_id, this.camera).subscribe(
       res => {
         this.video = res['video'];
         this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
@@ -208,6 +211,48 @@ export class AnprComponent implements OnInit, OnDestroy {
     },
   };
 
+  csvAlerts: Object = {
+    alerts: false,
+    count: false
+  }
+  showAlert: boolean = false;
+  showData: boolean = false;
+
+  async csv(algo){
+    this.csvAlerts[algo] = true
+    let type;
+    if(this.now_user.id_branch != '0000'){
+      type = 'cam_id';
+    }else{
+      type = 'id_account'
+    }
+    let l = {
+      start: this.range.start,
+      end: this.range.end,
+      type: type,
+      ham: true,
+      algo: algo
+    }
+    ;(await this.serv.report1(this.algo_id, this.camera, l)).subscribe(
+      async (res) => {
+        const ws = utils.json_to_sheet(res['data']);
+        const wb = utils.book_new();
+        utils.book_append_sheet(wb, ws, "Data");
+        await writeFileXLSX(wb, `${uuidv4()}.xlsx`);
+        this.csvAlerts[algo] = false
+      },
+      err => {
+        console.error(err)
+        this.csvAlerts[algo] = false
+        if(algo === 'count'){
+          this.showData = true;
+        }
+        if(algo === 'alerts'){
+          this.showAlert = true;
+        }
+      }
+    )
+  }
 }
 
 @Component({
