@@ -9010,7 +9010,7 @@ exports.breadTemp = async (req, res) => {
         }else if(diff >= 14 && diff <= 32){
           range = 24 * 60 * 60 * 1000
         }
-        console.log(`SELECT * from bread_temperature WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`, range/1000/60/60)
+        console.log(`SELECT * from bread_temperature WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`)
         await db
           .con()
           .query(
