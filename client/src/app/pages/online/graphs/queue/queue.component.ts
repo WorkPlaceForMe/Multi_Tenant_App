@@ -117,7 +117,6 @@ export class QueueComponent implements OnInit, OnDestroy {
       this.serv.queue(this.camera,l).subscribe(
         res=>{
           this.queue = res['data']
-          console.log(this.queue)
           this.labelsQueues = this.queue.cam_name.split('-')[1].split('/')
           let secondsString
           if(this.queue.avg >= 60){
@@ -424,7 +423,14 @@ export class QueueComponent implements OnInit, OnDestroy {
       zone: {
         title: 'Fila',
         type: 'string',
-        filter: false
+        filter: false,
+        valuePrepareFunction: (zone) => {
+          if(zone == 1){
+            return this.labelsQueues[0]
+          }else if(zone == 2){
+            return this.labelsQueues[1]
+          }
+        }
       }
     },
   };
