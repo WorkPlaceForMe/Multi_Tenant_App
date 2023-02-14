@@ -50,12 +50,12 @@ services:
     env_file:
       - ../conf/configDocker.env
 
-  port-images:
-    network_mode: host
-    image: graymatics1/port-images
-    # build: ./images
-    restart: always
-    volumes:
-      - ./dockerDeployment/resources:/usr/src/app/resources
-    env_file:
-      - ../conf/configDocker.env
+  # port-images:
+  #   network_mode: host
+  #   image: graymatics1/port-images
+  #   # build: ./images
+  #   restart: always
+  #   volumes:
+  #     - ./dockerDeployment/resources:/usr/src/app/resources
+  #   env_file:
+  #     - ../conf/configDocker.env
