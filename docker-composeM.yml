@@ -3,8 +3,7 @@ version: '3'
 services:
   port-proxy:
     network_mode: host
-    image: graymatics1/port-proxy
-    build: ./proxy
+    image: graymatics1/port-proxy:0.0.1
     restart: always
     volumes:
       - ./dockerDeployment/resources:/usr/src/app/resources
