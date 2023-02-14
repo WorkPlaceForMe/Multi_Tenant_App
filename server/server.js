@@ -112,12 +112,6 @@ if (process.env.INSTALL === 'true') {
           const find = await usr.findOne({
             where: { id: '0000-11111-aaaaaa-bbbbbb' }
           })
-          const span = await algo.findOne({
-            where: { id: 69 }
-          })
-          if (span === null) {
-            await updt.initial()
-          }
           if (find === null) {
             await init.initial()
           } else {
