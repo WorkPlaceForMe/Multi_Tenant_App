@@ -168,6 +168,7 @@ import { HamCheeseComponent } from './online/graphs/ham-cheese/ham-cheese.compon
 import { AvailabilityComponent } from './online/graphs/availability/availability.component';
 import { TemperatureComponent } from './online/graphs/temperature/temperature.component';
 import { SccComponent } from './online/graphs/scc/scc.component';
+import { CongestionComponent } from './online/graphs/congestion/congestion.component';
 
 @NgModule({
   imports: [
@@ -344,6 +345,7 @@ import { SccComponent } from './online/graphs/scc/scc.component';
     AvailabilityComponent,
     TemperatureComponent,
     SccComponent,
+    CongestionComponent,
   ],
   providers: [
     FacesService,

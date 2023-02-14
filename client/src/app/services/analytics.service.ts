@@ -202,13 +202,16 @@ export class AnalyticsService {
     return this.http.post(`${this.API_URL}65/${id}`, dates);
   }
   availability(id: string, dates){
-    return this.http.post(`${this.API_URL}69/${id}`, dates);
+    return this.http.post(`${this.API_URL}690/${id}`, dates);
   }
   temperature(id: string, dates){
-    return this.http.post(`${this.API_URL}70/${id}`, dates);
+    return this.http.post(`${this.API_URL}700/${id}`, dates);
   }
   scc(id: string, dates){
-    return this.http.post(`${this.API_URL}71/${id}`, dates);
+    return this.http.post(`${this.API_URL}710/${id}`, dates);
+  }
+  congestion(id: string, dates){
+    return this.http.post(`${this.API_URL}70/${id}`, dates);
   }
   async report(algo_id:number, cam_id:string, dates){
     return await this.http.post(`${api}/report/${algo_id}/${cam_id}`, dates ,{

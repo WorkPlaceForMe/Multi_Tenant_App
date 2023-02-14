@@ -41,7 +41,7 @@ exports.initial = async function () {
   try {
     await algo.create({
       id: 2,
-      name: 'Loitering Detection'
+      name: 'Persona en zona no autorizada'
     })
   } catch (err) {
     if (err.name !== 'SequelizeUniqueConstraintError') console.error(err.name)
