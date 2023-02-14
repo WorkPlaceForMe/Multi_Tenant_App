@@ -75,19 +75,19 @@
             </div>
           </nb-accordion-item-body>
         </nb-accordion-item>
-<!-- 
+
         <nb-accordion-item>
           <nb-accordion-item-header>
-            <strong>B) Traffic Management related.</strong> &nbsp;
+            <strong>B) Trafico.</strong> &nbsp;
             <span class="badge badge-success">{{actB}}</span>/<span class="badge badge-info">{{Balgos.length}}</span>
           </nb-accordion-item-header>
           <nb-accordion-item-body>
             <section class="mat-elevation-z2 mat-header-row alfons">
               <span class="mat-header-cell">Status</span>
-              <span class="mat-header-cell">Name</span>
-              <span class="mat-header-cell">RoI</span>
-              <span class="mat-header-cell">Confidence</span>
-              <span class="mat-header-cell">Save crops</span>
+              <span class="mat-header-cell">Nombre</span>
+              <span class="mat-header-cell">RdI</span>
+              <!-- <span class="mat-header-cell">Confidence</span>
+              <span class="mat-header-cell">Save crops</span> -->
             </section>
             <div *ngFor='let algorithm of Balgos; index as i'>
               <div class="mat-row mat-cell">
@@ -101,8 +101,8 @@
                 <span class="mat-cell"><button class="btn btn-sm"
                     [ngClass]="algorithm.id == 4 || algorithm.id == 8 || algorithm.id == 65 ? 'btn-info': 'btn-warning'"
                     [routerLink]="['/pages/cameras/algorithms/', param, algorithm.id, algorithm.conf + '-' + algorithm.save + '-' + algorithm.time]"
-                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{algorithm.id == 4 || algorithm.id == 8 || algorithm.id == 65 ? 'Click here to define the area' : 'Add an specific area'}}</button></span>
-                <span class="mat-cell"><input type="number" [(ngModel)]='Balgos[i].conf' min="0" max="100" value="95"
+                    [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{algorithm.id == 4 || algorithm.id == 8 || algorithm.id == 65 ? 'Hacer click para definir area necesaria' : 'Agregar area de foco'}}</button></span>
+                <!-- <span class="mat-cell"><input type="number" [(ngModel)]='Balgos[i].conf' min="0" max="100" value="95"
                     [disabled]='algorithm.activated==false || algorithm.activated == undefined'>&nbsp;%</span>
                 <span class="mat-cell">
                   <div class="custom-control custom-checkbox">
@@ -112,22 +112,22 @@
                       [disabled]='algorithm.activated==false || algorithm.activated == undefined || Balgos[i].save == false || Balgos[i].save == undefined'>
                     sec.
                   </div>
-                </span>
+                </span> -->
               </div>
             </div>
           </nb-accordion-item-body>
-        </nb-accordion-item> -->
-        <nb-accordion-item>
+        </nb-accordion-item>
+        <!-- <nb-accordion-item>
           <nb-accordion-item-header>
-            <strong>B) Seguridad.</strong> &nbsp;<span class="badge badge-success">{{actA}}</span>/<span class="badge badge-info">{{Aalgos.length}}</span>
+            <strong>C) Seguridad.</strong> &nbsp;<span class="badge badge-success">{{actA}}</span>/<span class="badge badge-info">{{Aalgos.length}}</span>
           </nb-accordion-item-header>
           <nb-accordion-item-body>
             <section class="mat-elevation-z2 mat-header-row alfons">
               <span class="mat-header-cell">Status</span>
               <span class="mat-header-cell">Nombre</span>
               <span class="mat-header-cell">RdI</span>
-              <!-- <span class="mat-header-cell">Confidence</span>
-              <span class="mat-header-cell">Save crops</span> -->
+              <span class="mat-header-cell">Confidence</span>
+              <span class="mat-header-cell">Save crops</span>
             </section>
             <div *ngFor='let algorithm of Aalgos; index as i'>
               <div class="mat-row mat-cell">
@@ -142,7 +142,7 @@
                     [ngClass]="algorithm.id == 4 || algorithm.id == 8 ? 'btn-info': 'btn-warning'"
                     [routerLink]="['/pages/cameras/algorithms/', param, algorithm.id, algorithm.conf + '-' + algorithm.save + '-' + algorithm.time]"
                     [disabled]='algorithm.activated==false || algorithm.activated == undefined'>{{algorithm.id == 4 || algorithm.id == 8 ?  'Hacer click para definir area necesaria' : 'Agregar area de foco'}}</button></span>
-                <!-- <span class="mat-cell"><input type="number" [(ngModel)]='Aalgos[i].conf' min="0" max="100" value="95"
+                <span class="mat-cell"><input type="number" [(ngModel)]='Aalgos[i].conf' min="0" max="100" value="95"
                     [disabled]='algorithm.activated==false || algorithm.activated == undefined'>&nbsp;%</span>
                 <span class="mat-cell">
                   <div class="custom-control custom-checkbox">
@@ -152,11 +152,11 @@
                       [disabled]='algorithm.activated==false || algorithm.activated == undefined || Aalgos[i].save == false || Aalgos[i].save == undefined'>
                     sec.
                   </div>
-                </span> -->
+                </span>
               </div>
             </div>
           </nb-accordion-item-body>
-        </nb-accordion-item>
+        </nb-accordion-item> -->
       </nb-accordion>
     </div>
     <div class="col-md-6">
