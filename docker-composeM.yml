@@ -3,6 +3,7 @@ version: '3'
 services:
   port-proxy:
     network_mode: host
+    platform: linux/arm64
     image: graymatics1/port-proxy:0.0.1
     restart: always
     volumes:
