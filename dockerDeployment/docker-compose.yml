@@ -11,7 +11,7 @@ services:
     # ports:
     #   - "3300:3300"
     network_mode: host
-    image: graymatics1/multi-tenant-server:1.2.44
+    image: graymatics1/multi-tenant-server:1.2.45
     restart: always
     env_file:
       - ../configDocker.env
