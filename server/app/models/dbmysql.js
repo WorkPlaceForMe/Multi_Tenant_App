@@ -1,4 +1,4 @@
-const mysql = require('mysql2/promise')
+const mysql = require('mysql')
 require('dotenv').config({ path: '../../../config.env' })
 
 const connection = {

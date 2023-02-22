@@ -18,7 +18,8 @@ const verifyToken = (req, res, next) => {
         message: 'Unauthorized!'
       })
     }
-    req.userId = decoded.id
+    req.account = decoded.id_account
+    req.branch = decoded.id_branch
     next()
   })
 }
