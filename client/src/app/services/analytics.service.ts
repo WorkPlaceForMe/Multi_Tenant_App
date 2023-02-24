@@ -207,6 +207,9 @@ export class AnalyticsService {
   vehloitering(id: string, dates){
     return this.http.post(`${this.API_URL}72/${id}`, dates);
   }
+  ppe(id: string, dates){
+    return this.http.post(`${this.API_URL}71/${id}`, dates);
+  }
   report(algo_id:number, cam_id:string, dates){
     return this.http.post(`${api}/report/${algo_id}/${cam_id}`, dates ,{
       responseType: 'blob'

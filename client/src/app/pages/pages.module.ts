@@ -167,6 +167,7 @@ import { EnterExitVComponent } from './online/graphs/enter-exit-v/enter-exit-v.c
 import { HamCheeseComponent } from './online/graphs/ham-cheese/ham-cheese.component';
 import { CongestionComponent } from './online/graphs/congestion/congestion.component';
 import { VehLoitComponent } from './online/graphs/veh-loit/veh-loit.component';
+import { PpeComponent } from './online/graphs/ppe/ppe.component';
 
 @NgModule({
   imports: [
@@ -342,6 +343,7 @@ import { VehLoitComponent } from './online/graphs/veh-loit/veh-loit.component';
     HamCheeseComponent,
     CongestionComponent,
     VehLoitComponent,
+    PpeComponent,
   ],
   providers: [
     FacesService,
