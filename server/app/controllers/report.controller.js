@@ -83,7 +83,7 @@ exports.report = async (req, res) => {
   start = new Date(data.start).getTime() + 7 * 60 * 60 * 1000
   start = JSON.stringify(new Date(start))
   start = start.substring(1, start.length - 1)
-  end = new Date(data.end).getTime() - 1 * 60 * 60 * 1000
+  end = new Date(data.end).getTime() - 1.5 * 60 * 60 * 1000
   end = JSON.stringify(new Date(end))
   end = end.substring(1, end.length - 1)
   // }
