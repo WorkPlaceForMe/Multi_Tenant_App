@@ -420,6 +420,22 @@
               </nb-card-body>
             </nb-card>
           </div>
+
+          <div *ngIf="algos[72]['activated']==true && algos[72]!=undefined">
+            <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
+              <nb-card-header align='center'>
+                Vehicle loitering settings
+              </nb-card-header>
+              <nb-card-body>
+                <div class="form-group">
+                  <div align='center'>
+                    Seconds:&nbsp;
+                    <input type="number" [(ngModel)]="vehloit['duration']" min="0" max="1000">
+                  </div>
+                </div>
+              </nb-card-body>
+            </nb-card>
+          </div>
         </div>
       </div>
     </div>

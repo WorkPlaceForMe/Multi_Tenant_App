@@ -1,0 +1,128 @@
+<div class="container no-padding">
+    <div class="col-md-12 no-padding" style="margin-top: 15px">
+      <p>Incidents</p>
+      <div class="row">
+        <div class="col-md-3 less-padding">
+          <nb-card>
+            <nb-card-body>
+              <p>Total</p>
+              <strong>{{
+                loitering == undefined ? "None" : loitering.total
+              }}</strong>
+            </nb-card-body>
+          </nb-card>
+        </div>
+        <div class="col-md-5 less-padding">
+          <nb-card>
+            <nb-card-body>
+              <p>Avg Frequency</p>
+              <strong>{{
+                loitering == undefined ? "None" : loitering.avgH
+              }}</strong
+              >&nbsp;per hr,&nbsp;<strong>{{
+                loitering == undefined ? "None" : loitering.avgS
+              }}</strong
+              >&nbsp;per sec.
+            </nb-card-body>
+          </nb-card>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5 less-padding">
+          <nb-card class="graph-body">
+            <nb-card-body>
+              <p>Alerts by Hour</p>
+              <chart
+                id="chart"
+                type="horizontalBar"
+                [data]="dataH"
+                [options]="optionsH"
+              ></chart>
+            </nb-card-body>
+          </nb-card>
+        </div>
+        <div class="col-md-7 less-padding">
+          <nb-card class="graph-body">
+            <nb-card-body>
+              <p>Dwell Time Variation</p>
+              <chart type="line" [data]="dataL" [options]="optionsL"></chart>
+              <small *ngIf="loitering != null"
+                >Min:&nbsp;<strong>{{ loitering.min }}</strong
+                >&nbsp;Max:&nbsp;<strong>{{ loitering.max }}</strong
+                >&nbsp;Avg:&nbsp;<strong>{{ loitering.avg }}</strong></small
+              >
+            </nb-card-body>
+          </nb-card>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8 less-padding">
+          <nb-card>
+            <nb-card-body style="padding: 0px">
+              <ng2-smart-table
+                [settings]="settings"
+                [source]="source"
+                (edit)="got($event)"
+              >
+              </ng2-smart-table>
+            </nb-card-body>
+          </nb-card>
+        </div>
+        <div class="col-md-4 less-padding" *ngIf="video">
+          <nb-card>
+            <nb-card-body align="center" style="min-height: 250px">
+              <video
+                controls
+                (click)="toggleVideo($event)"
+                #videoPlayer
+                class="responsive"
+                muted
+                loop
+                controls
+                preload="none"
+                style="width: 100%; height: 100%"
+              >
+                <source [src]="videoFile" type="video/mp4" />
+                Browser not supported
+              </video>
+            </nb-card-body>
+          </nb-card>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 no-padding" style="margin-top: 15px">
+      <div class="row">
+        <div class="col-md-8 less-padding">
+          <nb-card>
+            <nb-card-header>
+              <h4>Live Output Feed</h4>
+            </nb-card-header>
+            <nb-card-body>
+              <div align="center">
+                <iframe
+                  frameBorder="0"
+                  height="100%"
+                  width="100%"
+                  style="width: 100%; height: 100%; min-height: 800px"
+                  [src]="rtspIn"
+                >
+                </iframe>
+                <canvas
+                  #streaming
+                  id="canvas"
+                  width="640"
+                  height="480"
+                  style="
+                    display: block;
+                    width: 640px !important;
+                    height: 480px !important;
+                  "
+                ></canvas>
+              </div>
+            </nb-card-body>
+          </nb-card>
+        </div>
+      </div>
+    </div>
+  </div>
+  

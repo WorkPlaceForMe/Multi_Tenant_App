@@ -204,6 +204,9 @@ export class AnalyticsService {
   congestion(id: string, dates){
     return this.http.post(`${this.API_URL}70/${id}`, dates);
   }
+  vehloitering(id: string, dates){
+    return this.http.post(`${this.API_URL}72/${id}`, dates);
+  }
   report(algo_id:number, cam_id:string, dates){
     return this.http.post(`${api}/report/${algo_id}/${cam_id}`, dates ,{
       responseType: 'blob'

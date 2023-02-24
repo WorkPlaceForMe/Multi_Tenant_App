@@ -100,6 +100,8 @@ export class AlgorithmsComponent implements OnInit {
                         this.parkingTime = this.relations[e]['atributes'][1];
                       } else if (this.relations[e]['algo_id'] == 70) {
                         this.congestion = this.relations[e]['atributes'][1];
+                      } else if (this.relations[e]['algo_id'] == 72) {
+                        this.vehloit = this.relations[e]['atributes'][1];
                       }
                     }
                   }
@@ -216,6 +218,9 @@ export class AlgorithmsComponent implements OnInit {
   };
   congestion: any = {
     vehicles: 6,
+    duration: 10
+  }
+  vehloit: any = {
     duration: 10
   }
   showL: boolean;
@@ -430,7 +435,7 @@ export class AlgorithmsComponent implements OnInit {
     console.log(this.congestion)
     const data = [];
     const id = this.activatedRoute.snapshot.params.uuid;
-    data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime, this.congestion);
+    data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime, this.congestion,this.vehloit);
     this.facesService.sendAlgs(id, data).subscribe(
       res => {
         // this.router.navigateByUrl(`/pages/cameras/algorithms/${id}`)
@@ -447,7 +452,7 @@ export class AlgorithmsComponent implements OnInit {
   nSave() {
     const data = [];
     const id = this.activatedRoute.snapshot.params.uuid;
-    data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime, this.congestion);
+    data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime, this.congestion,this.vehloit);
     this.facesService.sendAlgs(id, data).subscribe(
       res => {},
       err => console.log(err),
