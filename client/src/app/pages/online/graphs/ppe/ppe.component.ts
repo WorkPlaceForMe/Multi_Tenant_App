@@ -105,7 +105,7 @@ export class PpeComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type,
     };
-    this.face.checkVideo(8, this.camera).subscribe(
+    this.face.checkVideo(71, this.camera).subscribe(
       res => {
         this.video = res['video'];
         this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
