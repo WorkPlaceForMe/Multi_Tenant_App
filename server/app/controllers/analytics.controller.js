@@ -4,6 +4,7 @@ require('dotenv').config({
 const db1 = require('../models')
 var jwt = require('jsonwebtoken')
 var db = require('../models/dbmysql')
+const { absolutePath } = require('swagger-ui-dist')
 const Relation = db1.relation
 
 exports.loitering = async (req, res) => {
@@ -9054,10 +9055,34 @@ exports.ppe = async (req, res) => {
         camera_id: req.params.id
       }
     }).then(async rel => {
+      const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
+      let cache = ['','',''], range, start, end
+      if(diff === 1){
+        range = 30 * 60 * 1000
+        // start = new Date(data.start).getTime() + 7 * 60 * 60 * 1000
+        // start = JSON.stringify(new Date(start))
+        // start = start.substring(1, start.length - 1);
+        // end =  new Date(data.end).getTime() - 1.5 * 60 * 60 * 1000
+        // end = JSON.stringify(new Date(end))
+        // end = end.substring(1, end.length - 1);
+      }else if(diff >= 1 && diff <= 3){
+        range = 2 * 60 * 60 * 1000
+      }else if(diff >= 3 && diff <= 7){
+        range = 4 * 60 * 60 * 1000
+      }else if(diff >= 7 && diff <= 14){
+        range = 8 * 60 * 60 * 1000
+      }else if(diff >= 14 && diff <= 32){
+        range = 24 * 60 * 60 * 1000
+      }
+      if(start === undefined){
+        start = data.start
+        end = data.end
+      }
+      cache = [new Date(start).getTime(),new Date(start).getTime(),new Date(start).getTime()]
       await db
         .con()
         .query(
-          `SELECT * from ppe WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          `SELECT * from ppe WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`,
           function (err, result) {
             if (err) {
               return res.status(500).json({
@@ -9065,102 +9090,31 @@ exports.ppe = async (req, res) => {
                 message: err
               })
             }
-            const ress = {}
-            let cache = ''
+            const ress = {}, label = []
+            let dataAlerts = [{},{},{}]
             for (const v of result) {
-              if (cache == '') {
-                cache =
-                  v.time.getFullYear() +
-                  '-' +
-                  (v.time.getMonth() + 1) +
-                  '-' +
-                  v.time.getDate() +
-                  ' ' +
-                  v.time.getHours()
-              }
-
               if (
-                cache !=
-                v.time.getFullYear() +
-                  '-' +
-                  (v.time.getMonth() + 1) +
-                  '-' +
-                  v.time.getDate() +
-                  ' ' +
-                  v.time.getHours()
+                cache[v.alert_type - 1] < v.time.getTime()
               ) {
                 while (
-                  cache !=
-                  v.time.getFullYear() +
-                    '-' +
-                    (v.time.getMonth() + 1) +
-                    '-' +
-                    v.time.getDate() +
-                    ' ' +
-                    v.time.getHours()
+                  cache[v.alert_type - 1] < v.time.getTime()
                 ) {
-                  let t = new Date(cache + ':00:00').getTime()
-                  // Add one hours to date
-                  t += 60 * 60 * 1000
-                  cache = new Date(t)
-                  ress[
-                    cache.getFullYear() +
-                      '-' +
-                      (cache.getMonth() + 1) +
-                      '-' +
-                      cache.getDate() +
-                      ' ' +
-                      cache.getHours()
-                  ] =
-                    ress[
-                      v.time.getFullYear() +
-                        '-' +
-                        (v.time.getMonth() + 1) +
-                        '-' +
-                        v.time.getDate() +
-                        ' ' +
-                        v.time.getHours()
-                    ] + 1 || 1
-
-                  cache =
-                    cache.getFullYear() +
-                    '-' +
-                    (cache.getMonth() + 1) +
-                    '-' +
-                    cache.getDate() +
-                    ' ' +
-                    cache.getHours()
+                  cache[v.alert_type - 1] = new Date(cache[v.alert_type - 1])
+                  dataAlerts[v.alert_type - 1][cache[v.alert_type - 1].getFullYear() + '-' + (cache[v.alert_type - 1].getMonth() + 1) +  '-' + cache[v.alert_type - 1].getDate() + ' ' + cache[v.alert_type - 1].getHours() + ':' + cache[v.alert_type - 1].getMinutes()] = 0
+                  cache[v.alert_type - 1] = cache[v.alert_type - 1].getTime()
+                  cache[v.alert_type - 1] += range
                 }
               }
               if (
-                cache ==
-                v.time.getFullYear() +
-                  '-' +
-                  (v.time.getMonth() + 1) +
-                  '-' +
-                  v.time.getDate() +
-                  ' ' +
-                  v.time.getHours()
+                cache[v.alert_type - 1] >= v.time.getTime()
               ) {
-                ress[
-                  v.time.getFullYear() +
-                    '-' +
-                    (v.time.getMonth() + 1) +
-                    '-' +
-                    v.time.getDate() +
-                    ' ' +
-                    v.time.getHours()
-                ] =
-                  ress[
-                    v.time.getFullYear() +
-                      '-' +
-                      (v.time.getMonth() + 1) +
-                      '-' +
-                      v.time.getDate() +
-                      ' ' +
-                      v.time.getHours()
-                  ] + 1 || 1
+                let t = cache[v.alert_type - 1]
+                t -= range
+                t = new Date(t)
+                dataAlerts[v.alert_type - 1][t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()] = (dataAlerts[v.alert_type - 1][ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1
               }
+              label.push(v.time)
+
               let d = v.time
               let se = d.getSeconds()
               let mi = d.getMinutes()
@@ -9191,11 +9145,23 @@ exports.ppe = async (req, res) => {
               v.movie = `${d}_${v.track_id}_video.mp4`
               v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/ppe/${req.params.id}/${v.movie}`
             }
+            for(let i = 0; i < dataAlerts.length; i ++){
+              while (
+                  cache[i] <= new Date(end)
+                ) {
+                  cache[i] = new Date(cache[i])
+                  dataAlerts[i][cache[i].getFullYear() + '-' + (cache[i].getMonth() + 1) +  '-' + cache[i].getDate() + ' ' + cache[i].getHours() + ':' + cache[i].getMinutes()] = 0
+                  cache[i] = cache[i].getTime()
+                  cache[i] += range
+                }
+            }
             const a = {
               total: result.length,
               raw: result,
               rel: rel,
-              over: ress
+              over: ress,
+              label: label,
+              alerts: dataAlerts
             }
             res.status(200).json({
               success: true,

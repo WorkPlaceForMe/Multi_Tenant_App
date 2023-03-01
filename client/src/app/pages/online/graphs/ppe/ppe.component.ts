@@ -10,6 +10,7 @@ import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
 import { WindowOpenerComponent } from '../window-opener/window-opener.component';
+import { SeverityComponent } from '../../severity/severity.component';
 
 @Component({
   selector: 'ngx-ppe',
@@ -35,6 +36,7 @@ export class PpeComponent implements OnInit, OnDestroy {
     private face: FacesService,
     public datepipe: DatePipe,
     private route: Router,
+    private theme: NbThemeService,
   ) { }
   single: any;
   colorScheme: any;
@@ -134,7 +136,91 @@ export class PpeComponent implements OnInit, OnDestroy {
           m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/ppe/' + m['cam_id'] + '/' + m['movie']);
         }
         this.source = this.ppe.raw.slice().sort((a, b) => +new Date(b.time) + +new Date(a.time));
+        const labels = []
+        for (let o of Object.keys(this.ppe.alerts[0])){
+          o = o + ':00';
+          labels.push(this.datepipe.transform(o, 'yyyy-M-dd HH:mm','-0400'));
+        }
+  
+        this.themeSubscription = this.theme.getJsTheme().subscribe((config) => {
+          const colors: any = config.variables;
+          const cols = {
+            0: colors.primary,
+            1: colors.warning,
+            2: colors.success,
+            3: colors.info,
+            4: colors.danger
+          }
+          const chartjs: any = config.variables.chartjs;
+          const datasetsLow = []
+          for(let i = 0; i < this.ppe.alerts.length; i++){
+            datasetsLow.push({
+              label: `Some: ${i + 1}`,
+              data: Object.values(this.ppe.alerts[i]),
+              borderColor: cols[i],
+              backgroundColor: cols[i],
+              fill: false,
+              pointRadius: 2,
+              pointHoverRadius: 5,
+            })
 
+          }
+          console.log(datasetsLow)
+          this.dataL = {
+            labels: labels,
+            datasets: datasetsLow,
+          };
+
+          this.options = {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              position: "bottom",
+              labels: {
+                fontColor: chartjs.textColor,
+              },
+            },
+            hover: {
+              mode: "index",
+            },
+            scales: {
+              xAxes: [
+                {
+                  display: false,
+                  scaleLabel: {
+                    display: false,
+                    labelString: "Month",
+                  },
+                  gridLines: {
+                    display: true,
+                    color: chartjs.axisLineColor,
+                  },
+                  ticks: {
+                    fontColor: chartjs.textColor,
+                  },
+                },
+              ],
+              yAxes: [
+                {
+                  display: true,
+                  scaleLabel: {
+                    display: true,
+                    // labelString: 'Value',
+                  },
+                  gridLines: {
+                    display: true,
+                    color: chartjs.axisLineColor,
+                  },
+                  ticks: {
+                    fontColor: chartjs.textColor,
+                    beginAtZero: true,
+                    stepSize: 1
+                  },
+                },
+              ],
+            },
+          };
+        })
       },
       err => {
         console.error(err);
@@ -177,8 +263,24 @@ export class PpeComponent implements OnInit, OnDestroy {
         type: 'string',
         filter: false,
       },
-      camera_name: {
+      cam_name: {
         title: 'CAM',
+        type: 'string',
+        filter: false,
+      },
+      alert_type: {
+        title: 'SEVERITY',
+        type: 'custom',
+        filter: false,
+        renderComponent: SeverityComponent,
+        onComponentInitFunction(instance) {
+          instance.save.subscribe(row => {
+            alert(`${row.name} saved!`);
+          });
+        },
+      },
+      alert_message: {
+        title: 'ALERT',
         type: 'string',
         filter: false,
       },

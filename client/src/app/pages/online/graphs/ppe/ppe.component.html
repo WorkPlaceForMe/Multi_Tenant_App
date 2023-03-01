@@ -1,5 +1,25 @@
 <div class="container no-padding">
     <div class='col-md-12 no-padding' style="margin-top: 15px;">
+      <div class="row justify-content-start">
+        <div class="col less-padding">
+            <nb-card class = "top-badges">
+                <nb-card-body>
+                    <p class = "badge-txt">People over time</p>
+                    <p class = "badge-reading">Total: {{ppe == undefined ? 'None' : ppe.total}}</p>
+                </nb-card-body>
+            </nb-card>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 less-padding">
+          <nb-card>
+            <nb-card-body class="top-badges">
+              <p>People over time</p>
+              <chart type="line" [data]="dataL" [options]="options"></chart>
+            </nb-card-body>
+          </nb-card>
+        </div>
+  </div>
         <div class="row">
             <div class="col-md-12 less-padding">
                 <nb-card>
