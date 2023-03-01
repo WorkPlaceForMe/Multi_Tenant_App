@@ -22,5 +22,8 @@ export class SeverityComponent implements OnInit {
     }else if(this.rowData.level == undefined){
       this.val = this.rowData.severity
     }
+    if(this.rowData.alert_type !== undefined){
+      this.val = JSON.stringify(this.rowData.alert_type - 1)
+    }
   }
 }

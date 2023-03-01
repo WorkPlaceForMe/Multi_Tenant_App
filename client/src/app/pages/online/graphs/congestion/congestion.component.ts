@@ -150,7 +150,7 @@ export class CongestionComponent implements OnInit , OnDestroy {
             m["cam_id"] +
             "/" +
             m["clip_path"];
-          m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss", '+0530');
+          m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss", '-0300');
           switch (m["severity"]) {
             case "0": {
               m["severity"] = "Low";
@@ -276,7 +276,7 @@ export class CongestionComponent implements OnInit , OnDestroy {
     noDataMessage: "No data found",
     columns: {
       picture: {
-        title: "PICTURE",
+        title: "Imagen",
         type: "custom",
         filter: false,
         renderComponent: ButtonViewComponentPic,
@@ -296,12 +296,12 @@ export class CongestionComponent implements OnInit , OnDestroy {
       //   },
       // },
       time: {
-        title: "TIME",
+        title: "Hora",
         type: "string",
         filter: false,
       },
       cam_name: {
-        title: "CAM",
+        title: "Camara",
         type: "string",
         filter: false,
       },
@@ -311,12 +311,12 @@ export class CongestionComponent implements OnInit , OnDestroy {
       //   filter: false,
       // },
       alert: {
-        title: "ALERT",
+        title: "Alerta",
         type: "string",
         filter: false,
       },
       level: {
-        title: 'SEVERITY',
+        title: 'Severidad',
         type: 'custom',
         filter: false,
         renderComponent: SeverityComponent,
@@ -357,7 +357,7 @@ export class CongestionComponent implements OnInit , OnDestroy {
         data = res['data']
         for (let m of data) {
           m['picture'] = 'http://localhost' + api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/congestion/' + m['cam_id'] + '/' + m['picture']
-          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', '+0530');
+          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', '-0300');
         }
         const ws = utils.json_to_sheet(data);
         const wb = utils.book_new();

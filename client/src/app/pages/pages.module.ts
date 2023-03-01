@@ -169,6 +169,8 @@ import { AvailabilityComponent } from './online/graphs/availability/availability
 import { TemperatureComponent } from './online/graphs/temperature/temperature.component';
 import { SccComponent } from './online/graphs/scc/scc.component';
 import { CongestionComponent } from './online/graphs/congestion/congestion.component';
+import { PpeComponent } from './online/graphs/ppe/ppe.component';
+import { VehLoitComponent } from './online/graphs/veh-loit/veh-loit.component';
 
 @NgModule({
   imports: [
@@ -346,6 +348,8 @@ import { CongestionComponent } from './online/graphs/congestion/congestion.compo
     TemperatureComponent,
     SccComponent,
     CongestionComponent,
+    PpeComponent,
+    VehLoitComponent,
   ],
   providers: [
     FacesService,

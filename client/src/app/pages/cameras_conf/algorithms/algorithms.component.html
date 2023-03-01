@@ -417,6 +417,40 @@
             </nb-card>
           </div>
 
+          <div *ngIf="algos[70]['activated']==true && algos[70]!=undefined">
+            <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
+              <nb-card-header align='center'>
+                Configuracion de congestion vehicular
+              </nb-card-header>
+              <nb-card-body>
+                <div class="form-group">
+                  <div align='center'>
+                    Segundos:&nbsp;
+                    <input type="number" [(ngModel)]="congestion['duration']" min="0" max="1000"><br>
+                    Vehiculos:&nbsp;
+                    <input type="number" [(ngModel)]="congestion['vehicles']" min="0" max="100">
+                  </div>
+                </div>
+              </nb-card-body>
+            </nb-card>
+          </div>
+
+          <div *ngIf="algos[72]['activated']==true && algos[72]!=undefined">
+            <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
+              <nb-card-header align='center'>
+                Configuracion de vehiculo estancado
+              </nb-card-header>
+              <nb-card-body>
+                <div class="form-group">
+                  <div align='center'>
+                    Segundos:&nbsp;
+                    <input type="number" [(ngModel)]="vehloit['duration']" min="0" max="1000">
+                  </div>
+                </div>
+              </nb-card-body>
+            </nb-card>
+          </div>
+
           <!-- <div *ngIf="algos[68]['activated']==true && algos[68]!=undefined">
             <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
               <nb-card-header align='center'>
