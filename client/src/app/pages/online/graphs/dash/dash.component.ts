@@ -403,7 +403,7 @@ export class DashComponent implements OnInit , OnDestroy {
         type: 'string',
         filter: false,
         valuePrepareFunction: (createdAt) => { 
-          return this.datepipe.transform(new Date(createdAt), 'yyyy-M-dd HH:mm', '+1060');
+          return this.datepipe.transform(new Date(createdAt), 'yyyy-M-dd HH:mm', '+0530');
         }
       },
       cam_name: {

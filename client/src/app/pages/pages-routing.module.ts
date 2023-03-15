@@ -28,6 +28,7 @@ import { PagenotfoundComponent } from "./pagenotfound/pagenotfound.component";
 import { GenerateHelpDeskTicketComponent } from "./helpdesk/generate-helpdesk-ticket/generate-helpdesk-ticket.component";
 import { HelpdeskTicketListingComponent } from "./helpdesk/helpdesk-ticket -listing/helpdesk-ticket-listing.component";
 import { IncidentLogsComponent } from "./search/incident-logs/incident-logs.component";
+import { StreamComponent } from "./online/stream/stream.component";
 
 const routes: Routes = [
   {
@@ -147,6 +148,11 @@ const routes: Routes = [
       {
         path: "graphs",
         component: CenterComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: "stream",
+        component: StreamComponent,
         canActivate: [AuthGuard],
       },
       {

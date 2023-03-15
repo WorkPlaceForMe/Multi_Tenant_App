@@ -168,12 +168,15 @@ import { HamCheeseComponent } from './online/graphs/ham-cheese/ham-cheese.compon
 import { CongestionComponent } from './online/graphs/congestion/congestion.component';
 import { VehLoitComponent } from './online/graphs/veh-loit/veh-loit.component';
 import { PpeComponent } from './online/graphs/ppe/ppe.component';
+import { StreamComponent } from './online/stream/stream.component';
+import { JanusModule } from 'janus-angular';
 
 @NgModule({
   imports: [
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts')
     }),
+    JanusModule,
     NgxChartsModule,
     ChartModule,
     Ng2SmartTableModule,
@@ -344,6 +347,7 @@ import { PpeComponent } from './online/graphs/ppe/ppe.component';
     CongestionComponent,
     VehLoitComponent,
     PpeComponent,
+    StreamComponent,
   ],
   providers: [
     FacesService,
