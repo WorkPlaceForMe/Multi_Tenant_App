@@ -74,6 +74,9 @@ exports.report = async (req, res) => {
   if (req.params.algo_id === '70') {
     query = `SELECT * from congestion WHERE ${data.type} = '${req.params.cam_id}' and time >= '${start}' and  time <= '${end}' order by time asc;`
   }
+  if (req.params.algo_id === '5') {
+    query = `SELECT * from speed WHERE ${data.type} = '${req.params.cam_id}' and time >= '${start}' and  time <= '${end}' order by time asc;`
+  }
   await db
     .con()
     .query(

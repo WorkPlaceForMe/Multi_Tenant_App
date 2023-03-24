@@ -9,7 +9,8 @@ import { FacesService } from '../../../../services/faces.service';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 import { Router } from '@angular/router';
 import { Account } from '../../../../models/Account';
-import { WindowOpenerComponent } from '../window-opener/window-opener.component';
+import { utils, writeFileXLSX } from 'xlsx';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'ngx-speeding',
@@ -70,6 +71,7 @@ export class SpeedingComponent implements OnInit, OnDestroy {
 
   video: boolean = false;
   rtspIn: any;
+  algoId: number = 5;
 
   ngOnInit(): void {
     // // if(api.length <= 4){
@@ -106,7 +108,7 @@ export class SpeedingComponent implements OnInit, OnDestroy {
       end: this.range.end,
       type: type,
     };
-    this.face.checkVideo(5, this.camera).subscribe(
+    this.face.checkVideo(this.algoId, this.camera).subscribe(
       res => {
         this.video = res['video'];
         this.rtspIn = this.sanitizer.bypassSecurityTrustResourceUrl(res['http_out']);
@@ -130,9 +132,9 @@ export class SpeedingComponent implements OnInit, OnDestroy {
       res => {
         this.speeding = res['data'];
         for (const m of this.speeding.raw) {
-          m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/speeding/' + m['cam_id'] + '/' + m['picture']);
-          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss');
-          m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/speeding/' + m['cam_id'] + '/' + m['movie']);
+          m['picture'] = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/speed/' + m['cam_id'] + '/' + m['picture']);
+          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', '+0530');
+          m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/speed/' + m['cam_id'] + '/' + m['movie']);
         }
         this.source = this.speeding.raw.slice().sort((a, b) => +new Date(b.time) + +new Date(a.time));
 
@@ -149,13 +151,7 @@ export class SpeedingComponent implements OnInit, OnDestroy {
   }
   settings = {
     mode: 'external',
-    actions: {
-      position: 'right',
-      columnTitle: 'ACTIONS',
-      add: false,
-      edit: true,
-      delete: false,
-    },
+    actions: false,
     edit: {
       editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
@@ -179,17 +175,17 @@ export class SpeedingComponent implements OnInit, OnDestroy {
           });
         },
       },
-      movie: {
-        title: 'VIDEO',
-        type: 'custom',
-        filter: false,
-        renderComponent: WindowOpenerComponent,
-        onComponentInitFunction(instance) {
-          instance.save.subscribe(row => {
-            alert(`${row.name} saved!`);
-          });
-        },
-      },
+      // movie: {
+      //   title: 'VIDEO',
+      //   type: 'custom',
+      //   filter: false,
+      //   renderComponent: WindowOpenerComponent,
+      //   onComponentInitFunction(instance) {
+      //     instance.save.subscribe(row => {
+      //       alert(`${row.name} saved!`);
+      //     });
+      //   },
+      // },
       time: {
         title: 'TIME',
         type: 'string',
@@ -200,11 +196,16 @@ export class SpeedingComponent implements OnInit, OnDestroy {
         type: 'string',
         filter: false,
       },
-      type: {
-        title: 'VEHICLE TYPE',
+      anpr: {
+        title: 'SPEED',
         type: 'string',
         filter: false,
       },
+      // type: {
+      //   title: 'VEHICLE TYPE',
+      //   type: 'string',
+      //   filter: false,
+      // },
       camera_name: {
         title: 'CAM',
         type: 'string',
@@ -212,7 +213,55 @@ export class SpeedingComponent implements OnInit, OnDestroy {
       },
     },
   };
+  csvAlerts: Object = {
+    alerts: false,
+    count: false
+  }
+  showAlert: boolean = false;
+  showData: boolean = false;
 
+  async csv(algo){
+    this.csvAlerts[algo] = true
+    let type;
+    if(this.now_user.id_branch != '0000'){
+      type = 'cam_id';
+    }else{
+      type = 'id_account'
+    }
+    let l = {
+      start: this.range.start,
+      end: this.range.end,
+      type: type,
+      ham: true,
+      algo: algo
+    }
+    ;(await this.serv.report1(this.algoId, this.camera, l)).subscribe(
+      async (res) => {
+        let data: Array<any>;
+        data = res['data']
+        for (let m of data) {
+          m['picture'] = 'http://localhost' + api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/speed/' + m['cam_id'] + '/' + m['picture']
+          m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', '+0530');
+        }
+        console.log(data, res['data'])
+        const ws = utils.json_to_sheet(data);
+        const wb = utils.book_new();
+        utils.book_append_sheet(wb, ws, "Data");
+        await writeFileXLSX(wb, `${uuidv4()}.xlsx`);
+        this.csvAlerts[algo] = false
+      },
+      err => {
+        console.error(err)
+        this.csvAlerts[algo] = false
+        if(algo === 'count'){
+          this.showData = true;
+        }
+        if(algo === 'alerts'){
+          this.showAlert = true;
+        }
+      }
+    )
+  }
 }
 
 @Component({

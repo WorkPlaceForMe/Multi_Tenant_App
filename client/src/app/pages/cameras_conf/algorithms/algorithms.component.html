@@ -277,13 +277,13 @@
                     Max. Velocity<br>
                     <input type="number" [(ngModel)]="speed['velocity']" min="0" max="120" value='50'> Km/h
                   </div>
-                  <div class="dropdown-divider"></div>
+                  <!--<div class="dropdown-divider"></div>
                   <div align='right'>
                     From:&nbsp;<input type="time" [(ngModel)]="speed['rangeB']"
                       (click)="checkTimeRangeS(speed['rangeB'],speed['rangeE'])">
                     <br>to:&nbsp;<input type="time" [(ngModel)]="speed['rangeE']"
                       (click)="checkTimeRangeS(speed['rangeB'],speed['rangeE'])">
-                  </div>
+                  </div> -->
                   <div class="p-2" align='center'>
                     <div class="alert alert-warning col-md-10" *ngIf="showS == true">
                       Please fill all the input.
@@ -294,7 +294,7 @@
                         [disabled]="algos[13]['activated'] == false">
                       <label class="custom-control-label" for="anpr0">Licence plate detector</label>
                     </div>
-                    <button class='btn btn-sm btn-info' (click)='resetTimeS()'>Reset</button>
+                    <!-- <button class='btn btn-sm btn-info' (click)='resetTimeS()'>Reset</button> -->
                   </div>
                 </div>
               </nb-card-body>

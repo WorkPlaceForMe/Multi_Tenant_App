@@ -152,13 +152,7 @@ export class AnprComponent implements OnInit, OnDestroy {
   }
   settings = {
     mode: 'external',
-    actions: {
-      position: 'right',
-      columnTitle: 'ACTIONS',
-      add: false,
-      edit: true,
-      delete: false,
-    },
+    actions: false,
     edit: {
       editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
@@ -182,17 +176,17 @@ export class AnprComponent implements OnInit, OnDestroy {
           });
         },
       },
-      movie: {
-        title: 'VIDEO',
-        type: 'custom',
-        filter: false,
-        renderComponent: WindowOpenerComponent,
-        onComponentInitFunction(instance) {
-          instance.save.subscribe(row => {
-            alert(`${row.name} saved!`);
-          });
-        },
-      },
+      // movie: {
+      //   title: 'VIDEO',
+      //   type: 'custom',
+      //   filter: false,
+      //   renderComponent: WindowOpenerComponent,
+      //   onComponentInitFunction(instance) {
+      //     instance.save.subscribe(row => {
+      //       alert(`${row.name} saved!`);
+      //     });
+      //   },
+      // },
       plate: {
         title: 'LICENSE PLATE',
         type: 'string',
