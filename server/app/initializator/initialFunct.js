@@ -606,6 +606,14 @@ exports.initial = async function () {
   } catch (err) {
     if (err.name !== 'SequelizeUniqueConstraintError') console.error(err.name)
   }
+  try {
+    await algo.create({
+      id: 73,
+      name: 'Battery defect'
+    })
+  } catch (err) {
+    if (err.name !== 'SequelizeUniqueConstraintError') console.error(err.name)
+  }
   // const lastId = 70
   try {
     await usr.create({
@@ -644,4 +652,4 @@ exports.initial = async function () {
 }
 // INSERT INTO `multi_tenant`.`algorithms` (`id`, `name`, `createdAt`, `updatedAt`) VALUES ('27', 'Camera Tampering', '2020-10-05 07:31:29', '2020-10-05 07:31:29');
 
-exports.lastId = 72
+exports.lastId = 73

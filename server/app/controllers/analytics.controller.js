@@ -9172,3 +9172,166 @@ exports.ppe = async (req, res) => {
     })
   })
 }
+
+exports.defect = async (req, res) => {
+  const token = req.headers['x-access-token']
+  const data = req.body
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    Relation.findOne({
+      where: {
+        algo_id: 73,
+        camera_id: req.params.id
+      }
+    }).then(async rel => {
+      await db
+        .con()
+        .query(
+          `SELECT * from batterydefect WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          function (err, result) {
+            if (err) {
+              return res.status(500).json({
+                success: false,
+                message: err
+              })
+            }
+            const ress = {}
+            let cache = ''
+            for (const v of result) {
+              if (cache == '') {
+                cache =
+                  v.time.getFullYear() +
+                  '-' +
+                  (v.time.getMonth() + 1) +
+                  '-' +
+                  v.time.getDate() +
+                  ' ' +
+                  v.time.getHours()
+              }
+
+              if (
+                cache !=
+                v.time.getFullYear() +
+                  '-' +
+                  (v.time.getMonth() + 1) +
+                  '-' +
+                  v.time.getDate() +
+                  ' ' +
+                  v.time.getHours()
+              ) {
+                while (
+                  cache !=
+                  v.time.getFullYear() +
+                    '-' +
+                    (v.time.getMonth() + 1) +
+                    '-' +
+                    v.time.getDate() +
+                    ' ' +
+                    v.time.getHours()
+                ) {
+                  let t = new Date(cache + ':00:00').getTime()
+                  // Add one hours to date
+                  t += 60 * 60 * 1000
+                  cache = new Date(t)
+                  ress[
+                    cache.getFullYear() +
+                      '-' +
+                      (cache.getMonth() + 1) +
+                      '-' +
+                      cache.getDate() +
+                      ' ' +
+                      cache.getHours()
+                  ] =
+                    ress[
+                      v.time.getFullYear() +
+                        '-' +
+                        (v.time.getMonth() + 1) +
+                        '-' +
+                        v.time.getDate() +
+                        ' ' +
+                        v.time.getHours()
+                    ] + 1 || 1
+
+                  cache =
+                    cache.getFullYear() +
+                    '-' +
+                    (cache.getMonth() + 1) +
+                    '-' +
+                    cache.getDate() +
+                    ' ' +
+                    cache.getHours()
+                }
+              }
+              if (
+                cache ==
+                v.time.getFullYear() +
+                  '-' +
+                  (v.time.getMonth() + 1) +
+                  '-' +
+                  v.time.getDate() +
+                  ' ' +
+                  v.time.getHours()
+              ) {
+                ress[
+                  v.time.getFullYear() +
+                    '-' +
+                    (v.time.getMonth() + 1) +
+                    '-' +
+                    v.time.getDate() +
+                    ' ' +
+                    v.time.getHours()
+                ] =
+                  ress[
+                    v.time.getFullYear() +
+                      '-' +
+                      (v.time.getMonth() + 1) +
+                      '-' +
+                      v.time.getDate() +
+                      ' ' +
+                      v.time.getHours()
+                  ] + 1 || 1
+              }
+              let d = v.time
+              let se = d.getSeconds()
+              let mi = d.getMinutes()
+              let ho = d.getHours()
+              if (se < 10) {
+                se = '0' + se
+              }
+              if (mi < 10) {
+                mi = '0' + mi
+              }
+              if (ho < 10) {
+                ho = '0' + ho
+              }
+              d =
+                d.getFullYear() +
+                '-' +
+                (d.getMonth() + 1) +
+                '-' +
+                d.getDate() +
+                '_' +
+                ho +
+                ':' +
+                mi +
+                ':' +
+                se
+              v.picture = `${d}_${v.track_id}.jpg`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/defect/${req.params.id}/${v.picture}`
+              v.movie = `${d}_${v.track_id}_video.mp4`
+              v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/defect/${req.params.id}/${v.movie}`
+            }
+            const a = {
+              total: result.length,
+              raw: result,
+              rel: rel,
+              over: ress
+            }
+            res.status(200).json({
+              success: true,
+              data: a
+            })
+          }
+        )
+    })
+  })
+}

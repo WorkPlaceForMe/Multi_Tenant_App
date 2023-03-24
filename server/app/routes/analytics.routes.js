@@ -2837,4 +2837,6 @@ module.exports = function (app) {
   app.post('/api/analytics/72/:id', [authJwt.isAvailable, authJwt.verifyToken], controller.vehloitering)
 
   app.post('/api/analytics/71/:id', [authJwt.isAvailable, authJwt.verifyToken], controller.ppe)
+
+  app.post('/api/analytics/73/:id', [authJwt.isAvailable, authJwt.verifyToken], controller.defect)
 }

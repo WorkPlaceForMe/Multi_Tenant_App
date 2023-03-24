@@ -170,6 +170,7 @@ import { VehLoitComponent } from './online/graphs/veh-loit/veh-loit.component';
 import { PpeComponent } from './online/graphs/ppe/ppe.component';
 import { StreamComponent } from './online/stream/stream.component';
 import { JanusModule } from 'janus-angular';
+import { DefectComponent } from './online/graphs/defect/defect.component';
 
 @NgModule({
   imports: [
@@ -348,6 +349,7 @@ import { JanusModule } from 'janus-angular';
     VehLoitComponent,
     PpeComponent,
     StreamComponent,
+    DefectComponent,
   ],
   providers: [
     FacesService,

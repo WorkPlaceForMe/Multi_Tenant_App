@@ -210,6 +210,9 @@ export class AnalyticsService {
   ppe(id: string, dates){
     return this.http.post(`${this.API_URL}71/${id}`, dates);
   }
+  defect(id: string, dates){
+    return this.http.post(`${this.API_URL}73/${id}`, dates);
+  }
   report(algo_id:number, cam_id:string, dates){
     return this.http.post(`${api}/report/${algo_id}/${cam_id}`, dates ,{
       responseType: 'blob'
