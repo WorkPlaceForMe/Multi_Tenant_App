@@ -47,11 +47,11 @@ export const MENU_ITEMSBRANCH: NbMenuItem[] = [
       },
     ],
   },
-  {
-    title: 'Streams',
-    icon: 'clipboard-outline',
-    link: 'stream'
-  },
+  // {
+  //   title: 'Streams',
+  //   icon: 'clipboard-outline',
+  //   link: 'stream'
+  // },
   {
     title: "Dashboards",
     icon: "bar-chart-outline",
