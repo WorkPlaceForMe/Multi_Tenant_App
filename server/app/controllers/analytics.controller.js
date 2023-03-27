@@ -9691,9 +9691,9 @@ exports.ppe = async (req, res) => {
                 mi +
                 ':' +
                 se
-              v.picture = `${d}_${v.track_id}.jpg`
+              v.picture = `${d}_${v.id}.jpg`
               v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/ppe/${req.params.id}/${v.picture}`
-              v.movie = `${d}_${v.track_id}_video.mp4`
+              v.movie = `${d}_${v.id}_video.mp4`
               v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/ppe/${req.params.id}/${v.movie}`
             }
             for(let i = 0; i < dataAlerts.length; i ++){
