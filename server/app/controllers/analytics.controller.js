@@ -3678,10 +3678,10 @@ exports.direction = async (req, res) => {
                 ':' +
                 se
               v['picture'] = `${d}_${v.track_id}.jpg`
-              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/direction/${req.params.id}/${v.picture}`
+              v.pic_path = `${process.env.app_url2}/api/pictures/${decoded.id_account}/${decoded.id_branch}/direction/${req.params.id}/${v.picture}`
               if (rel.atributes[0].time > 0) {
                 v.clip_path = `${d}_${v.track_id}.mp4`
-                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/direction/${req.params.id}/${v.clip_path}`
+                v.pic_path = `${process.env.app_url2}/api/pictures/${decoded.id_account}/${decoded.id_branch}/direction/${req.params.id}/${v.clip_path}`
               }
             }
             const a = {
@@ -9447,9 +9447,9 @@ exports.congestion = async (req, res) => {
                 ':' +
                 se
               v.picture = `${d}_${v.track_id}.jpg`
-              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/congestion/${req.params.id}/${v.picture}`
+              v.pic_path = `${process.env.app_url2}/api/pictures/${decoded.id_account}/${decoded.id_branch}/congestion/${req.params.id}/${v.picture}`
               v.movie = `${d}_${v.track_id}_video.mp4`
-              v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/congestion/${req.params.id}/${v.movie}`
+              v.vid = `${process.env.app_url2}/api/pictures/${decoded.id_account}/${decoded.id_branch}/congestion/${req.params.id}/${v.movie}`
             }
             const a = {
               total: result.length,
@@ -9548,8 +9548,8 @@ exports.vehloitering = async (req, res) => {
                   se
                 v.picture = `${d}_${v.track_id}.jpg`
                 v.movie = `${d}_${v.track_id}_video.mp4`
-                v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/vehicle_loitering/${req.params.id}/${v.movie}`
-                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/vehicle_loitering/${req.params.id}/${v.picture}`
+                v.vid = `${process.env.app_url2}/api/pictures/${decoded.id_account}/${decoded.id_branch}/vehicle_loitering/${req.params.id}/${v.movie}`
+                v.pic_path = `${process.env.app_url2}/api/pictures/${decoded.id_account}/${decoded.id_branch}/vehicle_loitering/${req.params.id}/${v.picture}`
                 let l = v.dwell / rel.atributes[1].time - 1
                 if (l >= 2) {
                   l = 2
