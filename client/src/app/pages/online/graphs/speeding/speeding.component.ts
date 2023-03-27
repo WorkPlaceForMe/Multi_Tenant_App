@@ -197,7 +197,7 @@ export class SpeedingComponent implements OnInit, OnDestroy {
         filter: false,
       },
       anpr: {
-        title: 'SPEED',
+        title: 'PLATE',
         type: 'string',
         filter: false,
       },
