@@ -26,7 +26,8 @@ if (process.env.NODE_ENV === 'production') {
       `http://${process.env.my_ip}:4200`,
       `${process.env.app_url}`,
       'http://localhost:4200',
-      `http://${process.env.my_ip}:3200`
+      `http://${process.env.my_ip}:3200`,
+      'http://localhost'
     ]
   }
   app.use(cors(corsOptions))
@@ -37,7 +38,8 @@ if (process.env.NODE_ENV === 'production') {
       `http://${process.env.my_ip}:4200`,
       `${process.env.app_url}`,
       'http://localhost:4200',
-      `http://${process.env.my_ip}:3200`
+      `http://${process.env.my_ip}:3200`,
+      'http://localhost'
     ]
   }
   app.use(cors(corsOptions))
