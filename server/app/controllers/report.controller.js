@@ -91,7 +91,7 @@ exports.report = async (req, res) => {
   let query = `SELECT id, time, camera_name, cam_id, zone, severity from queue_alerts WHERE ${data.type} = '${req.params.cam_id}' and time >= '${start}' and  time <= '${end}'${extra} order by time asc;`
 
   if (data.algo === 'count') {
-    query = `SELECT id, start_time, end_time, camera_name, cam_id, qid, track_id, queuing from queue_mgt WHERE ${data.type} = '${req.params.cam_id}' and start_time >= '${start}' and  start_time <= '${end}' order by start_time asc;`
+    query = `SELECT id, start_time, end_time, camera_name, cam_id, qid, track_id, queuing from queue_mgt WHERE ${data.type} = '${req.params.cam_id}' and start_time >= '${start}' and  start_time <= '${end}' and queuing = 0 order by start_time asc;`
   }
   if (req.params.algo_id === '69' && data.typ === 'alerts') {
     query = `SELECT id, time, camera_name, cam_id, zone, severity from avail_alerts WHERE ${data.type} = '${req.params.cam_id}' and time >= '${start}' and  time <= '${end}' order by time asc;`
