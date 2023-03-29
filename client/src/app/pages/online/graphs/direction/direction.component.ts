@@ -145,7 +145,7 @@ export class DirectionComponent implements OnInit, OnDestroy {
             m["cam_id"] +
             "/" +
             m["clip_path"];
-            m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/dir/' + m['cam_id'] + '/' + m['movie']);
+            m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl('http://192.168.140.29:3300/api/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/dir/' + m['cam_id'] + '/' + m['movie']);
           m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss");
           switch (m["severity"]) {
             case "0": {

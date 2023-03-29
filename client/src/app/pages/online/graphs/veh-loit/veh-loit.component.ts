@@ -115,7 +115,7 @@ export class VehLoitComponent implements OnInit, OnDestroy {
         this.loitering = res['data'];
         for(const m of this.loitering.raw){
           m['clip_path']  = api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/loitering/' + m['cam_id'] + '/' + m['clip_path'];
-          m['picture']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/loitering/' + m['cam_id'] + '/' + m['picture']);
+          m['picture']  = this.sanitizer.bypassSecurityTrustUrl('http://192.168.140.29:3300/api/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/loitering/' + m['cam_id'] + '/' + m['picture']);
           m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/loitering/' + m['cam_id'] + '/' + m['movie']);
           // m['time'] = new Date(m['time'])
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', '-0300');

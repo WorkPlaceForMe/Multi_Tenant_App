@@ -259,13 +259,7 @@ export class LoitComponent implements OnInit, OnDestroy {
 
   settings = {
     mode: 'external',
-    actions: {
-      position: 'right',
-      add: false,
-      edit: true,
-      columnTitle: 'ACTIONS',
-      delete: false,
-    },
+    actions: false,
     edit: {
       editButtonContent: '<i class="fas fa-ellipsis-h"></i>',
       saveButtonContent: '<i class="nb-checkmark"></i>',
@@ -294,17 +288,17 @@ export class LoitComponent implements OnInit, OnDestroy {
           });
         },
       },
-      movie: {
-        title: 'VIDEO',
-        type: 'custom',
-        filter: false,
-        renderComponent: WindowOpenerComponent,
-        onComponentInitFunction(instance) {
-          instance.save.subscribe(row => {
-            alert(`${row.name} saved!`);
-          });
-        },
-      },
+      // movie: {
+      //   title: 'VIDEO',
+      //   type: 'custom',
+      //   filter: false,
+      //   renderComponent: WindowOpenerComponent,
+      //   onComponentInitFunction(instance) {
+      //     instance.save.subscribe(row => {
+      //       alert(`${row.name} saved!`);
+      //     });
+      //   },
+      // },
       time: {
         title: 'TIME',
         type: 'string',
