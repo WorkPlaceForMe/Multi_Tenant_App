@@ -302,12 +302,12 @@ export class DefectComponent implements OnInit, OnDestroy {
         type: "string",
         filter: false,
       },
-      battey_name: {
+      battery_name: {
         title: "BATTERY NAME",
         type: "string",
         filter: false,
       },
-      batery_defect: {
+      battery_defect: {
         title: "DEFECT",
         type: "string",
         filter: false,
