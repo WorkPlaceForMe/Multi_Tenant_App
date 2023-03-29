@@ -139,7 +139,7 @@ export class CongestionComponent implements OnInit , OnDestroy {
               "/" +
               m["picture"]
           );
-          m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/congestion/' + m['cam_id'] + '/' + m['movie']);
+          m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl('http://192.168.140.29:3300/api/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/congestion/' + m['cam_id'] + '/' + m['movie']);
           m["clip_path"] =
             api +
             "/pictures/" +
@@ -356,7 +356,7 @@ export class CongestionComponent implements OnInit , OnDestroy {
         let data: Array<any>;
         data = res['data']
         for (let m of data) {
-          m['picture'] = 'http://localhost' + api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/congestion/' + m['cam_id'] + '/' + m['picture']
+          m['picture'] = 'http://192.168.140.29:3300/api/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/congestion/' + m['cam_id'] + '/' + m['picture']
           m['time'] = this.datepipe.transform(m['time'], 'yyyy-M-dd HH:mm:ss', '-0300');
         }
         const ws = utils.json_to_sheet(data);
