@@ -51,3 +51,4 @@ dockerDeployment/resources/**
 !dockerDeployment/resources/googleLogo.png
 !dockerDeployment/resources/favicon1.png
 !dockerDeployment/resources/favicon1.ico
+.DS_Store
