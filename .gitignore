@@ -91,3 +91,5 @@ client/e2e/*.map
 # System Files
 client/.DS_Store
 client/Thumbs.db
+
+.DS_Store
