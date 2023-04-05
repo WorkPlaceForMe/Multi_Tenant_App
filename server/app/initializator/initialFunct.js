@@ -616,7 +616,7 @@ exports.initial = async function () {
   }
   try {
     await algo.create({
-      id: 73,
+      id: 74,
       name: 'Battery module defect'
     })
   } catch (err) {
