@@ -45,7 +45,7 @@ export class ModuleDefectComponent implements  OnInit, OnDestroy {
   algorithms: any;
   loading: boolean = false;
   loadingTakeScreenShot: boolean = false;
-  algoId = 73;
+  algoId = 74;
 
   constructor(
     private serv: AnalyticsService,
