@@ -21,8 +21,6 @@ config.env
 configDocker.env
 runDocker.sh
 node_modules
-client/dist
-client/dist.zip
 pythonServer/configPython.env
 pythonServer/configPythonDocker.env
 pythonServer/app.log
