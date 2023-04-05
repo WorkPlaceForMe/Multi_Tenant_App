@@ -171,6 +171,7 @@ import { PpeComponent } from './online/graphs/ppe/ppe.component';
 import { StreamComponent } from './online/stream/stream.component';
 import { JanusModule } from 'janus-angular';
 import { DefectComponent } from './online/graphs/defect/defect.component';
+import { ModuleDefectComponent } from './online/graphs/module-defect/module-defect.component';
 
 @NgModule({
   imports: [
@@ -350,6 +351,7 @@ import { DefectComponent } from './online/graphs/defect/defect.component';
     PpeComponent,
     StreamComponent,
     DefectComponent,
+    ModuleDefectComponent,
   ],
   providers: [
     FacesService,
