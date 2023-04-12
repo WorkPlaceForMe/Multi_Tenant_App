@@ -15,6 +15,7 @@ commands_ssl.sh
 install.sh
 install_nginx.sh
 app.zip
+client/dist
 client.zip
 server.zip
 config.env
