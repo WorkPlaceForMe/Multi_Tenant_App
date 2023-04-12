@@ -92,3 +92,8 @@ client/e2e/*.map
 # System Files
 client/.DS_Store
 client/Thumbs.db
+client/.angular/.DS_Store
+dockerDeployment/.DS_Store
+proxy/.DS_Store
+server/.DS_Store
+.DS_Store
