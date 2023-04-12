@@ -1,10 +1,4 @@
 import { NgModule } from "@angular/core";
-import {
-  NbMenuModule,
-  NbPopoverModule,
-  NbTimepickerModule,
-  NbWindowModule,
-} from "@nebular/theme";
 
 import { ThemeModule } from "../@theme/theme.module";
 import { PagesComponent } from "./pages.component";
@@ -36,6 +30,12 @@ import { AnalyticsComponent } from "./analytics/analytics.component";
 import { SearchComponent } from "./facial_recognition/search/search.component";
 import { FormsModule as ngFormsModule } from "@angular/forms";
 import {
+  NbDialogModule,
+  NbLayoutModule,
+  NbMenuModule,
+  NbPopoverModule,
+  NbThemeModule,
+  NbTimepickerModule,
   NbCardModule,
   NbIconModule,
   NbInputModule,
@@ -55,6 +55,8 @@ import {
   NbSelectModule,
   NbSpinnerModule,
   NbContextMenuModule,
+  NbToastrModule,
+  NbToastrConfig
 } from "@nebular/theme";
 
 // import { TableComponent } from './facial_recognition/table/table.component';
@@ -178,6 +180,10 @@ import { ModuleDefectComponent } from './online/graphs/module-defect/module-defe
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts')
     }),
+    NbThemeModule.forRoot(),
+    NbLayoutModule,
+    NbToastrModule.forRoot(),
+    NbDialogModule.forRoot(),
     JanusModule,
     NgxChartsModule,
     ChartModule,
@@ -360,6 +366,7 @@ import { ModuleDefectComponent } from './online/graphs/module-defect/module-defe
     StrService,
     AnnotationsService,
     authInterceptorProviders,
+    { provide: NbToastrConfig, useValue: { /* Your configuration options here */ } },
     {
       provide: "SocialAuthServiceConfig",
       useValue: {

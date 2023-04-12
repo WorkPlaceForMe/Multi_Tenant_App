@@ -27,8 +27,24 @@ exports.sender = async function(){
             message = {
                 "id": `${uuid}`,
                 "TimeStamp": ts,
-                "Analytic": `'${analytic}'`,
+                "Analytic": analytic,
                 "CameraId": "bffdb3cf-8cf3-4454-9474-3a47cf99ef10",
+                "Parameters": parameters,
+                "Detail": "string",
+                "UrlImage": "string"
+            }
+            connection.send(JSON.stringify(message))
+
+            parameters = {
+                camera_name: "test House",
+            }
+            analytic = 66
+            await delay(1000)
+            message = {
+                "id": `${uuidv4()}`,
+                "TimeStamp": Math.round((new Date()).getTime() / 1000),
+                "Analytic": analytic,
+                "CameraId": "94d9d7fc-4c29-49da-8758-0079ac973e0c",
                 "Parameters": parameters,
                 "Detail": "string",
                 "UrlImage": "string"
@@ -44,7 +60,7 @@ exports.sender = async function(){
             message = {
                 "id": `${uuid}`,
                 "TimeStamp": ts,
-                "Analytic": `'${analytic}'`,
+                "Analytic": analytic,
                 "CameraId": "bffdb3cf-8cf3-4454-9474-3a47cf99ef10",
                 "Parameters": parameters,
                 "Detail": "string",
@@ -61,7 +77,7 @@ exports.sender = async function(){
             message = {
                 "id": `${uuid}`,
                 "TimeStamp": ts,
-                "Analytic": `'${analytic}'`,
+                "Analytic": analytic,
                 "CameraId": "bffdb3cf-8cf3-4454-9474-3a47cf99ef10",
                 "Parameters": parameters,
                 "Detail": "string",

@@ -16,11 +16,9 @@ import { Ng2SmartTableModule } from "ng2-smart-table";
 import {
   NbChatModule,
   NbDatepickerModule,
-  NbDialogModule,
   NbMenuModule,
   NbSidebarModule,
   NbTimepickerModule,
-  NbToastrModule,
   NbWindowModule,
   NbCardModule,
 } from "@nebular/theme";
@@ -41,9 +39,9 @@ import { authInterceptorProviders } from "./_helpers/auth.interceptor";
     NbMenuModule.forRoot(),
     NbDatepickerModule.forRoot(),
     NbTimepickerModule.forRoot(),
-    NbDialogModule.forRoot(),
+    // NbDialogModule.forRoot(),
+    // NbToastrModule.forRoot(),
     NbWindowModule.forRoot(),
-    NbToastrModule.forRoot(),
     NbChatModule.forRoot({
       messageGoogleMapKey: "AIzaSyA_wNuCzia92MAmdLRzmqitRGvCF7wCZPY",
     }),
@@ -51,6 +49,7 @@ import { authInterceptorProviders } from "./_helpers/auth.interceptor";
     ThemeModule.forRoot(),
   ],
   providers: [
+
     FacesService,
     DatePipe,
     ColorsService,

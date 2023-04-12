@@ -553,7 +553,7 @@ exports.initial = async function () {
   try {
     await algo.create({
       id: 66,
-      name: 'Incipient fire / fire detection'
+      name: 'Fire and Smoke detection'
     })
   } catch (err) {
     if (err.name !== 'SequelizeUniqueConstraintError') console.error(err.name)

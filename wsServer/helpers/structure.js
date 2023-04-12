@@ -7,7 +7,7 @@ exports.checkStructure = function(message){
     const type = {
         id: "string",
         TimeStamp: "number",
-        Analytic: "string",
+        Analytic: "number",
         CameraId: "string",
         Parameters: "object",
         Detail: "string",
