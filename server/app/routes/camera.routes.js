@@ -80,7 +80,7 @@ module.exports = function (app) {
    */
   app.post(
     '/api/camera',
-    [authJwt.verifyToken, authJwt.isClientOrBranch, verifyCam.rtsp, verifyCam.numCams],
+    [authJwt.verifyToken, verifyCam.rtsp, verifyCam.numCams],
     controller.addCamera
   )
 
