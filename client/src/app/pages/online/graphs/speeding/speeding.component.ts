@@ -196,11 +196,11 @@ export class SpeedingComponent implements OnInit, OnDestroy {
         type: 'string',
         filter: false,
       },
-      anpr: {
-        title: 'PLATE',
-        type: 'string',
-        filter: false,
-      },
+      // anpr: {
+      //   title: 'PLATE',
+      //   type: 'string',
+      //   filter: false,
+      // },
       // type: {
       //   title: 'VEHICLE TYPE',
       //   type: 'string',
