@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { NbCalendarRange, NbComponentStatus, NbDateService, NbGlobalPhysicalPosition, NbGlobalPosition, NbToastrService } from '@nebular/theme';
 import { Account } from '../../../../models/Account';
 import { NbPopoverDirective } from '@nebular/theme';
@@ -9,20 +9,18 @@ import { AuthService } from '../../../../services/auth.service';
   templateUrl: './control.component.html',
   styleUrls: ['./control.component.scss'],
 })
-export class ControlComponent implements OnInit, OnDestroy {
+export class ControlComponent implements OnInit, OnDestroy, OnChanges {
 
   @ViewChild(NbPopoverDirective) rangeSelector: NbPopoverDirective;
 
   @Input() analytic;
   @Input() cameras;
   @Input() rel;
+  @Input() camId: string;
   max: Date;
   fin: Date;
   range: NbCalendarRange<Date>;
   camera: string = '';
-  // camera = {
-  //   name: ''
-  // }
   location: string = '';
   reTime: number = 0;
   refresh: number = 0;
@@ -35,6 +33,12 @@ export class ControlComponent implements OnInit, OnDestroy {
   selectedDate: Date;
   selectedMonth: Date;
   lastMonths: Date[] = [];
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.camId) {
+      this.cam(this.camId)
+    }
+  }
 
   currentSelection: string  = 'Date';
   items = [

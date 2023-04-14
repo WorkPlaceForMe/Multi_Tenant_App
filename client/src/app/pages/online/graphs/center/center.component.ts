@@ -22,8 +22,11 @@ export class CenterComponent implements OnInit, OnDestroy {
     private toastrService: NbToastrService,
     private ws: WsService,
     ) { 
-      // this.toastrConfig.icon = 'nb-heart';
       this.wsConnection = this.ws.connection()
+      // this.ws.onMessage().subscribe((message) => {
+      //   console.log('Received message:', message);
+      //   // this.messages.push(message);
+      // });
     }
 
   info: any = []
@@ -122,13 +125,16 @@ pic:string = `${api}/pictures/graymaticsLogo.png`
     this.wsConnection.subscribe(
       (message) => {
         if(message.Analytic === 66){
-          this.showToast(`Please look at camera ${message.Parameters.camera_name}`, 'danger');
+          this.showToast(`Please look at camera ${message.Parameters.camera_name}`, 'danger', message.CameraId, 66);
         }
       },
       (error) => {
         console.error(error);
+        // this.ws.tryReconnect()
       },
       () => {
+        // console.error('damn')
+        // this.ws.tryReconnect()
       }
     );
     this.face.getDashboard().subscribe(
@@ -164,7 +170,7 @@ pic:string = `${api}/pictures/graymaticsLogo.png`
   position: NbGlobalPosition = NbGlobalPhysicalPosition.TOP_RIGHT;
   preventDuplicates = false;
 
-  private showToast( body: string, status: NbComponentStatus) {
+  private showToast( body: string, status: NbComponentStatus, camId: string, algoId: number) {
     const config = {
       status: status,
       destroyByClick: this.destroyByClick,
@@ -179,11 +185,15 @@ pic:string = `${api}/pictures/graymaticsLogo.png`
     const toastrRef: NbToastRef = this.toastrService.show(
       body,
       `${titleContent}`,
-      config)
-      // .onClick.subscribe(() => {
-      //   console.log('Toastr notification clicked!');
-      //   // Do something here
-      // });
+      config);
+    ((<any>toastrRef)['toastContainer']).nativeElement.addEventListener('click', () => {
+      for(const alg of [...this.info.analyticsP, ...this.info.analyticsT]){
+        if(alg.algo_id === algoId){
+          this.analytic = alg
+          this.aaa(camId)
+        }
+      }
+    })
   }
 
 }

@@ -1,68 +1,59 @@
 import { Injectable } from "@angular/core";
-import { Observable, Observer } from 'rxjs';
-import { AnonymousSubject } from 'rxjs/internal/Subject';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Message } from "../models/WsMess";
 
-import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
-// import { Client } from '@stomp/stompjs';
-// import * as Stomp from '@stomp/stompjs';
+import { WebSocketSubject, webSocket } from 'rxjs/webSocket';
+import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class WsService {
 
-  private subject: AnonymousSubject<MessageEvent>;
-  public messages: Subject<Message>;
-
   constructor() {
   }
+
+  // private reconnectionAttempts = 5;
+  // public currentAttempt = 0;
+  // private socket$: WebSocketSubject<Message>;
 
   public connection(){
     return webSocket<Message>(`${environment.webSocketUrl}/ws/connect/client`)
   }
+  
+  // private connection(): void {
+  //   this.socket$ = webSocket<Message>(`${environment.webSocketUrl}/ws/connect/client`)
 
-  public start() {
-    this.messages = <Subject<Message>>this.connect(`${environment.webSocketUrl}/ws/connect/client`).pipe(
-      map(
-        (res: MessageEvent): Message => {
-          let data = JSON.parse(res.data);
-          console.log(data)
-          return data;
-        }
-      )
-    );
-  }
+  //   this.socket$.subscribe(
+  //     () => {
+  //       console.log('WebSocket connected');
+  //       this.currentAttempt = 0;
+  //     },
+  //     (error) => {
+  //       console.log(`WebSocket error: ${error}`);
+  //       this.tryReconnect();
+  //     },
+  //     () => {
+  //       console.log('WebSocket disconnected');
+  //       this.tryReconnect();
+  //     }
+  //   );
+  // }
 
-  private connect(url): AnonymousSubject<MessageEvent> {
-    if (!this.subject) {
-      this.subject = this.create(url);
-      console.log("Connected: " + url);
-    }
-    return this.subject;
-  }
+  // public tryReconnect(): void {
+  //   if (this.currentAttempt < this.reconnectionAttempts) {
+  //     this.currentAttempt++;
+  //     console.log(`WebSocket reconnecting (attempt ${this.currentAttempt})...`);
+  //     setTimeout(() => {
+  //       console.log('Trying...')
+  //       this.connection();
+  //     }, 5000); // Wait for 5 seconds before attempting to reconnect
+  //   } else {
+  //     console.log('WebSocket reconnection failed');
+  //   }
+  // }
 
-  private create(url): AnonymousSubject<MessageEvent> {
-    let ws = new WebSocket(url);
-    let observable = new Observable((obs: Observer<MessageEvent>) => {
-      ws.onmessage = obs.next.bind(obs);
-      ws.onerror = obs.error.bind(obs);
-      ws.onclose = obs.complete.bind(obs);
-      return ws.close.bind(ws);
-    });
-    let observer = {
-      error: null,
-      complete: null,
-      next: (data: Object) => {
-        console.log('Message sent: ', data);
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify(data));
-        }
-      }
-    };
-    return new AnonymousSubject<MessageEvent>(observer, observable);
-  }
+  // public onMessage(): Observable<any> {
+  //   return this.socket$.asObservable();
+  // }
 }
