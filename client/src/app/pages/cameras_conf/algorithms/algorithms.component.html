@@ -169,6 +169,7 @@
       <div class='buttons-row'>
         <button nbButton [status]="'success'" (click)="saveAndBack(camera.stored_vid)">Guardar y volver</button>
         <!-- <button nbButton [status]="'info'"(click)="saave()">Save</button> -->
+        <button nbButton [status]="'info'"(click)="reTake()" *ngIf="!reTakeVals.show">Retomar foto</button>
         <button nbButton [status]="'warning'" (click)="back(camera.stored_vid)">Volver</button>
       </div>
 

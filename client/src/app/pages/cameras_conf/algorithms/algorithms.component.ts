@@ -233,6 +233,33 @@ export class AlgorithmsComponent implements OnInit {
     analytics: 0,
   };
 
+  reTakeVals: any = {
+    show: false,
+    error: false
+  }
+  reTake(){
+    this.reTakeVals.show = true
+    this.reTakeVals.error = false
+    let response = {
+      cameraId: this.camera.id,
+      id_account: this.camera['id_account'],
+      id_branch: this.camera['id_branch']
+    };
+
+    this.facesService.doOneImage(response).subscribe(
+      (res) => {
+        this.reTakeVals.show = false
+        window.location.reload();
+        // console.log(res)
+      },
+      (err) => {
+        this.reTakeVals.show = false
+        this.reTakeVals.error = true
+        // console.error(err)
+      }
+    );
+  }
+
   back(which){
     if (which === 'Yes'){
       this.router.navigateByUrl('/pages/search/list');

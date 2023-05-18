@@ -25,7 +25,7 @@ export class FacesService {
     return this.http.post(`${this.API_URI}/getInfo`, info);
   }
   doOneImage(camera_id: any) {
-    return this.http.post(`${this.API_URI}/cameraImages/`, camera_id);
+    return this.http.post(`${this.API_URI}2/frame`, camera_id);
   }
   doAllImages() {
     return this.http.get(`${this.API_URI}/cameraImages/all`);

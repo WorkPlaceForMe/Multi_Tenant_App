@@ -17,6 +17,7 @@ import { api } from "../../../models/API";
 import { Router } from "@angular/router";
 import { AuthService } from "../../../services/auth.service";
 import { NgxSpinnerService } from "ngx-spinner";
+import { Account } from "../../../models/Account";
 
 const URL = `${api}/elastic/video`;
 const uploadZipURL = `${api}/elastic/zip`;
@@ -45,6 +46,7 @@ export class UploadComponent implements OnInit {
   zipName: string;
   zipLoad: boolean = false;
   zipUploadFinished: boolean = false;
+  now_user: Account;
 
   @ViewChild("fileInput", { static: false }) fileInputVariable: any;
   @ViewChild("zipFileInput", { static: false }) zipFileInputVariable: any;
@@ -62,6 +64,7 @@ export class UploadComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.now_user = JSON.parse(localStorage.getItem('now_user'));
     this.uploader.onAfterAddingFile = (file) => {
       //this.SpinnerService.show();
       file.withCredentials = false;
@@ -179,21 +182,27 @@ export class UploadComponent implements OnInit {
     }
   }
 
+  error: boolean = false
+
   addRoI(res) {
+    const id = res.id
     let response = {
-      cam_id: res.id,
+      cameraId: id,
+      id_account: this.now_user.id_account,
+      id_branch: this.now_user.id_branch
     };
 
     this.facesService.doOneImage(response).subscribe(
       (res) => {
         // console.log(res)
-        //this.router.navigate(['/pages/cameras/algorithms/' + id]);
-        this.router.navigateByUrl("/pages/search/list");
+        this.router.navigate(['/pages/cameras/algorithms/' + id]);
+        // this.router.navigateByUrl("/pages/search/list");
       },
       (err) => {
         // console.error(err)
-        //this.router.navigate(['/pages/cameras/algorithms/' + id]);
-        this.router.navigateByUrl("/pages/search/list");
+        this.error = true
+        this.router.navigate(['/pages/cameras/algorithms/' + id]);
+        // this.router.navigateByUrl("/pages/search/list");
       }
     );
   }

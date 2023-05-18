@@ -4,6 +4,7 @@ import { FacesService } from '../../../services/faces.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { v4 as uuid } from 'uuid';
 import { NbComponentStatus, NbGlobalPhysicalPosition, NbGlobalPosition, NbToastrService } from '@nebular/theme';
+import { Account } from '../../../models/Account';
 
 @Component({
   selector: 'app-vid',
@@ -30,10 +31,12 @@ export class VidComponent implements OnInit {
   edit : boolean = false;
   submitted: boolean = false;
   is_saving : boolean = false;
+  now_user: Account;
 
   constructor(private facesService: FacesService, private router: Router, private activatedRoute: ActivatedRoute, private toastrService: NbToastrService) { }
 
   ngOnInit() {
+    this.now_user = JSON.parse(localStorage.getItem('now_user'));
     const params = this.activatedRoute.snapshot.params;
     if(params.uuid){
       this.facesService.getCamera(params.uuid)
@@ -61,16 +64,18 @@ export class VidComponent implements OnInit {
       res=>{
         // console.log(res);
         let response = {
-          cam_id: res['id']
+          cameraId: res['id'],
+          id_account: this.now_user.id_account,
+          id_branch: this.now_user.id_branch
         };
         this.facesService.doOneImage(response).subscribe(
           res => {
             // console.log(res)
-            this.router.navigate(['/pages/cameras/algorithms/'+response['cam_id']]);
+            this.router.navigate(['/pages/cameras/algorithms/'+response['id']]);
           },
           err => {
             // console.error(err)
-          this.router.navigate(['/pages/cameras/algorithms/'+response['cam_id']]);
+          this.router.navigate(['/pages/cameras/algorithms/'+response['id']]);
           }
         )
       },
