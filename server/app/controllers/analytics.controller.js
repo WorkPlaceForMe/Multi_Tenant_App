@@ -8993,6 +8993,7 @@ exports.breadTemp = async (req, res) => {
         let cache = [], range, cou = 0
         start = new Date(data.start)
         end = new Date(data.end)
+        console.log(data, start, end)
         if(diff === 1){
           range = 5 * 60 * 1000
           start = new Date(data.start).getTime() + 7 * 60 * 60 * 1000
@@ -9010,7 +9011,7 @@ exports.breadTemp = async (req, res) => {
         }else if(diff >= 14 && diff <= 32){
           range = 24 * 60 * 60 * 1000
         }
-        console.log(`SELECT * from bread_temperature WHERE ${data.type} = '${req.params.id}' and time >= '${start}' and  time <= '${end}' order by time asc;`)
+        console.log(`SELECT * from bread_temperature WHERE ${data.type} = '${req.params.id}' and time >= ${JSON.stringify(start)} and  time <= ${JSON.stringify(end)} order by time asc;`)
         await db
           .con()
           .query(
@@ -9021,7 +9022,7 @@ exports.breadTemp = async (req, res) => {
                   success: false,
                   message: err
                 })
-
+                console.log(result.length)
                 let dwell = [], dwellAll = []
                 let labelsD = [], labelsDAll =[]
                 let av = [], sum = []
