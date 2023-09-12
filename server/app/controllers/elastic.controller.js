@@ -20,7 +20,7 @@ const client = new elasticsearch.Client({
 
 const con = require('../models/dbmysql')
 const path =
-  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+  process.env.resources
 const multer = require('multer')
 const AWS = require('aws-sdk')
 const s3 = new AWS.S3({

@@ -7,7 +7,7 @@ const fs = require('fs')
 
 exports.initial = async function () {
   const path =
-  process.env.home + process.env.username + process.env.pathDocker + process.env.resources
+  process.env.resources
   await usr.create({
     id: '0000-11111-aaaaaa-bbbbbb',
     username: 'admin',
@@ -294,7 +294,7 @@ exports.initial = async function () {
     id: 68,
     name: 'Meat / Ham & Cheese'
   })
-  const lastId = 68
+  const lastId = 74
   await usr.create({
     id: '3333-666666-cccccc-nnnnnn',
     username: 'testing',
@@ -316,10 +316,15 @@ exports.initial = async function () {
     await fs.promises.mkdir(`${pathBranch}/heatmap_pics`)
   }
   for (let i = 0; i <= lastId; i++) {
-    aa.create({
-      algoId: i,
-      accountId: '3333-666666-cccccc-nnnnnn'
-    })
+    try {
+      await aa.create({
+        algoId: i,
+        accountId: '3333-666666-cccccc-nnnnnn'
+      })
+    } catch (err) {
+      if (err.name !== 'SequelizeUniqueConstraintError') console.error(err.name)
+    }
   }
 }
 // INSERT INTO `multi_tenant`.`algorithms` (`id`, `name`, `createdAt`, `updatedAt`) VALUES ('27', 'Camera Tampering', '2020-10-05 07:31:29', '2020-10-05 07:31:29');
+exports.lastId = 74

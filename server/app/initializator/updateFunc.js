@@ -15,15 +15,28 @@ exports.initial = async function () {
     where: { id: 68 }
   })
   await algo.create({
-    id: 71,
+    id: 69,
     name: 'Caja automatica'
   })
   await algo.create({
-    id: 69,
+    id: 70,
     name: 'Disponibilidad Pan'
   })
   await algo.create({
-    id: 70,
+    id: 71,
     name: 'Temperatura Pan'
   })
+  await algo.create({
+    id: 72,
+    name: 'Carnes Procesadas'
+  })
+  await algo.create({
+    id: 73,
+    name: 'Conteo De Personal'
+  })
+  await algo.create({
+    id: 74,
+    name: 'Tiempo De Procesamiento De Carne'
+  })
 }
+exports.lastId = 74
