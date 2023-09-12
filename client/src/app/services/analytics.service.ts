@@ -183,6 +183,9 @@ export class AnalyticsService {
   exit(id: string, dates){
     return this.http.post(`${this.API_URL}60/${id}`, dates);
   }
+  carnesProcesadas(id: string, dates){
+    return this.http.post(`${this.API_URL}72/${id}`, dates);
+  }
   enterExit(id: string, dates){
     return this.http.post(`${this.API_URL}59/${id}`, dates);
   }

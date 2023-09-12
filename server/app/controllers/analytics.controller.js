@@ -9314,3 +9314,181 @@ exports.scc = async (req, res) => {
       })
   })
 }
+
+exports.carnesProcesadas = async (req, res) => {
+  let token = req.headers['x-access-token']
+  const data = req.body
+  jwt.verify(token, process.env.secret, async (err, decoded) => {
+    let wh
+    if (decoded.id_branch != 0000) {
+      wh = {
+        id_branch: decoded.id_branch,
+        algo_id: 72
+      }
+    } else {
+      wh = {
+        id_account: decoded.id_account,
+        algo_id: 72
+      }
+    }
+    Relation.findOne({
+      where: wh
+    })
+      .then(async rel => {
+        const count = await Relation.count({
+          where: {
+            algo_id: 72,
+            camera_id: req.params.id
+          }
+        });
+        const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
+        let start, end
+        let cache, cacheTr, range
+        let dataAlertsTrolley = {}, dataPeopleReceipt = {}
+        start = new Date(data.start)
+        end = new Date(data.end)
+        const labelPeople = []
+        if(diff === 1){
+          range = 5 * 60 * 1000
+          start = new Date(data.start).getTime() + 7 * 60 * 60 * 1000
+          start = JSON.stringify(new Date(start))
+          start = start.substring(1, start.length - 1);
+          end =  new Date(data.end).getTime() - 1.5 * 60 * 60 * 1000
+          end = JSON.stringify(new Date(end))
+          end = end.substring(1, end.length - 1);
+        }else if(diff >= 1 && diff <= 3){
+          range = 2 * 60 * 60 * 1000
+        }else if(diff >= 3 && diff <= 7){
+          range = 4 * 60 * 60 * 1000
+        }else if(diff >= 7 && diff <= 14){
+          range = 8 * 60 * 60 * 1000
+        }else if(diff >= 14 && diff <= 32){
+          range = 24 * 60 * 60 * 1000
+        }
+        cache = new Date(start).getTime()
+        cacheTr = new Date(start).getTime()
+        await db
+          .con()
+          .query(
+            `SELECT * from carnesProcesadas WHERE ${data.type} = '${req.params.id}' and time >= ${JSON.stringify(start)} and  time <= ${JSON.stringify(end)} order by time asc;`,
+            async function (err, result) {
+              if (err)
+                return res.status(500).json({
+                  success: false,
+                  message: err
+                })
+              result.forEach(function (v) {
+                let d = v.time
+                let se = d.getSeconds()
+                let mi = d.getMinutes()
+                let ho = d.getHours()
+                if (se < 10) {
+                  se = '0' + se
+                }
+                if (mi < 10) {
+                  mi = '0' + mi
+                }
+                if (ho < 10) {
+                  ho = '0' + ho
+                }
+                d =
+                  d.getFullYear() +
+                  '-' +
+                  (d.getMonth() + 1) +
+                  '-' +
+                  d.getDate() +
+                  '_' +
+                  ho +
+                  ':' +
+                  mi +
+                  ':' +
+                  se
+                v['picture'] = `${d}_${v.id}.jpg`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/temp_alerts/${req.params.id}/${v.picture}`
+                if(v.trolley == '1'){
+                  if (
+                    cacheTr < v.time.getTime()
+                  ) {
+                    while (
+                      cacheTr < v.time.getTime()
+                    ) {
+                      cacheTr = new Date(cacheTr)
+                      dataAlertsTrolley[cacheTr.getFullYear() + '-' + (cacheTr.getMonth() + 1) +  '-' + cacheTr.getDate() + ' ' + cacheTr.getHours() + ':' + cacheTr.getMinutes()] = 0
+                      cacheTr = cacheTr.getTime()
+                      cacheTr += range
+                    }
+                  }
+                  if (
+                    cacheTr >= v.time.getTime()
+                  ) {
+                    let t = cacheTr
+                    t -= range
+                    t = new Date(t)
+                    dataAlertsTrolley[t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()] = (dataAlertsTrolley[ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1    
+                  }
+                  labelPeople.push(v.time)
+                }
+                if(v.receipt == '1'){
+                  if (
+                    cache < v.time.getTime()
+                  ) {
+                    while (
+                      cache < v.time.getTime()
+                    ) {
+                      cache = new Date(cache)
+                      dataPeopleReceipt[cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                      cache = cache.getTime()
+                      cache += range
+                    }
+                  }
+                  if (
+                    cache >= v.time.getTime()
+                  ) {
+                    let t = cache
+                    t -= range
+                    t = new Date(t)
+                    dataPeopleReceipt[t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()] = (dataPeopleReceipt[ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1    
+                  }
+                  labelPeople.push(v.time)
+                }
+              })
+              while (
+                cacheTr <= new Date(end)
+              ) {
+                cacheTr = new Date(cacheTr)
+                dataAlertsTrolley[cacheTr.getFullYear() + '-' + (cacheTr.getMonth() + 1) +  '-' + cacheTr.getDate() + ' ' + cacheTr.getHours() + ':' + cacheTr.getMinutes()] = 0
+                cacheTr = cacheTr.getTime()
+                cacheTr += range
+              }
+              while (
+                cache <= new Date(end)
+              ) {
+                cache = new Date(cache)
+                dataPeopleReceipt[cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                cache = cache.getTime()
+                cache += range
+              }
+              let a = {
+                raw: result,
+                dataAlertsTrolley: dataAlertsTrolley,
+                dataPeopleReceipt: dataPeopleReceipt
+                // labelsD: labelsD,
+                // dwellAll: dwellAll,
+                // labelsDAll: labelsDAll,
+              }
+              res.status(200).json({
+                success: true,
+                data: a
+              })
+            }
+          )
+      })
+      .catch(err => {
+        console.error(err)
+        return res.status(500).send({
+          success: false,
+          message: err
+        })
+      })
+  })
+}
