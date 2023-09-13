@@ -186,6 +186,12 @@ export class AnalyticsService {
   carnesProcesadas(id: string, dates){
     return this.http.post(`${this.API_URL}72/${id}`, dates);
   }
+  conteo(id: string, dates){
+    return this.http.post(`${this.API_URL}73/${id}`, dates);
+  }
+  tiempo(id: string, dates){
+    return this.http.post(`${this.API_URL}73/${id}`, dates);
+  }
   enterExit(id: string, dates){
     return this.http.post(`${this.API_URL}59/${id}`, dates);
   }

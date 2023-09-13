@@ -169,6 +169,8 @@ import { AvailabilityComponent } from './online/graphs/availability/availability
 import { TemperatureComponent } from './online/graphs/temperature/temperature.component';
 import { SccComponent } from './online/graphs/scc/scc.component';
 import { CarnesProcesadasComponent } from './online/graphs/carnes-procesadas/carnes-procesadas.component';
+import { ConteoDePersonalComponent } from './online/graphs/conteo-de-personal/conteo-de-personal.component';
+import { TiempoDeProcesamientoComponent } from './online/graphs/tiempo-de-procesamiento/tiempo-de-procesamiento.component';
 
 @NgModule({
   imports: [
@@ -346,6 +348,8 @@ import { CarnesProcesadasComponent } from './online/graphs/carnes-procesadas/car
     TemperatureComponent,
     SccComponent,
     CarnesProcesadasComponent,
+    ConteoDePersonalComponent,
+    TiempoDeProcesamientoComponent,
   ],
   providers: [
     FacesService,

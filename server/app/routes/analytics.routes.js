@@ -2839,4 +2839,9 @@ module.exports = function (app) {
   app.post('/api/analytics/71/:id', [authJwt.isAvailable, authJwt.verifyToken], controller.scc)
 
   app.post('/api/analytics/72/:id', [authJwt.isAvailable, authJwt.verifyToken], controller.carnesProcesadas)
+
+  app.post('/api/analytics/73/:id', [authJwt.isAvailable, authJwt.verifyToken], controller.conteo)
+
+  app.post('/api/analytics/74/:id', [authJwt.isAvailable, authJwt.verifyToken], controller.tiempo)
+
 }
