@@ -25,14 +25,14 @@ exports.getAll = (req, res) => {
   const _sort = Array.isArray(data._sort) ? data._sort[data._sort.length - 1] : data._sort
   const _order = Array.isArray(data._order) ? data._order[data._order.length - 1] : data._order
 
-  jwt.verify(token, process.env.secret, async (err, decoded) => {
+  jwt.verify(token, process.env.secret, async (_err, decoded) => {
     const promise1 = new Promise((resolve, reject) => {
-      db.con().query(`SELECT count(*) as count FROM tickets WHERE ${type} = '${id}';`, (err, resp) => {
+      db.con().query(`SELECT count(*) as count FROM tickets WHERE ${type} = '${id}';`, (_err, resp) => {
         resolve(resp[0].count)
       })
     })
     const promise2 = new Promise((resolve, reject) => {
-      db.con().query(`SELECT type, createdAt, updatedAt, assigned, level, reviewed, assignedBy, cam_name FROM tickets WHERE BINARY ${type} = '${id}' ORDER BY ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, (err, resp) => {
+      db.con().query(`SELECT type, createdAt, updatedAt, assigned, level, reviewed, assignedBy, cam_name FROM tickets WHERE BINARY ${type} = '${id}' ORDER BY ${_sort} ${_order} LIMIT ${limit} OFFSET ${offset};`, (_err, resp) => {
         resolve(resp)
       })
     })
