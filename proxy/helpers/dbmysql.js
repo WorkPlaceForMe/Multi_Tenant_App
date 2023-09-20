@@ -9,7 +9,7 @@ const connection = {
         user: process.env.USERM,
         password: process.env.PASSWORD,
         database: process.env.DB,
-        connectionLimit: 40
+        connectionLimit: 1000
       })
 
       this.pool.on('acquire', function (connection) {

@@ -124,6 +124,7 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
     this.serv.tiempo(this.camera, l).subscribe(
       (res) => {
         this.tiempo = res["data"];
+        console.log(this.tiempo)
         for (var m of this.tiempo.raw) {
           m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/tiempo/' + m['cam_id'] + '/' + m['movie']);
           m["picture"] = this.sanitizer.bypassSecurityTrustUrl(
