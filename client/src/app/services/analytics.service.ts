@@ -190,7 +190,7 @@ export class AnalyticsService {
     return this.http.post(`${this.API_URL}73/${id}`, dates);
   }
   tiempo(id: string, dates){
-    return this.http.post(`${this.API_URL}73/${id}`, dates);
+    return this.http.post(`${this.API_URL}74/${id}`, dates);
   }
   enterExit(id: string, dates){
     return this.http.post(`${this.API_URL}59/${id}`, dates);

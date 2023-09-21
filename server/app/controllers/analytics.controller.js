@@ -9328,7 +9328,7 @@ exports.carnesProcesadas = async (req, res) => {
       await db
         .con()
         .query(
-          `SELECT * from carnesProcesadas WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          `SELECT * from carnesprocesadas WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
           function (err, result) {
             if (err) {
               return res.status(500).json({
@@ -9458,10 +9458,10 @@ exports.carnesProcesadas = async (req, res) => {
                 ':' +
                 se
               v.picture = `${d}_${v.track_id}.jpg`
-              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/carnesProcesadas/${req.params.id}/${v.picture}`
+              v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/carnesprocesadas/${req.params.id}/${v.picture}`
               if (rel.atributes[0].time > 0) {
                 v.clip_path = `${d}_${v.track_id}.mp4`
-                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/carnesProcesadas/${req.params.id}/${v.clip_path}`
+                v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/carnesprocesadas/${req.params.id}/${v.clip_path}`
               }
             }
             const a = {
@@ -9660,6 +9660,7 @@ exports.tiempo = async (req, res) => {
         .query(
           `SELECT * from tiempo WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
           function (err, result) {
+            console.log(`SELECT * FROM tiempo WHERE ${data.type} = '${req.params.id}' AND time >= '${data.start}' AND time <= '${data.end}' ORDER BY time ASC;`);
             if (err) {
               return res.status(500).json({
                 success: false,
