@@ -9795,8 +9795,15 @@ exports.tiempo = async (req, res) => {
                 v.pic_path = `${process.env.my_ip}:${process.env.PORTNODE}/api/pictures/${decoded.id_account}/${decoded.id_branch}/tiempo/${req.params.id}/${v.clip_path}`
               }
             }
+            var date_time_str1 = data.start;
+            var date_time_str2 = data.end;
+            var date_time_obj1 = new Date(date_time_str1);
+            var date_time_obj2 = new Date(date_time_str2);
+            var timeDifferenceMs = date_time_obj2 - date_time_obj1;
+            var timeDifferenceMinutes = timeDifferenceMs / (1000 * 60);
+            var hour=parseInt(timeDifferenceMinutes/60)
             const a = {
-              total: result.length,
+              total: String(hour)+"hr",
               raw: result,
               rel: rel,
               over: ress
