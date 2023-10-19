@@ -9338,7 +9338,15 @@ exports.carnesProcesadas = async (req, res) => {
             }
             const ress = {}
             let cache = ''
+            var uniqueZones = [];
             for (const v of result) {
+              const zoneId = v["zone"];
+              if (zoneId !== undefined && !uniqueZones.includes(zoneId)) {
+                uniqueZones.push([zoneId]);
+              } // finding the num of  unic zones and total zones
+              var total_zones = uniqueZones.length;
+              console.log("num_of_zone =", uniqueZones);
+              console.log("total_zones =", total_zones);
               if (cache == '') {
                 cache =
                   v.time.getFullYear() +
@@ -9464,8 +9472,26 @@ exports.carnesProcesadas = async (req, res) => {
                 v.pic_path = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/carnesprocesadas/${req.params.id}/${v.clip_path}`
               }
             }
+            var sart=uniqueZones.sort();//zones are sorted here
+            const counts = {};// count each zone like zoneA:2,zoneD:5 like this
+            for (let i = 0; i < sart.length; i++) {
+              const value = sart[i];
+              if (counts[value]) {
+                counts[value]++;
+              } else {
+                counts[value] = 1;
+              }
+            }
+            var li=[]// unic zone list[1,2,3,4]
+            var uniqueList = Array.from(new Set(uniqueZones.map(item => item[0])));
+            for (const list1 of uniqueList){
+              li.push([list1])//uniqueZones.push([zoneId]);
+            }
             const a = {
               total: result.length,
+              zones:sart,
+              count:counts,
+              uniczones:li.sort(),
               raw: result,
               rel: rel,
               over: ress
@@ -9655,12 +9681,22 @@ exports.tiempo = async (req, res) => {
         camera_id: req.params.id
       }
     }).then(async rel => {
+      const count = await Relation.count({
+        where: {
+          algo_id: 74,
+          camera_id: req.params.id
+        }
+      });
+      const array = [];
+      for(let i=1; i<=count; i++){
+        array.push([i])
+      }
       await db
         .con()
         .query(
-          `SELECT * from tiempo WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          `SELECT * from meats WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
           function (err, result) {
-            console.log(`SELECT * FROM tiempo WHERE ${data.type} = '${req.params.id}' AND time >= '${data.start}' AND time <= '${data.end}' ORDER BY time ASC;`);
+
             if (err) {
               return res.status(500).json({
                 success: false,
@@ -9669,7 +9705,14 @@ exports.tiempo = async (req, res) => {
             }
             const ress = {}
             let cache = ''
+            var uniqueZones = [];
             for (const v of result) {
+              const zoneId = v["zone"];
+              if (zoneId !== undefined && !uniqueZones.includes(zoneId)) {
+                uniqueZones.push([zoneId]);
+              } // finding the num of  unic zones and total zones
+              var total_zones = uniqueZones.length;
+              console.log("total_zones =", total_zones);
               if (cache == '') {
                 cache =
                   v.time.getFullYear() +
@@ -9789,31 +9832,108 @@ exports.tiempo = async (req, res) => {
                 ':' +
                 se
               v.picture = `${d}_${v.track_id}.jpg`
-              v.pic_path = `${process.env.my_ip}:${process.env.PORTNODE}/api/pictures/${decoded.id_account}/${decoded.id_branch}/tiempo/${req.params.id}/${v.picture}`
+              v.pic_path = `${process.env.my_ip}:${process.env.PORTNODE}/api/pictures/${decoded.id_account}/${decoded.id_branch}/meats/${req.params.id}/${v.picture}`
               if (rel.atributes[0].time > 0) {
                 v.clip_path = `${d}_${v.track_id}.mp4`
-                v.pic_path = `${process.env.my_ip}:${process.env.PORTNODE}/api/pictures/${decoded.id_account}/${decoded.id_branch}/tiempo/${req.params.id}/${v.clip_path}`
+                v.pic_path = `${process.env.my_ip}:${process.env.PORTNODE}/api/pictures/${decoded.id_account}/${decoded.id_branch}/meats/${req.params.id}/${v.clip_path}`
               }
             }
-            var date_time_str1 = data.start;
-            var date_time_str2 = data.end;
-            var date_time_obj1 = new Date(date_time_str1);
-            var date_time_obj2 = new Date(date_time_str2);
-            var timeDifferenceMs = date_time_obj2 - date_time_obj1;
-            var timeDifferenceMinutes = timeDifferenceMs / (1000 * 60);
-            var hour=parseInt(timeDifferenceMinutes/60)
-            const a = {
-              total: String(hour)+"hr",
-              raw: result,
-              rel: rel,
-              over: ress
+            var sart=uniqueZones.sort();//zones are sorted here
+            const counts = {};// count each zone like zoneA:2,zoneD:5 like this
+            for (let i = 0; i < sart.length; i++) {
+              const value = sart[i];
+              if (counts[value]) {
+                counts[value]++;
+              } else {
+                counts[value] = 1;
+              }
             }
-            res.status(200).json({
-              success: true,
-              data: a
-            })
+            const hours1 = calculateVal(data.start, data.end)
+            var li=[]// unic zone list[1,2,3,4]
+            var uniqueList = Array.from(new Set(uniqueZones.map(item => item[0])));
+            for (const list1 of uniqueList){
+              li.push([list1])//uniqueZones.push([zoneId]);
+            }
+            var li=[]
+            var uniqueList = Array.from(new Set(uniqueZones.map(item => item[0])));
+            for (const list1 of uniqueList){
+              li.push([list1])//uniqueZones.push([zoneId]);
+            }
+            const sqlQuery = `SELECT * FROM helmet WHERE ${data.type} = '${req.params.id}' AND time >= '${data.start}' AND time <= '${data.end}' ORDER BY time ASC;`
+            // Execute the SQL query
+            db.con().query(sqlQuery, (err, result1) => {
+              if (err) {
+                // Handle any errors here
+                console.error("Error executing the SQL query:", err);
+                res.status(500).json({ success: false, error: "Database error" });
+                return;
+              }
+              // Process the SQL query results
+              var sumdwell = 0;
+              let valu= {}
+              for (const v of result1) {
+                sumdwell += parseInt(v.dwell);
+                if (v.zone != null) {
+                  if (valu[v.zone] === undefined) {
+                    valu[v.zone] = 0
+                  }
+                  valu[v.zone] += parseInt(v.dwell)
+                }
+              }
+              const sqlQuery = `SELECT * FROM helmet_count WHERE ${data.type} = '${req.params.id}' AND time >= '${data.start}' AND time <= '${data.end}' ORDER BY time ASC`;
+              // Execute the SQL query
+              db.con().query(sqlQuery, (err, result2) => {
+                if (err) {
+                  // Handle any errors here
+                  console.error("Error executing the SQL query:", err);
+                  res.status(500).json({ success: false, error: "Database error" });
+                  return;
+                }
+                // Process the SQL query results
+                var sum = 0;
+                for (const v of result2) {
+                  sum += v.count;  
+                }
+                const a = {
+                  reshelmetcount:sum/result2.length,
+                  dwellsum:sumdwell,
+                  eighthouestime:hours1,
+                  length:result.length,
+                  numberofzones:count,
+                  count:counts,
+                  dwellzones:valu,
+                  array:array,
+                  uniczones:li.sort(),
+                  zones:sart,
+                  raw: result,
+                  raw1:result1,
+                  raw2:result2,
+                  rel: rel,
+                  over: ress
+                }
+                res.status(200).json({
+                  success: true,
+                  data: a
+                })
+              }); 
+            });
           }
         )
     })
   })
+  function calculateVal (start, end) {
+    const currentDate = new Date(start)
+    const targetDate = new Date(end)
+    const hoursPerDay = 8
+    let val = 0
+    while (currentDate <= targetDate) {
+      const dayOfWeek = currentDate.getDay()
+      if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+        val++
+      }
+      currentDate.setDate(currentDate.getDate() + 1)
+    }
+    val = val * hoursPerDay
+    return val
+  }
 }

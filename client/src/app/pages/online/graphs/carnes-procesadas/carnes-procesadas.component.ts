@@ -66,6 +66,8 @@ export class CarnesProcesadasComponent implements OnInit , OnDestroy {
   optionsL: any;
   count: number = 0;
   coords = [];
+  uniczones:number;
+  meatcount:number;
 
   ngOnDestroy() {
     if (this.player != undefined) {
@@ -127,6 +129,8 @@ export class CarnesProcesadasComponent implements OnInit , OnDestroy {
     this.serv.carnesProcesadas(this.camera, l).subscribe(
       (res) => {
         this.carnesProcesadas = res["data"];
+        this.uniczones=res['data'].uniczones;
+        this.meatcount=res['data'].count;
         for (var m of this.carnesProcesadas.raw) {
           m["picture"] = this.sanitizer.bypassSecurityTrustUrl(
             api +

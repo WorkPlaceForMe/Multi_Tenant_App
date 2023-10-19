@@ -1,20 +1,57 @@
 <div class="container no-padding">
     <div class="col-md-12 no-padding" style="margin-top: 15px">
       <div class="row justify-content-start">
-        <div class="col-md-3 less-padding">
+        <div class="col-md-2 less-padding">
           <nb-card>
             <nb-card-body class="top-badges">
-              <p class="badge-txt">Total</p>
+              <p class="badge-txt">Promedio de cascos</p>
               <p class="badge-reading">
-                {{ tiempo == undefined ? "None" : tiempo.total }}
+                {{ tiempo == undefined ? "None" : tiempo.reshelmetcount | number: '1.2-3'}}
               </p>
             </nb-card-body>
           </nb-card>
         </div>
-        <div class="col-md-9 less-padding">
+        <div class="col-md-2 less-padding">
+          <nb-card>
+            <nb-card-body class="top-badges" >
+              <p class="badge-txt">Horas totales de trabajo : <span class="badge-reading">
+                {{ tiempo == undefined ? "None" : tiempo.eighthouestime }}
+              </span></p>
+              <p class="badge-txt">Conteo total de carnes : <span class="badge-reading">
+                {{ tiempo == undefined ? "None" : tiempo.length }}
+              </span></p>
+              <div *ngFor="let zone of uniczones let i = index">
+                <p class="badge-txt">Zona{{zone}} :<span *ngFor="let key of meatcount | keyvalue">
+                    <ng-container *ngIf="key.key == zone">
+                      {{ key.value }}
+                    </ng-container>
+                  </span> 
+                </p>
+              </div> 
+            </nb-card-body>
+          </nb-card>
+        </div>
+        <div class="col-md-2 less-padding">
+          <nb-card>
+            <nb-card-body class="top-badges" >
+              <p class="badge-txt">Tiempo total en zona : <span class="badge-reading">
+                {{ tiempo == undefined ? "None" : tiempo.dwellsum }}
+              </span></p>
+              <div *ngFor="let zone of uniczones let i = index">
+                <p class="badge-txt">Zona{{zone}} :<span *ngFor="let key of dwellcount | keyvalue">
+                    <ng-container *ngIf="key.key == zone">
+                      {{ key.value }}
+                    </ng-container>
+                  </span> 
+                </p>
+              </div> 
+            </nb-card-body>
+          </nb-card>
+        </div>
+        <div class="col-md-6 less-padding">
           <nb-card>
             <nb-card-body class="top-badges">
-              <p>Over Time</p>
+              <p>Carnes en el tiempo</p>
               <chart type="line" [data]="dataL" [options]="optionsL"></chart>
             </nb-card-body>
           </nb-card>

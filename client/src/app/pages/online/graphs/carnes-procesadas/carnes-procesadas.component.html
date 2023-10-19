@@ -8,6 +8,14 @@
               <p class="badge-reading">
                 {{ carnesProcesadas == undefined ? "None" : carnesProcesadas.total }}
               </p>
+              <div *ngFor="let zone of uniczones let i = index">
+                <p class="badge-txt">Zone{{zone}} :<span *ngFor="let key of meatcount | keyvalue">
+                    <ng-container *ngIf="key.key == zone">
+                      {{ key.value }}
+                    </ng-container>
+                  </span> 
+                </p>
+              </div>
             </nb-card-body>
           </nb-card>
         </div>

@@ -21,6 +21,7 @@ import { Account } from "../../../../models/Account";
 import { NbDialogRef, NbDialogService } from "@nebular/theme";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { WindowOpenerComponent } from "../window-opener/window-opener.component";
+import { number } from "echarts";
 
 @Component({
   selector: 'ngx-tiempo-de-procesamiento',
@@ -63,7 +64,11 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
   optionsL: any;
   count: number = 0;
   coords = [];
-
+  zonesData: any[] = [];
+  uniczones:any;
+  meatcount:number;
+  resultdata:any;
+  dwellcount:number;
   ngOnDestroy() {
     if (this.player != undefined) {
       this.player.destroy();
@@ -124,7 +129,12 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
     this.serv.tiempo(this.camera, l).subscribe(
       (res) => {
         this.tiempo = res["data"];
-
+        this.zonesData = res["data"].array; // Assign the zonesData from the API response
+        this.resultdata=res['data'].raw;
+        this.dwellcount=res['data'].dwellzones;
+        this.uniczones=res['data'].uniczones;
+        var length = this.uniczones.length;
+        this.meatcount=res['data'].count;
         for (var m of this.tiempo.raw) {
           m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/tiempo/' + m['cam_id'] + '/' + m['movie']);
           m["picture"] = this.sanitizer.bypassSecurityTrustUrl(
@@ -166,6 +176,7 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
         }
         this.source = this.tiempo.raw.slice().sort((a, b) => +new Date(b.time) - +new Date(a.time));
         let labels = [];
+
         for (var o of Object.keys(this.tiempo.over)) {
           o = o + ":00:00";
           labels.push(this.datepipe.transform(o, "yyyy-M-dd HH:mm"));
@@ -273,7 +284,7 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
     noDataMessage: "No data found",
     columns: {
       picture: {
-        title: "PICTURE",
+        title: "Imagen",
         type: "custom",
         filter: false,
         renderComponent: ButtonViewComponentPic,
@@ -281,24 +292,24 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
           instance.save.subscribe((row: string) => {});
         },
       },
-      movie: {
-        title: 'VIDEO',
-        type: 'custom',
-        filter: false,
-        renderComponent: WindowOpenerComponent,
-        onComponentInitFunction(instance) {
-          instance.save.subscribe(row => {
-            alert(`${row.name} saved!`);
-          });
-        },
-      },
+      // movie: {
+      //   title: 'VIDEO',
+      //   type: 'custom',
+      //   filter: false,
+      //   renderComponent: WindowOpenerComponent,
+      //   onComponentInitFunction(instance) {
+      //     instance.save.subscribe(row => {
+      //       alert(`${row.name} saved!`);
+      //     });
+      //   },
+      // },
       time: {
-        title: "TIME",
+        title: "Hora",
         type: "string",
         filter: false,
       },
       camera_name: {
-        title: "CAM",
+        title: "Camara",
         type: "string",
         filter: false,
       },
