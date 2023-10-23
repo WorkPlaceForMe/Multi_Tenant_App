@@ -9688,6 +9688,7 @@ exports.tiempo = async (req, res) => {
         }
       });
       var array1=[]
+      console.log(array1)
       var array2=[]
       var array3=[]
       const array = [];
