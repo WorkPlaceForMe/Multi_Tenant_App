@@ -308,7 +308,7 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
         type: "string",
         filter: false,
       },
-      camera_name: {
+      cam_name: {
         title: "Camara",
         type: "string",
         filter: false,

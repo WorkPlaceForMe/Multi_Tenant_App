@@ -9894,6 +9894,47 @@ exports.tiempo = async (req, res) => {
                 for (const v of result2) {
                   sum += v.count;  
                 }
+                // const mergedData = result.map(item => ({
+                //   ...item,
+                //   ...result1.find(({ id }) => item.id === id),
+                //   ...result2.find(({ id }) => item.id === id)
+                // }));
+                const mergedResults = {};
+                // Iterate through the arrays
+                for (let i = 0; i < result.length; i++) {
+                  const key = `result${result[i].id}`;
+                  if (!mergedResults[key]) {
+                    // If the key doesn't exist, initialize it
+                    mergedResults[key] = {
+                      ...result[i],
+                    };
+                  } else {
+                    // If the key already exists, merge the objects
+                    Object.assign(mergedResults[key], result[i]);
+                  }
+                  // Merge data from result1 and result2 (if available)
+                  if (result1[i]) {
+                    if (!mergedResults[key]) {
+                      mergedResults[key] = {
+                        ...result1[i],
+                      };
+                    } else {
+                      Object.assign(mergedResults[key], result1[i]);
+                    }
+                  }
+                  if (result2[i]) {
+                    if (!mergedResults[key]) {
+                      mergedResults[key] = {
+                        ...result2[i],
+                      };
+                    } else {
+                      Object.assign(mergedResults[key], result2[i]);
+                    }
+                  }
+                }
+                // Convert the mergedResults object into an array
+                const mergedResultsArray = Object.values(mergedResults);
+                console.log(mergedResultsArray,"allmearge result data");
                 const a = {
                   reshelmetcount:sum/result2.length,
                   dwellsum:sumdwell,
@@ -9905,11 +9946,14 @@ exports.tiempo = async (req, res) => {
                   array:array,
                   uniczones:li.sort(),
                   zones:sart,
-                  raw: result,
+                  raw: mergedResultsArray,
+                  raw0:result,
                   raw1:result1,
                   raw2:result2,
                   rel: rel,
+                  love:mergedResultsArray,
                   over: ress
+                  
                 }
                 res.status(200).json({
                   success: true,
