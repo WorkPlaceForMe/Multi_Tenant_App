@@ -9687,10 +9687,7 @@ exports.tiempo = async (req, res) => {
           camera_id: req.params.id
         }
       });
-      var array1=[]
-      console.log(array1)
-      var array2=[]
-      var array3=[]
+      
       const array = [];
       for(let i=1; i<=count; i++){
         array.push([i])
@@ -9700,7 +9697,7 @@ exports.tiempo = async (req, res) => {
         .query(
           `SELECT * from meats WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
           function (err, result) {
-            array1.push(result)
+             
             if (err) {
               return res.status(500).json({
                 success: false,
@@ -9866,7 +9863,7 @@ exports.tiempo = async (req, res) => {
             const sqlQuery = `SELECT * FROM helmet WHERE ${data.type} = '${req.params.id}' AND time >= '${data.start}' AND time <= '${data.end}' ORDER BY time ASC;`
             // Execute the SQL query
             db.con().query(sqlQuery, (err, result1) => {
-              array2.push(result1)
+               
               if (err) {
                 // Handle any errors here
                 console.error("Error executing the SQL query:", err);
@@ -9888,7 +9885,7 @@ exports.tiempo = async (req, res) => {
               const sqlQuery = `SELECT * FROM helmet_count WHERE ${data.type} = '${req.params.id}' AND time >= '${data.start}' AND time <= '${data.end}' ORDER BY time ASC`;
               // Execute the SQL query
               db.con().query(sqlQuery, (err, result2) => {
-                array3.push(result2)
+                
                 if (err) {
                   // Handle any errors here
                   console.error("Error executing the SQL query:", err);
