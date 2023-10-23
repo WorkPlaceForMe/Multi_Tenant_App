@@ -9687,7 +9687,7 @@ exports.tiempo = async (req, res) => {
           camera_id: req.params.id
         }
       });
-      
+
       const array = [];
       for(let i=1; i<=count; i++){
         array.push([i])
@@ -9958,11 +9958,11 @@ exports.tiempo = async (req, res) => {
                   uniczones:li.sort(),
                   zones:sart,
                   raw: mergedResultsArray,
-
+                  raw0:result,
                   raw1:result1,
                   raw2:result2,
                   rel: rel,
-                  mergedata:mergedResultsArray,
+                  
                   allmergedArray:mergedArray,
                   over: ress
                   
