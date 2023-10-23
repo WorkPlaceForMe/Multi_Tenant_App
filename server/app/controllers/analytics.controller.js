@@ -9687,6 +9687,9 @@ exports.tiempo = async (req, res) => {
           camera_id: req.params.id
         }
       });
+      var array1=[]
+      var array2=[]
+      var array3=[]
       const array = [];
       for(let i=1; i<=count; i++){
         array.push([i])
@@ -9696,7 +9699,7 @@ exports.tiempo = async (req, res) => {
         .query(
           `SELECT * from meats WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
           function (err, result) {
-
+            array1.push(result)
             if (err) {
               return res.status(500).json({
                 success: false,
@@ -9862,6 +9865,7 @@ exports.tiempo = async (req, res) => {
             const sqlQuery = `SELECT * FROM helmet WHERE ${data.type} = '${req.params.id}' AND time >= '${data.start}' AND time <= '${data.end}' ORDER BY time ASC;`
             // Execute the SQL query
             db.con().query(sqlQuery, (err, result1) => {
+              array2.push(result1)
               if (err) {
                 // Handle any errors here
                 console.error("Error executing the SQL query:", err);
@@ -9883,6 +9887,7 @@ exports.tiempo = async (req, res) => {
               const sqlQuery = `SELECT * FROM helmet_count WHERE ${data.type} = '${req.params.id}' AND time >= '${data.start}' AND time <= '${data.end}' ORDER BY time ASC`;
               // Execute the SQL query
               db.con().query(sqlQuery, (err, result2) => {
+                array3.push(result2)
                 if (err) {
                   // Handle any errors here
                   console.error("Error executing the SQL query:", err);
@@ -9899,7 +9904,10 @@ exports.tiempo = async (req, res) => {
                 //   ...result1.find(({ id }) => item.id === id),
                 //   ...result2.find(({ id }) => item.id === id)
                 // }));
+                const mergedArray = [...result, ...result1, ...result2];
+                console.log(mergedArray)
                 const mergedResults = {};
+
                 // Iterate through the arrays
                 for (let i = 0; i < result.length; i++) {
                   const key = `result${result[i].id}`;
@@ -9912,7 +9920,8 @@ exports.tiempo = async (req, res) => {
                     // If the key already exists, merge the objects
                     Object.assign(mergedResults[key], result[i]);
                   }
-                  // Merge data from result1 and result2 (if available)
+
+                  // Merge data from result2 and result3 (if available)
                   if (result1[i]) {
                     if (!mergedResults[key]) {
                       mergedResults[key] = {
@@ -9922,6 +9931,7 @@ exports.tiempo = async (req, res) => {
                       Object.assign(mergedResults[key], result1[i]);
                     }
                   }
+
                   if (result2[i]) {
                     if (!mergedResults[key]) {
                       mergedResults[key] = {
@@ -9932,8 +9942,11 @@ exports.tiempo = async (req, res) => {
                     }
                   }
                 }
+                
+
                 // Convert the mergedResults object into an array
                 const mergedResultsArray = Object.values(mergedResults);
+
                 console.log(mergedResultsArray,"allmearge result data");
                 const a = {
                   reshelmetcount:sum/result2.length,
@@ -9947,11 +9960,12 @@ exports.tiempo = async (req, res) => {
                   uniczones:li.sort(),
                   zones:sart,
                   raw: mergedResultsArray,
-                  raw0:result,
+
                   raw1:result1,
                   raw2:result2,
                   rel: rel,
-                  love:mergedResultsArray,
+                  mergedata:mergedResultsArray,
+                  allmergedArray:mergedArray,
                   over: ress
                   
                 }
