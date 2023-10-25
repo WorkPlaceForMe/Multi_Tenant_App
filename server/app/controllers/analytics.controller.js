@@ -9896,15 +9896,15 @@ exports.tiempo = async (req, res) => {
                 }
               }
               var helmetsart = helmetuniqueZones.sort();//zones are sorted here
-              const hcounts = {};// count each zone like zoneA:2,zoneD:5 like this
-              for (let i = 0; i < helmetsart.length; i++) {
-                const value = helmetsart[i];
-                if (hcounts[value]) {
-                  hcounts[value]++;
-                } else {
-                  hcounts[value] = 1;
-                }
-              }
+              // const hcounts = {};// count each zone like zoneA:2,zoneD:5 like this
+              // for (let i = 0; i < helmetsart.length; i++) {
+              //   const value = helmetsart[i];
+              //   if (hcounts[value]) {
+              //     hcounts[value]++;
+              //   } else {
+              //     hcounts[value] = 1;
+              //   }
+              // }
               var hli = []// unic zone list[1,2,3,4]
               var huniqueList = Array.from(new Set(helmetuniqueZones.map(item => item[0])));
               for (const list1 of huniqueList) {
@@ -9986,7 +9986,7 @@ exports.tiempo = async (req, res) => {
                   length:result.length,
                   numberofzones:count,
                   count:counts,
-                  hcount:hcounts,
+                  // hcount:hcounts,
                   dwellzones:valu,
                   array:array,
                   uniczones:li.sort(),

@@ -38,7 +38,7 @@
                 {{ tiempo == undefined ? "None" : tiempo.dwellsum }}
               </span></p>
               <div *ngFor="let zone of helmetzones let i = index">
-                <p class="badge-txt">Zona{{zone}} :<span *ngFor="let key of helmetcountzones | keyvalue">
+                <p class="badge-txt">Zona{{zone}} :<span *ngFor="let key of  dwellzones | keyvalue">
                     <ng-container *ngIf="key.key == zone">
                       {{ key.value }}
                     </ng-container>
