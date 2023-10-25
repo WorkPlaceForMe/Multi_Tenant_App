@@ -9874,6 +9874,7 @@ exports.tiempo = async (req, res) => {
               var sumdwell = 0;
               let valu= {}
               for (const v of result1) {
+                v.pic_path = `${process.env.my_ip}:${process.env.PORTNODE}/api/pictures/${decoded.id_account}/${decoded.id_branch}/meats/${req.params.id}/${v.picture}`
                 sumdwell += parseInt(v.dwell);
                 if (v.zone != null) {
                   if (valu[v.zone] === undefined) {
@@ -9882,6 +9883,7 @@ exports.tiempo = async (req, res) => {
                   valu[v.zone] += parseInt(v.dwell)
                 }
               }
+              console.log(valu,'alex value')
               const sqlQuery = `SELECT * FROM helmet_count WHERE ${data.type} = '${req.params.id}' AND time >= '${data.start}' AND time <= '${data.end}' ORDER BY time ASC`;
               // Execute the SQL query
               db.con().query(sqlQuery, (err, result2) => {
@@ -9895,6 +9897,7 @@ exports.tiempo = async (req, res) => {
                 // Process the SQL query results
                 var sum = 0;
                 for (const v of result2) {
+                  v.pic_path = `${process.env.my_ip}:${process.env.PORTNODE}/api/pictures/${decoded.id_account}/${decoded.id_branch}/meats/${req.params.id}/${v.picture}`
                   sum += v.count;  
                 }
                 // const mergedData = result.map(item => ({

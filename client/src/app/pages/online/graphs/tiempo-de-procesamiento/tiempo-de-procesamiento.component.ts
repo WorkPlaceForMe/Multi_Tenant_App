@@ -190,7 +190,7 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
             labels: labels,
             datasets: [
               {
-                label: "Hands Over Time",
+                label: "Carnes en el tiempo",
                 backgroundColor: NbColorHelper.hexToRgbA(colors.primary, 0.3),
                 data: Object.values(this.tiempo.over),
                 borderColor: colors.primary,
