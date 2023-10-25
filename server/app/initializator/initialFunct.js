@@ -859,6 +859,14 @@ exports.initial = async function () {
   } catch (err) {
     if (err.name !== 'SequelizeUniqueConstraintError') console.error(err.name)
   }
+  try{
+    await algo.create({
+      id: 74,
+      name: 'Analiticas Agrosuper'
+    })
+  } catch (err) {
+    if (err.name !== 'SequelizeUniqueConstraintError') console.error(err.name)
+  }
   // await algo.create({
   //   id: 68,
   //   name: 'Meat / Ham & Cheese'
