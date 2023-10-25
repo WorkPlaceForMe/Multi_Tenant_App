@@ -143,10 +143,10 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
               this.now_user["id_account"] +
               "/" +
               m["id_branch"] +
-              "/tiempo/" +
+              "/meats/" +
               m["cam_id"] +
               "/" +
-              m["picture"]
+              m["id"] + '.jpg'
           );
           m["clip_path"] =
             api +
