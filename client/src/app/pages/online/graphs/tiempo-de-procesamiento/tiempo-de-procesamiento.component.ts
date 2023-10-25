@@ -160,7 +160,7 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
             "/tiempo/" +
             m["cam_id"] +
             "/" +
-            m["clip_path"];
+           m["id"] + '.jpg'
           m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss");
           switch (m["severity"]) {
             case "0": {
