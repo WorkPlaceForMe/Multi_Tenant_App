@@ -9883,7 +9883,7 @@ exports.tiempo = async (req, res) => {
                   valu[v.zone] += parseInt(v.dwell)
                 }
               }
-              console.log(valu,'alex value')
+              console.log(valu,'alex sir value')
               const sqlQuery = `SELECT * FROM helmet_count WHERE ${data.type} = '${req.params.id}' AND time >= '${data.start}' AND time <= '${data.end}' ORDER BY time ASC`;
               // Execute the SQL query
               db.con().query(sqlQuery, (err, result2) => {
