@@ -141,7 +141,7 @@ export class CarnesProcesadasComponent implements OnInit , OnDestroy {
               "/carnesProcesadas/" +
               m["cam_id"] +
               "/" +
-              m["picture"]
+              m["id"] + '.jpg'
           );
           m["clip_path"] =
             api +
