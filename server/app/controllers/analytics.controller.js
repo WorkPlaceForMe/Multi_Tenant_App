@@ -9687,6 +9687,7 @@ exports.tiempo = async (req, res) => {
           camera_id: req.params.id
         }
       });
+      console.log(count,'meeeeeeeeeee')
 
       const array = [];
       for(let i=1; i<=count; i++){
@@ -9985,6 +9986,7 @@ exports.tiempo = async (req, res) => {
                   length:result.length,
                   numberofzones:count,
                   count:counts,
+                  hcount:hcounts,
                   dwellzones:valu,
                   array:array,
                   uniczones:li.sort(),

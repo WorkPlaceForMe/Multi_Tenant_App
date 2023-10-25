@@ -70,6 +70,7 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
   resultdata:any;
   dwellcount:number;
   helmetzones:number;
+  helmetcountzones:number;
   ngOnDestroy() {
     if (this.player != undefined) {
       this.player.destroy();
@@ -135,9 +136,13 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
         this.dwellcount=res['data'].dwellzones;
         this.uniczones=res['data'].uniczones;
         this.helmetzones=res['data'].helmetzone;
+        this.helmetcountzones=res['data'].hcount
+        console.log(this.helmetcountzones,'hhhhhhh')
         console.log(this.helmetzones)
         var length = this.uniczones.length;
         this.meatcount=res['data'].count;
+        console.log(this.meatcount)
+
         for (var m of this.tiempo.raw) {
           m['videoClip']  = this.sanitizer.bypassSecurityTrustUrl(api + '/pictures/' + this.now_user['id_account'] + '/' + m['id_branch'] + '/tiempo/' + m['cam_id'] + '/' + m['movie']);
           m["picture"] = this.sanitizer.bypassSecurityTrustUrl(
