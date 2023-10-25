@@ -69,6 +69,7 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
   meatcount:number;
   resultdata:any;
   dwellcount:number;
+  helmetzones:number;
   ngOnDestroy() {
     if (this.player != undefined) {
       this.player.destroy();
@@ -133,6 +134,8 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
         this.resultdata=res['data'].raw;
         this.dwellcount=res['data'].dwellzones;
         this.uniczones=res['data'].uniczones;
+        this.helmetzones=res['data'].helmetzone;
+        console.log(this.helmetzones)
         var length = this.uniczones.length;
         this.meatcount=res['data'].count;
         for (var m of this.tiempo.raw) {

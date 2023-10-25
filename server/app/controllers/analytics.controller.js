@@ -9714,6 +9714,7 @@ exports.tiempo = async (req, res) => {
               } // finding the num of  unic zones and total zones
               var total_zones = uniqueZones.length;
               console.log("total_zones =", total_zones);
+              console.log(uniqueZones,'first meet zone count')
               if (cache == '') {
                 cache =
                   v.time.getFullYear() +
@@ -9871,9 +9872,19 @@ exports.tiempo = async (req, res) => {
                 return;
               }
               // Process the SQL query results
+              
               var sumdwell = 0;
               let valu= {}
+              var helmetuniqueZones = [];
               for (const v of result1) {
+                const zoneId = v["zone"];
+                if (zoneId !== undefined && !helmetuniqueZones.includes(zoneId)) {
+                  helmetuniqueZones.push([zoneId]);
+                } // finding the num of  unic zones and total zones
+                var total_zones = helmetuniqueZones.length;
+                console.log("total_zones =", total_zones);
+                console.log(helmetuniqueZones, 'first helmet zone count')
+
                 v.pic_path = `${process.env.my_ip}:${process.env.PORTNODE}/api/pictures/${decoded.id_account}/${decoded.id_branch}/meats/${req.params.id}/${v.id}.jpg`
                 sumdwell += parseInt(v.dwell);
                 if (v.zone != null) {
@@ -9883,10 +9894,28 @@ exports.tiempo = async (req, res) => {
                   valu[v.zone] += parseInt(v.dwell)
                 }
               }
-              console.log(valu,'alex sir value')
+              var helmetsart = helmetuniqueZones.sort();//zones are sorted here
+              const hcounts = {};// count each zone like zoneA:2,zoneD:5 like this
+              for (let i = 0; i < helmetsart.length; i++) {
+                const value = helmetsart[i];
+                if (hcounts[value]) {
+                  hcounts[value]++;
+                } else {
+                  hcounts[value] = 1;
+                }
+              }
+              var hli = []// unic zone list[1,2,3,4]
+              var huniqueList = Array.from(new Set(helmetuniqueZones.map(item => item[0])));
+              for (const list1 of huniqueList) {
+                hli.push([list1])//uniqueZones.push([zoneId]);
+              }
+               
+              console.log(hli.sort(),'helmet unic final zone')
+              
               const sqlQuery = `SELECT * FROM helmet_count WHERE ${data.type} = '${req.params.id}' AND time >= '${data.start}' AND time <= '${data.end}' ORDER BY time ASC`;
               // Execute the SQL query
               db.con().query(sqlQuery, (err, result2) => {
+                 
                 
                 if (err) {
                   // Handle any errors here
@@ -9959,6 +9988,7 @@ exports.tiempo = async (req, res) => {
                   dwellzones:valu,
                   array:array,
                   uniczones:li.sort(),
+                  helmetzone:hli.sort(),
                   zones:sart,
                   raw: mergedResultsArray,
                   raw0:result,
