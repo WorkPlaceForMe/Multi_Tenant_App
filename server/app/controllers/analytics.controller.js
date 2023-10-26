@@ -9836,6 +9836,7 @@ exports.tiempo = async (req, res) => {
                 se
               v.picture = `${d}_${v.track_id}.jpg`
               v.pic_path = `${process.env.my_ip}:${process.env.PORTNODE}/api/pictures/${decoded.id_account}/${decoded.id_branch}/meats/${req.params.id}/${v.id}.jpg`
+              v.type='Carne detectada'
               if (rel.atributes[0].time > 0) {
                 v.clip_path = `${d}_${v.track_id}.mp4`
                 v.pic_path = `${process.env.my_ip}:${process.env.PORTNODE}/api/pictures/${decoded.id_account}/${decoded.id_branch}/meats/${req.params.id}/${v.clip_path}`
@@ -9887,6 +9888,7 @@ exports.tiempo = async (req, res) => {
                 console.log(helmetuniqueZones, 'first helmet zone count')
 
                 v.pic_path = `${process.env.my_ip}:${process.env.PORTNODE}/api/pictures/${decoded.id_account}/${decoded.id_branch}/meats/${req.params.id}/${v.id}.jpg`
+                v.type="Tiempo en zona";
                 sumdwell += parseInt(v.dwell);
                 if (v.zone != null) {
                   if (valu[v.zone] === undefined) {
@@ -9928,6 +9930,7 @@ exports.tiempo = async (req, res) => {
                 var sum = 0;
                 for (const v of result2) {
                   v.pic_path = `${process.env.my_ip}:${process.env.PORTNODE}/api/pictures/${decoded.id_account}/${decoded.id_branch}/meats/${req.params.id}/${v.id}.jpg`
+                  v.type='Cantidad de personas'
                   sum += v.count;  
                 }
                 // const mergedData = result.map(item => ({
