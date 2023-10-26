@@ -95,18 +95,19 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
 
   ngOnInit(): void {
     this.now_user = JSON.parse(localStorage.getItem("now_user"));
-    var time = new Date();
-    this.timezone = time
-      .toString()
-      .match(/[\+,\-](\d{4})\s/g)[0]
-      .split(" ")[0]
-      .slice(0, 3);
-    this.timezone = parseInt(this.timezone);
-    let p = "";
-    if (this.timezone > 0) {
-      p = "+";
-    }
-    this.timezone = p + JSON.stringify(this.timezone) + "00";
+    this.timezone = JSON.parse(localStorage.getItem("info")).timezone
+    // var time = new Date();
+    // this.timezone = time
+    //   .toString()
+    //   .match(/[\+,\-](\d{4})\s/g)[0]
+    //   .split(" ")[0]
+    //   .slice(0, 3);
+    // this.timezone = parseInt(this.timezone);
+    // let p = "";
+    // if (this.timezone > 0) {
+    //   p = "+";
+    // }
+    // this.timezone = p + JSON.stringify(this.timezone) + "00";
     let type;
     if (this.now_user.id_branch != "0000") {
       type = "cam_id";
@@ -156,6 +157,7 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
               "/" +
               m["id"] + '.jpg'
           );
+          console.log(m.id,'ididididididid')
           m["clip_path"] =
             api +
             "/pictures/" +
@@ -166,7 +168,7 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
             m["cam_id"] +
             "/" +
            m["id"] + '.jpg'
-          m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss");
+          m["time"] = this.datepipe.transform(m["time"], "yyyy-M-dd HH:mm:ss",this.timezone);
           switch (m["severity"]) {
             case "0": {
               m["severity"] = "Low";
@@ -187,7 +189,7 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
 
         for (var o of Object.keys(this.tiempo.over)) {
           o = o + ":00:00";
-          labels.push(this.datepipe.transform(o, "yyyy-M-dd HH:mm"));
+          labels.push(this.datepipe.transform(o, "yyyy-M-dd HH:mm",this.timezone));
         }
 
         this.themeSubscription = this.theme.getJsTheme().subscribe((config) => {

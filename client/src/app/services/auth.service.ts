@@ -8,6 +8,7 @@ const AUTH_API = `${api}/auth/`;
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'now_user';
+const INFO_KEY = 'info';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -46,6 +47,11 @@ export class AuthService {
     return this.http.post(AUTH_API + 'signinMs', {
       data: data
     }, httpOptions);
+  }
+   
+  public saveInfo(info) {
+    localStorage.removeItem(INFO_KEY)
+    localStorage.setItem(INFO_KEY , JSON.stringify(info))
   }
 
   register(user,type): Observable<any> {
