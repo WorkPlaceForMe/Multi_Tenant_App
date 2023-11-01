@@ -1836,10 +1836,10 @@ exports.queue = async (req, res) => {
               v.vid = `${process.env.app_url}/api/pictures/${decoded.id_account}/${decoded.id_branch}/queue/${req.params.id}/${v.movie}`
               if(v.queuing == 0){
                 if (
-                  cache < v.start_time.getTime()
+                  cache < v.time.getTime()
                 ) {
                   while (
-                    cache < v.start_time.getTime()
+                    cache < v.time.getTime()
                   ) {
                     cache = new Date(cache)
                     dataPeople[cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
@@ -1851,7 +1851,7 @@ exports.queue = async (req, res) => {
                   }
                 }
                 if (
-                  cache >= v.start_time.getTime()
+                  cache >= v.time.getTime()
                 ) {
                   let t = cache
                   t -= range
@@ -1859,7 +1859,7 @@ exports.queue = async (req, res) => {
                   dataPeople[t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()] = (dataPeople[ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1    
                   dataPeopleAll[v.qid - 1][t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()] = (dataPeopleAll[v.qid - 1][ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1     
                 }
-                labelPeople.push(v.start_time)
+                labelPeople.push(v.time)
                 cou++
               }
               if(cam_name === ''){
@@ -9688,6 +9688,29 @@ exports.tiempo = async (req, res) => {
         }
       });
       console.log(count,'meeeeeeeeeee')
+      const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
+      let cache = '', range, cou = 0, start, end
+      if(diff === 1){
+        range = 30 * 60 * 1000
+        start = new Date(data.start).getTime() + 7 * 60 * 60 * 1000
+        start = JSON.stringify(new Date(start))
+        start = start.substring(1, start.length - 1);
+        end =  new Date(data.end).getTime() - 1.5 * 60 * 60 * 1000
+        end = JSON.stringify(new Date(end))
+        end = end.substring(1, end.length - 1);
+      }else if(diff >= 1 && diff <= 3){
+        range = 2 * 60 * 60 * 1000
+      }else if(diff >= 3 && diff <= 7){
+        range = 4 * 60 * 60 * 1000
+      }else if(diff >= 7 && diff <= 14){
+        range = 8 * 60 * 60 * 1000
+      }else if(diff >= 14 && diff <= 32){
+        range = 24 * 60 * 60 * 1000
+      }
+      if(start === undefined){
+        start = data.start
+        end = data.end
+      }
 
       const array = [];
       for(let i=1; i<=count; i++){
@@ -9706,7 +9729,7 @@ exports.tiempo = async (req, res) => {
               })
             }
             const ress = {}
-            let cache = ''
+            let cache = new Date(start).getTime()
             var uniqueZones = [];
             for (const v of result) {
               const zoneId = v["zone"];
@@ -9716,99 +9739,99 @@ exports.tiempo = async (req, res) => {
               var total_zones = uniqueZones.length;
               console.log("total_zones =", total_zones);
               console.log(uniqueZones,'first meet zone count')
-              if (cache == '') {
-                cache =
-                  v.time.getFullYear() +
-                  '-' +
-                  (v.time.getMonth() + 1) +
-                  '-' +
-                  v.time.getDate() +
-                  ' ' +
-                  v.time.getHours()
-              }
+              //if (cache == '') {
+              //   cache =
+              //     v.time.getFullYear() +
+              //     '-' +
+              //     (v.time.getMonth() + 1) +
+              //     '-' +
+              //     v.time.getDate() +
+              //     ' ' +
+              //     v.time.getHours()
+              //}
 
-              if (
-                cache !=
-                v.time.getFullYear() +
-                  '-' +
-                  (v.time.getMonth() + 1) +
-                  '-' +
-                  v.time.getDate() +
-                  ' ' +
-                  v.time.getHours()
-              ) {
-                while (
-                  cache !=
-                  v.time.getFullYear() +
-                    '-' +
-                    (v.time.getMonth() + 1) +
-                    '-' +
-                    v.time.getDate() +
-                    ' ' +
-                    v.time.getHours()
-                ) {
-                  let t = new Date(cache + ':00:00').getTime()
-                  // Add one hours to date
-                  t += 60 * 60 * 1000
-                  cache = new Date(t)
-                  ress[
-                    cache.getFullYear() +
-                      '-' +
-                      (cache.getMonth() + 1) +
-                      '-' +
-                      cache.getDate() +
-                      ' ' +
-                      cache.getHours()
-                  ] =
-                    ress[
-                      v.time.getFullYear() +
-                        '-' +
-                        (v.time.getMonth() + 1) +
-                        '-' +
-                        v.time.getDate() +
-                        ' ' +
-                        v.time.getHours()
-                    ] + 1 || 1
+              // if (
+              //   cache !=
+              //   v.time.getFullYear() +
+              //     '-' +
+              //     (v.time.getMonth() + 1) +
+              //     '-' +
+              //     v.time.getDate() +
+              //     ' ' +
+              //     v.time.getHours()
+              // ) {
+              //   while (
+              //     cache !=
+              //     v.time.getFullYear() +
+              //       '-' +
+              //       (v.time.getMonth() + 1) +
+              //       '-' +
+              //       v.time.getDate() +
+              //       ' ' +
+              //       v.time.getHours()
+              //   ) {
+              //     let t = new Date(cache + ':00:00').getTime()
+              //     // Add one hours to date
+              //     t += 60 * 60 * 1000
+              //     cache = new Date(t)
+              //     ress[
+              //       cache.getFullYear() +
+              //         '-' +
+              //         (cache.getMonth() + 1) +
+              //         '-' +
+              //         cache.getDate() +
+              //         ' ' +
+              //         cache.getHours()
+              //     ] =
+              //       ress[
+              //         v.time.getFullYear() +
+              //           '-' +
+              //           (v.time.getMonth() + 1) +
+              //           '-' +
+              //           v.time.getDate() +
+              //           ' ' +
+              //           v.time.getHours()
+              //       ] + 1 || 1
 
-                  cache =
-                    cache.getFullYear() +
-                    '-' +
-                    (cache.getMonth() + 1) +
-                    '-' +
-                    cache.getDate() +
-                    ' ' +
-                    cache.getHours()
-                }
-              }
-              if (
-                cache ==
-                v.time.getFullYear() +
-                  '-' +
-                  (v.time.getMonth() + 1) +
-                  '-' +
-                  v.time.getDate() +
-                  ' ' +
-                  v.time.getHours()
-              ) {
-                ress[
-                  v.time.getFullYear() +
-                    '-' +
-                    (v.time.getMonth() + 1) +
-                    '-' +
-                    v.time.getDate() +
-                    ' ' +
-                    v.time.getHours()
-                ] =
-                  ress[
-                    v.time.getFullYear() +
-                      '-' +
-                      (v.time.getMonth() + 1) +
-                      '-' +
-                      v.time.getDate() +
-                      ' ' +
-                      v.time.getHours()
-                  ] + 1 || 1
-              }
+              //     cache =
+              //       cache.getFullYear() +
+              //       '-' +
+              //       (cache.getMonth() + 1) +
+              //       '-' +
+              //       cache.getDate() +
+              //       ' ' +
+              //       cache.getHours()
+              //   }
+              // }
+              // if (
+              //   cache ==
+              //   v.time.getFullYear() +
+              //     '-' +
+              //     (v.time.getMonth() + 1) +
+              //     '-' +
+              //     v.time.getDate() +
+              //     ' ' +
+              //     v.time.getHours()
+              // ) {
+              //   ress[
+              //     v.time.getFullYear() +
+              //       '-' +
+              //       (v.time.getMonth() + 1) +
+              //       '-' +
+              //       v.time.getDate() +
+              //       ' ' +
+              //       v.time.getHours()
+              //   ] =
+              //     ress[
+              //       v.time.getFullYear() +
+              //         '-' +
+              //         (v.time.getMonth() + 1) +
+              //         '-' +
+              //         v.time.getDate() +
+              //         ' ' +
+              //         v.time.getHours()
+              //     ] + 1 || 1
+              // }
               let d = v.time
               let se = d.getSeconds()
               let mi = d.getMinutes()
@@ -9841,6 +9864,43 @@ exports.tiempo = async (req, res) => {
                 v.clip_path = `${d}_${v.track_id}.mp4`
                 v.pic_path = `${process.env.my_ip}:${process.env.PORTNODE}/api/pictures/${decoded.id_account}/${decoded.id_branch}/meats/${req.params.id}/${v.clip_path}`
               }
+              //----------------------
+              if (
+                cache < v.time.getTime()
+              ) {
+                while (
+                  cache < v.time.getTime()
+                ) {
+                  cache = new Date(cache)
+                  ress[cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                  // for(let e = 0; e < count; e++){
+                  //   dataPeopleAll[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+                  // }
+                  cache = cache.getTime()
+                  cache += range
+                }
+              }
+              if (
+                cache >= v.time.getTime()
+              ) {
+                let t = cache
+                t -= range
+                t = new Date(t)
+                ress[t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()] = (ress[ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1    
+                //dataPeopleAll[v.qid - 1][t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()] = (dataPeopleAll[v.qid - 1][ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1     
+              }
+
+            }
+            while (
+              cache <= new Date(end)
+            ) {
+              cache = new Date(cache)
+              ress[cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+              // for(let e = 0; e < count; e++){
+              //   dataPeopleAll[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
+              // }
+              cache = cache.getTime()
+              cache += range
             }
             var sart=uniqueZones.sort();//zones are sorted here
             const counts = {};// count each zone like zoneA:2,zoneD:5 like this
