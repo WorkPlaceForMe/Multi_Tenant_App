@@ -571,6 +571,12 @@ exports.configs = (req, res) => {
               if (a.id == 68) {
                 stuff.push(inf[10])
               }
+               
+              if (a.id == 74) {
+                stuff.push(inf[11])
+
+              }
+              console.log(stuff,'ssssssssssssssssssssssssssssssss')
               for (var rela of rels) {
                 if (rela.algo_id == a.id) {
                   if (rela.atributes != JSON.stringify(stuff)) {

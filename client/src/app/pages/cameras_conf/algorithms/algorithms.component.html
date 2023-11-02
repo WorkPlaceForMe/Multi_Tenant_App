@@ -452,6 +452,26 @@
               </nb-card-body>
             </nb-card>
           </div> -->
+          <div *ngIf="algos[74]['activated']==true && algos[74]!=undefined">
+            <nb-card style="min-width: 12rem; max-width: 14rem; min-height: 30px;">
+              <nb-card-header align='center'>
+                Configuracion de rango
+              </nb-card-header>
+              <nb-card-body>
+                <div class="form-group">
+                  <div align='center'>
+                    Rango Superior<br>
+                    <input type="number" [(ngModel)]="meets['high']" placeholder="1.0" style ="width: auto;" step="0.01" min="0" max="50">
+                  </div>
+                  <br>
+                  <div align='center'>
+                    Rango Inferior<br>
+                    <input type="number" [(ngModel)]="meets['low']" placeholder="1.0" style ="width: auto;" step="0.01" min="0" max="50">
+                  </div>
+                </div>
+              </nb-card-body>
+            </nb-card>
+          </div>
         </div>
       </div>
     </div>

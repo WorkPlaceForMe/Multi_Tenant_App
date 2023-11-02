@@ -249,9 +249,11 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
                     display: true,
                     color: chartjs.axisLineColor,
                   },
-                  ticks: {
-                    fontColor: chartjs.textColor,
-                  },
+                    ticks: {
+                      fontColor: chartjs.textColor,
+                      beginAtZero: true,
+                      stepSize: 1
+                    },
                 },
               ],
             },

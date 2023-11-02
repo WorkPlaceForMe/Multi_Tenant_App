@@ -99,6 +99,11 @@ export class AlgorithmsComponent implements OnInit {
                       } else if (this.relations[e]['algo_id'] == 32) {
                         this.parkingTime = this.relations[e]['atributes'][1];
                       }
+
+                      else if (this.relations[e]['algo_id'] == 74) {
+                        console.log(this.relations[e]['atributes'],'atatatatatattata')
+                        this.meets = this.relations[e]['atributes'][1];
+                      }
                     }
                   }
 
@@ -227,6 +232,10 @@ export class AlgorithmsComponent implements OnInit {
   showU2: boolean;
   res_width: number;
   res_height: number;
+  meets:any={
+    high: 10,
+    low: 1
+  };
   private canvas;
   private ctx;
   remaining: any = {
@@ -458,7 +467,7 @@ export class AlgorithmsComponent implements OnInit {
   saave() {
     const data = [];
     const id = this.activatedRoute.snapshot.params.uuid;
-    data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime,this.queue, this.hamAndCheese);
+    data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime,this.queue, this.hamAndCheese,this.meets);
     this.facesService.sendAlgs(id, data).subscribe(
       res => {
         // this.router.navigateByUrl(`/pages/cameras/algorithms/${id}`)
@@ -475,7 +484,7 @@ export class AlgorithmsComponent implements OnInit {
   nSave() {
     const data = [];
     const id = this.activatedRoute.snapshot.params.uuid;
-    data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime, this.queue, this.hamAndCheese);
+    data.push(this.algos, this.climb, this.loiteringTime, this.aod, this.speed, this.unwanted, this.dac, this.quantity, this.parkingTime, this.queue, this.hamAndCheese,this.meets);
     this.facesService.sendAlgs(id, data).subscribe(
       res => {},
       err => console.log(err),

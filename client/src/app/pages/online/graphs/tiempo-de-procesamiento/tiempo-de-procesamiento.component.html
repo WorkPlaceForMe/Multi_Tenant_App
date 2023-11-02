@@ -8,6 +8,17 @@
               <p class="badge-reading">
                 {{ tiempo == undefined ? "None" : tiempo.reshelmetcount | number: '1.2-3'}}
               </p>
+              <div class="dropdown-divider"></div>
+              <p class="badge-txt">Productividad:</p>
+              <!-- <p class="badge-reading" *ngIf="tiempo.comparison === 'higher'">
+                {{ tiempo == undefined ? "None" : tiempo.meatperhrandavgworker | number: '1.2-3'}}
+              </p> -->
+              <button *ngIf="tiempo.comparison === 'higher'" nbButton outline status="success" size = "small" class="btn-block">{{ tiempo == undefined ? "None" : tiempo.meatperhrandavgworker | number: '1.2-3'}}</button>
+              <button *ngIf="tiempo.comparison === ''" nbButton outline status="primary" size = "small" class="btn-block">{{ tiempo == undefined ? "None" : tiempo.meatperhrandavgworker | number: '1.2-3'}}</button>
+              <button *ngIf="tiempo.comparison === 'lower'" nbButton outline status="danger" size = "small" class="btn-block">{{ tiempo == undefined ? "None" : tiempo.meatperhrandavgworker | number: '1.2-3'}}</button>
+              <!-- <p class="badge-reading" *ngIf="tiempo.comparison === 'lower'">
+                {{ tiempo == undefined ? "None" : tiempo.meatperhrandavgworker | number: '1.2-3'}}
+              </p> -->
             </nb-card-body>
           </nb-card>
         </div>

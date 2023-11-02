@@ -9674,6 +9674,8 @@ exports.conteo = async (req, res) => {
 exports.tiempo = async (req, res) => {
   const token = req.headers['x-access-token']
   const data = req.body
+  // console.log(data)
+  const thresh = 5
   jwt.verify(token, process.env.secret, async (err, decoded) => {
     Relation.findOne({
       where: {
@@ -9681,13 +9683,17 @@ exports.tiempo = async (req, res) => {
         camera_id: req.params.id
       }
     }).then(async rel => {
+      // console.log(rel,'relation')
+      const reationvalue=rel.atributes[1]
+      // console.log(rel.atributes[1],'vvvvvvvvvvvvvvvvvvvvvvvvvvv')
+      console.log(reationvalue)
       const count = await Relation.count({
         where: {
           algo_id: 74,
           camera_id: req.params.id
         }
       });
-      console.log(count,'meeeeeeeeeee')
+      // console.log(count,'meeeeeeeeeee')
       const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
       let cache = '', range, cou = 0, start, end
       if(diff === 1){
@@ -9730,15 +9736,15 @@ exports.tiempo = async (req, res) => {
             }
             const ress = {}
             let cache = new Date(start).getTime()
-            var uniqueZones = [];
+            let uniqueZones = [];
             for (const v of result) {
               const zoneId = v["zone"];
               if (zoneId !== undefined && !uniqueZones.includes(zoneId)) {
                 uniqueZones.push([zoneId]);
               } // finding the num of  unic zones and total zones
-              var total_zones = uniqueZones.length;
-              console.log("total_zones =", total_zones);
-              console.log(uniqueZones,'first meet zone count')
+              let total_zones = uniqueZones.length;
+              // console.log("total_zones =", total_zones);
+              // console.log(uniqueZones,'first meet zone count')
               //if (cache == '') {
               //   cache =
               //     v.time.getFullYear() +
@@ -9748,7 +9754,7 @@ exports.tiempo = async (req, res) => {
               //     v.time.getDate() +
               //     ' ' +
               //     v.time.getHours()
-              //}
+              // }
 
               // if (
               //   cache !=
@@ -9987,11 +9993,21 @@ exports.tiempo = async (req, res) => {
                   return;
                 }
                 // Process the SQL query results
-                var sum = 0;
+                let sum = 0;
                 for (const v of result2) {
                   v.pic_path = `${process.env.my_ip}:${process.env.PORTNODE}/api/pictures/${decoded.id_account}/${decoded.id_branch}/meats/${req.params.id}/${v.id}.jpg`
                   v.type='Cantidad de personas'
                   sum += v.count;  
+                }
+                const reshelmetcount=sum/result2.length
+                const meatperhrandavgworker=(result.length/hours1)/reshelmetcount
+                // console.log(meatperhrandavgworker, meatperhrandavgworker < reationvalue['low'], meatperhrandavgworker > reationvalue['high'])
+                let highOrLow = ''
+                if(meatperhrandavgworker > (reationvalue['high'] )){
+                  highOrLow = 'higher'
+                }
+                if(meatperhrandavgworker < (reationvalue['low'] )){
+                  highOrLow = 'lower'
                 }
                 // const mergedData = result.map(item => ({
                 //   ...item,
@@ -9999,7 +10015,7 @@ exports.tiempo = async (req, res) => {
                 //   ...result2.find(({ id }) => item.id === id)
                 // }));
                 const mergedArray = [...result, ...result1, ...result2];
-                console.log(mergedArray)
+                // console.log(mergedArray)
                 const mergedResults = {};
 
                 // Iterate through the arrays
@@ -10037,13 +10053,16 @@ exports.tiempo = async (req, res) => {
                   }
                 }
                 
-
                 // Convert the mergedResults object into an array
                 const mergedResultsArray = Object.values(mergedResults);
 
-                console.log(mergedResultsArray,"allmearge result data");
+                // console.log(mergedResultsArray,"allmearge result data");
                 const a = {
-                  reshelmetcount:sum/result2.length,
+                  comparison: highOrLow,
+                  comparisonPoint: reationvalue,
+                  reshelmetcount:reshelmetcount,
+                  meatperhrandavgworker:meatperhrandavgworker,
+                  reationvalue:reationvalue,
                   dwellsum:sumdwell,
                   eighthouestime:hours1,
                   length:result.length,
