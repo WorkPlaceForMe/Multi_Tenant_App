@@ -157,7 +157,7 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
               "/" +
               m["id"] + '.jpg'
           );
-          console.log(m.id,'ididididididid')
+          
           m["clip_path"] =
             api +
             "/pictures/" +
