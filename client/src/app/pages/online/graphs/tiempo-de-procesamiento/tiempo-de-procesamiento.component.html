@@ -44,14 +44,14 @@
         </div>
         <div class="col-md-2 less-padding">
           <nb-card>
-            <nb-card-body class="top-badges" >
-              <p class="badge-txt">Tiempo total en zona : <span class="badge-reading">
-                {{ tiempo == undefined ? "None" : tiempo.dwellsum }}
+            <nb-card-body class="top-badges">
+              <p class="badge-txt">Tiempo    total  en  zona:  <br/><span class="badge-reading">
+                {{ tiempo == undefined ? "None" : tiempo.dwellsum }} sec
               </span></p>
               <div *ngFor="let zone of helmetzones let i = index">
                 <p class="badge-txt">Zona{{zone}} :<span *ngFor="let key of  dwellzones | keyvalue">
                     <ng-container *ngIf="key.key == zone">
-                      {{ key.value }}
+                      <br/>{{ key.value }} sec
                     </ng-container>
                   </span> 
                 </p>
