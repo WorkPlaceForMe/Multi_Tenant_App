@@ -9674,7 +9674,7 @@ exports.conteo = async (req, res) => {
 exports.tiempo = async (req, res) => {
   const token = req.headers['x-access-token']
   const data = req.body
-  // console.log(data)
+
   const thresh = 5
   jwt.verify(token, process.env.secret, async (err, decoded) => {
     Relation.findOne({
@@ -9683,9 +9683,9 @@ exports.tiempo = async (req, res) => {
         camera_id: req.params.id
       }
     }).then(async rel => {
-      // console.log(rel,'relation')
+
       const reationvalue=rel.atributes[1]
-      // console.log(rel.atributes[1],'vvvvvvvvvvvvvvvvvvvvvvvvvvv')
+      
       console.log(reationvalue)
       const count = await Relation.count({
         where: {
@@ -9693,7 +9693,7 @@ exports.tiempo = async (req, res) => {
           camera_id: req.params.id
         }
       });
-      // console.log(count,'meeeeeeeeeee')
+      
       const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
       let cache = '', range, cou = 0, start, end
       if(diff === 1){
@@ -9743,101 +9743,7 @@ exports.tiempo = async (req, res) => {
                 uniqueZones.push([zoneId]);
               } // finding the num of  unic zones and total zones
               let total_zones = uniqueZones.length;
-              // console.log("total_zones =", total_zones);
-              // console.log(uniqueZones,'first meet zone count')
-              //if (cache == '') {
-              //   cache =
-              //     v.time.getFullYear() +
-              //     '-' +
-              //     (v.time.getMonth() + 1) +
-              //     '-' +
-              //     v.time.getDate() +
-              //     ' ' +
-              //     v.time.getHours()
-              // }
 
-              // if (
-              //   cache !=
-              //   v.time.getFullYear() +
-              //     '-' +
-              //     (v.time.getMonth() + 1) +
-              //     '-' +
-              //     v.time.getDate() +
-              //     ' ' +
-              //     v.time.getHours()
-              // ) {
-              //   while (
-              //     cache !=
-              //     v.time.getFullYear() +
-              //       '-' +
-              //       (v.time.getMonth() + 1) +
-              //       '-' +
-              //       v.time.getDate() +
-              //       ' ' +
-              //       v.time.getHours()
-              //   ) {
-              //     let t = new Date(cache + ':00:00').getTime()
-              //     // Add one hours to date
-              //     t += 60 * 60 * 1000
-              //     cache = new Date(t)
-              //     ress[
-              //       cache.getFullYear() +
-              //         '-' +
-              //         (cache.getMonth() + 1) +
-              //         '-' +
-              //         cache.getDate() +
-              //         ' ' +
-              //         cache.getHours()
-              //     ] =
-              //       ress[
-              //         v.time.getFullYear() +
-              //           '-' +
-              //           (v.time.getMonth() + 1) +
-              //           '-' +
-              //           v.time.getDate() +
-              //           ' ' +
-              //           v.time.getHours()
-              //       ] + 1 || 1
-
-              //     cache =
-              //       cache.getFullYear() +
-              //       '-' +
-              //       (cache.getMonth() + 1) +
-              //       '-' +
-              //       cache.getDate() +
-              //       ' ' +
-              //       cache.getHours()
-              //   }
-              // }
-              // if (
-              //   cache ==
-              //   v.time.getFullYear() +
-              //     '-' +
-              //     (v.time.getMonth() + 1) +
-              //     '-' +
-              //     v.time.getDate() +
-              //     ' ' +
-              //     v.time.getHours()
-              // ) {
-              //   ress[
-              //     v.time.getFullYear() +
-              //       '-' +
-              //       (v.time.getMonth() + 1) +
-              //       '-' +
-              //       v.time.getDate() +
-              //       ' ' +
-              //       v.time.getHours()
-              //   ] =
-              //     ress[
-              //       v.time.getFullYear() +
-              //         '-' +
-              //         (v.time.getMonth() + 1) +
-              //         '-' +
-              //         v.time.getDate() +
-              //         ' ' +
-              //         v.time.getHours()
-              //     ] + 1 || 1
-              // }
               let d = v.time
               let se = d.getSeconds()
               let mi = d.getMinutes()
@@ -9879,9 +9785,7 @@ exports.tiempo = async (req, res) => {
                 ) {
                   cache = new Date(cache)
                   ress[cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
-                  // for(let e = 0; e < count; e++){
-                  //   dataPeopleAll[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
-                  // }
+
                   cache = cache.getTime()
                   cache += range
                 }
@@ -9902,9 +9806,7 @@ exports.tiempo = async (req, res) => {
             ) {
               cache = new Date(cache)
               ress[cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
-              // for(let e = 0; e < count; e++){
-              //   dataPeopleAll[e][cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
-              // }
+               
               cache = cache.getTime()
               cache += range
             }
@@ -10015,7 +9917,6 @@ exports.tiempo = async (req, res) => {
                 //   ...result2.find(({ id }) => item.id === id)
                 // }));
                 const mergedArray = [...result, ...result1, ...result2];
-                // console.log(mergedArray)
                 const mergedResults = {};
 
                 // Iterate through the arrays
