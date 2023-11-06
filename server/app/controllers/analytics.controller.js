@@ -9674,7 +9674,6 @@ exports.conteo = async (req, res) => {
 exports.tiempo = async (req, res) => {
   const token = req.headers['x-access-token']
   const data = req.body
-
   const thresh = 5
   jwt.verify(token, process.env.secret, async (err, decoded) => {
     Relation.findOne({
@@ -9683,17 +9682,13 @@ exports.tiempo = async (req, res) => {
         camera_id: req.params.id
       }
     }).then(async rel => {
-
       const reationvalue=rel.atributes[1]
-      
-      console.log(reationvalue)
       const count = await Relation.count({
         where: {
           algo_id: 74,
           camera_id: req.params.id
         }
       });
-      
       const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
       let cache = '', range, cou = 0, start, end
       if(diff === 1){
@@ -9717,7 +9712,6 @@ exports.tiempo = async (req, res) => {
         start = data.start
         end = data.end
       }
-
       const array = [];
       for(let i=1; i<=count; i++){
         array.push([i])
@@ -9726,8 +9720,7 @@ exports.tiempo = async (req, res) => {
         .con()
         .query(
           `SELECT * from meats WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
-          function (err, result) {
-             
+          function (err, result) { 
             if (err) {
               return res.status(500).json({
                 success: false,
@@ -9743,7 +9736,6 @@ exports.tiempo = async (req, res) => {
                 uniqueZones.push([zoneId]);
               } // finding the num of  unic zones and total zones
               let total_zones = uniqueZones.length;
-
               let d = v.time
               let se = d.getSeconds()
               let mi = d.getMinutes()
@@ -9776,7 +9768,6 @@ exports.tiempo = async (req, res) => {
                 v.clip_path = `${d}_${v.track_id}.mp4`
                 v.pic_path = `${process.env.my_ip}:${process.env.PORTNODE}/api/pictures/${decoded.id_account}/${decoded.id_branch}/meats/${req.params.id}/${v.clip_path}`
               }
-              //----------------------
               if (
                 cache < v.time.getTime()
               ) {
@@ -9785,7 +9776,6 @@ exports.tiempo = async (req, res) => {
                 ) {
                   cache = new Date(cache)
                   ress[cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
-
                   cache = cache.getTime()
                   cache += range
                 }
@@ -9797,16 +9787,13 @@ exports.tiempo = async (req, res) => {
                 t -= range
                 t = new Date(t)
                 ress[t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()] = (ress[ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1    
-                //dataPeopleAll[v.qid - 1][t.getFullYear() + '-' + (t.getMonth() + 1) + '-' +  t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes()] = (dataPeopleAll[v.qid - 1][ t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() ] || 0) + 1     
               }
-
             }
             while (
               cache <= new Date(end)
             ) {
               cache = new Date(cache)
-              ress[cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0
-               
+              ress[cache.getFullYear() + '-' + (cache.getMonth() + 1) +  '-' + cache.getDate() + ' ' + cache.getHours() + ':' + cache.getMinutes()] = 0 
               cache = cache.getTime()
               cache += range
             }
@@ -9834,7 +9821,6 @@ exports.tiempo = async (req, res) => {
             const sqlQuery = `SELECT * FROM helmet WHERE ${data.type} = '${req.params.id}' AND time >= '${data.start}' AND time <= '${data.end}' ORDER BY time ASC;`
             // Execute the SQL query
             db.con().query(sqlQuery, (err, result1) => {
-               
               if (err) {
                 // Handle any errors here
                 console.error("Error executing the SQL query:", err);
@@ -9842,7 +9828,6 @@ exports.tiempo = async (req, res) => {
                 return;
               }
               // Process the SQL query results
-              
               var sumdwell = 0;
               let valu= {}
               var helmetuniqueZones = [];
@@ -9852,9 +9837,6 @@ exports.tiempo = async (req, res) => {
                   helmetuniqueZones.push([zoneId]);
                 } // finding the num of  unic zones and total zones
                 var total_zones = helmetuniqueZones.length;
-                console.log("total_zones =", total_zones);
-                console.log(helmetuniqueZones, 'first helmet zone count')
-
                 v.pic_path = `${process.env.my_ip}:${process.env.PORTNODE}/api/pictures/${decoded.id_account}/${decoded.id_branch}/meats/${req.params.id}/${v.id}.jpg`
                 v.type="Tiempo en zona";
                 sumdwell += parseInt(v.dwell);
@@ -9866,28 +9848,14 @@ exports.tiempo = async (req, res) => {
                 }
               }
               var helmetsart = helmetuniqueZones.sort();//zones are sorted here
-              // const hcounts = {};// count each zone like zoneA:2,zoneD:5 like this
-              // for (let i = 0; i < helmetsart.length; i++) {
-              //   const value = helmetsart[i];
-              //   if (hcounts[value]) {
-              //     hcounts[value]++;
-              //   } else {
-              //     hcounts[value] = 1;
-              //   }
-              // }
               var hli = []// unic zone list[1,2,3,4]
               var huniqueList = Array.from(new Set(helmetuniqueZones.map(item => item[0])));
               for (const list1 of huniqueList) {
                 hli.push([list1])//uniqueZones.push([zoneId]);
               }
-               
-              console.log(hli.sort(),'helmet unic final zone')
-              
               const sqlQuery = `SELECT * FROM helmet_count WHERE ${data.type} = '${req.params.id}' AND time >= '${data.start}' AND time <= '${data.end}' ORDER BY time ASC`;
               // Execute the SQL query
-              db.con().query(sqlQuery, (err, result2) => {
-                 
-                
+              db.con().query(sqlQuery, (err, result2) => { 
                 if (err) {
                   // Handle any errors here
                   console.error("Error executing the SQL query:", err);
@@ -9903,7 +9871,6 @@ exports.tiempo = async (req, res) => {
                 }
                 const reshelmetcount=sum/result2.length
                 const meatperhrandavgworker=(result.length/hours1)/reshelmetcount
-                // console.log(meatperhrandavgworker, meatperhrandavgworker < reationvalue['low'], meatperhrandavgworker > reationvalue['high'])
                 let highOrLow = ''
                 if(meatperhrandavgworker > (reationvalue['high'] )){
                   highOrLow = 'higher'
@@ -9911,14 +9878,8 @@ exports.tiempo = async (req, res) => {
                 if(meatperhrandavgworker < (reationvalue['low'] )){
                   highOrLow = 'lower'
                 }
-                // const mergedData = result.map(item => ({
-                //   ...item,
-                //   ...result1.find(({ id }) => item.id === id),
-                //   ...result2.find(({ id }) => item.id === id)
-                // }));
                 const mergedArray = [...result, ...result1, ...result2];
                 const mergedResults = {};
-
                 // Iterate through the arrays
                 for (let i = 0; i < result.length; i++) {
                   const key = `result${result[i].id}`;
@@ -9931,7 +9892,6 @@ exports.tiempo = async (req, res) => {
                     // If the key already exists, merge the objects
                     Object.assign(mergedResults[key], result[i]);
                   }
-
                   // Merge data from result2 and result3 (if available)
                   if (result1[i]) {
                     if (!mergedResults[key]) {
@@ -9942,7 +9902,6 @@ exports.tiempo = async (req, res) => {
                       Object.assign(mergedResults[key], result1[i]);
                     }
                   }
-
                   if (result2[i]) {
                     if (!mergedResults[key]) {
                       mergedResults[key] = {
@@ -9953,11 +9912,8 @@ exports.tiempo = async (req, res) => {
                     }
                   }
                 }
-                
                 // Convert the mergedResults object into an array
                 const mergedResultsArray = Object.values(mergedResults);
-
-                // console.log(mergedResultsArray,"allmearge result data");
                 const a = {
                   comparison: highOrLow,
                   comparisonPoint: reationvalue,
@@ -9969,7 +9925,6 @@ exports.tiempo = async (req, res) => {
                   length:result.length,
                   numberofzones:count,
                   count:counts,
-                  // hcount:hcounts,
                   dwellzones:valu,
                   array:array,
                   uniczones:li.sort(),
@@ -9980,10 +9935,8 @@ exports.tiempo = async (req, res) => {
                   raw1:result1,
                   raw2:result2,
                   rel: rel,
-                  
                   allmergedArray:mergedArray,
-                  over: ress
-                  
+                  over: ress 
                 }
                 res.status(200).json({
                   success: true,
