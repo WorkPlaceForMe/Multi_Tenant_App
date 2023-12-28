@@ -3,6 +3,7 @@ import { NbCalendarRange, NbComponentStatus, NbDateService, NbGlobalPhysicalPosi
 import { Account } from '../../../../models/Account';
 import { NbPopoverDirective } from '@nebular/theme';
 import { AuthService } from '../../../../services/auth.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'ngx-control',
@@ -35,6 +36,8 @@ export class ControlComponent implements OnInit, OnDestroy {
   selectedDate: Date;
   selectedMonth: Date;
   lastMonths: Date[] = [];
+  placeholdertimestartTime:any;
+  placeholdertimeEndTime:any;
 
   currentSelection: string  = 'Fecha';
   items = [
@@ -187,34 +190,54 @@ export class ControlComponent implements OnInit, OnDestroy {
 
   }
 
-  changeRange(event){
-    if (event.end !== undefined){
-      this.showRange = false;
-      event.end = new Date(event.end.setHours(event.end.getHours() + 23));
-      event.end = new Date(event.end.setMinutes(event.end.getMinutes() + 59));
-      event.end = new Date(event.end.setSeconds(event.end.getSeconds() + 59));
-      // if(new Date(event.end).getTimezoneOffset() == -530){
-      //   let off = new Date(event.end).getTimezoneOffset() + 30
-      //   off = off / 60
-      //   event.end = new Date(event.end.setHours(event.end.getHours() - off))
-      //   event.end = new Date(event.end.setMinutes(event.end.getMinutes() + 30));
-      //   event.start = new Date(event.start.setHours(event.start.getHours() - off))
-      //   event.start = new Date(event.start.setMinutes(event.start.getMinutes() + 30));
-      // }else{
-      //   let off = new Date(event.end).getTimezoneOffset()
-      //   off = off / 60
-      //   event.end = new Date(event.end.setHours(event.end.getHours() - off))
-      //   event.start = new Date(event.start.setHours(event.start.getHours() - off))
-      // }
-      this.range = {
-        start: new Date(event.start),
-        end: new Date(event.end),
-      };
-      this.cam(this.camera);
-      this.showRangeSelector(false);
-    }else{
-      this.showRange = true;
-    }
+  // changeRange(event){
+  //   if (event.end !== undefined){
+  //     this.showRange = false;
+  //     event.end = new Date(event.end.setHours(event.end.getHours() + 23));
+  //     event.end = new Date(event.end.setMinutes(event.end.getMinutes() + 59));
+  //     event.end = new Date(event.end.setSeconds(event.end.getSeconds() + 59));
+  //     // if(new Date(event.end).getTimezoneOffset() == -530){
+  //     //   let off = new Date(event.end).getTimezoneOffset() + 30
+  //     //   off = off / 60
+  //     //   event.end = new Date(event.end.setHours(event.end.getHours() - off))
+  //     //   event.end = new Date(event.end.setMinutes(event.end.getMinutes() + 30));
+  //     //   event.start = new Date(event.start.setHours(event.start.getHours() - off))
+  //     //   event.start = new Date(event.start.setMinutes(event.start.getMinutes() + 30));
+  //     // }else{
+  //     //   let off = new Date(event.end).getTimezoneOffset()
+  //     //   off = off / 60
+  //     //   event.end = new Date(event.end.setHours(event.end.getHours() - off))
+  //     //   event.start = new Date(event.start.setHours(event.start.getHours() - off))
+  //     // }
+  //     this.range = {
+  //       start: new Date(event.start),
+  //       end: new Date(event.end),
+  //     };
+  //     this.cam(this.camera);
+  //     this.showRangeSelector(false);
+  //   }else{
+  //     this.showRange = true;
+  //   }
+  // }
+   
+  changeRange(range: { startDate: Date, endDate: Date }) {
+    // Handle the range with both start and end dates in this function
+    const datePipe = new DatePipe('en-US');
+    this.placeholdertimestartTime= datePipe.transform(range.startDate, 'E MMM dd yyyy HH:mm:ss'/*/*'yyyy-MM-dd HH:mm:ss'*/)
+    this.placeholdertimeEndTime=datePipe.transform(range.endDate, 'E MMM dd yyyy HH:mm:ss'/*'yyyy-MM-dd HH:mm:ss'*/)
+  
+  console.log('Start Date:', datePipe.transform(range.startDate, 'yyyy-MM-dd HH:mm:ss'));
+  console.log('End Date:', datePipe.transform(range.endDate, 'yyyy-MM-dd HH:mm:ss'));
+    console.log('Start Date:', range.startDate);
+    console.log('End Date:', range.endDate);
+    
+    this.range = {
+      start: new Date(range.startDate),
+      end: new Date(range.endDate),
+    };
+    console.log(this.range,'TTTTTTTTTTTTTTTT')
+    this.cam(this.camera);
+    this.showRangeSelector(false);
   }
 
   set(event){

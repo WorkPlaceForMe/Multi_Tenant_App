@@ -162,7 +162,7 @@
                     </div>
                 </div>
             </nb-list-item>
-            <nb-list-item >
+            <!-- <nb-list-item >
                 <div class = "row">
                     <div style = "width: 100px" class = "col-md-auto" (click) = "selectRangeType('personalizar')">
                         <nb-radio  name = "range" [checked] = "currentSelection=='personalizar'" (onClick) = "selectRangeType('personalizar')">Definido</nb-radio>
@@ -172,6 +172,31 @@
                             <nb-rangepicker  #rangepicker [max]="max" [(range)]="range" style='margin-left: 2px;' (rangeChange)="changeRange($event)"></nb-rangepicker> 
                     </div>
                 </div>
-            </nb-list-item>
+            </nb-list-item> -->
+            <nb-list-item>
+                <div class="row">
+                  <!-- Start Date -->
+                  <div style="width: 100px" class="col-md-auto" (click)="selectRangeType('personalizar')">
+                    <nb-radio name="range" [checked]="currentSelection=='personalizar'" (click)="selectRangeType('personalizar')">Definido</nb-radio>
+                  </div>
+                  <div class="col">
+                    <input nbInput placeholder="Start Date" value={{this.placeholdertimestartTime}}   [nbDatepicker]="startDateTimepicker" [disabled]="currentSelection != 'personalizar'" fullWidth fieldSize="small" [(ngModel)]="startDate">
+                    <nb-date-timepicker withSeconds #startDateTimepicker [withTime]="true" [(date)]="startDate" style='margin-left: 2px;'></nb-date-timepicker>
+                      
+                  </div>
+                   
+                  <!-- End Date -->
+                  <div class="col">
+                    <input nbInput placeholder="End Date" value={{this.placeholdertimeEndTime}} [nbDatepicker]="endDateTimepicker" [disabled]="currentSelection != 'personalizar'" fullWidth fieldSize="small" [(ngModel)]="endDate">
+                    <nb-date-timepicker withSeconds #endDateTimepicker [withTime]="true" [(date)]="endDate" style='margin-left: 2px;'></nb-date-timepicker>
+                     
+                  </div>
+              
+                  <!-- Apply Range Button -->
+                  <div class="col">
+                    <button nbButton (click)="changeRange({ startDate: startDate, endDate: endDate })">Apply Range</button>
+                  </div>
+                </div>
+              </nb-list-item>
         </nb-list>
     </ng-template>

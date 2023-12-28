@@ -9674,6 +9674,24 @@ exports.conteo = async (req, res) => {
 exports.tiempo = async (req, res) => {
   const token = req.headers['x-access-token']
   const data = req.body
+  const indianstartTime = data.start;
+  const indianEndtTime =data.end
+
+  // Create a Date object from the original timestamp
+  const startoriginalDate = new Date(indianstartTime);
+  const endtoriginalDate = new Date(indianEndtTime);
+
+  // Adjust the time zone offset to +0530
+  const startadjustedDate = new Date(startoriginalDate.getTime() + (5.5 * 60 * 60 * 1000));
+  const endadjustedDate = new Date(endtoriginalDate.getTime() + (5.5 * 60 * 60 * 1000));
+
+  // Format the adjusted date in the desired pattern
+  const startformattedDate = startadjustedDate.toISOString().replace('T', ' ').replace(/\.\d{3}Z/, '');
+  const endformattedDate = endadjustedDate.toISOString().replace('T', ' ').replace(/\.\d{3}Z/, '');
+
+  console.log(startformattedDate,'SSSS');
+  console.log(endformattedDate,'eee');
+  console.log(data,'ddddddddddddddddddd')
   const thresh = 5
   jwt.verify(token, process.env.secret, async (err, decoded) => {
     Relation.findOne({
@@ -9689,28 +9707,48 @@ exports.tiempo = async (req, res) => {
           camera_id: req.params.id
         }
       });
-      const diff = Math.ceil((new Date(data.end) - new Date(data.start)) / (1000 * 3600 * 24));
+      const diff1 = Math.ceil((new Date(endformattedDate) - new Date(startformattedDate)) / (1000 * 60));
+      console.log(diff1,'DDDDDDDDDDD')
       let cache = '', range, cou = 0, start, end
-      if(diff === 1){
-        range = 30 * 60 * 1000
-        start = new Date(data.start).getTime() + 7 * 60 * 60 * 1000
+      
+      if(diff1 < 1440){
+        range=5*60*1000
+        start = new Date(startformattedDate).getTime() + 0.00 * 60 * 60 * 1000
+        console.log(start,'S!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         start = JSON.stringify(new Date(start))
+        console.log(start,'S22222222222222222222222222222222222222222')
         start = start.substring(1, start.length - 1);
-        end =  new Date(data.end).getTime() - 1.5 * 60 * 60 * 1000
+        console.log(start,'S3333333333333333333333333333333333')
+        end =  new Date(endformattedDate).getTime() - 0 * 60 * 60 * 1000
+        console.log(end,'E!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         end = JSON.stringify(new Date(end))
+        console.log(end,'E22222222222222222222222222222222')
         end = end.substring(1, end.length - 1);
-      }else if(diff >= 1 && diff <= 3){
+        console.log(end,'E333333333333333333333333333333333')
+      }
+      if(diff1 === 1440){
+        range = 30 * 60 * 1000
+        // start = new Date(startformattedDate).getTime() + 7 * 60 * 60 * 1000
+
+        // start = JSON.stringify(new Date(start))
+        // start = start.substring(1, start.length - 1);
+        // end =  new Date(endformattedDate).getTime() - 1.5 * 60 * 60 * 1000
+        // end = JSON.stringify(new Date(end))
+        // end = end.substring(1, end.length - 1);
+      }else if(diff1 >= 1440 && diff1 <= 4320){
         range = 2 * 60 * 60 * 1000
-      }else if(diff >= 3 && diff <= 7){
+      }else if(diff1 >= 4320 && diff1 <= 10080){
         range = 4 * 60 * 60 * 1000
-      }else if(diff >= 7 && diff <= 14){
+      }else if(diff1 >= 10080 && diff1 <= 20160){
         range = 8 * 60 * 60 * 1000
-      }else if(diff >= 14 && diff <= 32){
+      }else if(diff1 >= 20160 && diff1 <= 44640){
         range = 24 * 60 * 60 * 1000
       }
+      console.log(start,'SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS')
+      console.log(end,'EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE')
       if(start === undefined){
-        start = data.start
-        end = data.end
+        start = startformattedDate
+        end = endformattedDate
       }
       const array = [];
       for(let i=1; i<=count; i++){
@@ -9719,14 +9757,17 @@ exports.tiempo = async (req, res) => {
       await db
         .con()
         .query(
-          `SELECT * from meats WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          // `SELECT * from meats WHERE ${data.type} = '${req.params.id}' and time >= '${data.start}' and  time <= '${data.end}' order by time asc;`,
+          `SELECT * from meats WHERE ${data.type} = '${req.params.id}' and time >= '${startformattedDate}' and  time <= '${endformattedDate}' order by time asc;`,
           function (err, result) { 
+            console.log( `SELECT * from meats WHERE ${data.type} = '${req.params.id}' and time >= '${startformattedDate}' and  time <= '${endformattedDate}' order by time asc;`)
             if (err) {
               return res.status(500).json({
                 success: false,
                 message: err
               })
             }
+            //console.log(result,'resres')
             const ress = {}
             let cache = new Date(start).getTime()
             let uniqueZones = [];
@@ -9808,6 +9849,7 @@ exports.tiempo = async (req, res) => {
               }
             }
             const hours1 = calculateVal(data.start, data.end)
+            console.log(hours1,'HHHHHHHHHHH')
             var li=[]// unic zone list[1,2,3,4]
             var uniqueList = Array.from(new Set(uniqueZones.map(item => item[0])));
             for (const list1 of uniqueList){
@@ -9818,7 +9860,8 @@ exports.tiempo = async (req, res) => {
             for (const list1 of uniqueList){
               li.push([list1])//uniqueZones.push([zoneId]);
             }
-            const sqlQuery = `SELECT * FROM helmet WHERE ${data.type} = '${req.params.id}' AND time >= '${data.start}' AND time <= '${data.end}' ORDER BY time ASC;`
+            const sqlQuery =  `SELECT * from helmet WHERE ${data.type} = '${req.params.id}' and time >= '${startformattedDate}' and  time <= '${endformattedDate}' order by time asc;`
+            //`SELECT * FROM helmet WHERE ${data.type} = '${req.params.id}' AND time >= '${data.start}' AND time <= '${data.end}' ORDER BY time ASC;`
             // Execute the SQL query
             db.con().query(sqlQuery, (err, result1) => {
               if (err) {
@@ -9853,7 +9896,8 @@ exports.tiempo = async (req, res) => {
               for (const list1 of huniqueList) {
                 hli.push([list1])//uniqueZones.push([zoneId]);
               }
-              const sqlQuery = `SELECT * FROM helmet_count WHERE ${data.type} = '${req.params.id}' AND time >= '${data.start}' AND time <= '${data.end}' ORDER BY time ASC`;
+              const sqlQuery = `SELECT * from helmet_count WHERE ${data.type} = '${req.params.id}' and time >= '${startformattedDate}' and  time <= '${endformattedDate}' order by time asc;`
+              //`SELECT * FROM helmet_count WHERE ${data.type} = '${req.params.id}' AND time >= '${data.start}' AND time <= '${data.end}' ORDER BY time ASC`;
               // Execute the SQL query
               db.con().query(sqlQuery, (err, result2) => { 
                 if (err) {
@@ -9878,7 +9922,275 @@ exports.tiempo = async (req, res) => {
                 if(meatperhrandavgworker < (reationvalue['low'] )){
                   highOrLow = 'lower'
                 }
-                const mergedArray = [...result, ...result1, ...result2];
+                let mergedArray = [...result, ...result1, ...result2];
+                //****************************************************************************** */
+                let ran = [];
+                let ranhel=[];
+                let helmetnewone = {};
+                let newproductivity = {};
+
+                let resultone = [...result, ...result1, ...result2];
+                resultone.sort((a, b) => new Date(a.time) - new Date(b.time));
+
+                // Function to round time to the nearest 9-minute interval
+                function roundTimeTo9Minutes(dt) {
+                  const roundedTime = new Date(dt);
+                  roundedTime.setMilliseconds(0);
+                  roundedTime.setSeconds(0);
+                  roundedTime.setMinutes(Math.floor(dt.getMinutes() / (range/(60*1000))) * (range/(60*1000)));
+                  return roundedTime.toISOString();
+                }
+
+                // Map to store data for each 9-minute interval
+                const intervalData = new Map();
+
+                // Iterate through the time range in 9-minute intervals
+                let currentInterval = new Date(startformattedDate);
+                while (currentInterval <= new Date(endformattedDate)) {
+                  intervalData.set(roundTimeTo9Minutes(currentInterval), []);
+                  currentInterval.setMinutes(currentInterval.getMinutes() + (range/(60*1000)));
+                }
+
+                // Process each JSON object
+                let formattedTimestampWithTime;
+                resultone.forEach(entry => {
+                  const entryTime = new Date(entry.time);
+                  const roundedTime = roundTimeTo9Minutes(entryTime);
+
+                  // Add the entry to the corresponding interval in the map
+                  if (intervalData.has(roundedTime)) {
+                    intervalData.get(roundedTime).push(entry);
+                  }
+                });
+
+                // Extract new productivity for each interval
+                formattedTimestampWithTime = {};
+                Array.from(intervalData.entries()).forEach(([timestamp, dataInInterval]) => {
+                  let carneDetected = dataInInterval.filter(item => item.type === 'Carne detectada');
+                  let helmet = dataInInterval.filter(item => item.type === 'Cantidad de personas');
+
+                  let c = 0;
+                  for (let item of helmet) {
+                    if (item.type === 'Cantidad de personas') {
+                      c += item.count;
+                    }
+                  }
+
+                  ran.push(carneDetected);
+                  ranhel.push(helmet)
+                  //console.log(ran)
+                  //console.log(ranhel,'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
+                  console.log(ranhel[0].length,'HHHHHHHHHHHHHHHHHHHLLLLLLLLLLLLLLLLLLLLLLLLL')
+                  console.log(ran[0].length)
+                  // Update the helmetnewone object directly
+                  helmetnewone[timestamp] = helmet.length; // Assuming you want to store the count of 'Cantidad de personas'
+
+                  let pro = (ran[0].length / ((range)/(60*60*1000))) / (c/ranhel[0].length); // Assuming range is 9 minutes
+
+                  const formattedTimestamp = new Date(timestamp).toLocaleString('en-GB', { timeZone: 'Asia/Kolkata' });
+
+                  // Format the timestamp as 'YYYY-MM-DD H:mm'
+                  formattedTimestampWithTime[formattedTimestamp] = isNaN(pro) ? 0 : pro;
+
+                  ran = [];
+                  ranhel=[];
+                });
+
+                // Combine all objects into a single object
+                newproductivity = Object.assign({}, formattedTimestampWithTime);
+
+                //console.log(newproductivity);
+  //               let ran = []
+  //               let helmetnewone = []
+  //               let newproductivity = []
+
+  //               //                 let ran = [];
+  //               // let helmetnewone = [];
+  //               // let newproductivity = [];
+
+  //               let resultone = [...result, ...result1, ...result2];
+  //               resultone.sort((a, b) => new Date(a.time) - new Date(b.time));
+
+  //               // Function to round time to the nearest 10-minute interval
+  //               function roundTimeTo10Minutes(dt) {
+  //                 const roundedTime = new Date(dt);
+  //                 roundedTime.setMilliseconds(0);
+  //                 roundedTime.setSeconds(0);
+  //                 roundedTime.setMinutes(Math.round(dt.getMinutes() / 60) * 60);
+  //                 return roundedTime.toISOString();
+  //               }
+
+  //               // Map to store data for each 10-minute interval
+  //               const intervalData = new Map();
+
+  //               // Iterate through the time range in 10-minute intervals
+  //               let currentInterval = new Date(startformattedDate);
+  //               while (currentInterval <= endadjustedDate) {
+  //                 intervalData.set(roundTimeTo10Minutes(currentInterval), []);
+  //                 currentInterval.setMinutes(currentInterval.getMinutes() + 60);
+  //               }
+
+  //               // Process each JSON object
+  //               resultone.forEach(entry => {
+  //                 const entryTime = new Date(entry.time);
+  //                 const roundedTime = roundTimeTo10Minutes(entryTime);
+
+  //                 // Add the entry to the corresponding interval in the map
+  //                 if (intervalData.has(roundedTime)) {
+  //                   intervalData.get(roundedTime).push(entry);
+  //                 }
+  //               });
+
+  //               // Extract new productivity for each interval
+  //               let formattedTimestampWithTime;
+  //               resultone = Array.from(intervalData.entries()).map(([timestamp, dataInInterval]) => {
+  //                 let carneDetected = dataInInterval.filter(item => item.type === 'Carne detectada');
+  //                 let helmet = dataInInterval.filter(item => item.type === 'Cantidad de personas');
+
+  //                 let c = 0;
+  //                 for (let item of helmet) {
+  //                   if (item.type === 'Cantidad de personas') {
+  //                     c += item.count;
+  //                   }
+  //                 }
+
+  //                 ran.push(carneDetected);
+  //                 helmetnewone.push(helmet);
+  //                 let pro = (ran[0].length / (60 * 60 * 1000)) / c; // Assuming range is 10 minutes
+  //                 //newproductivity.push({ timestamp, newproductivity: isNaN(pro) ? 0 : pro }); // Set new productivity to 0 if NaN
+  //                 //newproductivity.push({ timestamp: roundedTime.toLocaleString('en-GB', { timeZone: 'Asia/Kolkata' }), newproductivity: isNaN(pro) ? 0 : pro });
+  //                 // newproductivity.push({
+  //                 //   timestamp: new Date(timestamp).toLocaleString('en-GB', { timeZone: 'Asia/Kolkata' }),
+  //                 //   newproductivity: isNaN(pro) ? 0 : pro
+  //                 // });
+  //                 const formattedTimestamp = new Date(timestamp).toLocaleString('en-GB', { timeZone: 'Asia/Kolkata' });
+
+  // // Format the timestamp as 'DD/MM/YYYY, HH:mm:ss'
+  // formattedTimestampWithTime = formattedTimestamp.replace(/\//g, '-').replace(',', '');
+  //                 newproductivity.push({
+  //                   [formattedTimestampWithTime]: isNaN(pro) ? 0 : pro
+  //                 });
+                
+
+  //                 ran = [];
+  //                 helmetnewone = [];
+  //                 return { timestamp, dataInInterval };
+  //               });
+
+  //               console.log(newproductivity);
+                 
+                 
+  //               //*************************************************** */
+  //               // let resultone = [...result, ...result1, ...result2];
+
+  //               // // Function to round time to the nearest 30-minute interval
+  //               // function roundTimeTo30Minutes(dt) {
+  //               //   const roundedTime = new Date(dt);
+  //               //   roundedTime.setMilliseconds(0);
+  //               //   roundedTime.setSeconds(0);
+  //               //   roundedTime.setMinutes(Math.round(dt.getMinutes() / 30) * 30);
+  //               //   return roundedTime.toISOString();
+  //               // }
+
+  //               // // Map to store data for each 30-minute interval
+  //               // const intervalData = new Map();
+
+  //               // // Process each JSON object
+  //               // resultone.forEach(entry => {
+  //               //   const entryTime = new Date(entry.time);
+  //               //   const roundedTime = roundTimeTo30Minutes(entryTime);
+
+  //               //   // Add the entry to the corresponding interval in the map
+  //               //   if (intervalData.has(roundedTime)) {
+  //               //     intervalData.get(roundedTime).push(entry);
+  //               //   } else {
+  //               //     intervalData.set(roundedTime, [entry]);
+  //               //   }
+  //               // });
+
+  //               // // Convert the map values to an array
+  //               // resultone = Array.from(intervalData.values());
+
+  //               // // Print the result
+  //               // resultone.forEach((dataInInterval, index) => {
+  //               //   console.log(`Interval ${index + 1}:`, dataInInterval,'444444444444444444');
+  //               // });
+                //**************************************** */
+                const productivityArray = [];
+                let intervalArray = [];
+                const prodArray = []
+                let startingTime = null;
+                let currentTime = null;
+                let m = 0;
+                //let meats = 0, workers = 0, amount = 0
+                let timeDifference = 0;
+                mergedArray.sort((a, b) => a.time - b.time);
+                for (let i = 0; i < mergedArray.length; i++) {
+                  m = i;
+                  //startingTime=mergedArray[0].time
+                  currentTime = mergedArray[i].time; // Assuming 'time' is the property containing time data
+
+                  if (!startingTime) {
+                    startingTime = currentTime; // Set starting time if it's null
+                  }
+                   
+
+                  timeDifference = currentTime.getMinutes() - startingTime.getMinutes();
+                  console.log(currentTime)
+                  console.log(currentTime.getMinutes(),'GGGGGGGGGGGGGGGGGGGG')
+                  console.log(timeDifference)
+                  console.log(startingTime.getMinutes())
+                   
+                  if (timeDifference < range/(60*1000)) { // Check if 10 minutes passed
+                    intervalArray.push(mergedArray[i])
+
+                  }else {
+                    startingTime = currentTime
+                    let meats = 0, workers = 0, amount = 0
+                    for(const vals of intervalArray){
+                      // console.log(vals)
+                      if(vals.type === 'Carne detectada'){
+                        meats=meats+1
+                      }
+                      if(vals.type === 'Cantidad de personas'){
+                        workers = workers + vals.count
+                        amount++
+                      }
+                       
+                    }
+                    const prod = ( (meats/(range/(60*60*1000))) / (workers/amount) )
+                    console.log(meats,range,workers,amount,'prod values0000000000')
+                    intervalArray = []
+                    prodArray.push(Math.ceil(prod))
+                    //console.log(prod,'p00000000')
+                    //console.log(prodArray,'paapapapapapap')
+                  }
+                }
+                if(intervalArray.length != 0){
+                  let meats = 0, workers = 0, amount = 0
+                  for(const vals of intervalArray){
+                    // console.log(vals)
+                    if(vals.type === 'Carne detectada'){
+                      meats++
+                    }
+                    if(vals.type === 'Cantidad de personas'){
+                      workers = workers + vals.count
+                      amount++
+                    }
+                    
+                  }
+                  const prod = ( (meats/range) / (workers/amount) )
+                  console.log(meats,range,workers,amount,'prod values')
+                  // calculation of prod
+                  prodArray.push(Math.ceil(prod))
+                  intervalArray = []
+                  //prodArray.push(prod)
+                  //console.log(prod,'p111111111111111')
+                  //console.log(prodArray,'p1p1p1p')
+                }
+                console.log(prodArray,'pppppppppppppppppp')
+                 
+
                 const mergedResults = {};
                 // Iterate through the arrays
                 for (let i = 0; i < result.length; i++) {
@@ -9935,8 +10247,12 @@ exports.tiempo = async (req, res) => {
                   raw1:result1,
                   raw2:result2,
                   rel: rel,
-                  allmergedArray:mergedArray,
-                  over: ress 
+            
+               
+               
+                  over: ress ,
+                  overone:newproductivity
+                 
                 }
                 res.status(200).json({
                   success: true,
@@ -9948,19 +10264,41 @@ exports.tiempo = async (req, res) => {
         )
     })
   })
+  // function calculateVal (start, end) {
+  //   const currentDate = new Date(start)
+  //   const targetDate = new Date(end)
+  //   const hoursPerDay = 8
+  //   let val = 0
+  //   while (currentDate <= targetDate) {
+  //     const dayOfWeek = currentDate.getDay()
+  //     if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+  //       val++
+  //     }
+  //     currentDate.setDate(currentDate.getDate() + 1)
+  //   }
+  //   val = val * hoursPerDay
+  //   return val
+  // }
   function calculateVal (start, end) {
     const currentDate = new Date(start)
     const targetDate = new Date(end)
-    const hoursPerDay = 8
+    const hoursPerDay = 10
     let val = 0
-    while (currentDate <= targetDate) {
-      const dayOfWeek = currentDate.getDay()
-      if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-        val++
+  
+    if ((targetDate - currentDate) / (1000 * 3600 * 24) < 1 && (targetDate - currentDate) / (1000 * 3600) < 10) {
+      val = (targetDate - currentDate) / (1000 * 3600)
+      val = Math.round(val * 100) / 100
+    } else {
+      while (currentDate <= targetDate) {
+        const dayOfWeek = currentDate.getDay()
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+          val++
+        }
+        currentDate.setDate(currentDate.getDate() + 1)
       }
-      currentDate.setDate(currentDate.getDate() + 1)
+      val = val * hoursPerDay
     }
-    val = val * hoursPerDay
+  
     return val
   }
 }
