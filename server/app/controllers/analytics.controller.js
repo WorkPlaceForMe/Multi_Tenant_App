@@ -5,6 +5,7 @@ const db1 = require('../models')
 var jwt = require('jsonwebtoken')
 var db = require('../models/dbmysql')
 const Relation = db1.relation
+const moment = require('moment-timezone');
 
 exports.loitering = async (req, res) => {
   let token = req.headers['x-access-token']
@@ -9680,14 +9681,27 @@ exports.tiempo = async (req, res) => {
   // Create a Date object from the original timestamp
   const startoriginalDate = new Date(indianstartTime);
   const endtoriginalDate = new Date(indianEndtTime);
+  const localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  //****************************loveeeeeeeeeeeeeeeeee */
+//   const startOriginalDateone = new Date(indianstartTime);
+//   const endOriginalDateone = new Date(indianEndtTime);
+//   const userTimeZoneOffset = new Date().getTimezoneOffset() / 60;
+//   // const localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+//   const startFormattedDateone = new Date(startoriginalDate.getTime() + (userTimeZoneOffset * 60 * 60 * 1000));//moment(indianstartTime).tz(localTimeZone).format('YYYY-MM-DD HH:mm:ss');
+//   const endFormattedDateone = new Date(endtoriginalDate.getTime() + (userTimeZoneOffset * 60 * 60 * 1000));//moment(indianEndtTime).tz(localTimeZone).format('YYYY-MM-DD HH:mm:ss'); //lates one
+//   const startformattedDateq = startFormattedDateone.toISOString().replace('T', ' ').replace(/\.\d{3}Z/, '');
+// const endformattedDateq = endFormattedDateone.toISOString().replace('T', ' ').replace(/\.\d{3}Z/, '');
+//   console.log(startformattedDateq, 'NNNNNNNNNNNNNNNNNNNNNNNNNNNN'); // Output: 2023-12-27 08:09:00
+//   console.log(endformattedDateq,'LLLLLLLLLLLLLLLLLLLLLLLLLLLL');
+  //*************************************888youuuuuuuuuuuuuuuuuuuuu */
 
   // Adjust the time zone offset to +0530
   const startadjustedDate = new Date(startoriginalDate.getTime() + (5.5 * 60 * 60 * 1000));
   const endadjustedDate = new Date(endtoriginalDate.getTime() + (5.5 * 60 * 60 * 1000));
 
   // Format the adjusted date in the desired pattern
-  const startformattedDate = startadjustedDate.toISOString().replace('T', ' ').replace(/\.\d{3}Z/, '');
-  const endformattedDate = endadjustedDate.toISOString().replace('T', ' ').replace(/\.\d{3}Z/, '');
+  const startformattedDate = moment(indianstartTime).tz(localTimeZone).format('YYYY-MM-DD HH:mm:ss');//startadjustedDate.toISOString().replace('T', ' ').replace(/\.\d{3}Z/, '');
+  const endformattedDate = moment(indianEndtTime).tz(localTimeZone).format('YYYY-MM-DD HH:mm:ss');//endadjustedDate.toISOString().replace('T', ' ').replace(/\.\d{3}Z/, '');
 
   console.log(startformattedDate,'SSSS');
   console.log(endformattedDate,'eee');
@@ -9712,7 +9726,7 @@ exports.tiempo = async (req, res) => {
       let cache = '', range, cou = 0, start, end
       
       if(diff1 < 1440){
-        range=5*60*1000
+        range=10*60*1000
         start = new Date(startformattedDate).getTime() + 0.00 * 60 * 60 * 1000
         console.log(start,'S!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         start = JSON.stringify(new Date(start))
@@ -9980,8 +9994,8 @@ exports.tiempo = async (req, res) => {
                   ranhel.push(helmet)
                   //console.log(ran)
                   //console.log(ranhel,'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
-                  console.log(ranhel[0].length,'HHHHHHHHHHHHHHHHHHHLLLLLLLLLLLLLLLLLLLLLLLLL')
-                  console.log(ran[0].length)
+                  //console.log(ranhel[0].length,'HHHHHHHHHHHHHHHHHHHLLLLLLLLLLLLLLLLLLLLLLLLL')
+                  //console.log(ran[0].length)
                   // Update the helmetnewone object directly
                   helmetnewone[timestamp] = helmet.length; // Assuming you want to store the count of 'Cantidad de personas'
 
@@ -10136,10 +10150,10 @@ exports.tiempo = async (req, res) => {
                    
 
                   timeDifference = currentTime.getMinutes() - startingTime.getMinutes();
-                  console.log(currentTime)
-                  console.log(currentTime.getMinutes(),'GGGGGGGGGGGGGGGGGGGG')
-                  console.log(timeDifference)
-                  console.log(startingTime.getMinutes())
+                  // console.log(currentTime)
+                  // console.log(currentTime.getMinutes(),'GGGGGGGGGGGGGGGGGGGG')
+                  // console.log(timeDifference)
+                  // console.log(startingTime.getMinutes())
                    
                   if (timeDifference < range/(60*1000)) { // Check if 10 minutes passed
                     intervalArray.push(mergedArray[i])
