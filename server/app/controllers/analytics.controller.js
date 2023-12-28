@@ -10131,7 +10131,7 @@ exports.tiempo = async (req, res) => {
                   currentTime = mergedArray[i].time; // Assuming 'time' is the property containing time data
 
                   if (!startingTime) {
-                    startingTime = currentTime; // Set starting time if it's null
+                    startingTime = currentTime;  
                   }
                    
 
