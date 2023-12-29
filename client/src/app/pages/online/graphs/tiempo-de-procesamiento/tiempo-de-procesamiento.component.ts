@@ -195,7 +195,7 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
             labels: labels,
             datasets: [
               {
-                label: "productividad a lo largo del tiempo",
+                label: "Productividad a lo largo del tiempo",
                 backgroundColor: NbColorHelper.hexToRgbA(colors.primary, 0.3),
                 data: Object.values(this.tiempo.overone),
                 borderColor: colors.primary,
