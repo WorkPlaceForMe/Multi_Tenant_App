@@ -9682,6 +9682,18 @@ exports.tiempo = async (req, res) => {
   const startoriginalDate = new Date(indianstartTime);
   const endtoriginalDate = new Date(indianEndtTime);
   const localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  //****************************************************** */
+  const timezone = data.time; // Format: +0530
+
+  // Convert the timezone offset to milliseconds
+  const offsetMillis = (parseInt(timezone.substring(0, 3)) * 60 + parseInt(timezone.substring(3))) * 60000;
+  const startAdjustedDateR = new Date(startoriginalDate.getTime() + offsetMillis);
+  const endAdjustedDateR = new Date(endtoriginalDate.getTime() + offsetMillis);
+  const startAdjustedString = startAdjustedDateR.toISOString().replace('T', ' ').replace(/\.\d{3}Z/, '');
+  const endAdjustedString = endAdjustedDateR.toISOString().replace('T', ' ').replace(/\.\d{3}Z/, '');
+  // console.log("Adjusted Start Time:", startAdjustedString);
+  // console.log("Adjusted End Time:", endAdjustedString);
+
   //****************************loveeeeeeeeeeeeeeeeee */
 //   const startOriginalDateone = new Date(indianstartTime);
 //   const endOriginalDateone = new Date(indianEndtTime);
@@ -9700,8 +9712,8 @@ exports.tiempo = async (req, res) => {
   const endadjustedDate = new Date(endtoriginalDate.getTime() + (5.5 * 60 * 60 * 1000));
 
   // Format the adjusted date in the desired pattern
-  const startformattedDate = moment(indianstartTime).tz(localTimeZone).format('YYYY-MM-DD HH:mm:ss');//startadjustedDate.toISOString().replace('T', ' ').replace(/\.\d{3}Z/, '');
-  const endformattedDate = moment(indianEndtTime).tz(localTimeZone).format('YYYY-MM-DD HH:mm:ss');//endadjustedDate.toISOString().replace('T', ' ').replace(/\.\d{3}Z/, '');
+  const startformattedDate = startAdjustedDateR.toISOString().replace('T', ' ').replace(/\.\d{3}Z/, '');//moment(indianstartTime).tz(localTimeZone).format('YYYY-MM-DD HH:mm:ss');//startadjustedDate.toISOString().replace('T', ' ').replace(/\.\d{3}Z/, '');
+  const endformattedDate = endAdjustedDateR.toISOString().replace('T', ' ').replace(/\.\d{3}Z/, '');//moment(indianEndtTime).tz(localTimeZone).format('YYYY-MM-DD HH:mm:ss');//endadjustedDate.toISOString().replace('T', ' ').replace(/\.\d{3}Z/, '');
 
   console.log(startformattedDate,'SSSS');
   console.log(endformattedDate,'eee');
@@ -10004,7 +10016,16 @@ exports.tiempo = async (req, res) => {
                   const formattedTimestamp = new Date(timestamp).toLocaleString('en-GB', { timeZone: 'Asia/Kolkata' });
 
                   // Format the timestamp as 'YYYY-MM-DD H:mm'
-                  formattedTimestampWithTime[formattedTimestamp] = isNaN(pro) ? 0 : pro;
+                  // formattedTimestampWithTime[formattedTimestamp] = isNaN(pro) ? 0 : pro;
+                  //*********************** */
+                  formattedTimestampWithTime[formattedTimestamp] = (() => {
+                    if (isNaN(pro) || ran[0].length <= 0 || ranhel[0].length <= 0) {
+                      return 0;
+                    } else {
+                      return pro;
+                    }
+                  })();
+                  //****************** */
 
                   ran = [];
                   ranhel=[];
@@ -10176,7 +10197,7 @@ exports.tiempo = async (req, res) => {
                     console.log(meats,range,workers,amount,'prod values0000000000')
                     intervalArray = []
                     prodArray.push(Math.ceil(prod))
-                    //console.log(prod,'p00000000')
+                    console.log(prod,'p00000000')
                     //console.log(prodArray,'paapapapapapap')
                   }
                 }

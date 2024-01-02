@@ -117,7 +117,9 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
       start: this.range.start,
       end: this.range.end,
       type: type,
+      time:this.timezone,
     };
+    console.log(l,'lllllllllllllllllllll')
     this.face.checkVideo(this.algoId, this.camera).subscribe(
       (res) => {
         this.video = res["video"];
@@ -186,6 +188,7 @@ export class TiempoDeProcesamientoComponent implements OnInit , OnDestroy {
           o = o + ":00:00";
           labels.push(this.datepipe.transform(o, "yyyy-M-dd HH:mm",this.timezone));
         }
+        console.log(this.timezone,'ttttttttttttttttttttt')
 
         this.themeSubscription = this.theme.getJsTheme().subscribe((config) => {
           const colors: any = config.variables;
